@@ -1,0 +1,38 @@
+{% set tags = h.get_facet_items_dict('tags', search_facets, limit=6) %}
+{% set placeholder = _('Search datasets...') %}
+{% set dataset_type = h.default_package_type() %}
+
+<div class="modern-search-box">
+  <h1 class="search-heading">{{ _("Find and explore public datasets") }}</h1>
+  <form class="search-form" method="get" action="{% url_for dataset_type ~ '.search' %}" style="width: 100%;">
+    <div class="search-input-wrapper">
+      <div class="search-input" style="width: 100%;">
+        <input
+          aria-label="{% block header_site_search_label %}{{ h.humanize_entity_type('package', dataset_type, 'search placeholder') or _('Search datasets') }}{% endblock %}"
+          id="field-main-search"
+          type="text"
+          class="form-control"
+          name="q"
+          value=""
+          autocomplete="off"
+          placeholder="{% block search_placeholder %}{{ placeholder }}{% endblock %}"
+          style="width: calc(100% - 36px); min-width: 650px;"
+        />
+        <button class="search-button" type="submit" aria-label="{{ _('Search') }}">
+          <i class="fa fa-search"></i>
+        </button>
+      </div>
+    </div>
+  </form>
+
+  {% if tags %}
+  <div class="popular-tags">
+    <span class="tags-label">{{ _("Popular topics:") }}</span>
+    <div class="tags-container">
+      {% for tag in tags %}
+        <a class="tag" href="{% url_for 'dataset.search', tags=tag.name %}" title="{{ tag.display_name }}">{{ tag.display_name|truncate(22) }}</a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>

@@ -1,0 +1,29 @@
+{% extends "page.html" %}
+
+{% block subtitle %}{{ _('Logged Out') }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="active">{{ _('Logged Out') }}</li>
+{% endblock %}
+
+{% block primary_content %}
+  <section class="module">
+    <div class="module-content">
+      <h1 class="page-heading">
+      	{% block page_heading %}{{ _('Logged Out') }}{% endblock %}
+      </h1>
+      <p>{% trans %}You are now logged out.{% endtrans %}</p>
+      <p><a href="{{ h.url_for('home.index') }}" class="btn btn-primary">{{ _('Return to Home Page') }}</a></p>
+    </div>
+  </section>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  <script>
+    // Redirect to home page after 3 seconds
+    setTimeout(function() {
+      window.location.href = "{{ h.url_for('home.index') }}";
+    }, 3000);
+  </script>
+{% endblock %}

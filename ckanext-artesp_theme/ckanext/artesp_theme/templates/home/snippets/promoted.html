@@ -1,0 +1,29 @@
+{% set intro = g.site_intro_text %}
+
+<div class="intro-content">
+  <h2 class="intro-heading">{{ _("About this portal") }}</h2>
+  {% if intro %}
+    {{ h.render_markdown(intro) }}
+  {% else %}
+    <p class="intro-message">
+      {{ _("Welcome to the ARTESP Open Data Portal. Here you can access and explore public datasets related to transportation, infrastructure, and regulatory information. Use the search box above to find specific data or browse through the featured collections below.") }}
+    </p>
+    <div class="intro-features">
+      <div class="intro-feature">
+        <i class="fa fa-database"></i>
+        <h3>{{ _("Open Data") }}</h3>
+        <p>{{ _("Access transportation and regulatory datasets in machine-readable formats") }}</p>
+      </div>
+      <div class="intro-feature">
+        <i class="fa fa-chart-bar"></i>
+        <h3>{{ _("Visualizations") }}</h3>
+        <p>{{ _("Explore interactive charts and maps of transportation data") }}</p>
+      </div>
+      <div class="intro-feature">
+        <i class="fa fa-code"></i>
+        <h3>{{ _("API Access") }}</h3>
+        <p>{{ _("Connect your applications directly to our data through APIs") }}</p>
+      </div>
+    </div>
+  {% endif %}
+</div>

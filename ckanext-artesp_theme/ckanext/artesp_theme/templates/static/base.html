@@ -1,0 +1,24 @@
+{% extends "page.html" %}
+
+{% block subtitle %}{{ page_title }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="active">{{ page_title }}</li>
+{% endblock %}
+
+{% block primary %}
+  <div class="primary col-md-12" role="main">
+    <article class="module">
+      <div class="module-content">
+        <div class="static-page">
+          <h1 class="page-heading">{{ page_title }}</h1>
+          <div class="static-content">
+            {% block page_content %}{% endblock %}
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+{% endblock %}
+
+{% block secondary %}{% endblock %}

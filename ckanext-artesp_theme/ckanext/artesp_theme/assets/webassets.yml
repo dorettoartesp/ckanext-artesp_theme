@@ -1,0 +1,15 @@
+# artesp_theme-js:
+#   filter: rjsmin
+#   output: ckanext-artesp_theme/%(version)s-artesp_theme.js
+#   contents:
+#     - js/artesp_theme.js
+#   extra:
+#     preload:
+#       - base/main
+
+artesp-theme-css:
+  filter: cssrewrite
+  output: ckanext-artesp_theme/%(version)s-artesp_theme.css
+  contents:
+    - css/artesp_theme.css
+    - css/user.css

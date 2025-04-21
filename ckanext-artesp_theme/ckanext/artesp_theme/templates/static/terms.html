@@ -1,0 +1,39 @@
+{% extends "static/base.html" %}
+
+{% set page_title = _('Terms of Use') %}
+
+{% block page_content %}
+  <p>{{ _('Welcome to the ARTESP Data Portal. By accessing or using this portal, you agree to comply with and be bound by the following terms and conditions of use. Please review these terms carefully.') }}</p>
+  
+  <h2>{{ _('1. Acceptance of Terms') }}</h2>
+  <p>{{ _('By accessing and using the ARTESP Data Portal, you accept and agree to be bound by the terms and provisions of this agreement.') }}</p>
+  
+  <h2>{{ _('2. Data Usage') }}</h2>
+  <p>{{ _('The data provided on this portal is made available under open licenses. Unless otherwise specified, you are free to:') }}</p>
+  <ul>
+    <li>{{ _('Copy, publish, distribute, and transmit the data') }}</li>
+    <li>{{ _('Adapt the data') }}</li>
+    <li>{{ _('Exploit the data commercially, for example, by combining it with other data, or by including it in your own product or application') }}</li>
+  </ul>
+  
+  <h2>{{ _('3. Attribution') }}</h2>
+  <p>{{ _('When using data from this portal, you must attribute ARTESP as the source of the data. This attribution should include:') }}</p>
+  <ul>
+    <li>{{ _('The name of the data provider (ARTESP)') }}</li>
+    <li>{{ _('If possible, a link to this data portal') }}</li>
+  </ul>
+  
+  <h2>{{ _('4. No Warranty') }}</h2>
+  <p>{{ _('The data is provided "as is" without warranty or any representation of accuracy, timeliness, or completeness.') }}</p>
+  
+  <h2>{{ _('5. Limitation of Liability') }}</h2>
+  <p>{{ _('ARTESP shall not be liable for any claim, damages, or other liability arising from the use of the data provided on this portal.') }}</p>
+  
+  <h2>{{ _('6. Changes to Terms') }}</h2>
+  <p>{{ _('ARTESP reserves the right to modify these terms at any time. We encourage users to frequently check this page for any changes.') }}</p>
+  
+  <h2>{{ _('7. Applicable Law') }}</h2>
+  <p>{{ _('These terms and conditions are governed by and construed in accordance with the laws of Brazil and the State of São Paulo.') }}</p>
+  
+  <p>{{ _('Last updated: January 2024') }}</p>
+{% endblock %}

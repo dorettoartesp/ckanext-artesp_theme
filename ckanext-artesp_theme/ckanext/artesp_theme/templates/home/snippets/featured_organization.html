@@ -1,0 +1,41 @@
+{% set organizations = h.get_featured_organizations() %}
+
+<div class="featured-organizations-section">
+  <h3 class="section-title"><i class="fa fa-building"></i> {{ _('Featured Organizations') }}</h3>
+  <div class="featured-groups-container">
+    {% for organization in organizations %}
+      <div class="featured-group-card">
+        <div class="featured-group-image">
+          <a href="{{ h.url_for(organization.type ~ '.read', id=organization.name) }}">
+            <img src="{{ organization.image_display_url or h.url_for_static('/base/images/placeholder-organization.png') }}" alt="{{ organization.name }}" class="img-fluid">
+          </a>
+        </div>
+        <div class="featured-group-content">
+          <h4 class="featured-group-title">
+            <a href="{{ h.url_for(organization.type ~ '.read', id=organization.name) }}">{{ organization.title or organization.name }}</a>
+          </h4>
+          {% if organization.description %}
+            <p class="featured-group-description">{{ h.markdown_extract(organization.description, 100) }}</p>
+          {% endif %}
+          <div class="featured-group-meta">
+            <span class="dataset-count">
+              <i class="fa fa-database"></i>
+              {% if organization.package_count %}
+                {{ _('{num} Datasets').format(num=organization.package_count) }}
+              {% else %}
+                {{ _('0 Datasets') }}
+              {% endif %}
+            </span>
+          </div>
+          <a href="{{ h.url_for(organization.type ~ '.read', id=organization.name) }}" class="btn btn-view">
+            <i class="fa fa-eye"></i> {{ _('View Organization') }}
+          </a>
+        </div>
+      </div>
+    {% else %}
+      <div class="featured-group-empty">
+        <i class="fa fa-info-circle"></i> {{ _('No featured organizations available') }}
+      </div>
+    {% endfor %}
+  </div>
+</div>

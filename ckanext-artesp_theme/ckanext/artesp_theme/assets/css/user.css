@@ -1,0 +1,155 @@
+/* User pages styling for ARTESP theme */
+
+/* Custom styling for user pages to match ARTESP colors */
+.user-login-module,
+.user-register-module,
+.user-reset-module {
+  max-width: 800px;
+  margin: 0 auto 3rem;
+  background-color: white;
+}
+
+/* Common styles for user pages */
+.module {
+  border: none;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.04);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.module-content {
+  padding: 2rem;
+}
+
+.page-heading {
+  color: var(--primary);
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--light-red);
+}
+
+/* Form styling */
+.form-control, input[type="text"], input[type="password"], input[type="email"] {
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  width: 100%;
+  max-width: 400px;
+}
+
+.form-control:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(192, 0, 0, 0.1);
+  outline: none;
+}
+
+.control-medium {
+  max-width: 400px;
+  width: 100%;
+}
+
+label {
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 0.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+/* Button styling */
+.btn-primary {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: white;
+  font-weight: 600;
+  padding: 0.6rem 1.25rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.btn-default {
+  background-color: white;
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  font-weight: 600;
+  padding: 0.6rem 1.25rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.btn-default:hover, .btn-default:focus, .btn-default:active {
+  background-color: var(--light-red);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* Module styling */
+.module-narrow .module-heading {
+  background-color: var(--primary);
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  font-size: 1.1rem;
+}
+
+.module-narrow .module-content {
+  padding: 1.25rem;
+}
+
+.module-narrow .module-content p {
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+.module-narrow .module-content .action {
+  margin-top: 1.25rem;
+}
+
+/* Error messages */
+.error-block {
+  color: var(--primary);
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+
+.error-block-list {
+  color: var(--primary);
+  background-color: var(--light-red);
+  border: 1px solid var(--primary);
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Checkbox styling */
+input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
+.checkbox label {
+  font-weight: 500;
+  color: #555;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .module-content {
+    padding: 1.5rem;
+  }
+
+  .page-heading {
+    font-size: 1.5rem;
+  }
+}

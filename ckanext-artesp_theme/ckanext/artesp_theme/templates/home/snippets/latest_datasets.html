@@ -1,0 +1,58 @@
+{% set latest_datasets = h.get_latest_datasets(3) %}
+
+<div class="latest-datasets-section">
+  <div class="section-header">
+    <h2 class="section-title">{{ _('Latest Datasets') }}</h2>
+    <a href="{% url_for 'dataset.search' %}" class="view-all-link">{{ _('View all datasets') }} <i class="fa fa-arrow-right"></i></a>
+  </div>
+  
+  <div class="latest-datasets-container">
+    {% if latest_datasets %}
+      {% for dataset in latest_datasets %}
+        <div class="dataset-card">
+          <div class="dataset-card-content">
+            <h3 class="dataset-title">
+              <a href="{{ h.url_for('dataset.read', id=dataset.name) }}">{{ dataset.title or dataset.name }}</a>
+            </h3>
+            
+            <div class="dataset-meta">
+              <span class="dataset-date">
+                <i class="fa fa-calendar"></i> {{ h.render_datetime(dataset.metadata_created, date_format='%d/%m/%Y') }}
+              </span>
+              
+              {% if dataset.organization %}
+                <span class="dataset-org">
+                  <i class="fa fa-building-o"></i> {{ dataset.organization.title or dataset.organization.name }}
+                </span>
+              {% endif %}
+              
+              <span class="dataset-resources">
+                <i class="fa fa-files-o"></i> {{ dataset.resources|length }} {{ _('Resources') }}
+              </span>
+            </div>
+            
+            <div class="dataset-description">
+              {% if dataset.notes %}
+                {{ h.markdown_extract(dataset.notes, 150) }}
+              {% else %}
+                <p class="empty">{{ _('No description provided.') }}</p>
+              {% endif %}
+            </div>
+            
+            {% if dataset.tags and dataset.tags|length > 0 %}
+              <div class="dataset-tags">
+                {% for tag in dataset.tags %}
+                  <a href="{% url_for 'dataset.search', tags=tag.name %}" class="tag">{{ tag.display_name }}</a>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="no-datasets">
+        <p>{{ _('No datasets found.') }}</p>
+      </div>
+    {% endif %}
+  </div>
+</div>

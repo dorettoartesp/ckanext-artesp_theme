@@ -1,0 +1,24 @@
+{% extends "static/base.html" %}
+
+{% set page_title = _('About CKAN') %}
+
+{% block page_content %}
+  <p>{{ _('CKAN is an open-source data management system that makes data accessible by providing tools to streamline publishing, sharing, finding and using data. CKAN is aimed at data publishers (national and regional governments, companies and organizations) wanting to make their data open and available.') }}</p>
+  
+  <p>{{ _('CKAN is a powerful data management system that makes data accessible – by providing tools to streamline publishing, sharing, finding and using data. CKAN is aimed at data publishers (national and regional governments, companies and organizations) wanting to make their data open and available.') }}</p>
+  
+  <h2>{{ _('Key Features') }}</h2>
+  <ul>
+    <li>{{ _('Publish and manage datasets with rich metadata') }}</li>
+    <li>{{ _('Engage with users via comments') }}</li>
+    <li>{{ _('Customize and extend the platform') }}</li>
+    <li>{{ _('Federation of data catalogs between instances') }}</li>
+    <li>{{ _('Fine-grained access control') }}</li>
+    <li>{{ _('Resource preview for common formats') }}</li>
+  </ul>
+  
+  <h2>{{ _('About the ARTESP Data Portal') }}</h2>
+  <p>{{ _('The ARTESP Data Portal is built on CKAN to provide open access to transportation-related data from the State of São Paulo. Our goal is to make public transportation data more accessible, transparent, and useful for citizens, researchers, and developers.') }}</p>
+  
+  <p>{{ _('For more information about CKAN, visit') }} <a href="https://ckan.org/" target="_blank">ckan.org</a>.</p>
+{% endblock %}

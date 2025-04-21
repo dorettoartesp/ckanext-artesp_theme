@@ -1,0 +1,42 @@
+{% set dataset_count = h.get_package_count() %}
+{% set resource_count = h.get_resource_count() %}
+{% set organization_count = h.get_organization_count() %}
+
+<div class="stats-section">
+  <div class="stats-header">
+    <h2 class="stats-title">{{ _('ARTESP em números') }}</h2>
+    <p class="stats-subtitle">{{ _('Explore os dados disponíveis no Portal de Dados Abertos da ARTESP') }}</p>
+  </div>
+
+  <div class="stats-container">
+    <div class="stat-item">
+      <div class="stat-icon">
+        <i class="fa fa-database"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-count">{{ dataset_count }}</div>
+        <div class="stat-label">{% if dataset_count == 1 %}{{ _('Dataset') }}{% else %}{{ _('Datasets') }}{% endif %}</div>
+      </div>
+    </div>
+
+    <div class="stat-item">
+      <div class="stat-icon">
+        <i class="fa fa-file-text"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-count">{{ resource_count }}</div>
+        <div class="stat-label">{% if resource_count == 1 %}{{ _('Resource') }}{% else %}{{ _('Resources') }}{% endif %}</div>
+      </div>
+    </div>
+
+    <div class="stat-item">
+      <div class="stat-icon">
+        <i class="fa fa-building"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-count">{{ organization_count }}</div>
+        <div class="stat-label">{% if organization_count == 1 %}{{ _('Organization') }}{% else %}{{ _('Organizations') }}{% endif %}</div>
+      </div>
+    </div>
+  </div>
+</div>
