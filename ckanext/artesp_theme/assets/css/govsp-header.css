@@ -1,9 +1,128 @@
 /* Custom CSS for São Paulo Government Header */
 
-/* Ensure proper spacing between the government header and CKAN header */
+/* Base styles for the header */
 .govsp-topo {
-  margin-bottom: 0;
-  padding-bottom: 0;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  background-color: #000;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Main container */
+#govsp-topbarGlobal {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 15px;
+  box-sizing: border-box;
+  z-index: 1000 !important;
+  position: relative;
+  background-color: #000;
+}
+
+/* Logo container */
+#topbarGlobal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+#topbarLink {
+  display: flex;
+  align-items: center;
+}
+
+.govsp-portal {
+  padding: 5px 0;
+}
+
+.govsp-portal img {
+  height: 38px;
+  width: auto;
+}
+
+/* Social icons navbar */
+.govsp-navbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.govsp-social {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 5px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 12px;
+}
+
+.govsp-icon-social {
+  width: 20px;
+  height: 20px;
+  margin-right: 2px;
+}
+
+.govsp-acessibilidade {
+  margin-left: 15px;
+}
+
+/* Kebab menu (mobile) */
+.govsp-kebab {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  margin-left: auto;
+}
+
+.govsp-kebab img {
+  width: 20px;
+  height: auto;
+}
+
+/* Dropdown menu (mobile) */
+.govsp-dropdown {
+  display: none;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background-color: #000;
+  border-radius: 4px;
+  position: absolute;
+  right: 15px;
+  top: 50px;
+  z-index: 1001;
+  width: 200px;
+}
+
+.govsp-dropdown li {
+  padding: 8px 12px;
+  border-bottom: 1px solid #333;
+}
+
+.govsp-dropdown li:last-child {
+  border-bottom: none;
+}
+
+.govsp-dropdown .govsp-social {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  text-decoration: none;
+  font-size: 12px;
+}
+
+.govsp-dropdown p.govsp-social {
+  margin: 0;
+  padding: 8px 12px;
+  color: #fff;
 }
 
 /* Adjust the minimal-header to work with the government header */
@@ -12,64 +131,29 @@
   padding-top: 10px;
 }
 
-/* Fix any potential z-index issues */
-#govsp-topbarGlobal {
-  z-index: 1000 !important;
-}
-
-/* Hide the kebab menu and dropdown on desktop */
-.govsp-kebab {
-  display: none;
-}
-
-.govsp-dropdown {
-  display: none;
-}
-
-/* Show social icons in the navbar on desktop */
-.govsp-navbar {
-  display: flex;
-  align-items: center;
-}
-
-/* Ensure mobile responsiveness */
+/* Mobile styles */
 @media (max-width: 768px) {
-  .govsp-topo {
-    margin-bottom: 0;
+  #topbarGlobal {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
-  .minimal-header {
-    margin-top: 0;
-  }
-
-  /* Hide the navbar social icons on mobile */
   .govsp-navbar {
     display: none;
   }
 
-  /* Show the kebab menu on mobile */
   .govsp-kebab {
     display: block;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 10px;
     position: absolute;
-    right: 10px;
-    top: 10px;
+    right: 15px;
+    top: 15px;
   }
 
-  /* Show the dropdown when active */
   .govsp-dropdown.govsp-active {
     display: block;
-    position: absolute;
-    right: 0;
-    top: 40px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 10px;
-    z-index: 1001;
-    list-style: none;
+  }
+
+  .govsp-portal {
+    margin-right: 50px;
   }
 }

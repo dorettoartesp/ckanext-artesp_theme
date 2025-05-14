@@ -42,7 +42,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Close dropdown when clicking outside
     document.addEventListener('click', function (e) {
-      if (!kebabGov.contains(e.target) && !dropdownGov.contains(e.target)) {
+      if (dropdownGov.classList.contains('govsp-active') &&
+          !kebabGov.contains(e.target) &&
+          !dropdownGov.contains(e.target)) {
         dropdownGov.classList.remove('govsp-active');
         kebabGov.classList.remove('govsp-active');
         dropdownGov.setAttribute("aria-hidden", "true");
