@@ -1,6 +1,50 @@
+
 {% set dataset_type = h.default_package_type() %}
+<!-- São Paulo Government Header -->
+{% asset 'artesp_assets/artesp-theme-css' %}
+{% asset 'artesp_assets/artesp-theme-js' %}
+<section class="govsp-topo">
+  <div id="govsp-topbarGlobal" class="blu-e">
+    <div id="topbarGlobal">
+      <div id="topbarLink" class="govsp-black">
+        <div class="govsp-portal">
+          <a href="https://www.saopaulo.sp.gov.br" title="nova guia Site Governo do Estado de São Paulo" target="_blank">
+            <img src="{{ h.url_for_static('/images/govsp/logo-governo-do-estado-sp.png') }}" alt="logomarca Governo de São Paulo" height="38" class="logo">
+          </a>
+        </div>
+      </div>
+      <nav class="govsp-navbar govsp-navbar-expand-lg">
+        <a class="govsp-social" href="http://bit.ly/govspnozap"><img class="govsp-icon-social" src="{{ h.url_for_static('/images/govsp/i-whatsapp.png') }}" alt="Whatsapp Governo do Estado de SP" /></a>
+        <a class="govsp-social" href="https://www.flickr.com/governosp/"><img class="govsp-icon-social" src="{{ h.url_for_static('/images/govsp/i-flickr.png') }}" alt="Flickr Governo do Estado de SP" /></a>
+        <a class="govsp-social" href="https://www.linkedin.com/company/governosp/"><img class="govsp-icon-social" src="{{ h.url_for_static('/images/govsp/i-linkedin.png') }}" alt="Linkedin Governo do Estado de SP" /></a>
+        <a class="govsp-social" href="https://www.tiktok.com/@governosp"><img class="govsp-icon-social" src="{{ h.url_for_static('/images/govsp/i-tiktok.png') }}" alt="TikTok Governo do Estado de SP" /></a>
+        <a class="govsp-social" href="https://www.youtube.com/governosp/"><img class="govsp-icon-social" src="{{ h.url_for_static('/images/govsp/i-youtube.png') }}" alt="Youtube Governo do Estado de SP" /></a>
+        <a class="govsp-social" href="https://www.twitter.com/governosp/"><img class="govsp-icon-social" src="{{ h.url_for_static('/images/govsp/i-twitter.png') }}" alt="Twitter Governo do Estado de SP" /></a>
+        <a class="govsp-social" href="https://www.instagram.com/governosp/"><img class="govsp-icon-social" src="{{ h.url_for_static('/images/govsp/i-insta.png') }}" alt="Instagram Governo do Estado de SP" /></a>
+        <a class="govsp-social" href="https://www.facebook.com/governosp/"><img class="govsp-icon-social" src="{{ h.url_for_static('/images/govsp/i-facebook.png') }}" alt="Facebook Governo do Estado de SP" /></a>
+        <p class="govsp-social">/governosp</p>
+        <a class="govsp-acessibilidade" title="nova guia" href="https://www.saopaulo.sp.gov.br/fale-conosco/comunicar-erros/" target="_blank"><img class="govsp-acessibilidade" src="{{ h.url_for_static('/images/govsp/i-error-report.png') }}" alt="Comunicar um erro"></a>
+      </nav>
+    </div>
+    <button class="govsp-kebab" id="govsp-kebab" aria-expanded="false"><img src="{{ h.url_for_static('/images/govsp/dots-menu.png') }}" alt="Menu"></button>
+    <ul class="govsp-dropdown vs3" id="govsp-dropdown" aria-hidden="true">
+      <li><a class="govsp-social" role="button" href="http://bit.ly/govspnozap"><img class="govsp-icon-social" src="{{ h.url_for_static('/images/govsp/i-whatsapp.png') }}" alt="Whatsapp Governo do Estado de SP" /></a></li>
+      <li><a class="govsp-social" role="button" href="https://www.flickr.com/governosp/"><img class="govsp-icon-social" src="{{ h.url_for_static('/images/govsp/i-flickr.png') }}" alt="Flickr Governo do Estado de SP" /></a></li>
+      <li><a class="govsp-social" role="button" href="https://www.linkedin.com/company/governosp/"><img class="govsp-icon-social" src="{{ h.url_for_static('/images/govsp/i-linkedin.png') }}" alt="Linkedin Governo do Estado de SP" /></a></li>
+      <li><a class="govsp-social" role="button" href="https://www.tiktok.com/@governosp"><img class="govsp-icon-social" src="{{ h.url_for_static('/images/govsp/i-tiktok.png') }}" alt="TikTok Governo do Estado de SP" /></a></li>
+      <li><a class="govsp-social" role="button" href="https://www.twitter.com/governosp/"><img class="govsp-icon-social" src="{{ h.url_for_static('/images/govsp/i-twitter.png') }}" alt="Twitter Governo do Estado de SP" /></a></li>
+      <li><a class="govsp-social" role="button" href="https://www.youtube.com/governosp/"><img class="govsp-icon-social" src="{{ h.url_for_static('/images/govsp/i-youtube.png') }}" alt="Youtube Governo do Estado de SP" /></a></li>
+      <li><a class="govsp-social" role="button" href="https://www.instagram.com/governosp/"><img class="govsp-icon-social" src="{{ h.url_for_static('/images/govsp/i-insta.png') }}" alt="Instagram Governo do Estado de SP" /></a></li>
+      <li><a class="govsp-social" role="button" href="https://www.facebook.com/governosp/"><img class="govsp-icon-social" src="{{ h.url_for_static('/images/govsp/i-facebook.png') }}" alt="Facebook Governo do Estado de SP" /></a></li>
+      <li><p class="govsp-social">/governosp</p></li>
+    </ul>
+  </div>
+  <noscript>Seu navegador não tem suporte a JavaScript ou está desativado!</noscript>
+</section>
+<!-- End São Paulo Government Header -->
 
 {% block header_wrapper %}
+
   <div class="minimal-header">
     <div class="container">
       <div class="header-top">

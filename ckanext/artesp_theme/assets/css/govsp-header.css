@@ -1,0 +1,75 @@
+/* Custom CSS for São Paulo Government Header */
+
+/* Ensure proper spacing between the government header and CKAN header */
+.govsp-topo {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+/* Adjust the minimal-header to work with the government header */
+.minimal-header {
+  margin-top: 0;
+  padding-top: 10px;
+}
+
+/* Fix any potential z-index issues */
+#govsp-topbarGlobal {
+  z-index: 1000 !important;
+}
+
+/* Hide the kebab menu and dropdown on desktop */
+.govsp-kebab {
+  display: none;
+}
+
+.govsp-dropdown {
+  display: none;
+}
+
+/* Show social icons in the navbar on desktop */
+.govsp-navbar {
+  display: flex;
+  align-items: center;
+}
+
+/* Ensure mobile responsiveness */
+@media (max-width: 768px) {
+  .govsp-topo {
+    margin-bottom: 0;
+  }
+
+  .minimal-header {
+    margin-top: 0;
+  }
+
+  /* Hide the navbar social icons on mobile */
+  .govsp-navbar {
+    display: none;
+  }
+
+  /* Show the kebab menu on mobile */
+  .govsp-kebab {
+    display: block;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+  }
+
+  /* Show the dropdown when active */
+  .govsp-dropdown.govsp-active {
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 40px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    z-index: 1001;
+    list-style: none;
+  }
+}
