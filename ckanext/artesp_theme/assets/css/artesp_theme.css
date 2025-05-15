@@ -3,6 +3,9 @@
    Organized into logical sections for better maintainability
    ========================================================================== */
 
+/* Import Rawline font from CDNFonts */
+@import url('https://fonts.cdnfonts.com/css/rawline');
+
 /* ==========================================================================
    SECTION 1: VARIABLES
    Contains color definitions and other CSS variables
@@ -188,6 +191,7 @@
 }
 
 .page-heading {
+  font-family: 'Rawline', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 2.2rem;
   font-weight: 700;
   color: #333333; /* Dark gray instead of blue */
@@ -1044,9 +1048,54 @@ a.loader-badge {
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Rawline', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   background-color: white;
   color: #333;
+  font-weight: 400;
+}
+
+/* Font weight classes for Rawline */
+.font-light {
+  font-weight: 300;
+}
+
+.font-regular {
+  font-weight: 400;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.font-extrabold {
+  font-weight: 800;
+}
+
+/* Apply Rawline font to all form elements and common UI components */
+input,
+button,
+select,
+textarea,
+.btn,
+.nav-link,
+.dropdown-item,
+.form-control,
+.page-link,
+.badge,
+.alert,
+.card-title,
+.card-text,
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: 'Rawline', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* Minimal Header Styles */
@@ -1193,6 +1242,7 @@ body {
 }
 
 .nav-menu li a {
+  font-family: 'Rawline', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
   display: block;
   color: #444 !important;
   padding: 0.75rem 1.25rem;
@@ -1220,6 +1270,7 @@ body {
 }
 
 .section-title {
+  font-family: 'Rawline', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
   color: var(--primary);
   font-size: 1.75rem;
   font-weight: 600;
@@ -1325,6 +1376,7 @@ body {
 }
 
 .btn-view {
+  font-family: 'Rawline', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: white;
   color: var(--primary);
   border: 2px solid var(--primary);
@@ -1427,6 +1479,7 @@ body {
 }
 
 .search-heading {
+  font-family: 'Rawline', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 1.75rem;
@@ -1453,6 +1506,7 @@ body {
 }
 
 .search-input input {
+  font-family: 'Rawline', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
   width: calc(100% - 0px); /* Full width */
   padding: 1rem 1.25rem;
   padding-right: 50px; /* Make room for the button */
