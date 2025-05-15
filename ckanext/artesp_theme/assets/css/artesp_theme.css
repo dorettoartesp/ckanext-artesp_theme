@@ -1717,8 +1717,8 @@ h1, h2, h3, h4, h5, h6,
 
 .latest-datasets-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.75rem;
 }
 
 @keyframes fadeInUp {
@@ -1732,18 +1732,20 @@ h1, h2, h3, h4, h5, h6,
   }
 }
 
+/* Dataset card styling based on Crimson Data Beacon */
 .dataset-card {
   background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
   overflow: hidden;
   height: 100%;
   display: flex;
   flex-direction: column;
   animation: fadeInUp 0.6s ease-out forwards;
   opacity: 0;
-  border: 1px solid #f0f0f0;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  position: relative;
 }
 
 .dataset-card:nth-child(1) {
@@ -1751,36 +1753,52 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .dataset-card:nth-child(2) {
-  animation-delay: 0.3s;
+  animation-delay: 0.2s;
 }
 
 .dataset-card:nth-child(3) {
-  animation-delay: 0.5s;
+  animation-delay: 0.3s;
+}
+
+.dataset-card:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+/* Category indicator at top of card */
+.dataset-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: var(--primary);
+  opacity: 0.9;
 }
 
 .dataset-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  border-color: rgba(255, 22, 31, 0.2); /* Light red border on hover */
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.08);
 }
 
 .dataset-card-content {
-  padding: 1.75rem;
+  padding: 1.5rem;
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
 .dataset-title {
-  font-size: 1.3rem;
-  font-weight: 700;
+  font-size: 1.15rem;
+  font-weight: 600;
   margin-top: 0;
-  margin-bottom: 1rem;
-  line-height: 1.3;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
 }
 
 .dataset-title a {
-  color: #333333; /* Dark gray instead of blue */
+  color: #222222;
   text-decoration: none;
   transition: color 0.2s ease;
   position: relative;
@@ -1788,40 +1806,45 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .dataset-title a:hover {
-  color: var(--primary); /* Red on hover */
+  color: var(--primary);
   text-decoration: none;
 }
 
 .dataset-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.25rem;
-  margin-bottom: 1.25rem;
-  font-size: 0.85rem;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.8rem;
   color: #666;
-  border-bottom: 1px solid #f0f0f0;
-  padding-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .dataset-date, .dataset-org, .dataset-resources {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.3rem;
+  color: #555;
+  font-weight: 500;
 }
 
 .dataset-date .fa, .dataset-org .fa, .dataset-resources .fa {
-  color: #808080; /* Use brand gray color */
-  font-size: 0.9rem;
-  margin-right: 0.25rem;
-  vertical-align: middle;
+  color: #777;
+  font-size: 0.85rem;
+  opacity: 0.8;
 }
 
 .dataset-description {
-  margin-bottom: 1.5rem;
-  color: #444444; /* Darker gray for better readability */
-  line-height: 1.6;
+  margin-bottom: 1.25rem;
+  color: #555;
+  line-height: 1.5;
   flex: 1;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
 
 .dataset-tags {
@@ -1829,36 +1852,48 @@ h1, h2, h3, h4, h5, h6,
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: auto;
-  padding-top: 1rem;
-  border-top: 1px solid #f0f0f0;
+  padding-top: 0.75rem;
 }
 
 .dataset-tags .tag {
-  font-size: 0.8rem;
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  background-color: #f8f8f8;
-  color: #444444;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.03);
+  color: #555;
   transition: all 0.2s ease;
-  border: 1px solid #e8e8e8;
+  font-weight: 500;
+  letter-spacing: 0.01em;
 }
 
 .dataset-tags .tag:hover {
-  background-color: #f0f0f0;
-  border-color: rgba(255, 22, 31, 0.3);
-  transform: translateY(-2px);
+  background-color: rgba(0, 0, 0, 0.06);
+  color: #333;
+  transform: translateY(-1px);
 }
 
 .no-datasets {
   grid-column: 1 / -1;
   text-align: center;
-  padding: 2.5rem;
+  padding: 2rem;
   background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-  border: 1px solid #f0f0f0;
-  color: #666;
-  font-size: 1.1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  color: #555;
+  font-size: 1rem;
+  position: relative;
+}
+
+.no-datasets::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: var(--gray-light);
+  opacity: 0.5;
 }
 
 .no-datasets p {
@@ -1867,32 +1902,45 @@ h1, h2, h3, h4, h5, h6,
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-}
-
-.no-datasets p {
   position: relative;
   padding-left: 1.5rem;
+  font-weight: 500;
 }
 
 .no-datasets p::before {
   content: "\f119"; /* Font Awesome sad face icon */
   font-family: "Font Awesome 5 Free";
-  color: #808080;
+  color: #777;
   position: absolute;
   left: 0;
   top: 50%;
   transform: translateY(-50%);
+  opacity: 0.8;
 }
 
 @media (max-width: 768px) {
   .latest-datasets-container {
     grid-template-columns: 1fr;
+    gap: 1.25rem;
   }
 
   .section-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
+  }
+
+  .dataset-card-content {
+    padding: 1.25rem;
+  }
+
+  .dataset-title {
+    font-size: 1.1rem;
+  }
+
+  .dataset-description {
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
   }
 }
 
@@ -2212,6 +2260,38 @@ h1, h2, h3, h4, h5, h6,
     padding-left: 10px;
     border-left-width: 3px;
   }
+
+  .latest-datasets-container {
+    gap: 1rem;
+  }
+
+  .dataset-card-content {
+    padding: 1.1rem;
+  }
+
+  .dataset-title {
+    font-size: 1rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .dataset-meta {
+    font-size: 0.75rem;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.6rem;
+  }
+
+  .dataset-description {
+    font-size: 0.8rem;
+    margin-bottom: 0.75rem;
+    -webkit-line-clamp: 2;
+  }
+
+  .dataset-tags .tag {
+    font-size: 0.7rem;
+    padding: 0.15rem 0.5rem;
+  }
+}
 
   .modern-hero {
     padding: 2rem 0 1rem;
