@@ -1558,9 +1558,12 @@ body {
 /* Latest datasets section styling */
 .latest-datasets-wrapper {
   margin: 0;
-  background-color: #f5f5f5;
+  background: linear-gradient(135deg, #f8f8f8, #f0f0f0, #f5f5f5, #f8f8f8);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
   padding: 4rem 0;
   position: relative;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.03);
 }
 
 .latest-datasets-wrapper::after {
@@ -1819,9 +1822,12 @@ body {
 .stats-section-wrapper {
   margin: 0 0 0;
   padding: 5rem 0 6rem;
-  background-color: #f5f5f5;
+  background: linear-gradient(135deg, #f5f5f5, #eaeaea, #f2f2f2, #f5f5f5);
+  background-size: 400% 400%;
+  animation: gradientShift 18s ease infinite;
   position: relative;
   overflow: hidden;
+  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.04);
 }
 
 .stats-section-wrapper::before {
@@ -1859,6 +1865,18 @@ body {
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }
 
