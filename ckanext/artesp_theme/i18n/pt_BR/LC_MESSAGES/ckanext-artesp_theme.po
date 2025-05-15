@@ -381,9 +381,7 @@ msgstr "Tenha um bom dia."
 msgid "Message sent by {{ site_title }} ({{ site_url }})"
 msgstr "Mensagem enviada por {{ site_title }} ({{ site_url }})"
 
-#: ckanext/artesp_theme/templates/home/snippets/about_text.html:4
-msgid "About ARTESP"
-msgstr "Sobre a ARTESP"
+
 
 #: ckanext/artesp_theme/templates/home/snippets/about_text.html:6
 msgid "Established by <strong>Complementary Law No. 914 of January 14, 2002</strong> and regulated by <strong>Decree No. 46,708 of April 22, 2002</strong>, the <strong>São Paulo State Transportation Regulatory Agency (ARTESP)</strong> is a special-regime autonomous authority with budgetary, financial, technical, and administrative independence. Its mandate is to regulate, supervise, and foster the quality of public transportation services delegated by the State Government."
@@ -489,14 +487,236 @@ msgstr "O CKAN é um software de código aberto, mantido por uma comunidade ativ
 msgid "For more information, please visit <a href=\"https://ckan.org/\">ckan.org</a>."
 msgstr "Para mais informações, visite <a href=\"https://ckan.org/\">ckan.org</a>."
 
-#: ckanext/artesp_theme/templates/home/snippets/search.html:5
-msgid "Find and explore public datasets"
-msgstr "Encontre e explore conjuntos de dados públicos"
 
-#: ckanext/artesp_theme/templates/home/snippets/search.html:7
-msgid "Search datasets..."
-msgstr "Pesquisar conjuntos de dados..."
 
-#: ckanext/artesp_theme/templates/home/snippets/search.html:9
-msgid "Search"
-msgstr "Pesquisar"
+#: ckanext/artesp_theme/templates/static/terms.html:6
+msgid "Welcome to the ARTESP Data Portal. By accessing or using this portal, you agree to comply with and be bound by the following terms and conditions of use. Please review these terms carefully."
+msgstr "Bem-vindo ao Portal de Dados da ARTESP. Ao acessar ou usar este portal, você concorda em cumprir e estar vinculado aos seguintes termos e condições de uso. Por favor, revise estes termos cuidadosamente."
+
+#: ckanext/artesp_theme/templates/static/terms.html:8
+msgid "1. Acceptance of Terms"
+msgstr "1. Aceitação dos Termos"
+
+#: ckanext/artesp_theme/templates/static/terms.html:9
+msgid "By accessing and using the ARTESP Data Portal, you accept and agree to be bound by the terms and provisions of this agreement."
+msgstr "Ao acessar e usar o Portal de Dados da ARTESP, você aceita e concorda em estar vinculado aos termos e disposições deste acordo."
+
+#: ckanext/artesp_theme/templates/static/terms.html:11
+msgid "2. Data Usage"
+msgstr "2. Uso de Dados"
+
+#: ckanext/artesp_theme/templates/static/terms.html:12
+msgid "The data provided on this portal is made available under open licenses. Unless otherwise specified, you are free to:"
+msgstr "Os dados fornecidos neste portal são disponibilizados sob licenças abertas. A menos que especificado de outra forma, você é livre para:"
+
+#: ckanext/artesp_theme/templates/static/terms.html:14
+msgid "Copy, publish, distribute, and transmit the data"
+msgstr "Copiar, publicar, distribuir e transmitir os dados"
+
+#: ckanext/artesp_theme/templates/static/terms.html:15
+msgid "Adapt the data"
+msgstr "Adaptar os dados"
+
+#: ckanext/artesp_theme/templates/static/terms.html:16
+msgid "Exploit the data commercially, for example, by combining it with other data, or by including it in your own product or application"
+msgstr "Explorar os dados comercialmente, por exemplo, combinando-os com outros dados ou incluindo-os em seu próprio produto ou aplicação"
+
+#: ckanext/artesp_theme/templates/static/terms.html:19
+msgid "3. Attribution"
+msgstr "3. Atribuição"
+
+#: ckanext/artesp_theme/templates/static/terms.html:20
+msgid "When using data from this portal, you must attribute ARTESP as the source of the data. This attribution should include:"
+msgstr "Ao usar dados deste portal, você deve atribuir à ARTESP como a fonte dos dados. Esta atribuição deve incluir:"
+
+#: ckanext/artesp_theme/templates/static/terms.html:22
+msgid "The name of the data provider (ARTESP)"
+msgstr "O nome do provedor de dados (ARTESP)"
+
+#: ckanext/artesp_theme/templates/static/terms.html:23
+msgid "If possible, a link to this data portal"
+msgstr "Se possível, um link para este portal de dados"
+
+#: ckanext/artesp_theme/templates/static/terms.html:26
+msgid "4. No Warranty"
+msgstr "4. Sem Garantia"
+
+#: ckanext/artesp_theme/templates/static/terms.html:27
+msgid "The data is provided \"as is\" without warranty or any representation of accuracy, timeliness, or completeness."
+msgstr "Os dados são fornecidos \"como estão\" sem garantia ou qualquer representação de precisão, atualidade ou completude."
+
+#: ckanext/artesp_theme/templates/static/terms.html:29
+msgid "5. Limitation of Liability"
+msgstr "5. Limitação de Responsabilidade"
+
+#: ckanext/artesp_theme/templates/static/terms.html:30
+msgid "ARTESP shall not be liable for any claim, damages, or other liability arising from the use of the data provided on this portal."
+msgstr "A ARTESP não será responsável por qualquer reclamação, danos ou outra responsabilidade decorrente do uso dos dados fornecidos neste portal."
+
+#: ckanext/artesp_theme/templates/static/terms.html:32
+msgid "6. Changes to Terms"
+msgstr "6. Alterações nos Termos"
+
+#: ckanext/artesp_theme/templates/static/terms.html:33
+msgid "ARTESP reserves the right to modify these terms at any time. We encourage users to frequently check this page for any changes."
+msgstr "A ARTESP reserva-se o direito de modificar estes termos a qualquer momento. Incentivamos os usuários a verificar frequentemente esta página para quaisquer alterações."
+
+#: ckanext/artesp_theme/templates/static/terms.html:35
+msgid "7. Applicable Law"
+msgstr "7. Lei Aplicável"
+
+#: ckanext/artesp_theme/templates/static/terms.html:36
+msgid "These terms and conditions are governed by and construed in accordance with the laws of Brazil and the State of São Paulo."
+msgstr "Estes termos e condições são regidos e interpretados de acordo com as leis do Brasil e do Estado de São Paulo."
+
+#: ckanext/artesp_theme/templates/static/terms.html:38
+msgid "Last updated: January 2024"
+msgstr "Última atualização: Janeiro de 2024"
+
+#: ckanext/artesp_theme/templates/static/privacy.html:6
+msgid "This Privacy Policy describes how your personal information is collected, used, and shared when you visit the ARTESP Data Portal."
+msgstr "Esta Política de Privacidade descreve como suas informações pessoais são coletadas, usadas e compartilhadas quando você visita o Portal de Dados da ARTESP."
+
+#: ckanext/artesp_theme/templates/static/privacy.html:8
+msgid "1. Information We Collect"
+msgstr "1. Informações que Coletamos"
+
+#: ckanext/artesp_theme/templates/static/privacy.html:9
+msgid "When you visit the portal, we automatically collect certain information about your device, including information about your web browser, IP address, time zone, and some of the cookies that are installed on your device."
+msgstr "Quando você visita o portal, coletamos automaticamente certas informações sobre seu dispositivo, incluindo informações sobre seu navegador da web, endereço IP, fuso horário e alguns dos cookies que estão instalados em seu dispositivo."
+
+#: ckanext/artesp_theme/templates/static/privacy.html:11
+msgid "Additionally, as you browse the portal, we collect information about the individual web pages that you view, what websites or search terms referred you to the portal, and information about how you interact with the portal."
+msgstr "Além disso, enquanto você navega pelo portal, coletamos informações sobre as páginas da web individuais que você visualiza, quais sites ou termos de pesquisa o encaminharam para o portal e informações sobre como você interage com o portal."
+
+#: ckanext/artesp_theme/templates/static/privacy.html:13
+msgid "2. How We Use Your Information"
+msgstr "2. Como Usamos Suas Informações"
+
+#: ckanext/artesp_theme/templates/static/privacy.html:14
+msgid "We use the information we collect to:"
+msgstr "Usamos as informações que coletamos para:"
+
+#: ckanext/artesp_theme/templates/static/privacy.html:16
+msgid "Improve and optimize our portal (for example, by generating analytics about how our users browse and interact with the portal)"
+msgstr "Melhorar e otimizar nosso portal (por exemplo, gerando análises sobre como nossos usuários navegam e interagem com o portal)"
+
+#: ckanext/artesp_theme/templates/static/privacy.html:17
+msgid "Assess the success of our marketing and outreach campaigns"
+msgstr "Avaliar o sucesso de nossas campanhas de marketing e divulgação"
+
+#: ckanext/artesp_theme/templates/static/privacy.html:18
+msgid "Monitor and prevent any security issues"
+msgstr "Monitorar e prevenir quaisquer problemas de segurança"
+
+#: ckanext/artesp_theme/templates/static/privacy.html:21
+msgid "3. Sharing Your Information"
+msgstr "3. Compartilhamento de Suas Informações"
+
+#: ckanext/artesp_theme/templates/static/privacy.html:22
+msgid "We share your information with third parties to help us use your information, as described above. For example, we use Google Analytics to help us understand how our users use the portal. You can read more about how Google uses your information here: https://policies.google.com/privacy."
+msgstr "Compartilhamos suas informações com terceiros para nos ajudar a usar suas informações, conforme descrito acima. Por exemplo, usamos o Google Analytics para nos ajudar a entender como nossos usuários usam o portal. Você pode ler mais sobre como o Google usa suas informações aqui: https://policies.google.com/privacy."
+
+#: ckanext/artesp_theme/templates/static/privacy.html:24
+msgid "4. Your Rights"
+msgstr "4. Seus Direitos"
+
+#: ckanext/artesp_theme/templates/static/privacy.html:25
+msgid "If you are a European resident, you have the right to access personal information we hold about you and to ask that your personal information be corrected, updated, or deleted. If you would like to exercise this right, please contact us."
+msgstr "Se você é um residente europeu, tem o direito de acessar as informações pessoais que mantemos sobre você e solicitar que suas informações pessoais sejam corrigidas, atualizadas ou excluídas. Se você deseja exercer esse direito, entre em contato conosco."
+
+#: ckanext/artesp_theme/templates/static/privacy.html:27
+msgid "5. Data Retention"
+msgstr "5. Retenção de Dados"
+
+#: ckanext/artesp_theme/templates/static/privacy.html:28
+msgid "When you use our portal, we will maintain your information for our records unless and until you ask us to delete this information."
+msgstr "Quando você usa nosso portal, manteremos suas informações em nossos registros, a menos e até que você nos peça para excluir essas informações."
+
+#: ckanext/artesp_theme/templates/static/privacy.html:30
+msgid "6. Changes"
+msgstr "6. Alterações"
+
+#: ckanext/artesp_theme/templates/static/privacy.html:31
+msgid "We may update this privacy policy from time to time in order to reflect, for example, changes to our practices or for other operational, legal or regulatory reasons."
+msgstr "Podemos atualizar esta política de privacidade de tempos em tempos para refletir, por exemplo, mudanças em nossas práticas ou por outros motivos operacionais, legais ou regulatórios."
+
+#: ckanext/artesp_theme/templates/static/privacy.html:33
+msgid "7. Contact Us"
+msgstr "7. Contate-nos"
+
+#: ckanext/artesp_theme/templates/static/privacy.html:34
+msgid "For more information about our privacy practices, if you have questions, or if you would like to make a complaint, please contact us by e-mail or by mail using the details provided on the Contact page."
+msgstr "Para mais informações sobre nossas práticas de privacidade, se você tiver dúvidas ou se desejar fazer uma reclamação, entre em contato conosco por e-mail ou por correio usando os detalhes fornecidos na página de Contato."
+
+#: ckanext/artesp_theme/templates/static/contact.html:6
+msgid "We value your feedback and are here to help with any questions or concerns you may have about the ARTESP Data Portal."
+msgstr "Valorizamos seu feedback e estamos aqui para ajudar com quaisquer perguntas ou preocupações que você possa ter sobre o Portal de Dados da ARTESP."
+
+#: ckanext/artesp_theme/templates/static/contact.html:11
+msgid "Contact Information"
+msgstr "Informações de Contato"
+
+#: ckanext/artesp_theme/templates/static/contact.html:12
+msgid "Address:"
+msgstr "Endereço:"
+
+#: ckanext/artesp_theme/templates/static/contact.html:13
+msgid "Phone:"
+msgstr "Telefone:"
+
+#: ckanext/artesp_theme/templates/static/contact.html:14
+msgid "Email:"
+msgstr "E-mail:"
+
+#: ckanext/artesp_theme/templates/static/contact.html:15
+msgid "Hours:"
+msgstr "Horário:"
+
+#: ckanext/artesp_theme/templates/static/contact.html:15
+msgid "Monday to Friday, 9:00 AM to 5:00 PM"
+msgstr "Segunda a Sexta, 9:00 às 17:00"
+
+#: ckanext/artesp_theme/templates/static/contact.html:21
+msgid "Location"
+msgstr "Localização"
+
+#: ckanext/artesp_theme/templates/static/about_ckan.html:10
+msgid "Key Features"
+msgstr "Principais Características"
+
+#: ckanext/artesp_theme/templates/static/about_ckan.html:12
+msgid "Publish and manage datasets with rich metadata"
+msgstr "Publicar e gerenciar conjuntos de dados com metadados ricos"
+
+#: ckanext/artesp_theme/templates/static/about_ckan.html:13
+msgid "Engage with users via comments"
+msgstr "Interagir com usuários através de comentários"
+
+#: ckanext/artesp_theme/templates/static/about_ckan.html:14
+msgid "Customize and extend the platform"
+msgstr "Personalizar e estender a plataforma"
+
+#: ckanext/artesp_theme/templates/static/about_ckan.html:15
+msgid "Federation of data catalogs between instances"
+msgstr "Federação de catálogos de dados entre instâncias"
+
+#: ckanext/artesp_theme/templates/static/about_ckan.html:16
+msgid "Fine-grained access control"
+msgstr "Controle de acesso granular"
+
+#: ckanext/artesp_theme/templates/static/about_ckan.html:17
+msgid "Resource preview for common formats"
+msgstr "Visualização prévia de recursos para formatos comuns"
+
+#: ckanext/artesp_theme/templates/static/about_ckan.html:20
+msgid "About the ARTESP Data Portal"
+msgstr "Sobre o Portal de Dados da ARTESP"
+
+#: ckanext/artesp_theme/templates/static/about_ckan.html:21
+msgid "The ARTESP Data Portal is built on CKAN to provide open access to transportation-related data from the State of São Paulo. Our goal is to make public transportation data more accessible, transparent, and useful for citizens, researchers, and developers."
+msgstr "O Portal de Dados da ARTESP é construído sobre o CKAN para fornecer acesso aberto a dados relacionados ao transporte do Estado de São Paulo. Nosso objetivo é tornar os dados de transporte público mais acessíveis, transparentes e úteis para cidadãos, pesquisadores e desenvolvedores."
+
+#: ckanext/artesp_theme/templates/static/about_ckan.html:23
+msgid "For more information about CKAN, visit"
+msgstr "Para mais informações sobre o CKAN, visite"
