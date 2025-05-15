@@ -340,6 +340,33 @@ a.btn.btn-success[data-module="api-info"] {
   background-color: var(--tw-gray-100) !important;
 }
 
+/* Government-style button for login */
+.btn-governo {
+  background-color: #1351b4 !important; /* São Paulo government blue */
+  color: white !important;
+  border-radius: 42px !important;
+  height: 32px !important;
+  width: 228px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-family: 'Rawline', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-weight: 500 !important;
+  font-size: 0.9rem !important;
+  text-decoration: none !important;
+  transition: background-color 0.2s ease !important;
+  border: none !important;
+  padding: 0 1.5rem !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.btn-governo:hover,
+.btn-governo:focus {
+  background-color: #0c3d8a !important; /* Darker blue on hover */
+  color: white !important;
+  text-decoration: none !important;
+}
+
 /* Override default link styles - aggressive override for #206b82 */
 a.tag, a.pill, a.label,
 .popular-tags a.tag,
@@ -1122,6 +1149,7 @@ h1, h2, h3, h4, h5, h6,
   margin: 0;
   padding: 0;
   list-style: none;
+  align-items: center;
 }
 
 .user-info {
