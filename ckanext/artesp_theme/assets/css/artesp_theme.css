@@ -1271,18 +1271,20 @@ h1, h2, h3, h4, h5, h6,
 
 .section-title {
   font-family: 'Rawline', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-  color: var(--primary);
+  color: #333333;
   font-size: 1.75rem;
   font-weight: 600;
   margin-bottom: 2rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 2px solid var(--light-red);
+  padding-left: 15px;
+  border-left: 5px solid var(--primary);
   display: flex;
   align-items: center;
+  line-height: 1.2;
 }
 
 .section-title i {
   margin-right: 0.5rem;
+  margin-left: -5px;
 }
 
 .featured-groups-container {
@@ -1678,17 +1680,9 @@ h1, h2, h3, h4, h5, h6,
   margin: 0;
   position: relative;
   display: inline-block;
-  padding-bottom: 10px;
-}
-
-.section-title::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background-color: var(--primary);
+  padding-left: 15px;
+  border-left: 5px solid var(--primary);
+  line-height: 1.2;
 }
 
 .view-all-link {
@@ -1942,17 +1936,9 @@ h1, h2, h3, h4, h5, h6,
   margin-bottom: 1rem;
   display: inline-block;
   position: relative;
-  padding-bottom: 10px;
-}
-
-.stats-title::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background-color: var(--primary);
+  padding-left: 18px;
+  border-left: 6px solid var(--primary);
+  line-height: 1.2;
 }
 
 .stats-subtitle {
@@ -2138,6 +2124,12 @@ h1, h2, h3, h4, h5, h6,
     height: 140px;
   }
 
+  .section-title, .stats-title {
+    font-size: 1.5rem;
+    padding-left: 12px;
+    border-left-width: 4px;
+  }
+
   .modern-hero {
     padding: 3rem 0 1.5rem;
     background-position: center 20%;
@@ -2213,6 +2205,12 @@ h1, h2, h3, h4, h5, h6,
 
   .featured-groups-container {
     grid-template-columns: 1fr;
+  }
+
+  .section-title, .stats-title {
+    font-size: 1.3rem;
+    padding-left: 10px;
+    border-left-width: 3px;
   }
 
   .modern-hero {
