@@ -3,9 +3,9 @@
 <div class="latest-datasets-section">
   <div class="section-header">
     <h2 class="section-title">{{ _('Latest Datasets') }}</h2>
-    <a href="{% url_for 'dataset.search' %}" class="view-all-link">{{ _('View all datasets') }} <i class="fa fa-arrow-right"></i></a>
+    <a href="{% url_for 'dataset.search' %}" class="view-all-link">{{ _('View all datasets') }} <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
   </div>
-  
+
   <div class="latest-datasets-container">
     {% if latest_datasets %}
       {% for dataset in latest_datasets %}
@@ -14,23 +14,23 @@
             <h3 class="dataset-title">
               <a href="{{ h.url_for('dataset.read', id=dataset.name) }}">{{ dataset.title or dataset.name }}</a>
             </h3>
-            
+
             <div class="dataset-meta">
               <span class="dataset-date">
-                <i class="fa fa-calendar"></i> {{ h.render_datetime(dataset.metadata_created, date_format='%d/%m/%Y') }}
+                <i class="fa fa-calendar" aria-hidden="true"></i> {{ h.render_datetime(dataset.metadata_created, date_format='%d/%m/%Y') }}
               </span>
-              
+
               {% if dataset.organization %}
                 <span class="dataset-org">
-                  <i class="fa fa-building-o"></i> {{ dataset.organization.title or dataset.organization.name }}
+                  <i class="fa fa-building-o" aria-hidden="true"></i> {{ dataset.organization.title or dataset.organization.name }}
                 </span>
               {% endif %}
-              
+
               <span class="dataset-resources">
-                <i class="fa fa-files-o"></i> {{ dataset.resources|length }} {{ _('Resources') }}
+                <i class="fa fa-files-o" aria-hidden="true"></i> {{ dataset.resources|length }} {{ _('Resources') }}
               </span>
             </div>
-            
+
             <div class="dataset-description">
               {% if dataset.notes %}
                 {{ h.markdown_extract(dataset.notes, 150) }}
@@ -38,7 +38,7 @@
                 <p class="empty">{{ _('No description provided.') }}</p>
               {% endif %}
             </div>
-            
+
             {% if dataset.tags and dataset.tags|length > 0 %}
               <div class="dataset-tags">
                 {% for tag in dataset.tags %}

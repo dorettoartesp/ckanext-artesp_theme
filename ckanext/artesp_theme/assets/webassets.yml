@@ -1,17 +1,14 @@
 artesp-theme-js:
   filter: rjsmin
-  output: ckanext-artesp_theme/%(version)s-artesp_theme.js
+  output: ckanext-artesp_theme/artesp_theme.js
   contents:
-    - js/govsp-header.js
+    - js/placeholder.js
   extra:
     preload:
       - base/main
-
 artesp-theme-css:
   filter: cssrewrite
-  output: ckanext-artesp_theme/%(version)s-artesp_theme.css
+  output: ckanext-artesp_theme/artesp_theme.css
   contents:
     - css/artesp_theme.css
     - css/user.css
-    - css/govsp-header.css
-    - css/govsp-top-padrao.css

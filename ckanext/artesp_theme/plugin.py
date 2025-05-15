@@ -1,5 +1,6 @@
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
+import os.path
 
 
 # import ckanext.artesp_theme.cli as cli
@@ -14,6 +15,7 @@ class ArtespThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IBlueprint)
+    plugins.implements(plugins.ITranslation)
 
     # plugins.implements(plugins.IAuthFunctions)
     # plugins.implements(plugins.IActions)
@@ -58,4 +60,18 @@ class ArtespThemePlugin(plugins.SingletonPlugin):
 
     # def get_validators(self):
     #     return validators.get_validators()
+
+    # ITranslation
+
+    def i18n_directory(self):
+        """Return the path to the translation directory."""
+        return os.path.join(os.path.dirname(__file__), 'i18n')
+
+    def i18n_locales(self):
+        """Return a list of available locales."""
+        return ['pt_BR']
+
+    def i18n_domain(self):
+        """Return the gettext domain for this plugin."""
+        return 'ckanext-artesp_theme'
 

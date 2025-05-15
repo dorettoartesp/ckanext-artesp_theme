@@ -1,17 +1,19 @@
 :root {
-  --primary: #c00000;
-  --secondary: #000000;
-  --accent: #8b0000;
+  /* Paleta Principal */
+  --primary: #FF161F; /* Vermelho (Pantone 485 C) */
+  --secondary: #034EA2; /* Azul (Pantone 2955 C) */
+  --accent: #0B9247; /* Verde (Pantone 347 C) */
+  --highlight: #FBB900; /* Amarelo (Pantone 123 C) */
   --light-red: #ffeeee;
 
-  /* Gray variations */
-  --gray-darkest: #222222;
+  /* Neutros / Supporting */
+  --gray-darkest: #000000; /* Preto (Pantone Black) */
   --gray-darker: #333333;
-  --gray-dark: #444444;
-  --gray-medium: #666666;
-  --gray-light: #999999;
-  --gray-lighter: #cccccc;
-  --gray-lightest: #f5f5f5;
+  --gray-dark: #808080; /* Cinza Escuro */
+  --gray-medium: #808080; /* Cinza Escuro */
+  --gray-light: #BFBFBF; /* Cinza Claro */
+  --gray-lighter: #BFBFBF; /* Cinza Claro */
+  --gray-lightest: #FFFFFF; /* Branco */
 
   /* Cool gray variations */
   --cool-gray-darkest: #2d3033;
@@ -31,61 +33,65 @@
   --warm-gray-lighter: #d6d3d1;
   --warm-gray-lightest: #f5f5f4;
 
-  /* Tailwind-style badge colors */
+  /* Tailwind-style badge colors - Updated with brand colors */
   --tw-gray-50: #f9fafb;
   --tw-gray-100: #f3f4f6;
   --tw-gray-200: #e5e7eb;
   --tw-gray-300: #d1d5db;
-  --tw-gray-400: #9ca3af;
-  --tw-gray-500: #6b7280;
+  --tw-gray-400: #BFBFBF; /* Cinza Claro */
+  --tw-gray-500: #808080; /* Cinza Escuro */
   --tw-gray-600: #4b5563;
   --tw-gray-700: #374151;
   --tw-gray-800: #1f2937;
-  --tw-gray-900: #111827;
+  --tw-gray-900: #000000; /* Preto */
 
-  --tw-red-50: #fef2f2;
-  --tw-red-100: #fee2e2;
-  --tw-red-200: #fecaca;
-  --tw-red-300: #fca5a5;
-  --tw-red-400: #f87171;
-  --tw-red-500: #ef4444;
-  --tw-red-600: #dc2626;
-  --tw-red-700: #b91c1c;
-  --tw-red-800: #991b1b;
-  --tw-red-900: #7f1d1d;
+  /* Red - Vermelho (Pantone 485 C) */
+  --tw-red-50: #fff5f5;
+  --tw-red-100: #ffe0e0;
+  --tw-red-200: #ffc1c1;
+  --tw-red-300: #ffa3a3;
+  --tw-red-400: #ff8484;
+  --tw-red-500: #ff6565;
+  --tw-red-600: #FF161F; /* Primary - Vermelho */
+  --tw-red-700: #e60000;
+  --tw-red-800: #cc0000;
+  --tw-red-900: #990000;
 
-  --tw-yellow-50: #fffbeb;
-  --tw-yellow-100: #fef3c7;
-  --tw-yellow-200: #fde68a;
-  --tw-yellow-300: #fcd34d;
-  --tw-yellow-400: #fbbf24;
-  --tw-yellow-500: #f59e0b;
-  --tw-yellow-600: #d97706;
-  --tw-yellow-700: #b45309;
-  --tw-yellow-800: #92400e;
-  --tw-yellow-900: #78350f;
+  /* Yellow - Amarelo (Pantone 123 C) */
+  --tw-yellow-50: #fffdf5;
+  --tw-yellow-100: #fff9e0;
+  --tw-yellow-200: #fff3c1;
+  --tw-yellow-300: #ffeda3;
+  --tw-yellow-400: #ffe784;
+  --tw-yellow-500: #ffd165;
+  --tw-yellow-600: #FBB900; /* Highlight - Amarelo */
+  --tw-yellow-700: #e6a800;
+  --tw-yellow-800: #cc9600;
+  --tw-yellow-900: #997000;
 
-  --tw-green-50: #ecfdf5;
-  --tw-green-100: #d1fae5;
-  --tw-green-200: #a7f3d0;
-  --tw-green-300: #6ee7b7;
-  --tw-green-400: #34d399;
-  --tw-green-500: #10b981;
-  --tw-green-600: #059669;
+  /* Green - Verde (Pantone 347 C) */
+  --tw-green-50: #f0fdf4;
+  --tw-green-100: #dcfce7;
+  --tw-green-200: #bbf7d0;
+  --tw-green-300: #86efac;
+  --tw-green-400: #4ade80;
+  --tw-green-500: #22c55e;
+  --tw-green-600: #0B9247; /* Accent - Verde */
   --tw-green-700: #047857;
   --tw-green-800: #065f46;
   --tw-green-900: #064e3b;
 
+  /* Blue - Azul (Pantone 2955 C) */
   --tw-blue-50: #eff6ff;
   --tw-blue-100: #dbeafe;
   --tw-blue-200: #bfdbfe;
   --tw-blue-300: #93c5fd;
   --tw-blue-400: #60a5fa;
   --tw-blue-500: #3b82f6;
-  --tw-blue-600: #2563eb;
-  --tw-blue-700: #1d4ed8;
-  --tw-blue-800: #1e40af;
-  --tw-blue-900: #1e3a8a;
+  --tw-blue-600: #034EA2; /* Secondary - Azul */
+  --tw-blue-700: #0244a1;
+  --tw-blue-800: #01397f;
+  --tw-blue-900: #002e5e;
 }
 
 /* Fix container width */
@@ -164,7 +170,7 @@
 .page-heading {
   font-size: 2.2rem;
   font-weight: 700;
-  color: var(--secondary);
+  color: #333333; /* Dark gray instead of blue */
   margin-bottom: 2rem;
   position: relative;
   padding-bottom: 1rem;
@@ -189,7 +195,7 @@
 .static-content h2 {
   font-size: 1.6rem;
   font-weight: 600;
-  color: var(--secondary);
+  color: #333333; /* Dark gray instead of blue */
   margin: 2rem 0 1rem;
 }
 
@@ -217,11 +223,11 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Override CKAN default greenish colors */
+/* Override CKAN default greenish colors with brand colors */
 .btn-success, .btn-success:hover, .btn-success:focus, .btn-success:active,
 .btn-primary, .btn-primary:hover, .btn-primary:focus, .btn-primary:active,
 a.btn-success[data-module="api-info"], a.btn-success[data-module="api-info"]:hover, a.btn-success[data-module="api-info"]:focus, a.btn-success[data-module="api-info"]:active {
-  background-color: var(--primary) !important;
+  background-color: var(--primary) !important; /* Vermelho */
   border-color: var(--primary) !important;
   color: #ffffff !important;
 }
@@ -741,104 +747,104 @@ a.tag, a.pill, a.label,
 }
 
 .badge-primary {
-  color: var(--tw-red-800);
-  background-color: var(--tw-red-100);
-  box-shadow: inset 0 0 0 1px rgba(153, 27, 27, 0.1);
+  color: #FFFFFF;
+  background-color: var(--primary); /* Vermelho */
+  box-shadow: inset 0 0 0 1px rgba(255, 22, 31, 0.2);
 }
 
 .badge-success {
-  color: var(--tw-green-800);
-  background-color: var(--tw-green-100);
-  box-shadow: inset 0 0 0 1px rgba(22, 101, 52, 0.2);
+  color: #FFFFFF;
+  background-color: var(--accent); /* Verde */
+  box-shadow: inset 0 0 0 1px rgba(11, 146, 71, 0.2);
 }
 
 .badge-info {
-  color: var(--tw-blue-800);
-  background-color: var(--tw-blue-100);
-  box-shadow: inset 0 0 0 1px rgba(30, 64, 175, 0.1);
+  color: #FFFFFF;
+  background-color: #808080; /* Gray instead of blue */
+  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.2);
 }
 
 .badge-warning {
-  color: var(--tw-yellow-800);
-  background-color: var(--tw-yellow-100);
-  box-shadow: inset 0 0 0 1px rgba(133, 77, 14, 0.2);
+  color: #000000;
+  background-color: var(--highlight); /* Amarelo */
+  box-shadow: inset 0 0 0 1px rgba(251, 185, 0, 0.2);
 }
 
 .badge-danger {
-  color: var(--tw-red-800);
-  background-color: var(--tw-red-100);
-  box-shadow: inset 0 0 0 1px rgba(153, 27, 27, 0.1);
+  color: #FFFFFF;
+  background-color: var(--primary); /* Vermelho */
+  box-shadow: inset 0 0 0 1px rgba(255, 22, 31, 0.2);
 }
 
-/* Format badges with Tailwind-style colors */
+/* Format badges with brand colors */
 .badge[data-format=html],
 .badge[data-format*=html] {
-  background-color: var(--tw-blue-100) !important;
-  color: var(--tw-blue-800) !important;
-  box-shadow: inset 0 0 0 1px rgba(30, 64, 175, 0.1) !important;
+  background-color: rgba(128, 128, 128, 0.15) !important; /* Gray */
+  color: #444444 !important;
+  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.2) !important;
 }
 
 .badge[data-format=png],
 .badge[data-format*=png] {
-  background-color: var(--tw-blue-100) !important;
-  color: var(--tw-blue-800) !important;
-  box-shadow: inset 0 0 0 1px rgba(30, 64, 175, 0.1) !important;
+  background-color: rgba(128, 128, 128, 0.15) !important; /* Gray */
+  color: #444444 !important;
+  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.2) !important;
 }
 
 .badge[data-format=json],
 .badge[data-format*=json] {
-  background-color: var(--tw-red-100) !important;
-  color: var(--tw-red-800) !important;
-  box-shadow: inset 0 0 0 1px rgba(153, 27, 27, 0.1) !important;
+  background-color: rgba(255, 22, 31, 0.15) !important; /* Vermelho */
+  color: var(--primary) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 22, 31, 0.2) !important;
 }
 
 .badge[data-format=xml],
 .badge[data-format*=xml] {
-  background-color: var(--tw-red-100) !important;
-  color: var(--tw-red-800) !important;
-  box-shadow: inset 0 0 0 1px rgba(153, 27, 27, 0.1) !important;
+  background-color: rgba(255, 22, 31, 0.15) !important; /* Vermelho */
+  color: var(--primary) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 22, 31, 0.2) !important;
 }
 
 .badge[data-format=text],
 .badge[data-format*=text] {
-  background-color: var(--tw-blue-100) !important;
-  color: var(--tw-blue-800) !important;
-  box-shadow: inset 0 0 0 1px rgba(30, 64, 175, 0.1) !important;
+  background-color: rgba(128, 128, 128, 0.15) !important; /* Gray */
+  color: #444444 !important;
+  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.2) !important;
 }
 
 .badge[data-format=csv],
 .badge[data-format*=csv] {
-  background-color: var(--tw-yellow-100) !important;
-  color: var(--tw-yellow-800) !important;
-  box-shadow: inset 0 0 0 1px rgba(133, 77, 14, 0.2) !important;
+  background-color: rgba(251, 185, 0, 0.15) !important; /* Amarelo */
+  color: #997000 !important;
+  box-shadow: inset 0 0 0 1px rgba(251, 185, 0, 0.2) !important;
 }
 
 .badge[data-format=xls],
 .badge[data-format*=xls] {
-  background-color: var(--tw-green-100) !important;
-  color: var(--tw-green-800) !important;
-  box-shadow: inset 0 0 0 1px rgba(22, 101, 52, 0.2) !important;
+  background-color: rgba(11, 146, 71, 0.15) !important; /* Verde */
+  color: var(--accent) !important;
+  box-shadow: inset 0 0 0 1px rgba(11, 146, 71, 0.2) !important;
 }
 
 .badge[data-format=zip],
 .badge[data-format*=zip] {
-  background-color: var(--tw-gray-100) !important;
-  color: var(--tw-gray-700) !important;
-  box-shadow: inset 0 0 0 1px rgba(75, 85, 99, 0.1) !important;
+  background-color: rgba(128, 128, 128, 0.15) !important; /* Cinza */
+  color: var(--gray-dark) !important;
+  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.2) !important;
 }
 
 .badge[data-format=api],
 .badge[data-format*=api] {
-  background-color: #fcf4ff !important;
-  color: #8b5cf6 !important;
-  box-shadow: inset 0 0 0 1px rgba(139, 92, 246, 0.1) !important;
+  background-color: rgba(128, 128, 128, 0.15) !important; /* Gray */
+  color: #444444 !important;
+  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.2) !important;
 }
 
 .badge[data-format=pdf],
 .badge[data-format*=pdf] {
-  background-color: var(--tw-red-100) !important;
-  color: var(--tw-red-800) !important;
-  box-shadow: inset 0 0 0 1px rgba(153, 27, 27, 0.1) !important;
+  background-color: rgba(255, 22, 31, 0.15) !important; /* Vermelho */
+  color: var(--primary) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 22, 31, 0.2) !important;
 }
 
 .badge[data-format=rdf],
@@ -846,9 +852,9 @@ a.tag, a.pill, a.label,
 .badge[data-format*=nquad],
 .badge[data-format*=ntriples],
 .badge[data-format*=turtle] {
-  background-color: #e0f2fe !important;
-  color: #0369a1 !important;
-  box-shadow: inset 0 0 0 1px rgba(3, 105, 161, 0.1) !important;
+  background-color: rgba(128, 128, 128, 0.15) !important; /* Gray */
+  color: #444444 !important;
+  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.2) !important;
 }
 
 .badge-default[href]:hover,
@@ -1255,7 +1261,7 @@ body {
 }
 
 .featured-group-title a {
-  color: var(--secondary);
+  color: #333333; /* Dark gray instead of blue */
   text-decoration: none;
   transition: color 0.2s ease;
 }
@@ -1312,7 +1318,7 @@ body {
 }
 
 .btn-view:hover {
-  background-color: var(--primary);
+  background-color: var(--primary); /* Vermelho */
   color: white;
   text-decoration: none;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -1499,8 +1505,8 @@ body {
 }
 
 .homepage .search-input-group .input-group-btn .btn:hover {
-  background-color: var(--accent);
-  border-color: var(--accent);
+  background-color: #e60000; /* Darker red */
+  border-color: #e60000;
 }
 
 .popular-tags {
@@ -1584,7 +1590,7 @@ body {
 .section-title {
   font-size: 1.8rem;
   font-weight: 700;
-  color: var(--secondary);
+  color: #333333; /* Dark gray instead of blue */
   margin: 0;
   position: relative;
   display: inline-block;
@@ -1602,18 +1608,30 @@ body {
 }
 
 .view-all-link {
-  color: var(--primary);
+  color: #444444; /* Dark gray instead of red */
   font-weight: 600;
   text-decoration: none;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.view-all-link .fa {
+  font-size: 0.85rem;
+  transition: transform 0.2s ease;
+  margin-left: 0.25rem;
+  vertical-align: middle;
 }
 
 .view-all-link:hover {
-  color: var(--accent);
+  color: var(--primary); /* Red on hover */
   text-decoration: none;
+}
+
+.view-all-link:hover .fa {
+  transform: translateX(3px);
 }
 
 .latest-datasets-container {
@@ -1637,13 +1655,14 @@ body {
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   overflow: hidden;
   height: 100%;
   display: flex;
   flex-direction: column;
   animation: fadeInUp 0.6s ease-out forwards;
   opacity: 0;
+  border: 1px solid #f0f0f0;
 }
 
 .dataset-card:nth-child(1) {
@@ -1660,11 +1679,12 @@ body {
 
 .dataset-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  border-color: rgba(255, 22, 31, 0.2); /* Light red border on hover */
 }
 
 .dataset-card-content {
-  padding: 1.5rem;
+  padding: 1.75rem;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -1679,23 +1699,27 @@ body {
 }
 
 .dataset-title a {
-  color: var(--secondary);
+  color: #333333; /* Dark gray instead of blue */
   text-decoration: none;
   transition: color 0.2s ease;
+  position: relative;
+  display: inline-block;
 }
 
 .dataset-title a:hover {
-  color: var(--primary);
+  color: var(--primary); /* Red on hover */
   text-decoration: none;
 }
 
 .dataset-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.85rem;
   color: #666;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 1.25rem;
 }
 
 .dataset-date, .dataset-org, .dataset-resources {
@@ -1704,11 +1728,19 @@ body {
   gap: 0.4rem;
 }
 
+.dataset-date .fa, .dataset-org .fa, .dataset-resources .fa {
+  color: #808080; /* Use brand gray color */
+  font-size: 0.9rem;
+  margin-right: 0.25rem;
+  vertical-align: middle;
+}
+
 .dataset-description {
   margin-bottom: 1.5rem;
-  color: #555;
-  line-height: 1.5;
+  color: #444444; /* Darker gray for better readability */
+  line-height: 1.6;
   flex: 1;
+  font-size: 0.95rem;
 }
 
 .dataset-tags {
@@ -1716,20 +1748,59 @@ body {
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid #f0f0f0;
 }
 
 .dataset-tags .tag {
   font-size: 0.8rem;
-  padding: 0.25rem 0.6rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  background-color: #f8f8f8;
+  color: #444444;
+  transition: all 0.2s ease;
+  border: 1px solid #e8e8e8;
+}
+
+.dataset-tags .tag:hover {
+  background-color: #f0f0f0;
+  border-color: rgba(255, 22, 31, 0.3);
+  transform: translateY(-2px);
 }
 
 .no-datasets {
   grid-column: 1 / -1;
   text-align: center;
-  padding: 2rem;
+  padding: 2.5rem;
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f0f0f0;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.no-datasets p {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.no-datasets p {
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.no-datasets p::before {
+  content: "\f119"; /* Font Awesome sad face icon */
+  font-family: "Font Awesome 5 Free";
+  color: #808080;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 @media (max-width: 768px) {
@@ -1802,7 +1873,7 @@ body {
 .stats-title {
   font-size: 2.2rem;
   font-weight: 700;
-  color: var(--secondary);
+  color: #333333; /* Dark gray instead of blue */
   margin-bottom: 1rem;
   display: inline-block;
   position: relative;
@@ -1850,18 +1921,19 @@ body {
   flex: 1;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   background-color: white;
   padding: 1.5rem 2rem;
   border-radius: 10px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   position: relative;
   overflow: hidden;
   min-width: 0;
   animation: fadeInRight 0.8s ease-out forwards;
   opacity: 0;
-  text-align: center;
+  text-align: left;
+  border: 1px solid #f0f0f0;
 }
 
 .stat-item:nth-child(1) {
@@ -1878,7 +1950,8 @@ body {
 
 .stat-item:hover {
   transform: translateY(-10px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+  border-color: rgba(255, 22, 31, 0.2); /* Light red border on hover */
 }
 
 /* Removed greenish line */
@@ -1886,32 +1959,47 @@ body {
 .stat-icon {
   font-size: 1.8rem;
   color: var(--primary);
-  margin-right: 1rem;
+  margin-right: 1.5rem;
   opacity: 0.9;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 3rem;
+  height: 3rem;
+  background-color: rgba(255, 22, 31, 0.1);
+  border-radius: 50%;
+  flex-shrink: 0;
+  position: relative;
+  text-align: center;
+}
+
+.stat-icon .fa {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
 }
 
 .stat-content {
   flex: 1;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   justify-content: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .stat-count {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--secondary);
+  color: #333333; /* Dark gray instead of blue */
   line-height: 1;
   margin-bottom: 0;
 }
 
 .stat-label {
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: #666;
   font-weight: 500;
   text-transform: uppercase;
@@ -1919,6 +2007,7 @@ body {
   display: flex;
   align-items: center;
   white-space: nowrap;
+  margin-top: -0.25rem;
 }
 
 /* Featured sections layout */
@@ -2105,8 +2194,14 @@ body {
   }
 
   .stat-icon {
-    font-size: 2rem;
+    font-size: 1.6rem;
     margin-right: 1rem;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .stat-icon .fa {
+    font-size: 1.3rem;
   }
 
   .stat-count {
@@ -2308,6 +2403,8 @@ body {
   background-color: var(--primary);
   border-color: var(--primary);
 }
+
+/* Remove custom Font Awesome overrides to prevent conflicts with CKAN core */
 
 @media (max-width: 992px) {
   .stats-container {
