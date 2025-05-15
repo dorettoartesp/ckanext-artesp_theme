@@ -1,3 +1,13 @@
+/* ==========================================================================
+   ARTESP Theme - CSS
+   Organized into logical sections for better maintainability
+   ========================================================================== */
+
+/* ==========================================================================
+   SECTION 1: VARIABLES
+   Contains color definitions and other CSS variables
+   ========================================================================== */
+
 :root {
   /* Paleta Principal */
   --primary: #FF161F; /* Vermelho (Pantone 485 C) */
@@ -94,6 +104,11 @@
   --tw-blue-900: #002e5e;
 }
 
+/* ==========================================================================
+   SECTION 2: BASE STYLES
+   Contains base styles, typography, and general elements
+   ========================================================================== */
+
 /* Fix container width */
 .container {
   width: 100%;
@@ -123,6 +138,11 @@
   align-items: center;
   justify-content: center;
 }
+
+/* ==========================================================================
+   SECTION 3: LAYOUT COMPONENTS
+   Contains layout components (header, footer, containers, grid)
+   ========================================================================== */
 
 /* Static Pages Styles */
 .static-page {
@@ -222,6 +242,11 @@
   overflow: hidden;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
+
+/* ==========================================================================
+   SECTION 4: UI COMPONENTS
+   Contains UI components (buttons, forms, cards, alerts, badges)
+   ========================================================================== */
 
 /* Override CKAN default greenish colors with brand colors */
 .btn-success, .btn-success:hover, .btn-success:focus, .btn-success:active,
@@ -717,6 +742,11 @@ a.tag, a.pill, a.label,
 .follow_button {
   color: var(--primary) !important;
 }
+
+/* ==========================================================================
+   SECTION 5: PAGE-SPECIFIC STYLES
+   Contains page-specific styles (homepage, dataset pages, organization pages)
+   ========================================================================== */
 
 /* Improve badge styling - Tailwind style */
 .badge {
