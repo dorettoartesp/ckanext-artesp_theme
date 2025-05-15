@@ -10,5 +10,5 @@ artesp-theme-css:
   filter: cssrewrite
   output: ckanext-artesp_theme/artesp_theme.css
   contents:
-    - css/main.css
+    - css/artesp_theme.css
     - css/user.css
