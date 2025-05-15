@@ -8,34 +8,37 @@
     <p class="stats-subtitle">{{ _('Explore os dados disponíveis no Portal de Dados Abertos da ARTESP') }}</p>
   </div>
 
-  <div class="stats-container">
-    <div class="stat-item">
-      <div class="stat-icon">
-        <i class="fa fa-database" aria-hidden="true"></i>
+  <div class="stats-row">
+    <!-- DATASET CARD -->
+    <div class="stats-card stats-card-blue">
+      <div class="stats-card-icon">
+        <i class="fa fa-database"></i>
       </div>
-      <div class="stat-content">
-        <div class="stat-count">{{ dataset_count }}</div>
-        <div class="stat-label">{% if dataset_count == 1 %}{{ _('Dataset') }}{% else %}{{ _('Datasets') }}{% endif %}</div>
-      </div>
-    </div>
-
-    <div class="stat-item">
-      <div class="stat-icon">
-        <i class="fa fa-file-text" aria-hidden="true"></i>
-      </div>
-      <div class="stat-content">
-        <div class="stat-count">{{ resource_count }}</div>
-        <div class="stat-label">{% if resource_count == 1 %}{{ _('Resource') }}{% else %}{{ _('Resources') }}{% endif %}</div>
+      <div class="stats-card-content">
+        <div class="stats-card-label">{% if dataset_count == 1 %}{{ _('Dataset') }}{% else %}{{ _('Datasets') }}{% endif %}</div>
+        <div class="stats-card-count">{{ dataset_count }}</div>
       </div>
     </div>
 
-    <div class="stat-item">
-      <div class="stat-icon">
-        <i class="fa fa-building" aria-hidden="true"></i>
+    <!-- RESOURCE CARD -->
+    <div class="stats-card stats-card-green">
+      <div class="stats-card-icon">
+        <i class="fa fa-file-text"></i>
       </div>
-      <div class="stat-content">
-        <div class="stat-count">{{ organization_count }}</div>
-        <div class="stat-label">{% if organization_count == 1 %}{{ _('Organization') }}{% else %}{{ _('Organizations') }}{% endif %}</div>
+      <div class="stats-card-content">
+        <div class="stats-card-label">{% if resource_count == 1 %}{{ _('Resource') }}{% else %}{{ _('Resources') }}{% endif %}</div>
+        <div class="stats-card-count">{{ resource_count }}</div>
+      </div>
+    </div>
+
+    <!-- ORGANIZATION CARD -->
+    <div class="stats-card stats-card-yellow">
+      <div class="stats-card-icon">
+        <i class="fa fa-building"></i>
+      </div>
+      <div class="stats-card-content">
+        <div class="stats-card-label">{% if organization_count == 1 %}{{ _('Organization') }}{% else %}{{ _('Organizations') }}{% endif %}</div>
+        <div class="stats-card-count">{{ organization_count }}</div>
       </div>
     </div>
   </div>

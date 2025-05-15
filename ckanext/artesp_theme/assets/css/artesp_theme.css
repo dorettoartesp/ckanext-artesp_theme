@@ -1482,9 +1482,9 @@ h1, h2, h3, h4, h5, h6,
 
 .search-heading {
   font-family: 'Rawline', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 2.5rem; /* Increased from 2rem to 2.5rem */
+  font-size: 1.9rem; /* Decreased from 2.2rem to 1.9rem */
   font-weight: 700;
-  margin-bottom: 2rem; /* Increased from 1.75rem to 2rem */
+  margin-bottom: 3rem;
   color: #333333;
   text-align: center;
   line-height: 1.3;
@@ -1644,8 +1644,8 @@ h1, h2, h3, h4, h5, h6,
 /* Latest datasets section styling */
 .latest-datasets-wrapper {
   margin: 0;
-  background-color: #f5f5f5;
-  padding: 4rem 0;
+  background-color: #ffffff; /* Changed from #f5f5f5 to white */
+  padding: 3rem 0 4rem 0; /* Increased padding to 4rem for top and bottom */
   position: relative;
 }
 
@@ -1657,7 +1657,7 @@ h1, h2, h3, h4, h5, h6,
   transform: translateX(-50%);
   width: 150px;
   height: 3px;
-  background-color: #f5f5f5;
+  background-color: #ffffff; /* Changed from #f5f5f5 to white */
 }
 
 .latest-datasets-section {
@@ -1996,117 +1996,204 @@ h1, h2, h3, h4, h5, h6,
   margin: 0 auto;
 }
 
+/* Stats container - using float-based layout */
 .stats-container {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  flex-wrap: nowrap;
+  width: 100%;
   max-width: 1000px;
   margin: 0 auto;
 }
 
-@keyframes fadeInRight {
+.stats-row {
+  margin: 0 -10px; /* Negative margin to offset column padding */
+}
+
+.stat-col {
+  float: left;
+  width: 33.333%;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+.clearfix {
+  clear: both;
+}
+
+@keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateX(30px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
   }
 }
 
+/* Stat item styling based on Crimson Data Beacon */
 .stat-item {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
   background-color: white;
-  padding: 1.5rem 2rem;
-  border-radius: 10px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.25s ease;
   position: relative;
   overflow: hidden;
-  min-width: 0;
-  animation: fadeInRight 0.8s ease-out forwards;
+  animation: fadeInUp 0.6s ease-out forwards;
   opacity: 0;
+  border: 1px solid rgba(0, 0, 0, 0.08);
   text-align: left;
-  border: 1px solid #f0f0f0;
+  height: 100%;
 }
 
-.stat-item:nth-child(1) {
+/* Color variations for each stat item */
+.stat-item-blue {
+  animation-delay: 0.1s;
+  border-left: 4px solid var(--secondary); /* Blue left border */
+}
+
+.stat-item-green {
   animation-delay: 0.2s;
+  border-left: 4px solid var(--accent); /* Green left border */
 }
 
-.stat-item:nth-child(2) {
-  animation-delay: 0.4s;
-}
-
-.stat-item:nth-child(3) {
-  animation-delay: 0.6s;
+.stat-item-yellow {
+  animation-delay: 0.3s;
+  border-left: 4px solid var(--highlight); /* Yellow left border */
 }
 
 .stat-item:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
-  border-color: rgba(255, 22, 31, 0.2); /* Light red border on hover */
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* Removed greenish line */
-
 .stat-icon {
-  font-size: 1.8rem;
-  color: var(--primary);
-  margin-right: 1.5rem;
-  opacity: 0.9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 3rem;
-  height: 3rem;
-  background-color: rgba(255, 22, 31, 0.1);
-  border-radius: 50%;
-  flex-shrink: 0;
-  position: relative;
+  float: left;
+  width: 2.5rem;
+  height: 2.5rem;
   text-align: center;
+  margin-right: 1rem;
+}
+
+.stat-item-blue .stat-icon {
+  color: var(--secondary); /* Blue icon */
+}
+
+.stat-item-green .stat-icon {
+  color: var(--accent); /* Green icon */
+}
+
+.stat-item-yellow .stat-icon {
+  color: var(--highlight); /* Yellow icon */
 }
 
 .stat-icon .fa {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   font-size: 1.5rem;
+  line-height: 2.5rem;
 }
 
 .stat-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 0.5rem;
+  margin-left: 3.5rem;
+  text-align: left;
 }
 
 .stat-count {
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: 700;
-  color: #333333; /* Dark gray instead of blue */
-  line-height: 1;
-  margin-bottom: 0;
+  color: #222222;
+  line-height: 1.2;
+  margin: 0;
 }
 
 .stat-label {
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: #666;
   font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
-  margin-top: -0.25rem;
+  margin: 0 0 0.25rem 0;
+}
+
+/* NEW STATS CARDS STYLING */
+.stats-row {
+  display: table;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  border-spacing: 20px 0;
+  table-layout: fixed;
+}
+
+.stats-card {
+  display: table-cell;
+  width: 33.33%;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  position: relative;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  transition: all 0.25s ease;
+  vertical-align: middle;
+}
+
+.stats-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Color variations */
+.stats-card-blue {
+  border-left: 4px solid var(--secondary); /* Blue left border */
+}
+
+.stats-card-green {
+  border-left: 4px solid var(--accent); /* Green left border */
+}
+
+.stats-card-yellow {
+  border-left: 4px solid var(--highlight); /* Yellow left border */
+}
+
+.stats-card-icon {
+  float: left;
+  width: 2.5rem;
+  height: 2.5rem;
+  text-align: center;
+  margin-right: 1rem;
+}
+
+.stats-card-blue .stats-card-icon {
+  color: var(--secondary); /* Blue icon */
+}
+
+.stats-card-green .stats-card-icon {
+  color: var(--accent); /* Green icon */
+}
+
+.stats-card-yellow .stats-card-icon {
+  color: var(--highlight); /* Yellow icon */
+}
+
+.stats-card-icon .fa {
+  font-size: 1.5rem;
+  line-height: 2.5rem;
+}
+
+.stats-card-content {
+  margin-left: 3.5rem;
+  text-align: left;
+}
+
+.stats-card-count {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #222222;
+  line-height: 1.2;
+}
+
+.stats-card-label {
+  font-size: 1rem;
+  color: #666;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
 }
 
 /* Featured sections layout */
@@ -2188,7 +2275,7 @@ h1, h2, h3, h4, h5, h6,
   }
 
   .search-heading {
-    font-size: 2rem; /* Adjusted for tablet */
+    font-size: 1.6rem; /* Adjusted for tablet, decreased from 1.8rem */
     margin-bottom: 1.75rem;
   }
 
@@ -2197,20 +2284,30 @@ h1, h2, h3, h4, h5, h6,
     height: 55px;
   }
 
-  .stats-container {
-    gap: 2rem;
+  .stats-row {
+    max-width: 95%;
+    border-spacing: 15px 0;
   }
 
-  .stat-item {
-    padding: 1.5rem;
+  .stats-card {
+    padding: 1.25rem;
+  }
+
+  .stat-icon {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  .stat-icon .fa {
+    font-size: 1.3rem;
   }
 
   .stat-count {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
   }
 
   .stat-label {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
   }
 
   .nav-menu {
@@ -2291,7 +2388,6 @@ h1, h2, h3, h4, h5, h6,
     font-size: 0.7rem;
     padding: 0.15rem 0.5rem;
   }
-}
 
   .modern-hero {
     padding: 3rem 0 2rem; /* Adjusted for mobile */
@@ -2303,7 +2399,7 @@ h1, h2, h3, h4, h5, h6,
   }
 
   .search-heading {
-    font-size: 1.8rem; /* Adjusted for mobile */
+    font-size: 1.4rem; /* Adjusted for mobile, decreased from 1.6rem */
     margin-bottom: 1.5rem;
   }
 
@@ -2326,33 +2422,35 @@ h1, h2, h3, h4, h5, h6,
     margin-right: 0;
   }
 
-  .stats-container {
-    flex-direction: column;
-    gap: 1rem;
+  .stats-row {
+    display: block;
+    width: 100%;
+    max-width: 100%;
   }
 
-  .stat-item {
+  .stats-card {
+    display: block;
     width: 100%;
-    padding: 1.25rem;
+    margin-bottom: 15px;
+    padding: 1rem;
   }
 
   .stat-icon {
-    font-size: 1.6rem;
-    margin-right: 1rem;
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2rem;
+    height: 2rem;
+    margin-right: 0.75rem;
   }
 
   .stat-icon .fa {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   }
 
   .stat-count {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
   }
 
   .stat-label {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
   }
 
   .logo-container {

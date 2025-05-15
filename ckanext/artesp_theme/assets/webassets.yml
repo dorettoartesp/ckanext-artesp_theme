@@ -3,6 +3,7 @@ artesp-theme-js:
   output: ckanext-artesp_theme/artesp_theme.js
   contents:
     - js/placeholder.js
+    - js/stats-counter.js
   extra:
     preload:
       - base/main
@@ -12,3 +13,4 @@ artesp-theme-css:
   contents:
     - css/artesp_theme.css
     - css/user.css
+    - css/stats-cards.css
