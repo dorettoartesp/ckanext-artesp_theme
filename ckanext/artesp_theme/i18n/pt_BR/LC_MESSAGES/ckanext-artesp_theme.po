@@ -352,3 +352,151 @@ msgstr "Nenhuma descrição fornecida."
 
 msgid "No datasets found."
 msgstr "Nenhum conjunto de dados encontrado."
+
+#: ckanext/artesp_theme/templates/emails/invite_user.txt:2
+msgid "Dear {{ user_name }},"
+msgstr "Prezado(a) {{ user_name }},"
+
+#: ckanext/artesp_theme/templates/emails/invite_user.txt:4
+msgid "You have been invited to {{ site_title }}."
+msgstr "Você foi convidado(a) para o {{ site_title }}."
+
+#: ckanext/artesp_theme/templates/emails/invite_user.txt:6
+msgid "A user has already been created for you with the username {{ user_name }}. You can change it later."
+msgstr "Um usuário já foi criado para você com o nome de usuário {{ user_name }}. Você pode alterá-lo posteriormente."
+
+#: ckanext/artesp_theme/templates/emails/invite_user.txt:8
+msgid "You have been added to the {{ group_type }} {{ group_title }} with the following role: {{ role_name }}."
+msgstr "Você foi adicionado(a) ao {{ group_type }} {{ group_title }} com a seguinte função: {{ role_name }}."
+
+#: ckanext/artesp_theme/templates/emails/invite_user.txt:10
+msgid "To accept this invite, please reset your password at:"
+msgstr "Para aceitar este convite, por favor redefina sua senha em:"
+
+#: ckanext/artesp_theme/templates/emails/invite_user.txt:15
+msgid "Have a nice day."
+msgstr "Tenha um bom dia."
+
+#: ckanext/artesp_theme/templates/emails/invite_user.txt:18
+msgid "Message sent by {{ site_title }} ({{ site_url }})"
+msgstr "Mensagem enviada por {{ site_title }} ({{ site_url }})"
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:4
+msgid "About ARTESP"
+msgstr "Sobre a ARTESP"
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:6
+msgid "Established by <strong>Complementary Law No. 914 of January 14, 2002</strong> and regulated by <strong>Decree No. 46,708 of April 22, 2002</strong>, the <strong>São Paulo State Transportation Regulatory Agency (ARTESP)</strong> is a special-regime autonomous authority with budgetary, financial, technical, and administrative independence. Its mandate is to regulate, supervise, and foster the quality of public transportation services delegated by the State Government."
+msgstr "Estabelecida pela <strong>Lei Complementar nº 914 de 14 de janeiro de 2002</strong> e regulamentada pelo <strong>Decreto nº 46.708 de 22 de abril de 2002</strong>, a <strong>Agência Reguladora de Serviços Públicos Delegados de Transporte do Estado de São Paulo (ARTESP)</strong> é uma autarquia de regime especial com independência orçamentária, financeira, técnica e administrativa. Seu mandato é regular, supervisionar e fomentar a qualidade dos serviços públicos de transporte delegados pelo Governo do Estado."
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:16
+msgid "Mission and Values"
+msgstr "Missão e Valores"
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:18
+msgid "ARTESP works to ensure <strong>safety, efficiency, innovation, and sustainability</strong> across every transportation mode under its jurisdiction, while promoting <strong>transparency and civic participation</strong> through open access to regulatory information and data."
+msgstr "A ARTESP trabalha para garantir <strong>segurança, eficiência, inovação e sustentabilidade</strong> em todos os modos de transporte sob sua jurisdição, promovendo <strong>transparência e participação cívica</strong> através do acesso aberto a informações e dados regulatórios."
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:25
+msgid "Areas of Operation"
+msgstr "Áreas de Atuação"
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:28
+msgid "<strong>Tolled Highways</strong> — Oversees <em>21 concessionaires</em> responsible for <em>more than 11,000 km</em> of highways spanning <em>335 municipalities</em> in São Paulo State."
+msgstr "<strong>Rodovias Pedagiadas</strong> — Supervisiona <em>21 concessionárias</em> responsáveis por <em>mais de 11.000 km</em> de rodovias abrangendo <em>335 municípios</em> no Estado de São Paulo."
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:32
+msgid "<strong>Inter-city Bus Transport</strong> — Regulates and inspects roughly <em>600 companies</em> operating scheduled coach services between cities, combats illegal transport, manages fares, and safeguards passenger safety."
+msgstr "<strong>Transporte Intermunicipal de Ônibus</strong> — Regula e fiscaliza aproximadamente <em>600 empresas</em> que operam serviços regulares de ônibus entre cidades, combate o transporte ilegal, gerencia tarifas e garante a segurança dos passageiros."
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:37
+msgid "<strong>Regional Airports</strong> — Supervises the concession and operation of <em>27 regional airports</em>, promoting executive aviation and statewide logistics integration."
+msgstr "<strong>Aeroportos Regionais</strong> — Supervisiona a concessão e operação de <em>27 aeroportos regionais</em>, promovendo a aviação executiva e a integração logística em todo o estado."
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:41
+msgid "<strong>Charter Services, Terminals, and Waterway Crossings</strong> — Sets standards, monitors contracts, and guarantees proper delivery of complementary transport services."
+msgstr "<strong>Serviços de Fretamento, Terminais e Travessias Hidroviárias</strong> — Estabelece padrões, monitora contratos e garante a entrega adequada de serviços complementares de transporte."
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:48
+msgid "Commitment to Transparency and Open Data"
+msgstr "Compromisso com Transparência e Dados Abertos"
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:50
+msgid "As part of the São Paulo State open-government strategy, ARTESP maintains its <strong>Open Data Portal</strong>, freely providing datasets that include:"
+msgstr "Como parte da estratégia de governo aberto do Estado de São Paulo, a ARTESP mantém seu <strong>Portal de Dados Abertos</strong>, fornecendo gratuitamente conjuntos de dados que incluem:"
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:54
+msgid "Highway operating conditions (incidents, traffic volumes, investments)."
+msgstr "Condições operacionais das rodovias (incidentes, volumes de tráfego, investimentos)."
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:55
+msgid "Inspections and fines in inter-city bus transport."
+msgstr "Inspeções e multas no transporte intermunicipal de ônibus."
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:56
+msgid "Performance indicators for concessionaires and user-service quality."
+msgstr "Indicadores de desempenho para concessionárias e qualidade de serviço ao usuário."
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:57
+msgid "Contract information, feasibility studies, and investment reports for highway and airport infrastructure."
+msgstr "Informações contratuais, estudos de viabilidade e relatórios de investimento para infraestrutura rodoviária e aeroportuária."
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:60
+msgid "These datasets enable citizens, researchers, entrepreneurs, and oversight bodies to <strong>evaluate public policies, create innovative applications, and make evidence-based decisions</strong>."
+msgstr "Esses conjuntos de dados permitem que cidadãos, pesquisadores, empreendedores e órgãos de fiscalização <strong>avaliem políticas públicas, criem aplicações inovadoras e tomem decisões baseadas em evidências</strong>."
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:66
+msgid "Why It Matters"
+msgstr "Por Que Isso Importa"
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:68
+msgid "<strong>Citizens</strong> gain clear information on fares, travel conditions, and service quality."
+msgstr "<strong>Cidadãos</strong> obtêm informações claras sobre tarifas, condições de viagem e qualidade de serviço."
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:69
+msgid "<strong>Public managers</strong> strengthen accountability and plan future concessions more effectively."
+msgstr "<strong>Gestores públicos</strong> fortalecem a prestação de contas e planejam futuras concessões com mais eficácia."
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:70
+msgid "<strong>Companies and startups</strong> can build mobility, logistics, and tourism solutions using reliable data."
+msgstr "<strong>Empresas e startups</strong> podem construir soluções de mobilidade, logística e turismo usando dados confiáveis."
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:75
+msgid "Conclusion"
+msgstr "Conclusão"
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:77
+msgid "By combining rigorous regulation, long-term vision, and a culture of transparency, ARTESP stands as a national benchmark for <strong>transport governance</strong> and reinforces São Paulo State's commitment to a <strong>safe, innovative, and sustainable</strong> infrastructure grounded in open data and public engagement."
+msgstr "Ao combinar regulação rigorosa, visão de longo prazo e uma cultura de transparência, a ARTESP se destaca como referência nacional em <strong>governança de transportes</strong> e reforça o compromisso do Estado de São Paulo com uma infraestrutura <strong>segura, inovadora e sustentável</strong> baseada em dados abertos e engajamento público."
+
+#: ckanext/artesp_theme/templates/static/about_ckan.html:6
+msgid "CKAN is an open-source data management system that makes data accessible by providing tools to streamline publishing, sharing, finding and using data. CKAN is aimed at data publishers (national and regional governments, companies and organizations) wanting to make their data open and available."
+msgstr "O CKAN é um sistema de gerenciamento de dados de código aberto que torna os dados acessíveis, fornecendo ferramentas para simplificar a publicação, compartilhamento, busca e uso de dados. O CKAN é destinado a publicadores de dados (governos nacionais e regionais, empresas e organizações) que desejam tornar seus dados abertos e disponíveis."
+
+#: ckanext/artesp_theme/templates/static/about_ckan.html:8
+msgid "CKAN is a powerful data management system that makes data accessible – by providing tools to streamline publishing, sharing, finding and using data. CKAN is aimed at data publishers (national and regional governments, companies and organizations) wanting to make their data open and available."
+msgstr "O CKAN é um poderoso sistema de gerenciamento de dados que torna os dados acessíveis – fornecendo ferramentas para simplificar a publicação, compartilhamento, busca e uso de dados. O CKAN é destinado a publicadores de dados (governos nacionais e regionais, empresas e organizações) que desejam tornar seus dados abertos e disponíveis."
+
+#: ckanext/artesp_theme/templates/static/about_ckan.html:10
+msgid "CKAN provides a streamlined way to make your data discoverable by other users, by search engines, and by the automatic discovery tools that underpin the nascent semantic web."
+msgstr "O CKAN fornece uma maneira simplificada de tornar seus dados descobríveis por outros usuários, por mecanismos de busca e pelas ferramentas de descoberta automática que sustentam a nascente web semântica."
+
+#: ckanext/artesp_theme/templates/static/about_ckan.html:12
+msgid "CKAN is open source software, maintained by an active and international community of developers, and is in use by numerous governments, organizations and communities around the world."
+msgstr "O CKAN é um software de código aberto, mantido por uma comunidade ativa e internacional de desenvolvedores, e é utilizado por numerosos governos, organizações e comunidades em todo o mundo."
+
+#: ckanext/artesp_theme/templates/static/about_ckan.html:14
+msgid "For more information, please visit <a href=\"https://ckan.org/\">ckan.org</a>."
+msgstr "Para mais informações, visite <a href=\"https://ckan.org/\">ckan.org</a>."
+
+#: ckanext/artesp_theme/templates/home/snippets/search.html:5
+msgid "Find and explore public datasets"
+msgstr "Encontre e explore conjuntos de dados públicos"
+
+#: ckanext/artesp_theme/templates/home/snippets/search.html:7
+msgid "Search datasets..."
+msgstr "Pesquisar conjuntos de dados..."
+
+#: ckanext/artesp_theme/templates/home/snippets/search.html:9
+msgid "Search"
+msgstr "Pesquisar"
