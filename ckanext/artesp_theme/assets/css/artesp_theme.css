@@ -1674,8 +1674,8 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .section-title {
-  font-size: 1.8rem;
-  font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: 500;
   color: #333333; /* Dark gray instead of blue */
   margin: 0;
   position: relative;
