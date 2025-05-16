@@ -1108,7 +1108,7 @@ h1, h2, h3, h4, h5, h6,
 .header-top {
   display: flex;
   justify-content: flex-end;
-  padding: 0.5rem 0;
+  padding: 0 0;
 }
 
 .user-actions {
@@ -1459,7 +1459,7 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .logo-container {
-  margin-bottom: 2.5rem;
+  margin-bottom: 0;
 }
 
 .artesp-logo {
@@ -1484,7 +1484,8 @@ h1, h2, h3, h4, h5, h6,
   font-family: 'Rawline', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 1.9rem; /* Decreased from 2.2rem to 1.9rem */
   font-weight: 700;
-  margin-bottom: 3rem;
+  margin-bottom: 0.5rem;
+  margin-top: 1.5rem;
   color: #333333;
   text-align: center;
   line-height: 1.3;
