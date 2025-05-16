@@ -2481,12 +2481,12 @@ h1, h2, h3, h4, h5, h6,
 
 .footer-main {
   background-color: transparent;
-  padding: 2rem 0 1rem;
+  padding: 2rem 0 0rem;
   border-top: none;
 }
 
 .footer-bottom {
-  background-color: #333;
+  background-color: #000;
   color: #f5f5f5;
   padding: 1rem 0;
 }
@@ -2551,6 +2551,24 @@ h1, h2, h3, h4, h5, h6,
 .powered-by p {
   margin-bottom: 0;
   font-size: 0.9rem;
+}
+
+/* São Paulo Government Logo in Footer */
+.govsp-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.govsp-logo img {
+  max-width: 160px;
+  height: auto;
+  transition: opacity 0.3s ease;
+}
+
+.govsp-logo img:hover {
+  opacity: 0.85;
 }
 
 .ckan-footer-logo {
@@ -2664,9 +2682,22 @@ h1, h2, h3, h4, h5, h6,
     padding: 1.5rem 0 1rem;
   }
 
+  .govsp-logo {
+    margin: 1.5rem auto;
+  }
+
+  .govsp-logo img {
+    max-width: 140px;
+  }
+
   .powered-by {
-    text-align: left;
+    text-align: center;
     margin-top: 1rem;
+  }
+
+  .copyright {
+    text-align: center;
+    margin-bottom: 1rem;
   }
 
   .footer-logo-container {
