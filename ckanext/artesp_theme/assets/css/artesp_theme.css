@@ -1764,7 +1764,7 @@ h1, h2, h3, h4, h5, h6,
   animation-delay: 0.4s;
 }
 
-/* Category indicator at top of card */
+/* Category indicator at top of card - Color rotation pattern */
 .dataset-card::before {
   content: '';
   position: absolute;
@@ -1772,8 +1772,20 @@ h1, h2, h3, h4, h5, h6,
   left: 0;
   width: 100%;
   height: 4px;
-  background-color: var(--primary);
   opacity: 0.9;
+}
+
+/* Color rotation pattern for cards */
+.dataset-card:nth-child(3n+1)::before {
+  background-color: #034EA2; /* Blue */
+}
+
+.dataset-card:nth-child(3n+2)::before {
+  background-color: #0B9247; /* Green */
+}
+
+.dataset-card:nth-child(3n+3)::before {
+  background-color: #FBB900; /* Yellow */
 }
 
 .dataset-card:hover {
