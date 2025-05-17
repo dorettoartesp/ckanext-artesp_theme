@@ -243,7 +243,7 @@ a.tag, a.pill, a.label,
 }
 
 /* Keep ARTESP red for other elements */
-[style*="color: rgb(32, 107, 130)"],
+/* [style*="color: rgb(32, 107, 130)"],
 [style*="color:rgb(32, 107, 130)"],
 [style*="color: rgb(32,107,130)"],
 [style*="color:rgb(32,107,130)"],
@@ -258,4 +258,4 @@ a.tag, a.pill, a.label,
 .add-to-group .btn-primary,
 .follow_button {
   color: var(--primary) !important;
-}
+} */
