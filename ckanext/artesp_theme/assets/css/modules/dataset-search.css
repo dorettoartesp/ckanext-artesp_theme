@@ -1,0 +1,212 @@
+/* ==========================================================================
+   ARTESP Theme - Dataset Search Page
+   Contains styles for the dataset search page
+   ========================================================================== */
+
+/* Module content styling */
+.module-content {
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+/* Primary action button container */
+.page_primary_action {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Search form styling */
+.search-form {
+  margin-bottom: 25px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Search input row - first row */
+.search-input-row {
+  width: 100%;
+  margin-bottom: 20px;
+  display: block;
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+/* Search input group styling */
+.input-group.search-input-group {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.input-group.search-input-group .form-control.input-lg {
+  height: 46px;
+  line-height: 46px;
+  border-radius: 4px 0 0 4px;
+  border: 1px solid #ddd;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
+  /* Ensure these flex properties override framework defaults */
+  flex-grow: 1; /* Allow the input to grow */
+  flex-shrink: 1; /* Allow the input to shrink if needed */
+  flex-basis: 0% !important; /* Force the initial size to 0 before growing, overriding Bootstrap's 'auto' */
+  width: auto !important;    /* Override Bootstrap's 'width: 1%' or 'width: 100%' if they interfere with flex-basis */
+  min-width: 0; /* Allows the input to shrink smaller than its content if necessary */
+}
+
+.input-group.search-input-group .input-group-btn .btn.btn-default.btn-lg {
+  height: 46px;
+  line-height: 34px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0 4px 4px 0;
+  border: 1px solid #ddd;
+  border-left: none;
+}
+
+/* Results row - second row */
+.search-results-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  width: 100%;
+  clear: both;
+}
+
+/* Search results title */
+.search-results-row h1 {
+  font-size: 1.5rem;
+  margin: 0;
+  font-weight: 600;
+  color: #333;
+  flex: 1;
+  min-width: 200px;
+}
+
+/* Order by control styling */
+.control-order-by {
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.control-order-by label {
+  margin-right: 10px;
+  margin-bottom: 0;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.control-order-by select {
+  width: auto;
+  min-width: 180px;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.control-order-by .btn {
+  margin-left: 5px;
+}
+
+/* Filter list styling */
+.filter-list {
+  margin-bottom: 20px;
+  padding: 10px 0;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filter-list .facet {
+  font-weight: 600;
+  margin-right: 5px;
+}
+
+.filter-list .filtered.pill {
+  display: inline-flex;
+  align-items: center;
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  padding: 4px 10px;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+.filter-list .filtered.pill a.remove {
+  margin-left: 5px;
+  color: #999;
+}
+
+.filter-list .filtered.pill a.remove:hover {
+  color: var(--primary);
+}
+
+/* Show filters button */
+.show-filters.btn {
+  margin-bottom: 20px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .search-results-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .search-results-row h1 {
+    margin-bottom: 15px;
+  }
+
+  .control-order-by {
+    width: 100%;
+  }
+
+  .control-order-by select {
+    flex: 1;
+  }
+}
+
+@media (max-width: 576px) {
+  .module-content {
+    padding: 15px;
+  }
+
+  .input-group.search-input-group .form-control.input-lg {
+    height: 40px;
+    line-height: 40px;
+  }
+
+  .input-group.search-input-group .input-group-btn .btn.btn-default.btn-lg {
+    height: 40px;
+    line-height: 28px;
+  }
+
+  .search-results-row h1 {
+    font-size: 1.2rem;
+  }
+
+  .control-order-by {
+    flex-wrap: wrap;
+  }
+
+  .control-order-by label {
+    margin-bottom: 5px;
+    width: 100%;
+  }
+
+  .control-order-by select {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+}

@@ -1,0 +1,264 @@
+/* ==========================================================================
+   ARTESP Theme - Layout Components
+   Contains layout components (header, footer, containers, grid)
+   ========================================================================== */
+
+/* Static Pages Styles */
+.static-page {
+  padding: 2rem 0;
+}
+
+/* Breadcrumb Styles */
+.toolbar {
+  padding: 0.75rem 0;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.breadcrumb {
+  background-color: transparent;
+  padding: 0;
+  margin-bottom: 0;
+  font-size: 0.9rem;
+}
+
+.breadcrumb > li + li:before {
+  content: '›';
+  color: #999;
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 0 0.5rem;
+}
+
+.breadcrumb > li > a {
+  color: #666;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.breadcrumb > li > a:hover {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.breadcrumb > .active {
+  color: #333;
+  font-weight: 600;
+}
+
+.page-heading {
+  font-family: 'Rawline', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #333333; /* Dark gray instead of blue */
+  margin-bottom: 2rem;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.page-heading::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 80px;
+  height: 3px;
+  background-color: var(--primary);
+}
+
+.static-content {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: #444;
+}
+
+.static-content h2 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #333333; /* Dark gray instead of blue */
+  margin: 2rem 0 1rem;
+}
+
+.static-content p {
+  margin-bottom: 1.2rem;
+}
+
+.static-content ul {
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.static-content li {
+  margin-bottom: 0.5rem;
+}
+
+/* Contact Page Styles */
+.contact-info, .contact-map {
+  margin-bottom: 2rem;
+}
+
+.map-container {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Minimal Header Styles */
+.minimal-header {
+  padding: 0;
+  background: none;
+}
+
+.header-top {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 0;
+}
+
+.user-actions {
+  display: flex;
+  align-items: center;
+}
+
+.user-nav {
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.user-info {
+  position: relative;
+}
+
+.user-info > a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #555;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.user-info > a:hover {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.user-info img {
+  border-radius: 50%;
+  margin-right: 0.25rem;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem 0;
+  min-width: 200px;
+  z-index: 1000;
+}
+
+.user-info:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-menu li {
+  padding: 0;
+}
+
+.dropdown-menu li a,
+.dropdown-menu li button {
+  display: flex;
+  align-items: center;
+  padding: 0.6rem 1rem;
+  color: #444;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: none;
+  font-size: 0.9rem;
+}
+
+.dropdown-menu li a:hover,
+.dropdown-menu li button:hover {
+  background-color: #f5f5f5;
+  color: var(--primary);
+}
+
+.dropdown-menu li a i,
+.dropdown-menu li button i {
+  margin-right: 0.5rem;
+  width: 1rem;
+  text-align: center;
+}
+
+.user-login,
+.user-register {
+  color: #555;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.user-login:hover,
+.user-register:hover {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.user-register {
+  position: relative;
+  padding-left: 1rem;
+}
+
+.user-register:before {
+  content: '|';
+  position: absolute;
+  left: 0.25rem;
+  color: #ccc;
+}
+
+/* Main Navigation */
+.main-navigation {
+  background: none;
+  padding: 0;
+  margin-top: 0.5rem;
+}
+
+.nav-menu {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  justify-content: center;
+}
+
+.nav-menu li {
+  position: relative;
+}
+
+.nav-menu li a {
+  font-family: 'Rawline', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  display: block;
+  color: #444 !important;
+  padding: 0.75rem 1.25rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.nav-menu li a:hover,
+.nav-menu li.active a {
+  background: none;
+  text-decoration: none;
+  color: var(--primary) !important;
+}

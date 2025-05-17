@@ -1,0 +1,76 @@
+/* ==========================================================================
+   ARTESP Theme - Base Styles
+   Contains base styles, typography, and general elements
+   ========================================================================== */
+
+/* Fix search input and button height */
+.input-group.search-input-group {
+  display: flex;
+  align-items: stretch;
+}
+
+.input-group.search-input-group .form-control.input-lg {
+  height: 46px;
+  line-height: 46px;
+}
+
+.input-group.search-input-group .input-group-btn .btn.btn-default.btn-lg {
+  height: 46px;
+  line-height: 34px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body {
+  font-family: 'Rawline', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: white;
+  color: #333;
+  font-weight: 400;
+}
+
+/* Font weight classes for Rawline */
+.font-light {
+  font-weight: 300;
+}
+
+.font-regular {
+  font-weight: 400;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.font-extrabold {
+  font-weight: 800;
+}
+
+/* Apply Rawline font to all form elements and common UI components */
+input,
+button,
+select,
+textarea,
+.btn,
+.nav-link,
+.dropdown-item,
+.form-control,
+.page-link,
+.badge,
+.alert,
+.card-title,
+.card-text,
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: 'Rawline', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+}

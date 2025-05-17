@@ -1,0 +1,242 @@
+/* ==========================================================================
+   ARTESP Theme - UI Components
+   Contains UI components (buttons, forms, cards, alerts, badges)
+   ========================================================================== */
+
+/* Override CKAN default greenish colors with brand colors */
+.btn-success, .btn-success:hover, .btn-success:focus, .btn-success:active,
+.btn-primary, .btn-primary:hover, .btn-primary:focus, .btn-primary:active,
+a.btn-success[data-module="api-info"], a.btn-success[data-module="api-info"]:hover, a.btn-success[data-module="api-info"]:focus, a.btn-success[data-module="api-info"]:active {
+  background-color: var(--secondary) !important;
+  border-color: var(--secondary) !important;
+  color: #ffffff !important;
+}
+
+/* Fix delete button styling */
+.btn-danger,
+.btn-danger:hover,
+.btn-danger:focus,
+.btn-danger:active,
+a.btn-danger,
+a.btn-danger:hover,
+a.btn-danger:focus,
+a.btn-danger:active,
+.btn-danger[data-module="confirm-action"],
+.btn-danger[data-module="confirm-action"]:hover,
+.btn-danger[data-module="confirm-action"]:focus,
+.btn-danger[data-module="confirm-action"]:active {
+  background-color: #dc3545 !important;
+  border-color: #dc3545 !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  text-shadow: none !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-danger:hover,
+a.btn-danger:hover,
+.btn-danger[data-module="confirm-action"]:hover {
+  background-color: #c82333 !important;
+  border-color: #bd2130 !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Fix for resource buttons text - with high specificity */
+.btn.btn-primary.resource-url-analytics,
+.resource-actions .btn.btn-primary,
+.resource-actions .btn.btn-danger,
+.resource-actions .btn.btn-success,
+.btn.btn-primary,
+.btn-group .btn.btn-primary,
+body .btn.btn-primary,
+body .primary .btn.btn-primary,
+body .module-resource .actions .btn.btn-primary,
+body .resource-actions .btn.btn-primary,
+body .resource-item .btn.btn-primary,
+body .resource-item .btn.btn-primary.resource-url-analytics,
+.d-flex.flex-wrap.gap-1.justify-content-end .btn.btn-success,
+.d-flex.flex-wrap.gap-1.justify-content-end a[data-module="api-info"] {
+  color: #ffffff !important;
+  font-weight: 600;
+  text-shadow: none;
+}
+
+.resource-actions .btn {
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+/* Specific override for resource-url-analytics button */
+.resource-url-analytics,
+.btn.resource-url-analytics,
+.btn.btn-primary.resource-url-analytics,
+body .btn.btn-primary.resource-url-analytics,
+body .resource-item .btn.btn-primary.resource-url-analytics,
+a[data-module="api-info"],
+a.btn.btn-success[data-module="api-info"] {
+  color: #ffffff !important;
+}
+
+/* Fix dropdown-item styling */
+.dropdown-item.resource-url-analytics {
+  color: var(--gray-dark) !important;
+  background-color: transparent !important;
+}
+
+.dropdown-item.resource-url-analytics:hover,
+.dropdown-item.resource-url-analytics:focus {
+  color: var(--primary) !important;
+  background-color: var(--tw-gray-100) !important;
+}
+
+/* Override default link styles - aggressive override for #206b82 */
+a.tag, a.pill, a.label,
+.popular-tags a.tag,
+.module-narrow .nav-facet .nav-item a,
+.module-narrow .nav-facet .nav-item > a,
+.module-narrow .nav-facet .nav-aside li a,
+.module-narrow .nav-facet .nav-aside li > a,
+.tag, .pill, .label,
+.popular-tags .tag,
+.module-narrow .nav-item a,
+.module-narrow .nav-aside li a,
+[data-module="autocomplete"] .tag,
+.primary .tag,
+.secondary .tag,
+.module-shallow .tag,
+.module-narrow .tag,
+.package-search-form .tag,
+.dataset-list .tag,
+.dataset-item .tag,
+.context-info .tag,
+.flash-messages .tag {
+  color: #444 !important;
+  background-color: white !important;
+}
+
+/* Direct override for #206b82 color */
+[style*="color: #206b82"],
+[style*="color:#206b82"],
+[style*="color: rgb(32, 107, 130)"],
+[style*="color:rgb(32, 107, 130)"] {
+  color: #444 !important;
+}
+
+/* Override tag hover styles */
+a.tag:hover, a.tag:focus, a.tag:active,
+a.tag.active, a.tag.selected,
+a.pill:hover, a.pill:focus, a.pill:active,
+a.pill.active, a.pill.selected,
+a.label:hover, a.label:focus, a.label:active,
+a.label.active, a.label.selected,
+.popular-tags a.tag:hover, .popular-tags a.tag:focus, .popular-tags a.tag:active,
+.popular-tags a.tag.active, .popular-tags a.tag.selected,
+.module-narrow .nav-item.active > a,
+.module-narrow .nav-aside li.active a,
+.tag:hover, .tag:focus, .tag:active,
+.tag.active, .tag.selected,
+.pill:hover, .pill:focus, .pill:active,
+.pill.active, .pill.selected,
+.label:hover, .label:focus, .label:active,
+.label.active, .label.selected {
+  background-color: #f0f0f0 !important;
+  color: #444 !important;
+  border-color: var(--primary) !important;
+  border-width: 1px !important;
+  text-decoration: none !important;
+  box-shadow: 0 2px 5px rgba(192, 0, 0, 0.1) !important;
+  transform: translateY(-1px) !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Override all links with a beautiful dark gray color */
+a {
+  color: var(--gray-dark);
+  transition: color 0.2s ease;
+}
+
+a:hover, a:focus {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+/* Ensure links in main content have the dark gray color */
+.primary a,
+.secondary a,
+.module a,
+.dataset-item a,
+.resource-item a,
+.nav-item a,
+.breadcrumb a,
+.pagination a,
+.dataset-resources a,
+.dataset-info a,
+.page-header a,
+.module-content.page-header a,
+.module-content.page-header.hug a,
+.dashboard .page-header a,
+.dashboard .nav-tabs a,
+.dashboard .nav-tabs li a,
+.dashboard .nav-tabs > li > a,
+.admin a,
+.admin-page a,
+.ckan-admin a,
+.admin .page-header a,
+.admin-page .page-header a,
+.ckan-admin .page-header a,
+.user a,
+.user-list a,
+.user-edit a,
+.account a,
+.account-masthead a,
+.user-profile a,
+.user-dashboard a,
+.user-admin a,
+.user-settings a,
+.user-profile .page-header a,
+.user-dashboard .page-header a,
+.user-admin .page-header a,
+.user-settings .page-header a {
+  color: var(--gray-dark);
+}
+
+.primary a:hover,
+.secondary a:hover,
+.module a:hover,
+.dataset-item a:hover,
+.resource-item a:hover,
+.nav-item a:hover,
+.breadcrumb a:hover,
+.pagination a:hover,
+.dataset-resources a:hover,
+.dataset-info a:hover,
+.page-header a:hover,
+.module-content.page-header a:hover,
+.module-content.page-header.hug a:hover,
+.dashboard .page-header a:hover,
+.dashboard .nav-tabs a:hover,
+.dashboard .nav-tabs li a:hover,
+.dashboard .nav-tabs > li > a:hover,
+.admin a:hover,
+.admin-page a:hover,
+.ckan-admin a:hover,
+.admin .page-header a:hover,
+.admin-page .page-header a:hover,
+.ckan-admin .page-header a:hover,
+.user a:hover,
+.user-list a:hover,
+.user-edit a:hover,
+.account a:hover,
+.account-masthead a:hover,
+.user-profile a:hover,
+.user-dashboard a:hover,
+.user-admin a:hover,
+.user-settings a:hover,
+.user-profile .page-header a:hover,
+.user-dashboard .page-header a:hover,
+.user-admin .page-header a:hover,
+.user-settings .page-header a:hover {
+  color: var(--primary);
+}
