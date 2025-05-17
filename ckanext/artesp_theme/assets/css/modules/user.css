@@ -38,7 +38,7 @@
   font-size: 1rem;
   transition: all 0.2s ease;
   width: 100%;
-  max-width: 400px;
+  /* max-width: 400px; */
 }
 
 .form-control:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus {
@@ -97,7 +97,7 @@ label {
 
 /* Module styling */
 .module-narrow .module-heading {
-  background-color: var(--primary);
+  background-color: var(--gray-darker);
   color: white;
   font-weight: 600;
   padding: 0.75rem 1rem;

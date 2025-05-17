@@ -1,0 +1,244 @@
+/* ==========================================================================
+   ARTESP Theme - Footer Styles
+   Contains footer-specific styles
+   ========================================================================== */
+
+/* Footer styling */
+.site-footer {
+  color: #333;
+  font-size: 0.95rem;
+  background-image: none !important;
+  background: none !important;
+}
+
+.footer-main {
+  background-color: transparent;
+  background-image: none !important;
+  background: none !important;
+  padding: 2rem 0 0rem;
+  border-top: none;
+}
+
+.footer-bottom {
+  background-color: #000;
+  color: #f5f5f5;
+  padding: 1rem 0;
+}
+
+.site-footer a {
+  color: #444;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.site-footer a:hover {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.footer-links ul {
+  margin-bottom: 2rem;
+}
+
+.footer-links li {
+  margin-bottom: 0.75rem;
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-logo-container {
+  margin-bottom: 1.5rem;
+}
+
+.footer-logo img {
+  max-width: 180px;
+  height: auto;
+}
+
+.footer-brand-text {
+  margin-bottom: 1.5rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+.site-footer h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.copyright p {
+  margin-bottom: 0;
+  font-size: 0.9rem;
+}
+
+.powered-by {
+  text-align: right;
+}
+
+.powered-by p {
+  margin-bottom: 0;
+  font-size: 0.9rem;
+}
+
+/* São Paulo Government Logo in Footer */
+.govsp-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.govsp-logo img {
+  max-width: 160px;
+  height: auto;
+  transition: opacity 0.3s ease;
+}
+
+.govsp-logo img:hover {
+  opacity: 0.85;
+}
+
+.ckan-footer-logo {
+  background-image: url('/base/images/ckan-logo-footer.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  display: inline-block;
+  width: 68px;
+  height: 21px;
+  vertical-align: middle;
+  margin-left: 0.5rem;
+  filter: brightness(2);
+}
+
+.language-selector {
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.lang-select-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.lang-select {
+  margin: 0;
+  width: 100%;
+  background-image: none !important;
+}
+
+.lang-select-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: white;
+  border-radius: 4px;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  width: 100%;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.lang-select-inner::after {
+  content: '\25BC';
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #666;
+  font-size: 0.7rem;
+}
+
+.lang-select select {
+  border: none;
+  background: transparent;
+  background-image: none !important;
+  color: #444;
+  font-size: 0.85rem;
+  padding: 0;
+  padding-right: 0.5rem;
+  flex: 1;
+  min-width: 0;
+  box-shadow: none;
+  height: auto;
+  width: 100%;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.lang-select select:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.lang-select .btn {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  background-color: #444;
+  border-color: #444;
+  color: white;
+  margin: 0;
+  min-width: 40px;
+}
+
+.lang-select .btn:hover {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+@media (max-width: 768px) {
+  .footer-main {
+    padding: 1.5rem 0 1rem;
+  }
+
+  .govsp-logo {
+    margin: 1.5rem auto;
+  }
+
+  .govsp-logo img {
+    max-width: 140px;
+  }
+
+  .powered-by {
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  .copyright {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .footer-logo-container {
+    margin-bottom: 1rem;
+  }
+
+  .site-footer h4 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .footer-links > .row > div:first-child h4 {
+    margin-top: 2rem;
+  }
+
+  .footer-brand-text {
+    margin-bottom: 1rem;
+  }
+
+  .lang-select {
+    margin-bottom: 1rem;
+  }
+}

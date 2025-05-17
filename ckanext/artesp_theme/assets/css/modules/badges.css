@@ -1,0 +1,233 @@
+/* ==========================================================================
+   ARTESP Theme - Badges
+   Contains badge and label styling
+   ========================================================================== */
+
+/* Improve badge styling - Tailwind style */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25em 0.65em;
+  font-size: 0.75em;
+  font-weight: 500;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease-in-out;
+  letter-spacing: 0.02em;
+  margin-right: 0.3rem;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.badge-default {
+  color: var(--tw-gray-600);
+  background-color: var(--tw-gray-100);
+  box-shadow: inset 0 0 0 1px rgba(75, 85, 99, 0.1);
+}
+
+.badge:hover {
+  transform: translateY(-1px);
+}
+
+.badge-primary {
+  color: #FFFFFF;
+  background-color: var(--primary); /* Vermelho */
+  box-shadow: inset 0 0 0 1px rgba(255, 22, 31, 0.2);
+}
+
+.badge-success {
+  color: #FFFFFF;
+  background-color: var(--accent); /* Verde */
+  box-shadow: inset 0 0 0 1px rgba(11, 146, 71, 0.2);
+}
+
+.badge-info {
+  color: #FFFFFF;
+  background-color: #808080; /* Gray instead of blue */
+  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.2);
+}
+
+.badge-warning {
+  color: #000000;
+  background-color: var(--highlight); /* Amarelo */
+  box-shadow: inset 0 0 0 1px rgba(251, 185, 0, 0.2);
+}
+
+.badge-danger {
+  color: #FFFFFF;
+  background-color: var(--primary); /* Vermelho */
+  box-shadow: inset 0 0 0 1px rgba(255, 22, 31, 0.2);
+}
+
+/* Format badges with brand colors */
+.badge[data-format=html],
+.badge[data-format*=html] {
+  background-color: rgba(128, 128, 128, 0.15) !important; /* Gray */
+  color: #444444 !important;
+  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.2) !important;
+}
+
+.badge[data-format=png],
+.badge[data-format*=png] {
+  background-color: rgba(128, 128, 128, 0.15) !important; /* Gray */
+  color: #444444 !important;
+  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.2) !important;
+}
+
+.badge[data-format=json],
+.badge[data-format*=json] {
+  background-color: rgba(255, 22, 31, 0.15) !important; /* Vermelho */
+  color: var(--primary) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 22, 31, 0.2) !important;
+}
+
+.badge[data-format=xml],
+.badge[data-format*=xml] {
+  background-color: rgba(255, 22, 31, 0.15) !important; /* Vermelho */
+  color: var(--primary) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 22, 31, 0.2) !important;
+}
+
+.badge[data-format=text],
+.badge[data-format*=text] {
+  background-color: rgba(128, 128, 128, 0.15) !important; /* Gray */
+  color: #444444 !important;
+  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.2) !important;
+}
+
+.badge[data-format=csv],
+.badge[data-format*=csv] {
+  background-color: rgba(251, 185, 0, 0.15) !important; /* Amarelo */
+  color: #997000 !important;
+  box-shadow: inset 0 0 0 1px rgba(251, 185, 0, 0.2) !important;
+}
+
+.badge[data-format=xls],
+.badge[data-format*=xls] {
+  background-color: rgba(11, 146, 71, 0.15) !important; /* Verde */
+  color: var(--accent) !important;
+  box-shadow: inset 0 0 0 1px rgba(11, 146, 71, 0.2) !important;
+}
+
+.badge[data-format=zip],
+.badge[data-format*=zip] {
+  background-color: rgba(128, 128, 128, 0.15) !important; /* Cinza */
+  color: var(--gray-dark) !important;
+  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.2) !important;
+}
+
+.badge[data-format=api],
+.badge[data-format*=api] {
+  background-color: rgba(128, 128, 128, 0.15) !important; /* Gray */
+  color: #444444 !important;
+  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.2) !important;
+}
+
+.badge[data-format=pdf],
+.badge[data-format*=pdf] {
+  background-color: rgba(255, 22, 31, 0.15) !important; /* Vermelho */
+  color: var(--primary) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 22, 31, 0.2) !important;
+}
+
+.badge[data-format=rdf],
+.badge[data-format*=rdf],
+.badge[data-format*=nquad],
+.badge[data-format*=ntriples],
+.badge[data-format*=turtle] {
+  background-color: rgba(128, 128, 128, 0.15) !important; /* Gray */
+  color: #444444 !important;
+  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.2) !important;
+}
+
+.badge-default[href]:hover,
+.badge-default[href]:focus {
+  background-color: var(--tw-gray-200) !important;
+  color: var(--tw-gray-700) !important;
+  text-decoration: none !important;
+}
+
+/* Fix for datastore status badge */
+.loader-badge {
+  margin-left: 10px;
+  background: #f8f9fa;
+  color: #444;
+  border-radius: 4px;
+  display: inline-flex;
+  font-size: 13px;
+  vertical-align: middle;
+  font-weight: 500;
+  line-height: 1.2;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e9ecef;
+  overflow: hidden;
+}
+
+a.loader-badge {
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.loader-badge:hover,
+.loader-badge:focus {
+  color: #444;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.prefix,
+.status {
+  display: inline-block;
+  padding: 3px 8px;
+}
+
+.loader-badge .prefix {
+  background: #f8f9fa;
+  color: #495057;
+  font-weight: 600;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.loader-badge .status {
+  font-weight: 600;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.loader-badge .status.active {
+  background: #d4edda;
+  color: #155724;
+}
+
+.loader-badge .status.complete {
+  background: #cce5ff;
+  color: #004085;
+}
+
+.loader-badge .status.error {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.loader-badge .status.inactive {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.loader-badge .status.pending {
+  background: #e9ecef;
+  color: #495057;
+}
+
+.loader-badge .status.running {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.loader-badge .status.unknown {
+  background: #e9ecef;
+  color: #6c757d;
+}

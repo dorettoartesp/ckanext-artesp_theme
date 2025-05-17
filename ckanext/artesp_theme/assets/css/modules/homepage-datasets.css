@@ -1,0 +1,328 @@
+/* ==========================================================================
+   ARTESP Theme - Homepage Datasets Section
+   Contains styles for the latest datasets section on the homepage
+   ========================================================================== */
+
+/* Latest datasets section styling */
+.latest-datasets-wrapper {
+  margin: 0;
+  background-color: #ffffff; /* Changed from #f5f5f5 to white */
+  padding: 3rem 0 4rem 0; /* Increased padding to 4rem for top and bottom */
+  position: relative;
+}
+
+.latest-datasets-wrapper::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150px;
+  height: 3px;
+  background-color: #ffffff; /* Changed from #f5f5f5 to white */
+}
+
+.latest-datasets-section {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  animation: fadeIn 1s ease-out forwards;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #333333; /* Dark gray instead of blue */
+  margin: 0;
+  position: relative;
+  display: inline-block;
+  padding-left: 15px;
+  border-left: 5px solid var(--primary);
+  line-height: 1.2;
+}
+
+.view-all-link {
+  font-size: 0.95rem;
+  color: #666;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  position: relative;
+  font-weight: normal;
+}
+
+.view-all-link .fa {
+  font-size: 0.8rem;
+  transition: transform 0.2s ease;
+  margin-left: 0.25rem;
+  vertical-align: middle;
+  opacity: 0.8;
+}
+
+.view-all-link:hover {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.view-all-link:hover .fa {
+  transform: translateX(3px);
+  opacity: 1;
+}
+
+.latest-datasets-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.75rem;
+}
+
+/* Dataset card styling based on Crimson Data Beacon */
+.dataset-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  animation: fadeInUp 0.6s ease-out forwards;
+  opacity: 0;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  position: relative;
+}
+
+.dataset-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.dataset-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.dataset-card:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.dataset-card:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+/* Category indicator at top of card - Color rotation pattern */
+.dataset-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  opacity: 0.9;
+}
+
+/* Color rotation pattern for cards */
+.dataset-card:nth-child(3n+1)::before {
+  background-color: #034EA2; /* Blue */
+}
+
+.dataset-card:nth-child(3n+2)::before {
+  background-color: #0B9247; /* Green */
+}
+
+.dataset-card:nth-child(3n+3)::before {
+  background-color: #FBB900; /* Yellow */
+}
+
+.dataset-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.dataset-card-content {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.dataset-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+.dataset-title a {
+  color: #222222;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  position: relative;
+  display: inline-block;
+}
+
+.dataset-title a:hover {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.dataset-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.8rem;
+  color: #666;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.dataset-date, .dataset-org, .dataset-resources {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: #555;
+  font-weight: 500;
+}
+
+.dataset-date .fa, .dataset-org .fa, .dataset-resources .fa {
+  color: #777;
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.dataset-description {
+  margin-bottom: 1.25rem;
+  color: #555;
+  line-height: 1.5;
+  flex: 1;
+  font-size: 0.9rem;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.dataset-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 0.75rem;
+}
+
+.dataset-tags .tag {
+  font-size: 0.75rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.03);
+  color: #555;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.dataset-tags .tag:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+  color: #333;
+  transform: translateY(-1px);
+}
+
+.no-datasets {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  color: #555;
+  font-size: 1rem;
+  position: relative;
+}
+
+.no-datasets::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: var(--gray-light);
+  opacity: 0.5;
+}
+
+.no-datasets p {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  position: relative;
+  padding-left: 1.5rem;
+  font-weight: 500;
+}
+
+.no-datasets p::before {
+  content: "\f119"; /* Font Awesome sad face icon */
+  font-family: "Font Awesome 5 Free";
+  color: #777;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.8;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .latest-datasets-container {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .dataset-card-content {
+    padding: 1.25rem;
+  }
+
+  .dataset-title {
+    font-size: 1.1rem;
+  }
+
+  .dataset-description {
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+  }
+}

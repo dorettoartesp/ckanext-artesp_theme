@@ -7,10 +7,112 @@ artesp-theme-js:
   extra:
     preload:
       - base/main
-artesp-theme-css:
+# CSS modules
+artesp-variables:
   filter: cssrewrite
-  output: ckanext-artesp_theme/artesp_theme.css
+  output: ckanext-artesp_theme/%(version)s_variables.css
   contents:
-    - css/artesp_theme.css
-    - css/user.css
-    - css/stats-cards.css
+    - css/modules/variables.css
+artesp-base:
+  filter: cssrewrite
+  output: ckanext-artesp_theme/%(version)s_base.css
+  contents:
+    - css/modules/base.css
+  extra:
+    preload:
+      - artesp_theme/artesp-variables
+artesp-layout:
+  filter: cssrewrite
+  output: ckanext-artesp_theme/%(version)s_layout.css
+  contents:
+    - css/modules/layout.css
+  extra:
+    preload:
+      - artesp_theme/artesp-base
+artesp-components:
+  filter: cssrewrite
+  output: ckanext-artesp_theme/%(version)s_components.css
+  contents:
+    - css/modules/components.css
+  extra:
+    preload:
+      - artesp_theme/artesp-layout
+artesp-components-additional:
+  filter: cssrewrite
+  output: ckanext-artesp_theme/%(version)s_components-additional.css
+  contents:
+    - css/modules/components-additional.css
+  extra:
+    preload:
+      - artesp_theme/artesp-components
+artesp-badges:
+  filter: cssrewrite
+  output: ckanext-artesp_theme/%(version)s_badges.css
+  contents:
+    - css/modules/badges.css
+  extra:
+    preload:
+      - artesp_theme/artesp-components-additional
+artesp-footer:
+  filter: cssrewrite
+  output: ckanext-artesp_theme/%(version)s_footer.css
+  contents:
+    - css/modules/footer.css
+  extra:
+    preload:
+      - artesp_theme/artesp-badges
+artesp-homepage:
+  filter: cssrewrite
+  output: ckanext-artesp_theme/%(version)s_homepage.css
+  contents:
+    - css/modules/homepage.css
+  extra:
+    preload:
+      - artesp_theme/artesp-footer
+artesp-homepage-datasets:
+  filter: cssrewrite
+  output: ckanext-artesp_theme/%(version)s_homepage-datasets.css
+  contents:
+    - css/modules/homepage-datasets.css
+  extra:
+    preload:
+      - artesp_theme/artesp-homepage
+artesp-homepage-stats:
+  filter: cssrewrite
+  output: ckanext-artesp_theme/%(version)s_homepage-stats.css
+  contents:
+    - css/modules/homepage-stats.css
+  extra:
+    preload:
+      - artesp_theme/artesp-homepage-datasets
+artesp-dataset-search:
+  filter: cssrewrite
+  output: ckanext-artesp_theme/%(version)s_dataset-search.css
+  contents:
+    - css/modules/dataset-search.css
+  extra:
+    preload:
+      - artesp_theme/artesp-homepage-stats
+artesp-responsive:
+  filter: cssrewrite
+  output: ckanext-artesp_theme/%(version)s_responsive.css
+  contents:
+    - css/modules/responsive.css
+  extra:
+    preload:
+      - artesp_theme/artesp-dataset-search
+artesp-user:
+  filter: cssrewrite
+  output: ckanext-artesp_theme/%(version)s_user.css
+  contents:
+    - css/modules/user.css
+  extra:
+    preload:
+      - artesp_theme/artesp-responsive
+# Main CSS bundle that includes all styles
+artesp-theme-css:
+  output: ckanext-artesp_theme/artesp_theme.css
+  contents: []
+  extra:
+    preload:
+      - artesp_theme/artesp-user
