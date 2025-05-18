@@ -2,7 +2,6 @@
 {% set current_url = request.environ.CKAN_CURRENT_URL %}
 
 <div class="language-selector">
-  <div class="lang-select-title">{{ _('Language') }}</div>
   <form class="form-inline form-select lang-select" action="{% url_for 'util.internal_redirect' %}" method="POST" id="language-form">
     {{ h.csrf_input() }}
     <div class="lang-select-inner">
