@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-artesp_theme 0.0.1\n"
 "Report-Msgid-Bugs-To: email@example.com\n"
-"POT-Creation-Date: 2025-05-19 17:02-0300\n"
+"POT-Creation-Date: 2025-05-19 17:46-0300\n"
 "PO-Revision-Date: 2025-05-19 11:25-0300\n"
 "Last-Translator: Gemini <gemini@google.com>\n"
 "Language: pt_BR\n"
@@ -50,6 +50,9 @@ msgstr "Institucional"
 
 # | msgid "About the site"
 #: ckanext/artesp_theme/templates/footer.html:28
+#: ckanext/artesp_theme/templates/home/about.html:3
+#: ckanext/artesp_theme/templates/home/about.html:6
+#: ckanext/artesp_theme/templates/home/about.html:16
 msgid "About this site"
 msgstr "Sobre este site"
 
@@ -196,9 +199,6 @@ msgstr "Cadastrar"
 #: ckanext/artesp_theme/templates/group/about.html:3
 #: ckanext/artesp_theme/templates/group/read_base.html:20
 #: ckanext/artesp_theme/templates/header.html:72
-#: ckanext/artesp_theme/templates/home/about.html:3
-#: ckanext/artesp_theme/templates/home/about.html:6
-#: ckanext/artesp_theme/templates/home/about.html:16
 #: ckanext/artesp_theme/templates/organization/about.html:3
 #: ckanext/artesp_theme/templates/organization/read_base.html:21
 #: ckanext/artesp_theme/templates/user/edit_user_form.html:21
@@ -883,11 +883,7 @@ msgstr "leia mais"
 msgid "Welcome"
 msgstr "Bem-vindo"
 
-#: ckanext/artesp_theme/templates/home/snippets/about_text.html:2
-msgid "About ARTESP"
-msgstr "Sobre a ARTESP"
-
-#: ckanext/artesp_theme/templates/home/snippets/about_text.html:4
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:3
 msgid ""
 "The São Paulo State Transportation Regulatory Agency (ARTESP) is a\n"
 "    government agency responsible for the regulation, oversight, and "
@@ -900,7 +896,7 @@ msgstr ""
 "    regulação, fiscalização e monitoramento dos serviços públicos de\n"
 "    transporte delegados pelo Estado de São Paulo."
 
-#: ckanext/artesp_theme/templates/home/snippets/about_text.html:7
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:6
 msgid ""
 "Its mission is to ensure that these services are delivered with\n"
 "    quality, safety, efficiency, and sustainability, contributing to the "
@@ -912,7 +908,7 @@ msgstr ""
 "para o\n"
 "    desenvolvimento social e econômico do estado."
 
-#: ckanext/artesp_theme/templates/home/snippets/about_text.html:12
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:11
 msgid ""
 "In 2024, ARTESP significantly expanded its responsibilities by assuming\n"
 "    oversight of services previously managed by the Metropolitan Urban "
@@ -924,7 +920,7 @@ msgstr ""
 "Empresa\n"
 "    Metropolitana de Transportes Urbanos (EMTU)."
 
-#: ckanext/artesp_theme/templates/home/snippets/about_text.html:14
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:13
 msgid ""
 "EMTU was responsible for managing intermunicipal\n"
 "    public transportation in the metropolitan regions of São Paulo, "
@@ -935,7 +931,7 @@ msgstr ""
 "    intermunicipal nas regiões metropolitanas de São Paulo, Campinas,\n"
 "    Baixada Santista, Vale do Paraíba e Litoral Norte, e Sorocaba."
 
-#: ckanext/artesp_theme/templates/home/snippets/about_text.html:17
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:16
 msgid ""
 "This expansion brought metropolitan bus services, light rail systems\n"
 "    (VLT), and other metropolitan transit modes under ARTESP's regulatory"
@@ -948,7 +944,7 @@ msgstr ""
 "para\n"
 "    o escopo regulatório da ARTESP."
 
-#: ckanext/artesp_theme/templates/home/snippets/about_text.html:22
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:21
 msgid ""
 "ARTESP also assumed responsibility for regulating the state's rail\n"
 "    concessions, including both passenger and freight rail services "
@@ -961,7 +957,7 @@ msgstr ""
 "operados\n"
 "    sob parcerias público-privadas."
 
-#: ckanext/artesp_theme/templates/home/snippets/about_text.html:24
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:23
 msgid ""
 "This move further strengthens\n"
 "    the agency’s strategic role in the planning and oversight of São "
@@ -972,7 +968,7 @@ msgstr ""
 "    no planejamento e supervisão da infraestrutura de transporte\n"
 "    de São Paulo."
 
-#: ckanext/artesp_theme/templates/home/snippets/about_text.html:29
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:28
 msgid ""
 "Today, ARTESP regulates over 11,000 kilometers of concessioned\n"
 "    highways, hundreds of metropolitan bus lines, light rail networks, "
@@ -989,7 +985,7 @@ msgstr ""
 "transporte\n"
 "    de cargas especializadas."
 
-#: ckanext/artesp_theme/templates/home/snippets/about_text.html:32
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:31
 msgid ""
 "The agency operates with transparency and public\n"
 "    accountability, making updated and accessible information available "
@@ -2309,22 +2305,32 @@ msgid "Address:"
 msgstr "Endereço:"
 
 #: ckanext/artesp_theme/templates/static/contact.html:13
+msgid ""
+"105 Iguatemi Street\n"
+"Itaim Bibi, São Paulo, SP 01451-011\n"
+"Brazil"
+msgstr ""
+"Rua Iguatemi, 105\n"
+"Itaim Bibi, São Paulo - SP, 01451-011\n"
+"Brasil"
+
+#: ckanext/artesp_theme/templates/static/contact.html:15
 msgid "Phone:"
 msgstr "Telefone:"
 
-#: ckanext/artesp_theme/templates/static/contact.html:14
+#: ckanext/artesp_theme/templates/static/contact.html:16
 msgid "Email:"
 msgstr "E-mail:"
 
-#: ckanext/artesp_theme/templates/static/contact.html:15
+#: ckanext/artesp_theme/templates/static/contact.html:17
 msgid "Hours:"
 msgstr "Horário:"
 
-#: ckanext/artesp_theme/templates/static/contact.html:15
+#: ckanext/artesp_theme/templates/static/contact.html:17
 msgid "Monday to Friday, 9:00 AM to 6:00 PM"
 msgstr "Segunda a Sexta, 9:00 às 18:00"
 
-#: ckanext/artesp_theme/templates/static/contact.html:21
+#: ckanext/artesp_theme/templates/static/contact.html:23
 msgid "Location"
 msgstr "Localização"
 
@@ -4143,4 +4149,7 @@ msgstr "Buscar Usuários"
 
 #~ msgid "About {0}"
 #~ msgstr "Sobre {0}"
+
+#~ msgid "About ARTESP"
+#~ msgstr "Sobre a ARTESP"
 
