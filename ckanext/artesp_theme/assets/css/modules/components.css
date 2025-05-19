@@ -238,5 +238,5 @@ a:hover, a:focus {
 .user-dashboard .page-header a:hover,
 .user-admin .page-header a:hover,
 .user-settings .page-header a:hover {
-  color: var(--primary);
+  color: var(--gray-darker);
 }

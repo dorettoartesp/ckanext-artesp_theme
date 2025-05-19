@@ -1,39 +1,142 @@
-{% extends "static/base.html" %}
+{% extends "static/base.html" %} {% set page_title = _('Terms of Use') %} {%
+block page_content %}
+<section>
+  <h1>{{_('Terms of Use')}}</h1>
+  <p>
+    {{_('Welcome to the ARTESP Open Data Portal ("Portal").')}} {{_('These Terms
+    of Use ("Terms") govern your access to and use of the Portal and the data
+    provided herein.')}} {{_('By accessing, Browse, or using this Portal and its
+    datasets, you ("User") acknowledge that you have read, understood, and agree
+    to be bound by these Terms and to comply with all applicable laws and
+    regulations.')}} {{_('If you do not agree with these Terms, please do not
+    use this Portal.')}}
+  </p>
 
-{% set page_title = _('Terms of Use') %}
+  <h2>{{_('1. Purpose of the Portal')}}</h2>
+  <p>
+    {{_('The ARTESP Open Data Portal aims to promote transparency, citizen
+    participation, and innovation by providing public access to data related to
+    transportation regulation and associated activities managed by ARTESP.')}}
+  </p>
 
-{% block page_content %}
-  <p>{{ _('Welcome to the ARTESP Data Portal. By accessing or using this portal, you agree to comply with and be bound by the following terms and conditions of use. Please review these terms carefully.') }}</p>
-  
-  <h2>{{ _('1. Acceptance of Terms') }}</h2>
-  <p>{{ _('By accessing and using the ARTESP Data Portal, you accept and agree to be bound by the terms and provisions of this agreement.') }}</p>
-  
-  <h2>{{ _('2. Data Usage') }}</h2>
-  <p>{{ _('The data provided on this portal is made available under open licenses. Unless otherwise specified, you are free to:') }}</p>
+  <h2>{{_('2. License and Use of Data')}}</h2>
+  <p>
+    {{_('All data published on this Portal is considered public unless otherwise
+    indicated and is made available for free use, reproduction, and
+    redistribution under the following conditions:')}}
+  </p>
   <ul>
-    <li>{{ _('Copy, publish, distribute, and transmit the data') }}</li>
-    <li>{{ _('Adapt the data') }}</li>
-    <li>{{ _('Exploit the data commercially, for example, by combining it with other data, or by including it in your own product or application') }}</li>
+    <li>
+      <strong>{{_('Attribution:')}}</strong> {{_('You must clearly and
+      appropriately credit ARTESP as the source of the data (e.g., "Source:
+      ARTESP Open Data Portal – [Year of access/data version if
+      available]").')}}
+    </li>
+    <li>
+      <strong>{{_('Integrity of Data:')}}</strong> {{_('You must not alter the
+      data in such a way that its original meaning or context is distorted or
+      misrepresented.')}}
+    </li>
+    <li>
+      <strong>{{_('Non-Endorsement:')}}</strong> {{_('Your use of the data must
+      not imply endorsement by ARTESP of your derivative work, product, or
+      service.')}}
+    </li>
   </ul>
-  
-  <h2>{{ _('3. Attribution') }}</h2>
-  <p>{{ _('When using data from this portal, you must attribute ARTESP as the source of the data. This attribution should include:') }}</p>
+
+  <h2>{{_('3. Prohibited Uses')}}</h2>
+  <p>
+    {{_('The User agrees not to use the data or the Portal for any of the
+    following:')}}
+  </p>
   <ul>
-    <li>{{ _('The name of the data provider (ARTESP)') }}</li>
-    <li>{{ _('If possible, a link to this data portal') }}</li>
+    <li>{{_('Any unlawful, fraudulent, or malicious activities.')}}</li>
+    <li>
+      {{_('Activities that are discriminatory, defamatory, offensive, or harmful
+      to ARTESP, third parties, or any public institutions.')}}
+    </li>
+    <li>
+      {{_('Activities that could compromise the security, integrity, or
+      availability of the Portal or its data.')}}
+    </li>
+    <li>
+      {{_('Any use that infringes upon the rights of others, including
+      intellectual property rights (other than the data itself as licensed
+      herein).')}}
+    </li>
   </ul>
-  
-  <h2>{{ _('4. No Warranty') }}</h2>
-  <p>{{ _('The data is provided "as is" without warranty or any representation of accuracy, timeliness, or completeness.') }}</p>
-  
-  <h2>{{ _('5. Limitation of Liability') }}</h2>
-  <p>{{ _('ARTESP shall not be liable for any claim, damages, or other liability arising from the use of the data provided on this portal.') }}</p>
-  
-  <h2>{{ _('6. Changes to Terms') }}</h2>
-  <p>{{ _('ARTESP reserves the right to modify these terms at any time. We encourage users to frequently check this page for any changes.') }}</p>
-  
-  <h2>{{ _('7. Applicable Law') }}</h2>
-  <p>{{ _('These terms and conditions are governed by and construed in accordance with the laws of Brazil and the State of São Paulo.') }}</p>
-  
-  <p>{{ _('Last updated: January 2024') }}</p>
+
+  <h2>{{_('4. User Responsibilities')}}</h2>
+  <ul>
+    <li>
+      {{_('Users are responsible for their interpretation and use of the data
+      obtained from the Portal.')}}
+    </li>
+    <li>
+      {{_('Given that datasets may be updated, corrected, or replaced
+      periodically without prior notice, Users are responsible for ensuring they
+      are using the most current and appropriate version of the data for their
+      needs.')}}
+    </li>
+  </ul>
+
+  <h2>{{_('5. Disclaimers')}}</h2>
+  <ul>
+    <li>
+      <strong>{{_('No Warranty:')}}</strong> {{_('The data on this Portal is
+      provided on an "as is" and "as available" basis.')}} {{_('ARTESP makes no
+      representations or warranties of any kind, express or implied, as to the
+      accuracy, completeness, reliability, timeliness, or fitness for a
+      particular purpose of the data provided.')}} {{_('ARTESP disclaims all
+      warranties to the fullest extent permissible under applicable law.')}}
+    </li>
+    <li>
+      <strong>{{_('Limitation of Liability:')}}</strong> {{_('ARTESP shall not
+      be liable for any direct, indirect, incidental, special, consequential, or
+      punitive damages, or any loss of profits or revenues, whether incurred
+      directly or indirectly, or any loss of data, use, goodwill, or other
+      intangible losses, resulting from (a) your access to or use of or
+      inability to access or use the Portal or data; (b) any conduct or content
+      of any third party on the Portal; or (c) unauthorized access, use, or
+      alteration of your transmissions or content.')}} {{_('Any applications,
+      analyses, interpretations, conclusions, or products created by Users based
+      on the data are the sole responsibility of their creators.')}}
+    </li>
+  </ul>
+
+  <h2>{{_('6. Intellectual Property')}}</h2>
+  <p>
+    {{_('While the data is provided under the terms of the license described in
+    Section 2, all other content on this Portal, including but not limited to
+    text, graphics, logos, icons, images, and the overall design and "look and
+    feel" of the Portal, are the property of ARTESP or its licensors and are
+    protected by copyright and other intellectual property laws.')}}
+  </p>
+
+  <h2>{{_('7. Modifications to Terms')}}</h2>
+  <p>
+    {{_('ARTESP reserves the right to modify these Terms at any time and at its
+    sole discretion.')}} {{_('Any changes will be effective immediately upon
+    posting the revised Terms on this page.')}} {{_('Your continued use of the
+    Portal following the posting of changes will constitute your acceptance of
+    such changes.')}} {{_('Users are advised to review this page periodically
+    for the latest information on our Terms of Use.')}}
+  </p>
+
+  <h2>{{_('8. Governing Law and Jurisdiction')}}</h2>
+  <p>
+    {{_('These Terms shall be governed by and construed in accordance with the
+    laws of the Federative Republic of Brazil, without regard to its conflict of
+    law principles.')}} {{_('Any disputes arising out of or relating to these
+    Terms or your use of the Portal shall be subject to the exclusive
+    jurisdiction of the courts of São Paulo, State of São Paulo, Brazil.')}}
+  </p>
+
+  <h2>{{_('9. Contact')}}</h2>
+  <p>
+    {{_('If you have any questions regarding these Terms of Use, please contact
+    ARTESP through the official communication channels available on the Portal.')}}
+  </p>
+  <p>{{ _('Last updated: June 2025') }}</p>
+</section>
 {% endblock %}
