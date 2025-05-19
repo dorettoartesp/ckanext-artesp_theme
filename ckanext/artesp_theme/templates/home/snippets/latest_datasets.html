@@ -16,19 +16,19 @@
             </h3>
 
             <div class="dataset-meta">
-              <span class="dataset-date">
+              <div class="dataset-date">
                 <i class="fa fa-calendar" aria-hidden="true"></i> {{ h.render_datetime(dataset.metadata_created, date_format='%d/%m/%Y') }}
-              </span>
+              </div>
 
               {% if dataset.organization %}
-                <span class="dataset-org">
-                  <i class="fa fa-building-o" aria-hidden="true"></i> {{ dataset.organization.title or dataset.organization.name }}
-                </span>
+                <div class="dataset-org">
+                  <i class="fa fa-building" aria-hidden="true"></i> {{ dataset.organization.title|upper or dataset.organization.name|upper }}
+                </div>
               {% endif %}
 
-              <span class="dataset-resources">
-                <i class="fa fa-files-o" aria-hidden="true"></i> {{ dataset.resources|length }} {{ _('Resources') }}
-              </span>
+              <div class="dataset-resources">
+                <i class="fa fa-folder-open" aria-hidden="true"></i> {{ ungettext('{num} Resource', '{num} Resources', dataset.resources|length).format(num=dataset.resources|length) }}
+              </div>
             </div>
 
             <div class="dataset-description">

@@ -176,6 +176,8 @@
 .dataset-meta {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
   gap: 1rem;
   margin-bottom: 1rem;
   font-size: 0.8rem;
@@ -185,17 +187,17 @@
 }
 
 .dataset-date, .dataset-org, .dataset-resources {
-  display: flex;
-  align-items: center;
   gap: 0.3rem;
   color: #555;
   font-weight: 500;
+  margin-top: 0;
 }
 
 .dataset-date .fa, .dataset-org .fa, .dataset-resources .fa {
   color: #777;
   font-size: 0.85rem;
   opacity: 0.8;
+  margin-right: 2px;
 }
 
 .dataset-description {
