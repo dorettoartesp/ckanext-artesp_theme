@@ -12,7 +12,7 @@
         <div class="dataset-card">
           <div class="dataset-card-content">
             <h3 class="dataset-title">
-              <a href="{{ h.url_for('dataset.read', id=dataset.name) }}">{{ dataset.title or dataset.name }}</a>
+              <a href="{{ h.url_for('dataset.read', id=dataset.name) }}">{{ dataset.title|upper or dataset.name|upper }}</a>
             </h3>
 
             <div class="dataset-meta">

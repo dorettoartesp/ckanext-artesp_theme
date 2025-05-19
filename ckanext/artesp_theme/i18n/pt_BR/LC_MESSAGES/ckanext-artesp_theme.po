@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-artesp_theme 0.0.1\n"
 "Report-Msgid-Bugs-To: email@example.com\n"
-"POT-Creation-Date: 2025-05-19 11:03-0300\n"
-"PO-Revision-Date: 2025-05-14 16:45-0300\n"
-"Last-Translator: ARTESP <dorettoartesp@gmail.com>\n"
+"POT-Creation-Date: 2025-05-19 11:37-0300\n"
+"PO-Revision-Date: 2025-05-19 11:25-0300\n"
+"Last-Translator: Gemini <gemini@google.com>\n"
 "Language: pt_BR\n"
 "Language-Team: pt_BR <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -135,7 +135,7 @@ msgstr "Grupos"
 #: ckanext/artesp_theme/templates/footer.html:47
 #: ckanext/artesp_theme/templates/snippets/language_selector.html:8
 msgid "Language"
-msgstr ""
+msgstr "Idioma"
 
 #: ckanext/artesp_theme/templates/footer.html:65
 msgid "All rights reserved."
@@ -143,7 +143,7 @@ msgstr "Todos os direitos reservados."
 
 #: ckanext/artesp_theme/templates/footer.html:70
 msgid "Government of São Paulo State"
-msgstr ""
+msgstr "Governo do Estado de São Paulo"
 
 #: ckanext/artesp_theme/templates/footer.html:76
 msgid ""
@@ -298,6 +298,20 @@ msgid ""
 " templates more fully we recommend <a href=\"%(docs_url)s\" "
 "target=\"_blank\" rel=\"noreferrer\">reading the documentation</a>.</p>"
 msgstr ""
+"<p><strong>Título do Site:</strong> Este é o título desta instância do "
+"CKAN que aparece em vários lugares em todo o CKAN.</p> <p><strong>Folha "
+"de Estilo Personalizada:</strong> Define um arquivo CSS principal "
+"alternativo.</p> <p><strong>Logo do Site:</strong> Este é o logotipo que "
+"aparece no cabeçalho de todos os modelos de instância do CKAN.</p> "
+"<p><strong>Sobre:</strong> Este texto aparecerá na <a "
+"href=\"%(about_url)s\">página sobre</a> desta instância do CKAN.</p> "
+"<p><strong>Texto de Introdução:</strong> Este texto aparecerá na <a "
+"href=\"%(home_url)s\">página inicial</a> desta instância do CKAN como "
+"boas-vindas aos visitantes.</p> <p><strong>CSS Personalizado:</strong> "
+"Este é um bloco de CSS que aparece na tag <code>&lt;head&gt;</code> de "
+"cada página. Se você deseja personalizar os modelos de forma mais "
+"completa, recomendamos <a href=\"%(docs_url)s\" target=\"_blank\" "
+"rel=\"noreferrer\">ler a documentação</a>.</p>"
 
 #: ckanext/artesp_theme/templates/admin/confirm_reset.html:3
 #: ckanext/artesp_theme/templates/admin/confirm_reset.html:11
@@ -354,6 +368,11 @@ msgid ""
 "the CKAN  <a href=\"%(docs_url)s\" target=\"_blank\" "
 "rel=\"noreferrer\">sysadmin guide</a></p>"
 msgstr ""
+"<p>Como usuário administrador, você tem controle total sobre esta "
+"instância do CKAN. Proceda com cuidado!</p> <p>Para orientações sobre o "
+"uso dos recursos de administrador, consulte o <a href=\"%(docs_url)s\" "
+"target=\"_blank\" rel=\"noreferrer\">guia de administrador</a> do "
+"CKAN</p>"
 
 #: ckanext/artesp_theme/templates/admin/trash.html:13
 msgid "Are you sure you want to purge everything?"
@@ -408,99 +427,87 @@ msgstr "Excluir permanentemente"
 
 #: ckanext/artesp_theme/templates/development/snippets/form.html:5
 msgid "Standard"
-msgstr ""
+msgstr "Padrão"
 
 #: ckanext/artesp_theme/templates/development/snippets/form.html:5
 msgid "Standard Input"
-msgstr ""
+msgstr "Entrada Padrão"
 
 #: ckanext/artesp_theme/templates/development/snippets/form.html:6
 msgid "Medium"
-msgstr ""
+msgstr "Médio"
 
 #: ckanext/artesp_theme/templates/development/snippets/form.html:6
 msgid "Medium Width Input"
-msgstr ""
+msgstr "Entrada de Largura Média"
 
 #: ckanext/artesp_theme/templates/development/snippets/form.html:7
-#, fuzzy
-#| msgid "Full Name"
 msgid "Full"
-msgstr "Nome Completo"
+msgstr "Completo"
 
 #: ckanext/artesp_theme/templates/development/snippets/form.html:7
 msgid "Full Width Input"
-msgstr ""
+msgstr "Entrada de Largura Completa"
 
 #: ckanext/artesp_theme/templates/development/snippets/form.html:8
-#, fuzzy
-#| msgid "Purge"
 msgid "Large"
-msgstr "Excluir permanentemente"
+msgstr "Grande"
 
 #: ckanext/artesp_theme/templates/development/snippets/form.html:8
 msgid "Large Input"
-msgstr ""
+msgstr "Entrada Grande"
 
 #: ckanext/artesp_theme/templates/development/snippets/form.html:9
 msgid "Prepend"
-msgstr ""
+msgstr "Prefixo"
 
 #: ckanext/artesp_theme/templates/development/snippets/form.html:9
 msgid "Prepend Input"
-msgstr ""
+msgstr "Entrada com Prefixo"
 
 #: ckanext/artesp_theme/templates/development/snippets/form.html:13
 msgid "Custom Field (empty)"
-msgstr ""
+msgstr "Campo Personalizado (vazio)"
 
 #: ckanext/artesp_theme/templates/development/snippets/form.html:19
 #: ckanext/artesp_theme/templates/snippets/custom_form_fields.html:20
 #: ckanext/artesp_theme/templates/snippets/custom_form_fields.html:37
-#, fuzzy
-#| msgid "Custom CSS"
 msgid "Custom Field"
-msgstr "CSS Personalizado"
+msgstr "Campo Personalizado"
 
 #: ckanext/artesp_theme/templates/development/snippets/form.html:22
 msgid "Markdown"
-msgstr ""
+msgstr "Markdown"
 
 #: ckanext/artesp_theme/templates/development/snippets/form.html:23
 msgid "Textarea"
-msgstr ""
+msgstr "Área de Texto"
 
 #: ckanext/artesp_theme/templates/development/snippets/form.html:24
 msgid "Select"
-msgstr ""
+msgstr "Selecionar"
 
 #: ckanext/artesp_theme/templates/group/admins.html:3
 #: ckanext/artesp_theme/templates/group/admins.html:6
 #: ckanext/artesp_theme/templates/organization/admins.html:3
 #: ckanext/artesp_theme/templates/organization/admins.html:6
-#, fuzzy
-#| msgid "Administration"
 msgid "Administrators"
-msgstr "Administração"
+msgstr "Administradores"
 
 #: ckanext/artesp_theme/templates/group/base_form_page.html:7
-#, fuzzy
-#| msgid "Groups"
 msgid "Group Form"
-msgstr "Grupos"
+msgstr "Formulário de Grupo"
 
 #: ckanext/artesp_theme/templates/group/confirm_delete.html:11
-#, fuzzy, python-brace-format
-#| msgid "Are you sure you want to reset the config?"
+#, python-brace-format
 msgid "Are you sure you want to delete group - {name}?"
-msgstr "Tem certeza que deseja redefinir a configuração?"
+msgstr "Tem certeza que deseja excluir o grupo - {name}?"
 
 #: ckanext/artesp_theme/templates/group/confirm_delete_member.html:11
 #: ckanext/artesp_theme/templates/organization/confirm_delete_member.html:11
-#, fuzzy, python-brace-format
-#| msgid "Are you sure you want to reset the config?"
+#, python-brace-format
 msgid "Are you sure you want to delete member - {name}?"
-msgstr "Tem certeza que deseja redefinir a configuração?"
+msgstr "Tem certeza que deseja excluir o membro - {name}?"
 
 #: ckanext/artesp_theme/templates/group/edit.html:7
 #: ckanext/artesp_theme/templates/group/edit_base.html:4
@@ -512,20 +519,18 @@ msgstr "Tem certeza que deseja redefinir a configuração?"
 #: ckanext/artesp_theme/templates/user/edit_base.html:3
 #: ckanext/artesp_theme/templates/user/read_base.html:17
 msgid "Manage"
-msgstr ""
+msgstr "Gerenciar"
 
 #: ckanext/artesp_theme/templates/group/edit.html:12
-#, fuzzy
-#| msgid "Deleted groups"
 msgid "Edit Group"
-msgstr "Grupos excluídos"
+msgstr "Editar Grupo"
 
 #: ckanext/artesp_theme/templates/group/edit_base.html:9
 #: ckanext/artesp_theme/templates/organization/edit_base.html:9
 #: ckanext/artesp_theme/templates/package/resource_read.html:42
 #: ckanext/artesp_theme/templates/package/resource_views.html:4
 msgid "View"
-msgstr ""
+msgstr "Visualizar"
 
 #: ckanext/artesp_theme/templates/group/edit_base.html:13
 #: ckanext/artesp_theme/templates/group/manage_members.html:29
@@ -538,7 +543,7 @@ msgstr ""
 #: ckanext/artesp_theme/templates/package/resource_edit.html:3
 #: ckanext/artesp_theme/templates/package/resource_edit_base.html:12
 msgid "Edit"
-msgstr ""
+msgstr "Editar"
 
 #: ckanext/artesp_theme/templates/group/edit_base.html:14
 #: ckanext/artesp_theme/templates/group/manage_members.html:3
@@ -550,10 +555,8 @@ msgstr ""
 #: ckanext/artesp_theme/templates/organization/members.html:3
 #: ckanext/artesp_theme/templates/organization/read_base.html:20
 #: ckanext/artesp_theme/templates/organization/snippets/info.html:57
-#, fuzzy
-#| msgid "Remember me"
 msgid "Members"
-msgstr "Lembrar de mim"
+msgstr "Membros"
 
 #: ckanext/artesp_theme/templates/group/followers.html:3
 #: ckanext/artesp_theme/templates/group/followers.html:6
@@ -568,20 +571,16 @@ msgstr "Lembrar de mim"
 #: ckanext/artesp_theme/templates/user/followers.html:7
 #: ckanext/artesp_theme/templates/user/snippets/info.html:40
 msgid "Followers"
-msgstr ""
+msgstr "Seguidores"
 
 #: ckanext/artesp_theme/templates/group/index.html:14
 #: ckanext/artesp_theme/templates/user/dashboard_groups.html:7
-#, fuzzy
-#| msgid "Deleted groups"
 msgid "Add Group"
-msgstr "Grupos excluídos"
+msgstr "Adicionar Grupo"
 
 #: ckanext/artesp_theme/templates/group/index.html:21
-#, fuzzy
-#| msgid "Search datasets..."
 msgid "Search groups..."
-msgstr "Buscar conjuntos de dados..."
+msgstr "Buscar grupos..."
 
 #: ckanext/artesp_theme/templates/group/index.html:21
 #: ckanext/artesp_theme/templates/group/read.html:15
@@ -592,7 +591,7 @@ msgstr "Buscar conjuntos de dados..."
 #: ckanext/artesp_theme/templates/snippets/search_form.html:4
 #: ckanext/artesp_theme/templates/snippets/simple_search.html:10
 msgid "Name Ascending"
-msgstr ""
+msgstr "Nome Crescente"
 
 #: ckanext/artesp_theme/templates/group/index.html:21
 #: ckanext/artesp_theme/templates/group/read.html:16
@@ -603,16 +602,16 @@ msgstr ""
 #: ckanext/artesp_theme/templates/snippets/search_form.html:4
 #: ckanext/artesp_theme/templates/snippets/simple_search.html:10
 msgid "Name Descending"
-msgstr ""
+msgstr "Nome Decrescente"
 
 #: ckanext/artesp_theme/templates/group/index.html:30
 msgid "There are currently no groups for this site"
-msgstr ""
+msgstr "Atualmente não existem grupos para este site"
 
 #: ckanext/artesp_theme/templates/group/index.html:32
 #: ckanext/artesp_theme/templates/organization/index.html:31
 msgid "How about creating one?"
-msgstr ""
+msgstr "Que tal criar um?"
 
 #: ckanext/artesp_theme/templates/group/manage_members.html:6
 #: ckanext/artesp_theme/templates/group/member_new.html:10
@@ -622,12 +621,12 @@ msgstr ""
 #: ckanext/artesp_theme/templates/organization/member_new.html:12
 #: ckanext/artesp_theme/templates/organization/member_new.html:80
 msgid "Add Member"
-msgstr ""
+msgstr "Adicionar Membro"
 
 #: ckanext/artesp_theme/templates/group/manage_members.html:7
 #: ckanext/artesp_theme/templates/organization/manage_members.html:9
 msgid "CSV"
-msgstr ""
+msgstr "CSV"
 
 #: ckanext/artesp_theme/templates/group/manage_members.html:16
 #: ckanext/artesp_theme/templates/group/member_new.html:63
@@ -640,16 +639,14 @@ msgstr ""
 #: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:42
 #: ckanext/artesp_theme/templates/package/collaborators/collaborators.html:20
 msgid "Role"
-msgstr ""
+msgstr "Função"
 
 #: ckanext/artesp_theme/templates/group/manage_members.html:32
 #: ckanext/artesp_theme/templates/group/member_new.html:72
 #: ckanext/artesp_theme/templates/organization/manage_members.html:45
 #: ckanext/artesp_theme/templates/organization/member_new.html:74
-#, fuzzy
-#| msgid "Are you sure you want to reset the config?"
 msgid "Are you sure you want to delete this member?"
-msgstr "Tem certeza que deseja redefinir a configuração?"
+msgstr "Tem certeza que deseja excluir este membro?"
 
 #: ckanext/artesp_theme/templates/group/manage_members.html:32
 #: ckanext/artesp_theme/templates/group/member_new.html:72
@@ -664,61 +661,57 @@ msgstr "Tem certeza que deseja redefinir a configuração?"
 #: ckanext/artesp_theme/templates/package/snippets/package_form.html:42
 #: ckanext/artesp_theme/templates/package/snippets/resource_form.html:73
 #: ckanext/artesp_theme/templates/user/edit_user_form.html:93
-#, fuzzy
-#| msgid "Deleted groups"
 msgid "Delete"
-msgstr "Grupos excluídos"
+msgstr "Excluir"
 
 #: ckanext/artesp_theme/templates/group/member_new.html:8
 #: ckanext/artesp_theme/templates/organization/member_new.html:10
 msgid "Back to all members"
-msgstr ""
+msgstr "Voltar para todos os membros"
 
 #: ckanext/artesp_theme/templates/group/member_new.html:10
 #: ckanext/artesp_theme/templates/organization/member_new.html:7
 #: ckanext/artesp_theme/templates/organization/member_new.html:12
-#, fuzzy
-#| msgid "Remember me"
 msgid "Edit Member"
-msgstr "Lembrar de mim"
+msgstr "Editar Membro"
 
 #: ckanext/artesp_theme/templates/group/member_new.html:20
 #: ckanext/artesp_theme/templates/organization/member_new.html:22
 #: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:20
 msgid "Existing User"
-msgstr ""
+msgstr "Usuário Existente"
 
 #: ckanext/artesp_theme/templates/group/member_new.html:23
 #: ckanext/artesp_theme/templates/organization/member_new.html:25
 #: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:23
 msgid "If you wish to add an existing user, search for their username below."
 msgstr ""
+"Se você deseja adicionar um usuário existente, pesquise pelo nome de "
+"usuário abaixo."
 
 #: ckanext/artesp_theme/templates/group/member_new.html:42
 #: ckanext/artesp_theme/templates/organization/member_new.html:44
 msgid "or"
-msgstr ""
+msgstr "ou"
 
 #: ckanext/artesp_theme/templates/group/member_new.html:48
 #: ckanext/artesp_theme/templates/organization/member_new.html:50
-#, fuzzy
-#| msgid "User"
 msgid "New User"
-msgstr "Usuário"
+msgstr "Novo Usuário"
 
 #: ckanext/artesp_theme/templates/group/member_new.html:51
 #: ckanext/artesp_theme/templates/organization/member_new.html:53
 msgid "If you wish to invite a new user, enter their email address."
-msgstr ""
+msgstr "Se você deseja convidar um novo usuário, digite o endereço de e-mail dele."
 
 #: ckanext/artesp_theme/templates/group/member_new.html:74
 msgid "Save"
-msgstr ""
+msgstr "Salvar"
 
 #: ckanext/artesp_theme/templates/group/member_new.html:91
 #: ckanext/artesp_theme/templates/organization/member_new.html:93
 msgid "What are roles?"
-msgstr ""
+msgstr "O que são funções?"
 
 #: ckanext/artesp_theme/templates/group/member_new.html:94
 msgid ""
@@ -726,30 +719,27 @@ msgid ""
 "organization members.</p> <p><strong>Member:</strong> Can add/remove "
 "datasets from groups</p>"
 msgstr ""
+"<p><strong>Administrador:</strong> Pode editar informações do grupo, bem "
+"como gerenciar membros da organização.</p> <p><strong>Membro:</strong> "
+"Pode adicionar/remover conjuntos de dados dos grupos</p>"
 
 #: ckanext/artesp_theme/templates/group/new.html:3
-#, fuzzy
-#| msgid "Create Account"
 msgid "Create a Group"
-msgstr "Criar Conta"
+msgstr "Criar um Grupo"
 
 #: ckanext/artesp_theme/templates/group/new_group_form.html:17
-#, fuzzy
-#| msgid "Deleted groups"
 msgid "Update Group"
-msgstr "Grupos excluídos"
+msgstr "Atualizar Grupo"
 
 #: ckanext/artesp_theme/templates/group/new_group_form.html:19
-#, fuzzy
-#| msgid "Deleted groups"
 msgid "Create Group"
-msgstr "Grupos excluídos"
+msgstr "Criar Grupo"
 
 #: ckanext/artesp_theme/templates/group/read.html:14
 #: ckanext/artesp_theme/templates/organization/read.html:20
 #: ckanext/artesp_theme/templates/package/search.html:29
 msgid "Relevance"
-msgstr ""
+msgstr "Relevância"
 
 #: ckanext/artesp_theme/templates/group/read.html:17
 #: ckanext/artesp_theme/templates/organization/bulk_process.html:31
@@ -757,7 +747,7 @@ msgstr ""
 #: ckanext/artesp_theme/templates/package/search.html:32
 #: ckanext/artesp_theme/templates/package/snippets/resource_form.html:59
 msgid "Last Modified"
-msgstr ""
+msgstr "Última Modificação"
 
 #: ckanext/artesp_theme/templates/group/read.html:20
 #: ckanext/artesp_theme/templates/home/snippets/search.html:2
@@ -770,21 +760,17 @@ msgstr "Buscar conjuntos de dados..."
 #: ckanext/artesp_theme/templates/group/snippets/feeds.html:2
 #, python-brace-format
 msgid "Datasets in group: {group}"
-msgstr ""
+msgstr "Conjuntos de dados no grupo: {group}"
 
 #: ckanext/artesp_theme/templates/group/snippets/group_form.html:12
 #: ckanext/artesp_theme/templates/organization/snippets/organization_form.html:12
 #: ckanext/artesp_theme/templates/package/snippets/resource_form.html:36
-#, fuzzy
-#| msgid "username"
 msgid "Name"
-msgstr "nome de usuário"
+msgstr "Nome"
 
 #: ckanext/artesp_theme/templates/group/snippets/group_form.html:12
-#, fuzzy
-#| msgid "Groups"
 msgid "My Group"
-msgstr "Grupos"
+msgstr "Meu Grupo"
 
 #: ckanext/artesp_theme/templates/group/snippets/group_form.html:20
 #: ckanext/artesp_theme/templates/organization/snippets/organization_form.html:20
@@ -792,89 +778,76 @@ msgstr "Grupos"
 #: ckanext/artesp_theme/templates/package/snippets/resource_form.html:30
 #: ckanext/artesp_theme/templates/package/snippets/resource_upload_field.html:107
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: ckanext/artesp_theme/templates/group/snippets/group_form.html:22
 #: ckanext/artesp_theme/templates/organization/snippets/organization_form.html:22
 #: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:21
 #: ckanext/artesp_theme/templates/package/snippets/resource_form.html:40
 #: ckanext/artesp_theme/templates/package/snippets/view_form.html:9
-#, fuzzy
-#| msgid "No description provided."
 msgid "Description"
-msgstr "Nenhuma descrição fornecida."
+msgstr "Descrição"
 
 #: ckanext/artesp_theme/templates/group/snippets/group_form.html:22
 msgid "A little information about my group..."
-msgstr ""
+msgstr "Um pouco de informação sobre meu grupo..."
 
 #: ckanext/artesp_theme/templates/group/snippets/group_form.html:40
-#, fuzzy
-#| msgid "Are you sure you want to reset the config?"
 msgid "Are you sure you want to delete this Group?"
-msgstr "Tem certeza que deseja redefinir a configuração?"
+msgstr "Tem certeza que deseja excluir este Grupo?"
 
 #: ckanext/artesp_theme/templates/group/snippets/group_form.html:43
-#, fuzzy
-#| msgid "Groups"
 msgid "Save Group"
-msgstr "Grupos"
+msgstr "Salvar Grupo"
 
 #: ckanext/artesp_theme/templates/group/snippets/group_item.html:32
 #: ckanext/artesp_theme/templates/organization/snippets/organization_item.html:31
-#, fuzzy, python-brace-format
-#| msgid "Datasets"
+#, python-brace-format
 msgid "{num} Dataset"
 msgid_plural "{num} Datasets"
-msgstr[0] "Conjuntos de Dados"
-msgstr[1] ""
+msgstr[0] "{num} Conjunto de Dados"
+msgstr[1] "{num} Conjuntos de Dados"
 
 #: ckanext/artesp_theme/templates/group/snippets/group_item.html:34
 #: ckanext/artesp_theme/templates/home/snippets/featured_group.html:26
 #: ckanext/artesp_theme/templates/home/snippets/featured_organization.html:26
 #: ckanext/artesp_theme/templates/organization/snippets/organization_item.html:33
-#, fuzzy
-#| msgid "Datasets"
 msgid "0 Datasets"
-msgstr "Conjuntos de Dados"
+msgstr "0 Conjuntos de Dados"
 
 #: ckanext/artesp_theme/templates/group/snippets/group_item.html:39
 #: ckanext/artesp_theme/templates/organization/snippets/organization_item.html:38
 #, python-brace-format
 msgid "{num} Member"
 msgid_plural "{num} Members"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{num} Membro"
+msgstr[1] "{num} Membros"
 
 #: ckanext/artesp_theme/templates/group/snippets/group_item.html:41
 #: ckanext/artesp_theme/templates/organization/snippets/organization_item.html:40
-#, fuzzy
-#| msgid "Remember me"
 msgid "0 Members"
-msgstr "Lembrar de mim"
+msgstr "0 Membros"
 
 #: ckanext/artesp_theme/templates/group/snippets/group_item.html:51
 #: ckanext/artesp_theme/templates/group/snippets/group_item.html:52
 #, python-brace-format
 msgid "View {name}"
-msgstr ""
+msgstr "Visualizar {name}"
 
 #: ckanext/artesp_theme/templates/group/snippets/group_item.html:56
 #: ckanext/artesp_theme/templates/macros/form/custom.html:50
 #: ckanext/artesp_theme/templates/package/snippets/resource_upload_field.html:34
 #: ckanext/artesp_theme/templates/snippets/search_form.html:77
-#, fuzzy
-#| msgid "Promote"
 msgid "Remove"
-msgstr "Promover"
+msgstr "Remover"
 
 #: ckanext/artesp_theme/templates/group/snippets/group_item.html:56
 msgid "Remove dataset from this group"
-msgstr ""
+msgstr "Remover conjunto de dados deste grupo"
 
 #: ckanext/artesp_theme/templates/group/snippets/helper.html:15
 msgid "What are Groups?"
-msgstr ""
+msgstr "O que são Grupos?"
 
 #: ckanext/artesp_theme/templates/group/snippets/helper.html:19
 msgid ""
@@ -883,6 +856,11 @@ msgid ""
 "on a particular theme, or as a very simple way to help people find and "
 "search your own published datasets."
 msgstr ""
+"Você pode usar Grupos CKAN para criar e gerenciar coleções de conjuntos "
+"de dados. Isso pode ser para catalogar conjuntos de dados para um projeto"
+" ou equipe específica, ou sobre um tema específico, ou como uma forma "
+"muito simples de ajudar as pessoas a encontrar e pesquisar seus próprios "
+"conjuntos de dados publicados."
 
 #: ckanext/artesp_theme/templates/group/snippets/info.html:19
 #: ckanext/artesp_theme/templates/organization/bulk_process.html:85
@@ -890,15 +868,13 @@ msgstr ""
 #: ckanext/artesp_theme/templates/package/read.html:19
 #: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:117
 #: ckanext/artesp_theme/templates/snippets/package_item.html:39
-#, fuzzy
-#| msgid "Deleted groups"
 msgid "Deleted"
-msgstr "Grupos excluídos"
+msgstr "Excluído"
 
 #: ckanext/artesp_theme/templates/group/snippets/info.html:29
 #: ckanext/artesp_theme/templates/organization/snippets/info.html:38
 msgid "read more"
-msgstr ""
+msgstr "leia mais"
 
 #: ckanext/artesp_theme/templates/home/index.html:3
 msgid "Welcome"
@@ -926,47 +902,57 @@ msgid ""
 "Features overview: <a "
 "href=\"https://ckan.org/features/\">https://ckan.org/features/</a></p>"
 msgstr ""
+"<p>O CKAN é a plataforma de portal de dados de código aberto líder "
+"mundial.</p> <p>O CKAN é uma solução de software completa e pronta para "
+"uso que torna os dados acessíveis e utilizáveis – fornecendo ferramentas "
+"para otimizar a publicação, compartilhamento, localização e uso de dados "
+"(incluindo armazenamento de dados e provisão de APIs de dados robustas). "
+"O CKAN é destinado a publicadores de dados (governos nacionais e "
+"regionais, empresas e organizações) que desejam tornar seus dados abertos"
+" e disponíveis.</p> <p>O CKAN é usado por governos e grupos de usuários "
+"em todo o mundo e alimenta uma variedade de portais de dados oficiais e "
+"comunitários, incluindo portais para governos locais, nacionais e "
+"internacionais, como o <a href=\"https://data.gov.uk\">data.gov.uk</a> do"
+" Reino Unido e o <a "
+"href=\"https://catalog.data.gov/\">catalog.data.gov</a> dos Estados "
+"Unidos, o <a href=\"https://dados.gov.br/\">dados.gov.br</a> do Brasil, "
+"portais governamentais holandeses, bem como sites de cidades e municípios"
+" nos EUA, Reino Unido, Argentina, Finlândia e outros lugares.</p> "
+"<p>CKAN: <a href=\"https://ckan.org/\">https://ckan.org/</a><br /> "
+"Vitrines do CKAN: <a "
+"href=\"https://ckan.org/showcase\">https://ckan.org/showcase</a><br /> "
+"Visão geral dos recursos: <a "
+"href=\"https://ckan.org/features/\">https://ckan.org/features/</a></p>"
 
 #: ckanext/artesp_theme/templates/home/snippets/featured_group.html:4
-#, fuzzy
-#| msgid "Deleted groups"
 msgid "Featured Groups"
-msgstr "Grupos excluídos"
+msgstr "Grupos em Destaque"
 
 #: ckanext/artesp_theme/templates/home/snippets/featured_group.html:24
 #: ckanext/artesp_theme/templates/home/snippets/featured_organization.html:24
-#, fuzzy, python-brace-format
-#| msgid "Datasets"
+#, python-brace-format
 msgid "{num} Datasets"
-msgstr "Conjuntos de Dados"
+msgstr "{num} Conjunto de Dados"
 
 #: ckanext/artesp_theme/templates/home/snippets/featured_group.html:31
-#, fuzzy
-#| msgid "View profile"
 msgid "View Group"
-msgstr "Ver perfil"
+msgstr "Ver Grupo"
 
 #: ckanext/artesp_theme/templates/home/snippets/featured_group.html:37
 msgid "No featured groups available"
-msgstr ""
+msgstr "Nenhum grupo em destaque disponível"
 
 #: ckanext/artesp_theme/templates/home/snippets/featured_organization.html:4
-#, fuzzy
-#| msgid "Deleted organizations"
 msgid "Featured Organizations"
-msgstr "Organizações excluídas"
+msgstr "Organizações em Destaque"
 
 #: ckanext/artesp_theme/templates/home/snippets/featured_organization.html:31
-#, fuzzy
-#| msgid "Organizations"
 msgid "View Organization"
-msgstr "Organizações"
+msgstr "Ver Organização"
 
 #: ckanext/artesp_theme/templates/home/snippets/featured_organization.html:37
-#, fuzzy
-#| msgid "Deleted organizations"
 msgid "No featured organizations available"
-msgstr "Organizações excluídas"
+msgstr "Nenhuma organização em destaque disponível"
 
 #: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:5
 msgid "Latest Datasets"
@@ -992,10 +978,8 @@ msgid "No datasets found."
 msgstr "Nenhum conjunto de dados encontrado."
 
 #: ckanext/artesp_theme/templates/home/snippets/promoted.html:4
-#, fuzzy
-#| msgid "About the ARTESP Data Portal"
 msgid "About this portal"
-msgstr "Sobre o Portal de Dados da ARTESP"
+msgstr "Sobre este portal"
 
 #: ckanext/artesp_theme/templates/home/snippets/promoted.html:9
 msgid ""
@@ -1004,44 +988,45 @@ msgid ""
 " information. Use the search box above to find specific data or browse "
 "through the featured collections below."
 msgstr ""
+"Bem-vindo ao Portal de Dados Abertos da ARTESP. Aqui você pode acessar e "
+"explorar conjuntos de dados públicos relacionados a transporte, "
+"infraestrutura e informações regulatórias. Use a caixa de busca acima "
+"para encontrar dados específicos ou navegue pelas coleções em destaque "
+"abaixo."
 
 #: ckanext/artesp_theme/templates/home/snippets/promoted.html:14
-#, fuzzy
-#| msgid "Adapt the data"
 msgid "Open Data"
-msgstr "Adaptar os dados"
+msgstr "Dados Abertos"
 
 #: ckanext/artesp_theme/templates/home/snippets/promoted.html:15
 msgid "Access transportation and regulatory datasets in machine-readable formats"
 msgstr ""
+"Acesse conjuntos de dados de transporte e regulatórios em formatos "
+"legíveis por máquina"
 
 #: ckanext/artesp_theme/templates/home/snippets/promoted.html:19
-#, fuzzy
-#| msgid "Organizations"
 msgid "Visualizations"
-msgstr "Organizações"
+msgstr "Visualizações"
 
 #: ckanext/artesp_theme/templates/home/snippets/promoted.html:20
 msgid "Explore interactive charts and maps of transportation data"
-msgstr ""
+msgstr "Explore gráficos interativos e mapas de dados de transporte"
 
 #: ckanext/artesp_theme/templates/home/snippets/promoted.html:24
 msgid "API Access"
-msgstr ""
+msgstr "Acesso API"
 
 #: ckanext/artesp_theme/templates/home/snippets/promoted.html:25
 msgid "Connect your applications directly to our data through APIs"
-msgstr ""
+msgstr "Conecte seus aplicativos diretamente aos nossos dados através de APIs"
 
 #: ckanext/artesp_theme/templates/home/snippets/search.html:6
 msgid "Find and explore public datasets"
 msgstr "Encontre e explore conjuntos de dados públicos"
 
 #: ckanext/artesp_theme/templates/home/snippets/search.html:11
-#, fuzzy
-#| msgid "Search datasets..."
 msgid "Search datasets"
-msgstr "Buscar conjuntos de dados..."
+msgstr "Buscar conjuntos de dados"
 
 #: ckanext/artesp_theme/templates/home/snippets/search.html:21
 #: ckanext/artesp_theme/templates/snippets/simple_search.html:5
@@ -1055,24 +1040,20 @@ msgstr "Tópicos populares:"
 
 #: ckanext/artesp_theme/templates/home/snippets/stats.html:7
 msgid "ARTESP em números"
-msgstr ""
+msgstr "ARTESP em números"
 
 #: ckanext/artesp_theme/templates/home/snippets/stats.html:8
 msgid "Explore os dados disponíveis no Portal de Dados Abertos da ARTESP"
-msgstr ""
+msgstr "Explore os dados disponíveis no Portal de Dados Abertos da ARTESP"
 
 #: ckanext/artesp_theme/templates/home/snippets/stats.html:18
 #: ckanext/artesp_theme/templates/package/read_base.html:22
-#, fuzzy
-#| msgid "Datasets"
 msgid "Dataset"
-msgstr "Conjuntos de Dados"
+msgstr "Conjunto de Dados"
 
 #: ckanext/artesp_theme/templates/home/snippets/stats.html:29
-#, fuzzy
-#| msgid "Resources"
 msgid "Resource"
-msgstr "Recursos"
+msgstr "Recurso"
 
 #: ckanext/artesp_theme/templates/home/snippets/stats.html:29
 #: ckanext/artesp_theme/templates/package/resources.html:5
@@ -1083,53 +1064,49 @@ msgstr "Recursos"
 
 #: ckanext/artesp_theme/templates/home/snippets/stats.html:40
 #: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:75
-#, fuzzy
-#| msgid "Organizations"
 msgid "Organization"
-msgstr "Organizações"
+msgstr "Organização"
 
 #: ckanext/artesp_theme/templates/macros/form/checkbox.html:28
 #: ckanext/artesp_theme/templates/macros/form/input_block.html:25
 msgid "This field is required"
-msgstr ""
+msgstr "Este campo é obrigatório"
 
 #: ckanext/artesp_theme/templates/macros/form/custom.html:42
 msgid "Key"
-msgstr ""
+msgstr "Chave"
 
 #: ckanext/artesp_theme/templates/macros/form/custom.html:54
 #: ckanext/artesp_theme/templates/package/resource_read.html:146
 #: ckanext/artesp_theme/templates/package/snippets/additional_info.html:7
 #: ckanext/artesp_theme/templates/snippets/additional_info.html:12
 msgid "Value"
-msgstr ""
+msgstr "Valor"
 
 #: ckanext/artesp_theme/templates/macros/form/errors.html:18
 msgid "The form contains invalid entries:"
-msgstr ""
+msgstr "O formulário contém entradas inválidas:"
 
 #: ckanext/artesp_theme/templates/macros/form/image_upload.html:15
 msgid "http://example.com/my-image.jpg"
-msgstr ""
+msgstr "http://exemplo.com/minha-imagem.jpg"
 
 #: ckanext/artesp_theme/templates/macros/form/image_upload.html:16
 msgid "Image URL"
-msgstr ""
+msgstr "URL da Imagem"
 
 #: ckanext/artesp_theme/templates/macros/form/image_upload.html:17
 msgid "Image"
-msgstr ""
+msgstr "Imagem"
 
 #: ckanext/artesp_theme/templates/macros/form/image_upload.html:52
 #: ckanext/artesp_theme/templates/package/snippets/resource_upload_field.html:77
 msgid "Clear Upload"
-msgstr ""
+msgstr "Limpar Envio"
 
 #: ckanext/artesp_theme/templates/macros/form/input_block.html:25
-#, fuzzy
-#| msgid "Custom CSS"
 msgid "Custom"
-msgstr "CSS Personalizado"
+msgstr "Personalizado"
 
 #: ckanext/artesp_theme/templates/macros/form/markdown.html:31
 #, python-format
@@ -1138,50 +1115,47 @@ msgid ""
 "data-bs-toggle=\"popover\" data-bs-content=\"%(markdown_tooltip)s\" data-"
 "bs-html=\"true\">Markdown formatting</a> here"
 msgstr ""
+"Você pode usar <a href=\"#markdown\" title=\"Referência rápida de "
+"Markdown\" data-bs-toggle=\"popover\" data-bs-"
+"content=\"%(markdown_tooltip)s\" data-bs-html=\"true\">formatação "
+"Markdown</a> aqui"
 
 #: ckanext/artesp_theme/templates/macros/form/required_message.html:11
-#, fuzzy
-#| msgid "Required"
 msgid "Required field"
-msgstr "Obrigatório"
+msgstr "Campo obrigatório"
 
 #: ckanext/artesp_theme/templates/organization/base_form_page.html:5
-#, fuzzy
-#| msgid "Organizations"
 msgid "Organization Form"
-msgstr "Organizações"
+msgstr "Formulário de Organização"
 
 #: ckanext/artesp_theme/templates/organization/bulk_process.html:5
 #: ckanext/artesp_theme/templates/organization/bulk_process.html:13
-#, fuzzy
-#| msgid "Latest Datasets"
 msgid "Edit datasets"
-msgstr "Conjuntos de Dados Recentes"
+msgstr "Editar conjuntos de dados"
 
 #: ckanext/artesp_theme/templates/organization/bulk_process.html:18
 #, python-brace-format
 msgid " found for \"{query}\""
-msgstr ""
+msgstr " encontrado(s) para \"{query}\""
 
 #: ckanext/artesp_theme/templates/organization/bulk_process.html:20
-#, fuzzy, python-brace-format
-#| msgid "No datasets found."
+#, python-brace-format
 msgid "Sorry no datasets found for \"{query}\""
-msgstr "Nenhum conjunto de dados encontrado."
+msgstr "Desculpe, nenhum conjunto de dados encontrado para \"{query}\""
 
 #: ckanext/artesp_theme/templates/organization/bulk_process.html:50
 msgid "Make public"
-msgstr ""
+msgstr "Tornar público"
 
 #: ckanext/artesp_theme/templates/organization/bulk_process.html:54
 msgid "Make private"
-msgstr ""
+msgstr "Tornar privado"
 
 #: ckanext/artesp_theme/templates/organization/bulk_process.html:83
 #: ckanext/artesp_theme/templates/package/read.html:16
 #: ckanext/artesp_theme/templates/snippets/package_item.html:37
 msgid "Draft"
-msgstr ""
+msgstr "Rascunho"
 
 #: ckanext/artesp_theme/templates/organization/bulk_process.html:88
 #: ckanext/artesp_theme/templates/package/read.html:9
@@ -1190,48 +1164,41 @@ msgstr ""
 #: ckanext/artesp_theme/templates/snippets/private.html:2
 #: ckanext/artesp_theme/templates/user/snippets/info.html:84
 msgid "Private"
-msgstr ""
+msgstr "Privado"
 
 #: ckanext/artesp_theme/templates/organization/bulk_process.html:101
 msgid "This organization has no datasets associated to it"
-msgstr ""
+msgstr "Esta organização não possui conjuntos de dados associados a ela"
 
 #: ckanext/artesp_theme/templates/organization/confirm_delete.html:11
-#, fuzzy, python-brace-format
-#| msgid "Are you sure you want to reset the config?"
+#, python-brace-format
 msgid "Are you sure you want to delete organization - {name}?"
-msgstr "Tem certeza que deseja redefinir a configuração?"
+msgstr "Tem certeza que deseja excluir a organização - {name}?"
 
 #: ckanext/artesp_theme/templates/organization/edit.html:14
-#, fuzzy
-#| msgid "Organizations"
 msgid "Edit Organization"
-msgstr "Organizações"
+msgstr "Editar Organização"
 
 #: ckanext/artesp_theme/templates/organization/index.html:13
 #: ckanext/artesp_theme/templates/user/dashboard_organizations.html:7
-#, fuzzy
-#| msgid "Organizations"
 msgid "Add Organization"
-msgstr "Organizações"
+msgstr "Adicionar Organização"
 
 #: ckanext/artesp_theme/templates/organization/index.html:20
-#, fuzzy
-#| msgid "Organizations"
 msgid "Search organizations..."
-msgstr "Organizações"
+msgstr "Buscar organizações..."
 
 #: ckanext/artesp_theme/templates/organization/index.html:29
 msgid "There are currently no organizations for this site"
-msgstr ""
+msgstr "Atualmente não existem organizações para este site"
 
 #: ckanext/artesp_theme/templates/organization/manage_members.html:15
 #: ckanext/artesp_theme/templates/organization/members.html:10
 #, python-brace-format
 msgid "{count} member"
 msgid_plural "{count} members"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{count} membro"
+msgstr[1] "{count} membros"
 
 #: ckanext/artesp_theme/templates/organization/member_new.html:34
 #: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:32
@@ -1245,14 +1212,12 @@ msgid "Username"
 msgstr "Nome de Usuário"
 
 #: ckanext/artesp_theme/templates/organization/member_new.html:56
-#, fuzzy
-#| msgid "Address:"
 msgid "Email address"
-msgstr "Endereço:"
+msgstr "Endereço de e-mail"
 
 #: ckanext/artesp_theme/templates/organization/member_new.html:76
 msgid "Update Member"
-msgstr ""
+msgstr "Atualizar Membro"
 
 #: ckanext/artesp_theme/templates/organization/member_new.html:96
 msgid ""
@@ -1262,35 +1227,33 @@ msgid ""
 "<p><strong>Member:</strong> Can view the organization's private datasets,"
 " but not add new datasets.</p>"
 msgstr ""
+"<p><strong>Administrador:</strong> Pode adicionar/editar e excluir "
+"conjuntos de dados, bem como gerenciar membros da organização.</p> "
+"<p><strong>Editor:</strong> Pode adicionar e editar conjuntos de dados, "
+"mas não gerenciar membros da organização.</p> <p><strong>Membro:</strong>"
+" Pode visualizar os conjuntos de dados privados da organização, mas não "
+"adicionar novos conjuntos de dados.</p>"
 
 #: ckanext/artesp_theme/templates/organization/new.html:3
-#, fuzzy
-#| msgid "Deleted organizations"
 msgid "Create an Organization"
-msgstr "Organizações excluídas"
+msgstr "Criar uma Organização"
 
 #: ckanext/artesp_theme/templates/organization/new_organization_form.html:19
-#, fuzzy
-#| msgid "Deleted organizations"
 msgid "Update Organization"
-msgstr "Organizações excluídas"
+msgstr "Atualizar Organização"
 
 #: ckanext/artesp_theme/templates/organization/new_organization_form.html:21
-#, fuzzy
-#| msgid "Deleted organizations"
 msgid "Create Organization"
-msgstr "Organizações excluídas"
+msgstr "Criar Organização"
 
 #: ckanext/artesp_theme/templates/organization/snippets/feeds.html:2
 #, python-brace-format
 msgid "Datasets in organization: {group}"
-msgstr ""
+msgstr "Conjuntos de dados na organização: {group}"
 
 #: ckanext/artesp_theme/templates/organization/snippets/helper.html:16
-#, fuzzy
-#| msgid "Organizations"
 msgid "What are Organizations?"
-msgstr "Organizações"
+msgstr "O que são Organizações?"
 
 #: ckanext/artesp_theme/templates/organization/snippets/helper.html:20
 msgid ""
@@ -1298,22 +1261,22 @@ msgid ""
 "datasets. Users can have different roles within an Organization, "
 "depending on their level of authorisation to create, edit and publish."
 msgstr ""
+"As Organizações CKAN são usadas para criar, gerenciar e publicar coleções"
+" de conjuntos de dados. Os usuários podem ter diferentes funções dentro "
+"de uma Organização, dependendo do seu nível de autorização para criar, "
+"editar e publicar."
 
 #: ckanext/artesp_theme/templates/organization/snippets/info.html:41
 msgid "There is no description for this organization"
-msgstr ""
+msgstr "Não há descrição para esta organização"
 
 #: ckanext/artesp_theme/templates/organization/snippets/organization_form.html:12
-#, fuzzy
-#| msgid "Organizations"
 msgid "My Organization"
-msgstr "Organizações"
+msgstr "Minha Organização"
 
 #: ckanext/artesp_theme/templates/organization/snippets/organization_form.html:22
-#, fuzzy
-#| msgid "For more information about CKAN, visit"
 msgid "A little information about my organization..."
-msgstr "Para mais informações sobre o CKAN, visite"
+msgstr "Algumas informações sobre minha organização..."
 
 #: ckanext/artesp_theme/templates/organization/snippets/organization_form.html:40
 msgid ""
@@ -1321,35 +1284,31 @@ msgid ""
 " be performed while public or private datasets belong to this "
 "organization."
 msgstr ""
+"Tem certeza que deseja excluir esta Organização? Nota*: A exclusão não "
+"pode ser realizada enquanto conjuntos de dados públicos ou privados "
+"pertencerem a esta organização."
 
 #: ckanext/artesp_theme/templates/organization/snippets/organization_form.html:43
-#, fuzzy
-#| msgid "Organizations"
 msgid "Save Organization"
-msgstr "Organizações"
+msgstr "Salvar Organização"
 
 #: ckanext/artesp_theme/templates/organization/snippets/organization_item.html:49
 #: ckanext/artesp_theme/templates/organization/snippets/organization_item.html:50
-#, fuzzy, python-brace-format
-#| msgid "Organizations"
+#, python-brace-format
 msgid "View {organization_name}"
-msgstr "Organizações"
+msgstr "Visualizar {organization_name}"
 
 #: ckanext/artesp_theme/templates/package/base.html:24
 #: ckanext/artesp_theme/templates/package/new.html:9
 #: ckanext/artesp_theme/templates/package/snippets/new_package_breadcrumb.html:2
 #: ckanext/artesp_theme/templates/package/snippets/stages.html:25
 #: ckanext/artesp_theme/templates/package/snippets/stages.html:27
-#, fuzzy
-#| msgid "Latest Datasets"
 msgid "Create Dataset"
-msgstr "Conjuntos de Dados Recentes"
+msgstr "Criar Conjunto de Dados"
 
 #: ckanext/artesp_theme/templates/package/base_form_page.html:19
-#, fuzzy
-#| msgid "Latest Datasets"
 msgid "What are datasets?"
-msgstr "Conjuntos de Dados Recentes"
+msgstr "O que são conjuntos de dados?"
 
 #: ckanext/artesp_theme/templates/package/base_form_page.html:22
 msgid ""
@@ -1357,198 +1316,176 @@ msgid ""
 "together with a description and other information, at a fixed URL. "
 "Datasets are what users see when searching for data."
 msgstr ""
+"Um Conjunto de Dados CKAN é uma coleção de recursos de dados (como "
+"arquivos), juntamente com uma descrição e outras informações, em uma URL "
+"fixa. Conjuntos de dados são o que os usuários veem ao procurar por "
+"dados."
 
 #: ckanext/artesp_theme/templates/package/confirm_delete.html:12
-#, fuzzy, python-brace-format
-#| msgid "Are you sure you want to reset the config?"
+#, python-brace-format
 msgid "Are you sure you want to delete dataset - {name}?"
-msgstr "Tem certeza que deseja redefinir a configuração?"
+msgstr "Tem certeza que deseja excluir o conjunto de dados - {name}?"
 
 #: ckanext/artesp_theme/templates/package/confirm_delete_resource.html:11
-#, fuzzy, python-brace-format
-#| msgid "Are you sure you want to reset the config?"
+#, python-brace-format
 msgid "Are you sure you want to delete resource - {name}?"
-msgstr "Tem certeza que deseja redefinir a configuração?"
+msgstr "Tem certeza que deseja excluir o recurso - {name}?"
 
 #: ckanext/artesp_theme/templates/package/edit_base.html:13
-#, fuzzy
-#| msgid "View all datasets"
 msgid "View dataset"
-msgstr "Ver todos os conjuntos de dados"
+msgstr "Visualizar conjunto de dados"
 
 #: ckanext/artesp_theme/templates/package/edit_base.html:17
 msgid "Edit metadata"
-msgstr ""
+msgstr "Editar metadados"
 
 #: ckanext/artesp_theme/templates/package/edit_base.html:18
-#, fuzzy
-#| msgid "Resources"
 msgid "Reorder resources"
-msgstr "Recursos"
+msgstr "Reordenar recursos"
 
 #: ckanext/artesp_theme/templates/package/collaborators/collaborators.html:3
 #: ckanext/artesp_theme/templates/package/edit_base.html:20
 msgid "Collaborators"
-msgstr ""
+msgstr "Colaboradores"
 
 #: ckanext/artesp_theme/templates/package/edit_view.html:3
 #: ckanext/artesp_theme/templates/package/edit_view.html:4
 #: ckanext/artesp_theme/templates/package/edit_view.html:8
 #: ckanext/artesp_theme/templates/package/edit_view.html:12
 msgid "Edit view"
-msgstr ""
+msgstr "Editar visualização"
 
 #: ckanext/artesp_theme/templates/package/edit_view.html:21
 #: ckanext/artesp_theme/templates/package/new_view.html:20
 #: ckanext/artesp_theme/templates/package/snippets/resource_item.html:46
 msgid "Preview"
-msgstr ""
+msgstr "Pré-visualizar"
 
 #: ckanext/artesp_theme/templates/package/edit_view.html:22
-#, fuzzy
-#| msgid "Update Config"
 msgid "Update"
-msgstr "Atualizar Configuração"
+msgstr "Atualizar"
 
 #: ckanext/artesp_theme/templates/package/group_list.html:17
 msgid "Associate this group with this dataset"
-msgstr ""
+msgstr "Associar este grupo a este conjunto de dados"
 
 #: ckanext/artesp_theme/templates/package/group_list.html:17
-#, fuzzy
-#| msgid "Deleted groups"
 msgid "Add to group"
-msgstr "Grupos excluídos"
+msgstr "Adicionar ao grupo"
 
 #: ckanext/artesp_theme/templates/package/group_list.html:27
 msgid "There are no groups associated with this dataset"
-msgstr ""
+msgstr "Não há grupos associados a este conjunto de dados"
 
 #: ckanext/artesp_theme/templates/package/new_package_form.html:13
-#, fuzzy
-#| msgid "Latest Datasets"
 msgid "Update Dataset"
-msgstr "Conjuntos de Dados Recentes"
+msgstr "Atualizar Conjunto de Dados"
 
 #: ckanext/artesp_theme/templates/package/new_resource.html:5
-#, fuzzy
-#| msgid "Adapt the data"
 msgid "Add data to the dataset"
-msgstr "Adaptar os dados"
+msgstr "Adicionar dados ao conjunto de dados"
 
 #: ckanext/artesp_theme/templates/package/new_resource.html:11
 #: ckanext/artesp_theme/templates/package/new_resource_not_draft.html:8
-#, fuzzy
-#| msgid "Data & Resources"
 msgid "Add New Resource"
-msgstr "Dados e Recursos"
+msgstr "Adicionar Novo Recurso"
 
 #: ckanext/artesp_theme/templates/package/new_resource_not_draft.html:3
 #: ckanext/artesp_theme/templates/package/new_resource_not_draft.html:4
-#, fuzzy
-#| msgid "Resources"
 msgid "Add resource"
-msgstr "Recursos"
+msgstr "Adicionar recurso"
 
 #: ckanext/artesp_theme/templates/package/new_resource_not_draft.html:16
-#, fuzzy
-#| msgid "Resources"
 msgid "New resource"
-msgstr "Recursos"
+msgstr "Novo recurso"
 
 #: ckanext/artesp_theme/templates/package/new_view.html:3
 #: ckanext/artesp_theme/templates/package/new_view.html:4
 #: ckanext/artesp_theme/templates/package/new_view.html:8
 #: ckanext/artesp_theme/templates/package/new_view.html:12
 msgid "Add view"
-msgstr ""
+msgstr "Adicionar visualização"
 
 #: ckanext/artesp_theme/templates/package/new_view.html:21
 #: ckanext/artesp_theme/templates/package/snippets/resource_form.html:91
 msgid "Add"
-msgstr ""
+msgstr "Adicionar"
 
 #: ckanext/artesp_theme/templates/package/resource_edit_base.html:18
-#, fuzzy
-#| msgid "Resources"
 msgid "View resource"
-msgstr "Recursos"
+msgstr "Visualizar recurso"
 
 #: ckanext/artesp_theme/templates/package/resource_edit_base.html:23
 #: ckanext/artesp_theme/templates/package/resource_edit_base.html:29
 #: ckanext/artesp_theme/templates/package/resource_read.html:32
 #: ckanext/artesp_theme/templates/package/snippets/resource_item.html:69
 #: ckanext/artesp_theme/templates/package/snippets/resources.html:37
-#, fuzzy
-#| msgid "Data & Resources"
 msgid "Edit resource"
-msgstr "Dados e Recursos"
+msgstr "Editar recurso"
 
 #: ckanext/artesp_theme/templates/package/resource_edit_base.html:25
 #: ckanext/artesp_theme/templates/package/resource_read.html:34
 #: ckanext/artesp_theme/templates/package/snippets/resource_item.html:71
 #: ckanext/artesp_theme/templates/package/snippets/resources.html:39
 msgid "Views"
-msgstr ""
+msgstr "Visualizações"
 
 #: ckanext/artesp_theme/templates/package/resource_read.html:44
 msgid "API Endpoint"
-msgstr ""
+msgstr "Ponto de extremidade da API"
 
 #: ckanext/artesp_theme/templates/package/resource_read.html:46
 #: ckanext/artesp_theme/templates/package/snippets/resource_item.html:63
-#, fuzzy
-#| msgid "Resources"
 msgid "Go to resource"
-msgstr "Recursos"
+msgstr "Ir para o recurso"
 
 #: ckanext/artesp_theme/templates/package/resource_read.html:48
 #: ckanext/artesp_theme/templates/package/snippets/resource_item.html:60
 msgid "Download"
-msgstr ""
+msgstr "Baixar"
 
 #: ckanext/artesp_theme/templates/package/resource_read.html:63
 #: ckanext/artesp_theme/templates/package/resource_read.html:65
-#, fuzzy
-#| msgid "Hours:"
 msgid "URL:"
-msgstr "Horário:"
+msgstr "URL:"
 
 #: ckanext/artesp_theme/templates/package/resource_read.html:73
 msgid "Dataset description:"
-msgstr ""
+msgstr "Descrição do conjunto de dados:"
 
 #: ckanext/artesp_theme/templates/package/resource_read.html:75
 #, python-format
 msgid "Source: <a href=\"%(url)s\">%(dataset)s</a>"
-msgstr ""
+msgstr "Fonte: <a href=\"%(url)s\">%(dataset)s</a>"
 
 #: ckanext/artesp_theme/templates/package/resource_read.html:106
 msgid "There are no views created for this resource yet."
-msgstr ""
+msgstr "Ainda não há visualizações criadas para este recurso."
 
 #: ckanext/artesp_theme/templates/package/resource_read.html:110
 msgid "Not seeing the views you were expecting?"
-msgstr ""
+msgstr "Não está vendo as visualizações que esperava?"
 
 #: ckanext/artesp_theme/templates/package/resource_read.html:112
 #: ckanext/artesp_theme/templates/package/snippets/resource_view.html:35
-#, fuzzy
-#| msgid "Click here to login"
 msgid "Click here for more information."
-msgstr "Clique aqui para entrar"
+msgstr "Clique aqui para mais informações."
 
 #: ckanext/artesp_theme/templates/package/resource_read.html:115
 msgid "Here are some reasons you may not be seeing expected views:"
 msgstr ""
+"Aqui estão alguns motivos pelos quais você pode não estar vendo as "
+"visualizações esperadas:"
 
 #: ckanext/artesp_theme/templates/package/resource_read.html:117
 msgid "No view has been created that is suitable for this resource"
-msgstr ""
+msgstr "Nenhuma visualização adequada para este recurso foi criada"
 
 #: ckanext/artesp_theme/templates/package/resource_read.html:118
 msgid "The site administrators may not have enabled the relevant view plugins"
 msgstr ""
+"Os administradores do site podem não ter habilitado os plugins de "
+"visualização relevantes"
 
 #: ckanext/artesp_theme/templates/package/resource_read.html:119
 msgid ""
@@ -1556,58 +1493,59 @@ msgid ""
 "enabled, or the data may not have been pushed to the DataStore, or the "
 "DataStore hasn't finished processing the data yet"
 msgstr ""
+"Se uma visualização requer o DataStore, o plugin DataStore pode não estar"
+" habilitado, ou os dados podem não ter sido enviados para o DataStore, ou"
+" o DataStore ainda não terminou de processar os dados"
 
 #: ckanext/artesp_theme/templates/package/resource_read.html:141
-#, fuzzy
-#| msgid "Contact Information"
 msgid "Additional Information"
-msgstr "Informações de Contato"
+msgstr "Informações Adicionais"
 
 #: ckanext/artesp_theme/templates/package/resource_read.html:145
 #: ckanext/artesp_theme/templates/package/snippets/additional_info.html:6
 #: ckanext/artesp_theme/templates/snippets/additional_info.html:11
 msgid "Field"
-msgstr ""
+msgstr "Campo"
 
 #: ckanext/artesp_theme/templates/package/resource_read.html:151
 msgid "Data last updated"
-msgstr ""
+msgstr "Dados atualizados pela última vez"
 
 #: ckanext/artesp_theme/templates/package/resource_read.html:152
 #: ckanext/artesp_theme/templates/package/resource_read.html:156
 #: ckanext/artesp_theme/templates/package/resource_read.html:160
 #: ckanext/artesp_theme/templates/package/resource_read.html:164
 msgid "unknown"
-msgstr ""
+msgstr "desconhecido"
 
 #: ckanext/artesp_theme/templates/package/resource_read.html:155
 msgid "Metadata last updated"
-msgstr ""
+msgstr "Metadados atualizados pela última vez"
 
 #: ckanext/artesp_theme/templates/package/resource_read.html:159
 #: ckanext/artesp_theme/templates/package/snippets/additional_info.html:74
 msgid "Created"
-msgstr ""
+msgstr "Criado"
 
 #: ckanext/artesp_theme/templates/package/resource_read.html:163
 #: ckanext/artesp_theme/templates/package/snippets/resource_form.html:45
 #: ckanext/artesp_theme/templates/package/snippets/resource_info.html:19
 msgid "Format"
-msgstr ""
+msgstr "Formato"
 
 #: ckanext/artesp_theme/templates/package/resource_read.html:167
 #: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:32
 #: ckanext/artesp_theme/templates/snippets/license.html:20
 msgid "License"
-msgstr ""
+msgstr "Licença"
 
 #: ckanext/artesp_theme/templates/package/resource_views.html:11
 msgid "New view"
-msgstr ""
+msgstr "Nova visualização"
 
 #: ckanext/artesp_theme/templates/package/resource_views.html:29
 msgid "This resource has no views"
-msgstr ""
+msgstr "Este recurso não possui visualizações"
 
 #: ckanext/artesp_theme/templates/package/resources.html:19
 #: ckanext/artesp_theme/templates/package/snippets/resources_list.html:28
@@ -1616,58 +1554,57 @@ msgid ""
 "<p class=\"empty\">This dataset has no data, <a href=\"%(url)s\">why not "
 "add some?</a></p>"
 msgstr ""
+"<p class=\"empty\">Este conjunto de dados não possui dados, <a "
+"href=\"%(url)s\">por que não adicionar alguns?</a></p>"
 
 #: ckanext/artesp_theme/templates/package/view_edit_base.html:9
 msgid "All views"
-msgstr ""
+msgstr "Todas as visualizações"
 
 #: ckanext/artesp_theme/templates/package/view_edit_base.html:12
-#, fuzzy
-#| msgid "View profile"
 msgid "View view"
-msgstr "Ver perfil"
+msgstr "Visualizar visualização"
 
 #: ckanext/artesp_theme/templates/package/view_edit_base.html:37
-#, fuzzy
-#| msgid "View profile"
 msgid "View preview"
-msgstr "Ver perfil"
+msgstr "Visualizar pré-visualização"
 
 #: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:5
 #: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:10
 msgid "Edit Collaborator"
-msgstr ""
+msgstr "Editar Colaborador"
 
 #: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:5
 #: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:10
 #: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:51
 msgid "Add Collaborator"
-msgstr ""
+msgstr "Adicionar Colaborador"
 
 #: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:8
 msgid "Back to all collaborators"
-msgstr ""
+msgstr "Voltar para todos os colaboradores"
 
 #: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:45
 #: ckanext/artesp_theme/templates/package/collaborators/collaborators.html:36
-#, fuzzy
-#| msgid "Are you sure you want to reset the config?"
 msgid "Are you sure you want to delete this collaborator?"
-msgstr "Tem certeza que deseja redefinir a configuração?"
+msgstr "Tem certeza que deseja excluir este colaborador?"
 
 #: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:47
 msgid "Update Collaborator"
-msgstr ""
+msgstr "Atualizar Colaborador"
 
 #: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:64
 msgid "What are the available roles?"
-msgstr ""
+msgstr "Quais são as funções disponíveis?"
 
 #: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:68
 msgid ""
 "<p><strong>Admin:</strong> In addition to managing the dataset, admins "
 "can add and remove collaborators from a dataset.</p>"
 msgstr ""
+"<p><strong>Administrador:</strong> Além de gerenciar o conjunto de dados,"
+" os administradores podem adicionar e remover colaboradores de um "
+"conjunto de dados.</p>"
 
 #: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:72
 msgid ""
@@ -1676,146 +1613,139 @@ msgid ""
 "<p><strong>Member:</strong> Members can access the dataset if private, "
 "but not edit it.</p>"
 msgstr ""
+"<p><strong>Editor:</strong> Editores podem editar o conjunto de dados e "
+"seus recursos, bem como acessar o conjunto de dados se for privado.</p> "
+"<p><strong>Membro:</strong> Membros podem acessar o conjunto de dados se "
+"for privado, mas não editá-lo.</p>"
 
 #: ckanext/artesp_theme/templates/package/collaborators/collaborators.html:7
 msgid "Add Collaborators"
-msgstr ""
+msgstr "Adicionar Colaboradores"
 
 #: ckanext/artesp_theme/templates/package/collaborators/collaborators.html:14
 #, python-brace-format
 msgid "{count} collaborator"
 msgid_plural "{count} collaborators"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{count} colaborador"
+msgstr[1] "{count} colaboradores"
 
 #: ckanext/artesp_theme/templates/package/collaborators/confirm_delete.html:11
-#, fuzzy, python-brace-format
-#| msgid "Are you sure you want to reset the config?"
+#, python-brace-format
 msgid "Are you sure you want to delete collaborator - {name}?"
-msgstr "Tem certeza que deseja redefinir a configuração?"
+msgstr "Tem certeza que deseja excluir o colaborador - {name}?"
 
 #: ckanext/artesp_theme/templates/package/snippets/additional_info.html:2
 #: ckanext/artesp_theme/templates/snippets/additional_info.html:7
 msgid "Additional Info"
-msgstr ""
+msgstr "Informações Adicionais"
 
 #: ckanext/artesp_theme/templates/package/snippets/additional_info.html:14
 #: ckanext/artesp_theme/templates/package/snippets/package_metadata_fields.html:6
-#, fuzzy
-#| msgid "Resources"
 msgid "Source"
-msgstr "Recursos"
+msgstr "Fonte"
 
 #: ckanext/artesp_theme/templates/package/snippets/additional_info.html:29
 #: ckanext/artesp_theme/templates/package/snippets/additional_info.html:34
 #: ckanext/artesp_theme/templates/package/snippets/package_metadata_fields.html:14
 msgid "Author"
-msgstr ""
+msgstr "Autor"
 
 #: ckanext/artesp_theme/templates/package/snippets/additional_info.html:41
 #: ckanext/artesp_theme/templates/package/snippets/additional_info.html:46
 #: ckanext/artesp_theme/templates/package/snippets/package_metadata_fields.html:20
 msgid "Maintainer"
-msgstr ""
+msgstr "Mantenedor"
 
 #: ckanext/artesp_theme/templates/package/snippets/additional_info.html:53
 #: ckanext/artesp_theme/templates/package/snippets/package_metadata_fields.html:10
 msgid "Version"
-msgstr ""
+msgstr "Versão"
 
 #: ckanext/artesp_theme/templates/package/snippets/additional_info.html:60
 #: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:113
 #: ckanext/artesp_theme/templates/user/snippets/info.html:99
 msgid "State"
-msgstr ""
+msgstr "Estado"
 
 #: ckanext/artesp_theme/templates/package/snippets/additional_info.html:66
-#, fuzzy
-#| msgid "Last updated: January 2024"
 msgid "Last Updated"
-msgstr "Última atualização: Janeiro de 2024"
+msgstr "Última Atualização"
 
 #: ckanext/artesp_theme/templates/package/snippets/cannot_create_package.html:10
 msgid "Before you can create a dataset you need to create an organization."
 msgstr ""
+"Antes de poder criar um conjunto de dados, você precisa criar uma "
+"organização."
 
 #: ckanext/artesp_theme/templates/package/snippets/cannot_create_package.html:13
-#, fuzzy
-#| msgid "Deleted organizations"
 msgid "Create a new organization"
-msgstr "Organizações excluídas"
+msgstr "Criar uma nova organização"
 
 #: ckanext/artesp_theme/templates/package/snippets/cannot_create_package.html:18
 msgid "There are no organizations to which you can assign this dataset."
-msgstr ""
+msgstr "Não há organizações às quais você pode atribuir este conjunto de dados."
 
 #: ckanext/artesp_theme/templates/package/snippets/cannot_create_package.html:19
 msgid ""
 "Ask a system administrator to create an organization before you can "
 "continue."
 msgstr ""
+"Peça a um administrador do sistema para criar uma organização antes que "
+"você possa continuar."
 
 #: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:6
 #: ckanext/artesp_theme/templates/package/snippets/view_form.html:8
-#, fuzzy
-#| msgid "Site Title"
 msgid "Title"
-msgstr "Título do Site"
+msgstr "Título"
 
 #: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:6
-#, fuzzy
-#| msgid "Site Title"
 msgid "eg. A descriptive title"
-msgstr "Título do Site"
+msgstr "ex. Um título descritivo"
 
 #: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:15
-#, fuzzy
-#| msgid "Datasets"
 msgid "eg. my-dataset"
-msgstr "Conjuntos de Dados"
+msgstr "ex. meu-conjunto-de-dados"
 
 #: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:21
 msgid "eg. Some useful notes about the data"
-msgstr ""
+msgstr "ex. Algumas notas úteis sobre os dados"
 
 #: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:26
 #: ckanext/artesp_theme/templates/snippets/context/dataset.html:17
-#, fuzzy
-#| msgid "Trash"
 msgid "Tags"
-msgstr "Lixeira"
+msgstr "Etiquetas"
 
 #: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:26
 msgid "eg. economy, mental health, government"
-msgstr ""
+msgstr "ex. economia, saúde mental, governo"
 
 #: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:36
 msgid "Please select the license"
-msgstr ""
+msgstr "Por favor, selecione a licença"
 
 #: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:45
 msgid ""
 "License definitions and additional information can be found at <a "
 "href=\"http://opendefinition.org/licenses/\">opendefinition.org</a>"
 msgstr ""
+"Definições de licença e informações adicionais podem ser encontradas em "
+"<a href=\"http://opendefinition.org/licenses/\">opendefinition.org</a>"
 
 #: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:79
-#, fuzzy
-#| msgid "Organizations"
 msgid "No Organization"
-msgstr "Organizações"
+msgstr "Nenhuma Organização"
 
 #: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:94
 msgid "Visibility"
-msgstr ""
+msgstr "Visibilidade"
 
 #: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:97
 msgid "Public"
-msgstr ""
+msgstr "Público"
 
 #: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:116
 msgid "Active"
-msgstr ""
+msgstr "Ativo"
 
 #: ckanext/artesp_theme/templates/package/snippets/package_form.html:31
 msgid ""
@@ -1826,24 +1756,28 @@ msgid ""
 "href=\"http://opendatacommons.org/licenses/odbl/1-0/\">Open Database "
 "License</a>."
 msgstr ""
+"A <i>licença de dados</i> que você selecionar acima se aplica apenas ao "
+"conteúdo de quaisquer arquivos de recurso que você adicionar a este "
+"conjunto de dados. Ao enviar este formulário, você concorda em liberar os"
+" valores de <i>metadados</i> que você inserir no formulário sob a <a "
+"href=\"http://opendatacommons.org/licenses/odbl/1-0/\">Open Database "
+"License</a>."
 
 #: ckanext/artesp_theme/templates/package/snippets/package_form.html:42
-#, fuzzy
-#| msgid "Are you sure you want to purge everything?"
 msgid "Are you sure you want to delete this dataset?"
-msgstr "Tem certeza que deseja excluir permanentemente tudo?"
+msgstr "Tem certeza que deseja excluir este conjunto de dados?"
 
 #: ckanext/artesp_theme/templates/package/snippets/package_form.html:46
 msgid "Next: Add Data"
-msgstr ""
+msgstr "Próximo: Adicionar Dados"
 
 #: ckanext/artesp_theme/templates/package/snippets/package_metadata_fields.html:6
 msgid "http://example.com/dataset.json"
-msgstr ""
+msgstr "http://exemplo.com/conjunto-de-dados.json"
 
 #: ckanext/artesp_theme/templates/package/snippets/package_metadata_fields.html:10
 msgid "1.0"
-msgstr ""
+msgstr "1.0"
 
 #: ckanext/artesp_theme/templates/package/snippets/package_metadata_fields.html:14
 #: ckanext/artesp_theme/templates/package/snippets/package_metadata_fields.html:20
@@ -1852,10 +1786,8 @@ msgid "Joe Bloggs"
 msgstr "João Silva"
 
 #: ckanext/artesp_theme/templates/package/snippets/package_metadata_fields.html:16
-#, fuzzy
-#| msgid "Username or Email"
 msgid "Author Email"
-msgstr "Nome de Usuário ou E-mail"
+msgstr "E-mail do Autor"
 
 #: ckanext/artesp_theme/templates/package/snippets/package_metadata_fields.html:16
 #: ckanext/artesp_theme/templates/package/snippets/package_metadata_fields.html:22
@@ -1865,396 +1797,363 @@ msgstr "joao@exemplo.com.br"
 
 #: ckanext/artesp_theme/templates/package/snippets/package_metadata_fields.html:22
 msgid "Maintainer Email"
-msgstr ""
+msgstr "E-mail do Mantenedor"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_edit_form.html:12
-#, fuzzy
-#| msgid "Data & Resources"
 msgid "Update Resource"
-msgstr "Dados e Recursos"
+msgstr "Atualizar Recurso"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_form.html:31
 #: ckanext/artesp_theme/templates/package/snippets/resource_upload_field.html:78
 #: ckanext/artesp_theme/templates/package/snippets/resource_upload_field.html:90
 msgid "File"
-msgstr ""
+msgstr "Arquivo"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_form.html:32
 msgid "http://example.com/external-data.csv"
-msgstr ""
+msgstr "http://exemplo.com/dados-externos.csv"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_form.html:36
 msgid "eg. January 2011 Gold Prices"
-msgstr ""
+msgstr "ex. Preços do Ouro de Janeiro de 2011"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_form.html:40
 msgid "Some useful notes about the data"
-msgstr ""
+msgstr "Algumas notas úteis sobre os dados"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_form.html:45
 msgid "eg. CSV, XML or JSON"
-msgstr ""
+msgstr "ex. CSV, XML ou JSON"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_form.html:48
 msgid "This will be guessed automatically. Leave blank if you wish"
-msgstr ""
+msgstr "Isso será adivinhado automaticamente. Deixe em branco se desejar"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_form.html:59
 msgid "eg. 2012-06-05"
-msgstr ""
+msgstr "ex. 2012-06-05"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_form.html:61
 msgid "File Size"
-msgstr ""
+msgstr "Tamanho do Arquivo"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_form.html:61
 msgid "eg. 1024"
-msgstr ""
+msgstr "ex. 1024"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_form.html:63
 #: ckanext/artesp_theme/templates/package/snippets/resource_form.html:65
 msgid "MIME Type"
-msgstr ""
+msgstr "Tipo MIME"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_form.html:63
 #: ckanext/artesp_theme/templates/package/snippets/resource_form.html:65
 msgid "eg. application/json"
-msgstr ""
+msgstr "ex. application/json"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_form.html:73
-#, fuzzy
-#| msgid "Are you sure you want to purge everything?"
 msgid "Are you sure you want to delete this resource?"
-msgstr "Tem certeza que deseja excluir permanentemente tudo?"
+msgstr "Tem certeza que deseja excluir este recurso?"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_form.html:79
 msgid "Previous"
-msgstr ""
+msgstr "Anterior"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_form.html:83
 msgid "Save & add another"
-msgstr ""
+msgstr "Salvar e adicionar outro"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_form.html:87
 msgid "Finish"
-msgstr ""
+msgstr "Finalizar"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_help.html:2
-#, fuzzy
-#| msgid "Data & Resources"
 msgid "What's a resource?"
-msgstr "Dados e Recursos"
+msgstr "O que é um recurso?"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_help.html:4
 msgid "A resource can be any file or link to a file containing useful data."
 msgstr ""
+"Um recurso pode ser qualquer arquivo ou link para um arquivo contendo "
+"dados úteis."
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_item.html:36
 msgid "Explore"
-msgstr ""
+msgstr "Explorar"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_item.html:49
-#, fuzzy
-#| msgid "Contact Information"
 msgid "More information"
-msgstr "Informações de Contato"
+msgstr "Mais informações"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_upload_field.html:42
-#, fuzzy
-#| msgid "Datasets"
 msgid "Data"
-msgstr "Conjuntos de Dados"
+msgstr "Dados"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_upload_field.html:47
 msgid "Upload a file on your computer"
-msgstr ""
+msgstr "Enviar um arquivo do seu computador"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_upload_field.html:51
 msgid "Upload"
-msgstr ""
+msgstr "Enviar"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_upload_field.html:54
 msgid "Link to a URL on the internet (you can also link to an API)"
-msgstr ""
+msgstr "Link para uma URL na internet (você também pode vincular a uma API)"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_upload_field.html:58
-#, fuzzy
-#| msgid "Login"
 msgid "Link"
-msgstr "Entrar"
+msgstr "Link"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_view.html:11
 msgid "Fullscreen"
-msgstr ""
+msgstr "Tela cheia"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_view.html:19
 msgid "Embed"
-msgstr ""
+msgstr "Incorporar"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_view.html:33
 msgid "This resource view is not available at the moment."
-msgstr ""
+msgstr "Esta visualização de recurso não está disponível no momento."
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_view.html:42
-#, fuzzy
-#| msgid "Data & Resources"
 msgid "Download resource"
-msgstr "Dados e Recursos"
+msgstr "Baixar recurso"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_view.html:63
 msgid "Your browser does not support iframes."
-msgstr ""
+msgstr "Seu navegador não suporta iframes."
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_view.html:72
 msgid "Embed resource view"
-msgstr ""
+msgstr "Incorporar visualização de recurso"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_view.html:73
 msgid "Close"
-msgstr ""
+msgstr "Fechar"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_view.html:77
 msgid ""
 "You can copy and paste the embed code into a CMS or blog software that "
 "supports raw HTML"
 msgstr ""
+"Você pode copiar e colar o código de incorporação em um CMS ou software "
+"de blog que suporte HTML bruto"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_view.html:80
 msgid "Width"
-msgstr ""
+msgstr "Largura"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_view.html:83
 msgid "Height"
-msgstr ""
+msgstr "Altura"
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_view.html:86
 msgid "Code"
-msgstr ""
+msgstr "Código"
 
 #: ckanext/artesp_theme/templates/package/snippets/resources.html:58
-#, fuzzy
-#| msgid "Data & Resources"
 msgid "Add new resource"
-msgstr "Dados e Recursos"
+msgstr "Adicionar novo recurso"
 
 #: ckanext/artesp_theme/templates/package/snippets/resources_list.html:14
-#, fuzzy
-#| msgid "Data & Resources"
 msgid "Data and Resources"
 msgstr "Dados e Recursos"
 
 #: ckanext/artesp_theme/templates/package/snippets/resources_list.html:32
 msgid "This dataset has no data"
-msgstr ""
+msgstr "Este conjunto de dados não possui dados"
 
 #: ckanext/artesp_theme/templates/package/snippets/stages.html:32
 #: ckanext/artesp_theme/templates/package/snippets/stages.html:36
 #: ckanext/artesp_theme/templates/package/snippets/stages.html:38
-#, fuzzy
-#| msgid "Adapt the data"
 msgid "Add data"
-msgstr "Adaptar os dados"
+msgstr "Adicionar dados"
 
 #: ckanext/artesp_theme/templates/package/snippets/view_form.html:8
 msgid "eg. My View"
-msgstr ""
+msgstr "ex. Minha Visualização"
 
 #: ckanext/artesp_theme/templates/package/snippets/view_form.html:9
-#, fuzzy
-#| msgid "For more information about CKAN, visit"
 msgid "eg. Information about my view"
-msgstr "Para mais informações sobre o CKAN, visite"
+msgstr "ex. Informações sobre minha visualização"
 
 #: ckanext/artesp_theme/templates/package/snippets/view_form_filters.html:16
 msgid "Add Filter"
-msgstr ""
+msgstr "Adicionar Filtro"
 
 #: ckanext/artesp_theme/templates/package/snippets/view_form_filters.html:28
 msgid "Remove Filter"
-msgstr ""
+msgstr "Remover Filtro"
 
 #: ckanext/artesp_theme/templates/package/snippets/view_form_filters.html:46
 msgid "Filters"
-msgstr ""
+msgstr "Filtros"
 
 #: ckanext/artesp_theme/templates/package/snippets/view_help.html:2
 msgid "What's a view?"
-msgstr ""
+msgstr "O que é uma visualização?"
 
 #: ckanext/artesp_theme/templates/package/snippets/view_help.html:4
 msgid "A view is a representation of the data held against a resource"
-msgstr ""
+msgstr "Uma visualização é uma representação dos dados contidos em um recurso"
 
 #: ckanext/artesp_theme/templates/snippets/add_dataset.html:4
-#, fuzzy
-#| msgid "Deleted datasets"
 msgid "Add Dataset"
-msgstr "Conjuntos de dados excluídos"
+msgstr "Adicionar Conjunto de Dados"
 
 #: ckanext/artesp_theme/templates/snippets/datapusher_status.html:8
 #, python-brace-format
 msgid "Datapusher status: {status}."
-msgstr ""
+msgstr "Status do Datapusher: {status}."
 
 #: ckanext/artesp_theme/templates/snippets/disqus_trackback.html:2
 msgid "Trackback URL"
-msgstr ""
+msgstr "URL de Trackback"
 
 #: ckanext/artesp_theme/templates/snippets/facet_list.html:77
 #, python-brace-format
 msgid "Show More {facet_type}"
-msgstr ""
+msgstr "Mostrar Mais {facet_type}"
 
 #: ckanext/artesp_theme/templates/snippets/facet_list.html:80
 #, python-brace-format
 msgid "Show Only Popular {facet_type}"
-msgstr ""
+msgstr "Mostrar Apenas Populares {facet_type}"
 
 #: ckanext/artesp_theme/templates/snippets/facet_list.html:84
 #, python-brace-format
 msgid "There are no {facet_type} that match this search"
-msgstr ""
+msgstr "Não há {facet_type} que correspondam a esta pesquisa"
 
 #: ckanext/artesp_theme/templates/snippets/follow_button.html:4
 msgid "Unfollow"
-msgstr ""
+msgstr "Deixar de seguir"
 
 #: ckanext/artesp_theme/templates/snippets/follow_button.html:9
 msgid "Follow"
-msgstr ""
+msgstr "Seguir"
 
 #: ckanext/artesp_theme/templates/snippets/home_breadcrumb_item.html:2
-#, fuzzy
-#| msgid "Phone:"
 msgid "Home"
-msgstr "Telefone:"
+msgstr "Início"
 
 #: ckanext/artesp_theme/templates/snippets/language_selector.html:17
 #: ckanext/artesp_theme/templates/snippets/search_form.html:57
 #: ckanext/artesp_theme/templates/snippets/simple_search.html:15
 msgid "Go"
-msgstr ""
+msgstr "Ir"
 
 #: ckanext/artesp_theme/templates/snippets/license.html:8
-#, fuzzy
-#| msgid "No description provided."
 msgid "No License Provided"
-msgstr "Nenhuma descrição fornecida."
+msgstr "Nenhuma Licença Fornecida"
 
 #: ckanext/artesp_theme/templates/snippets/license.html:27
 msgid "This dataset satisfies the Open Definition."
-msgstr ""
+msgstr "Este conjunto de dados satisfaz a Definição Aberta."
 
 #: ckanext/artesp_theme/templates/snippets/package_item.html:48
 msgid "There is no description for this dataset"
-msgstr ""
+msgstr "Não há descrição para este conjunto de dados"
 
 #: ckanext/artesp_theme/templates/snippets/search_form.html:18
 msgid "Submit"
-msgstr ""
+msgstr "Enviar"
 
 #: ckanext/artesp_theme/templates/snippets/search_form.html:48
 #: ckanext/artesp_theme/templates/snippets/simple_search.html:8
-#, fuzzy
-#| msgid "Powered by"
 msgid "Order by"
-msgstr "Desenvolvido com"
+msgstr "Ordenar por"
 
 #: ckanext/artesp_theme/templates/snippets/search_form.html:82
 msgid "Filter Results"
-msgstr ""
+msgstr "Filtrar Resultados"
 
 #: ckanext/artesp_theme/templates/snippets/search_form.html:89
 msgid "<p class=\"extra\">Please try another search.</p>"
-msgstr ""
+msgstr "<p class=\"extra\">Por favor, tente outra pesquisa.</p>"
 
 #: ckanext/artesp_theme/templates/snippets/search_form.html:95
 msgid ""
 "<p id=\"search-error\"><strong>There was an error while "
 "searching.</strong> Please try again.</p>"
 msgstr ""
+"<p id=\"search-error\"><strong>Ocorreu um erro durante a "
+"pesquisa.</strong> Por favor, tente novamente.</p>"
 
 #: ckanext/artesp_theme/templates/snippets/search_result_text.html:15
 #, python-brace-format
 msgid "{number} dataset found for \"{query}\""
 msgid_plural "{number} datasets found for \"{query}\""
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{number} conjunto de dados encontrado para \"{query}\""
+msgstr[1] "{number} conjuntos de dados encontrados para \"{query}\""
 
 #: ckanext/artesp_theme/templates/snippets/search_result_text.html:16
-#, fuzzy, python-brace-format
-#| msgid "No datasets found."
+#, python-brace-format
 msgid "No datasets found for \"{query}\""
-msgstr "Nenhum conjunto de dados encontrado."
+msgstr "Nenhum conjunto de dados encontrado para \"{query}\""
 
 #: ckanext/artesp_theme/templates/snippets/search_result_text.html:17
-#, fuzzy, python-brace-format
-#| msgid "No datasets found."
+#, python-brace-format
 msgid "{number} dataset found"
 msgid_plural "{number} datasets found"
-msgstr[0] "Nenhum conjunto de dados encontrado."
-msgstr[1] ""
+msgstr[0] "{number} conjunto de dados encontrado"
+msgstr[1] "{number} conjuntos de dados encontrados"
 
 #: ckanext/artesp_theme/templates/snippets/search_result_text.html:18
-#, fuzzy
-#| msgid "No datasets found."
 msgid "No datasets found"
-msgstr "Nenhum conjunto de dados encontrado."
+msgstr "Nenhum conjunto de dados encontrado"
 
 #: ckanext/artesp_theme/templates/snippets/search_result_text.html:21
 #, python-brace-format
 msgid "{number} group found for \"{query}\""
 msgid_plural "{number} groups found for \"{query}\""
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{number} grupo encontrado para \"{query}\""
+msgstr[1] "{number} grupos encontrados para \"{query}\""
 
 #: ckanext/artesp_theme/templates/snippets/search_result_text.html:22
 #, python-brace-format
 msgid "No groups found for \"{query}\""
-msgstr ""
+msgstr "Nenhum grupo encontrado para \"{query}\""
 
 #: ckanext/artesp_theme/templates/snippets/search_result_text.html:23
 #, python-brace-format
 msgid "{number} group found"
 msgid_plural "{number} groups found"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{number} grupo encontrado"
+msgstr[1] "{number} grupos encontrados"
 
 #: ckanext/artesp_theme/templates/snippets/search_result_text.html:24
-#, fuzzy
-#| msgid "No datasets found."
 msgid "No groups found"
-msgstr "Nenhum conjunto de dados encontrado."
+msgstr "Nenhum grupo encontrado"
 
 #: ckanext/artesp_theme/templates/snippets/search_result_text.html:27
 #, python-brace-format
 msgid "{number} organization found for \"{query}\""
 msgid_plural "{number} organizations found for \"{query}\""
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{number} organização encontrada para \"{query}\""
+msgstr[1] "{number} organizações encontradas para \"{query}\""
 
 #: ckanext/artesp_theme/templates/snippets/search_result_text.html:28
 #, python-brace-format
 msgid "No organizations found for \"{query}\""
-msgstr ""
+msgstr "Nenhuma organização encontrada para \"{query}\""
 
 #: ckanext/artesp_theme/templates/snippets/search_result_text.html:29
-#, fuzzy, python-brace-format
-#| msgid "Organizations"
+#, python-brace-format
 msgid "{number} organization found"
 msgid_plural "{number} organizations found"
-msgstr[0] "Organizações"
-msgstr[1] ""
+msgstr[0] "{number} organização encontrada"
+msgstr[1] "{number} organizações encontradas"
 
 #: ckanext/artesp_theme/templates/snippets/search_result_text.html:30
-#, fuzzy
-#| msgid "Organizations"
 msgid "No organizations found"
-msgstr "Organizações"
+msgstr "Nenhuma organização encontrada"
 
 #: ckanext/artesp_theme/templates/snippets/social.html:5
 msgid "Social"
-msgstr ""
+msgstr "Social"
 
 #: ckanext/artesp_theme/templates/static/about_ckan.html:6
 msgid ""
@@ -2633,79 +2532,66 @@ msgstr ""
 #: ckanext/artesp_theme/templates/tests/mock_json_resource_preview_template.html:7
 #: ckanext/artesp_theme/templates/tests/mock_resource_preview_template.html:7
 msgid "Loading..."
-msgstr ""
+msgstr "Carregando..."
 
 #: ckanext/artesp_theme/templates/user/api_tokens.html:20
-#, fuzzy
-#| msgid "Create Account"
 msgid "Create API Token"
-msgstr "Criar Conta"
+msgstr "Criar Token de API"
 
 #: ckanext/artesp_theme/templates/user/api_tokens.html:30
 #: ckanext/artesp_theme/templates/user/read_base.html:26
 msgid "API Tokens"
-msgstr ""
+msgstr "Tokens de API"
 
 #: ckanext/artesp_theme/templates/user/api_tokens.html:38
 msgid "You haven't created any API Tokens."
-msgstr ""
+msgstr "Você não criou nenhum Token de API."
 
 #: ckanext/artesp_theme/templates/user/confirm_delete.html:11
-#, fuzzy, python-brace-format
-#| msgid "Are you sure you want to reset the config?"
+#, python-brace-format
 msgid "Are you sure you want to delete user - {name}?"
-msgstr "Tem certeza que deseja redefinir a configuração?"
+msgstr "Tem certeza que deseja excluir o usuário - {name}?"
 
 #: ckanext/artesp_theme/templates/user/dashboard.html:20
-#, fuzzy
-#| msgid "Settings"
 msgid "Profile settings"
-msgstr "Configurações"
+msgstr "Configurações do perfil"
 
 #: ckanext/artesp_theme/templates/user/dashboard.html:25
 #: ckanext/artesp_theme/templates/user/dashboard_datasets.html:11
-#, fuzzy
-#| msgid "Datasets"
 msgid "My Datasets"
-msgstr "Conjuntos de Dados"
+msgstr "Meus Conjuntos de Dados"
 
 #: ckanext/artesp_theme/templates/user/dashboard.html:26
 #: ckanext/artesp_theme/templates/user/dashboard_organizations.html:12
-#, fuzzy
-#| msgid "Organizations"
 msgid "My Organizations"
-msgstr "Organizações"
+msgstr "Minhas Organizações"
 
 #: ckanext/artesp_theme/templates/user/dashboard.html:27
 #: ckanext/artesp_theme/templates/user/dashboard_groups.html:12
-#, fuzzy
-#| msgid "Groups"
 msgid "My Groups"
-msgstr "Grupos"
+msgstr "Meus Grupos"
 
 #: ckanext/artesp_theme/templates/user/dashboard_datasets.html:16
 #: ckanext/artesp_theme/templates/user/read.html:20
 msgid "You haven't created any datasets."
-msgstr ""
+msgstr "Você não criou nenhum conjunto de dados."
 
 #: ckanext/artesp_theme/templates/user/dashboard_datasets.html:18
 #: ckanext/artesp_theme/templates/user/dashboard_groups.html:24
 #: ckanext/artesp_theme/templates/user/dashboard_organizations.html:24
 #: ckanext/artesp_theme/templates/user/read.html:22
-#, fuzzy
-#| msgid "Create an Account"
 msgid "Create one now?"
-msgstr "Criar uma Conta"
+msgstr "Criar um agora?"
 
 #: ckanext/artesp_theme/templates/user/dashboard_groups.html:22
 #: ckanext/artesp_theme/templates/user/read_groups.html:20
 msgid "You are not a member of any groups."
-msgstr ""
+msgstr "Você não é membro de nenhum grupo."
 
 #: ckanext/artesp_theme/templates/user/dashboard_organizations.html:22
 #: ckanext/artesp_theme/templates/user/read_organizations.html:19
 msgid "You are not a member of any organizations."
-msgstr ""
+msgstr "Você não é membro de nenhuma organização."
 
 #: ckanext/artesp_theme/templates/user/edit.html:6
 #: ckanext/artesp_theme/templates/user/edit_base.html:3
@@ -2714,36 +2600,30 @@ msgstr ""
 #: ckanext/artesp_theme/templates/user/read_base.html:8
 #: ckanext/artesp_theme/templates/user/read_base.html:11
 #: ckanext/artesp_theme/templates/user/snippets/user_search.html:2
-#, fuzzy
-#| msgid "User"
 msgid "Users"
-msgstr "Usuário"
+msgstr "Usuários"
 
 #: ckanext/artesp_theme/templates/user/edit.html:17
-#, fuzzy
-#| msgid "Account"
 msgid "Account Info"
-msgstr "Conta"
+msgstr "Informações da Conta"
 
 #: ckanext/artesp_theme/templates/user/edit.html:19
 msgid "Your profile lets other CKAN users know about who you are and what you do."
 msgstr ""
+"Seu perfil permite que outros usuários do CKAN saibam quem você é e o que"
+" você faz."
 
 #: ckanext/artesp_theme/templates/user/edit_user_form.html:10
 msgid "Change details"
-msgstr ""
+msgstr "Alterar detalhes"
 
 #: ckanext/artesp_theme/templates/user/edit_user_form.html:17
-#, fuzzy
-#| msgid "Full Name"
 msgid "Full name"
 msgstr "Nome Completo"
 
 #: ckanext/artesp_theme/templates/user/edit_user_form.html:17
-#, fuzzy
-#| msgid "Joe Bloggs"
 msgid "eg. Joe Bloggs"
-msgstr "João Silva"
+msgstr "ex. João Silva"
 
 #: ckanext/artesp_theme/templates/user/edit_user_form.html:19
 #: ckanext/artesp_theme/templates/user/new_user_form.html:12
@@ -2752,16 +2632,12 @@ msgid "Email"
 msgstr "E-mail"
 
 #: ckanext/artesp_theme/templates/user/edit_user_form.html:19
-#, fuzzy
-#| msgid "joe@example.com"
 msgid "eg. joe@example.com"
-msgstr "joao@exemplo.com.br"
+msgstr "ex. joao@exemplo.com.br"
 
 #: ckanext/artesp_theme/templates/user/edit_user_form.html:21
-#, fuzzy
-#| msgid "For more information about CKAN, visit"
 msgid "A little information about yourself"
-msgstr "Para mais informações sobre o CKAN, visite"
+msgstr "Um pouco de informação sobre você"
 
 #: ckanext/artesp_theme/templates/user/edit_user_form.html:26
 #: ckanext/artesp_theme/templates/user/new_user_form.html:20
@@ -2775,13 +2651,15 @@ msgstr "URL da Foto de Perfil"
 
 #: ckanext/artesp_theme/templates/user/edit_user_form.html:32
 msgid "Reactivate User"
-msgstr ""
+msgstr "Reativar Usuário"
 
 #: ckanext/artesp_theme/templates/user/edit_user_form.html:33
 msgid ""
 "This account is deactivated, if you want to reactivate it, please click "
 "on checkbox."
 msgstr ""
+"Esta conta está desativada, se você quiser reativá-la, por favor clique "
+"na caixa de seleção."
 
 #: ckanext/artesp_theme/templates/user/edit_user_form.html:43
 #: ckanext/artesp_theme/templates/user/edit_user_form.html:78
@@ -2794,59 +2672,41 @@ msgstr "Senha"
 
 #: ckanext/artesp_theme/templates/user/edit_user_form.html:44
 #: ckanext/artesp_theme/templates/user/edit_user_form.html:80
-#, fuzzy
-#| msgid "Password"
 msgid "Confirm Password"
-msgstr "Senha"
+msgstr "Confirmar Senha"
 
 #: ckanext/artesp_theme/templates/user/edit_user_form.html:50
-#, fuzzy
-#| msgid "Sysadmins"
 msgid "Sysadmin password"
-msgstr "Administradores do Sistema"
+msgstr "Senha de administrador do sistema"
 
 #: ckanext/artesp_theme/templates/user/edit_user_form.html:53
-#, fuzzy
-#| msgid "Sysadmins"
 msgid "Sysadmin Password"
-msgstr "Administradores do Sistema"
+msgstr "Senha de Administrador do Sistema"
 
 #: ckanext/artesp_theme/templates/user/edit_user_form.html:67
-#, fuzzy
-#| msgid "Update Password"
 msgid "Change password"
-msgstr "Atualizar Senha"
+msgstr "Alterar senha"
 
 #: ckanext/artesp_theme/templates/user/edit_user_form.html:70
-#, fuzzy
-#| msgid "Password"
 msgid "Old Password"
-msgstr "Senha"
+msgstr "Senha Antiga"
 
 #: ckanext/artesp_theme/templates/user/edit_user_form.html:93
-#, fuzzy
-#| msgid "Are you sure you want to reset the config?"
 msgid "Are you sure you want to delete this User?"
-msgstr "Tem certeza que deseja redefinir a configuração?"
+msgstr "Tem certeza que deseja excluir este Usuário?"
 
 #: ckanext/artesp_theme/templates/user/edit_user_form.html:97
-#, fuzzy
-#| msgid "View profile"
 msgid "Reactivate Profile"
-msgstr "Ver perfil"
+msgstr "Reativar Perfil"
 
 #: ckanext/artesp_theme/templates/user/edit_user_form.html:97
-#, fuzzy
-#| msgid "Update Config"
 msgid "Update Profile"
-msgstr "Atualizar Configuração"
+msgstr "Atualizar Perfil"
 
 #: ckanext/artesp_theme/templates/user/list.html:3
 #: ckanext/artesp_theme/templates/user/snippets/user_search.html:11
-#, fuzzy
-#| msgid "User"
 msgid "All Users"
-msgstr "Usuário"
+msgstr "Todos os Usuários"
 
 #: ckanext/artesp_theme/templates/user/login.html:3
 #: ckanext/artesp_theme/templates/user/login.html:6
@@ -2861,7 +2721,7 @@ msgstr "Precisa de uma Conta?"
 
 #: ckanext/artesp_theme/templates/user/login.html:27
 msgid "Then sign right up, it only takes a minute."
-msgstr "Cadastre-se agora, leva apenas um minuto."
+msgstr "Então cadastre-se agora, leva apenas um minuto."
 
 #: ckanext/artesp_theme/templates/user/login.html:30
 msgid "Create an Account"
@@ -2884,29 +2744,23 @@ msgstr "Esqueceu sua senha?"
 #: ckanext/artesp_theme/templates/user/logout.html:3
 #: ckanext/artesp_theme/templates/user/logout.html:6
 #: ckanext/artesp_theme/templates/user/logout.html:13
-#, fuzzy
-#| msgid "Log out"
 msgid "Logged Out"
-msgstr "Sair"
+msgstr "Sessão Encerrada"
 
 #: ckanext/artesp_theme/templates/user/logout.html:15
 msgid "You are now logged out."
-msgstr ""
+msgstr "Você saiu da sua conta."
 
 #: ckanext/artesp_theme/templates/user/logout.html:16
-#, fuzzy
-#| msgid "Text on home page"
 msgid "Return to Home Page"
-msgstr "Texto na página inicial"
+msgstr "Retornar à Página Inicial"
 
 #: ckanext/artesp_theme/templates/user/logout_first.html:9
 #, python-brace-format
 msgid "You're already logged in as {user}."
-msgstr ""
+msgstr "Você já está conectado como {user}."
 
 #: ckanext/artesp_theme/templates/user/logout_first.html:9
-#, fuzzy
-#| msgid "Log out"
 msgid "Logout"
 msgstr "Sair"
 
@@ -2917,17 +2771,15 @@ msgstr "Lembrar de mim"
 
 #: ckanext/artesp_theme/templates/user/logout_first.html:20
 msgid "You're already logged in"
-msgstr ""
+msgstr "Você já está conectado"
 
 #: ckanext/artesp_theme/templates/user/logout_first.html:22
 msgid "You need to log out before you can log in with another account."
-msgstr ""
+msgstr "Você precisa sair antes de poder entrar com outra conta."
 
 #: ckanext/artesp_theme/templates/user/logout_first.html:23
-#, fuzzy
-#| msgid "Log out"
 msgid "Log out now"
-msgstr "Sair"
+msgstr "Sair agora"
 
 #: ckanext/artesp_theme/templates/user/new.html:6
 msgid "Registration"
@@ -2993,15 +2845,15 @@ msgstr "Simplesmente digite uma nova senha e atualizaremos sua conta"
 
 #: ckanext/artesp_theme/templates/user/read.html:27
 msgid "User hasn't created any datasets."
-msgstr ""
+msgstr "O usuário não criou nenhum conjunto de dados."
 
 #: ckanext/artesp_theme/templates/user/read_groups.html:22
 msgid "User isn't a member of any groups."
-msgstr ""
+msgstr "O usuário não é membro de nenhum grupo."
 
 #: ckanext/artesp_theme/templates/user/read_organizations.html:21
 msgid "User isn't a member of any organizations."
-msgstr ""
+msgstr "O usuário não é membro de nenhuma organização."
 
 #: ckanext/artesp_theme/templates/user/request_reset.html:3
 #: ckanext/artesp_theme/templates/user/request_reset.html:13
@@ -3026,69 +2878,59 @@ msgstr ""
 
 #: ckanext/artesp_theme/templates/user/snippets/api_token_list.html:13
 msgid "Token"
-msgstr ""
+msgstr "Token"
 
 #: ckanext/artesp_theme/templates/user/snippets/api_token_list.html:14
-#, fuzzy
-#| msgid "Latest Datasets"
 msgid "Last access"
-msgstr "Conjuntos de Dados Recentes"
+msgstr "Último acesso"
 
 #: ckanext/artesp_theme/templates/user/snippets/api_token_list.html:15
-#, fuzzy
-#| msgid "Location"
 msgid "Actions"
-msgstr "Localização"
+msgstr "Ações"
 
 #: ckanext/artesp_theme/templates/user/snippets/api_token_list.html:32
 msgid "Never"
-msgstr ""
+msgstr "Nunca"
 
 #: ckanext/artesp_theme/templates/user/snippets/api_token_list.html:41
 msgid "Revoke"
-msgstr ""
+msgstr "Revogar"
 
 #: ckanext/artesp_theme/templates/user/snippets/followers.html:9
 msgid "No followers"
-msgstr ""
+msgstr "Nenhum seguidor"
 
 #: ckanext/artesp_theme/templates/user/snippets/info.html:29
 msgid "You have not provided a biography."
-msgstr ""
+msgstr "Você não forneceu uma biografia."
 
 #: ckanext/artesp_theme/templates/user/snippets/info.html:31
 msgid "This user has no biography."
-msgstr ""
+msgstr "Este usuário não possui biografia."
 
 #: ckanext/artesp_theme/templates/user/snippets/info.html:75
 msgid "Open ID"
-msgstr ""
+msgstr "Open ID"
 
 #: ckanext/artesp_theme/templates/user/snippets/info.html:84
 msgid "This means only you can see this"
-msgstr ""
+msgstr "Isso significa que apenas você pode ver isto"
 
 #: ckanext/artesp_theme/templates/user/snippets/info.html:89
-#, fuzzy
-#| msgid "Remember me"
 msgid "Member Since"
-msgstr "Lembrar de mim"
+msgstr "Membro Desde"
 
 #: ckanext/artesp_theme/templates/user/snippets/info.html:94
-#, fuzzy
-#| msgid "Latest Datasets"
 msgid "Last Active"
-msgstr "Conjuntos de Dados Recentes"
+msgstr "Última Atividade"
 
 #: ckanext/artesp_theme/templates/user/snippets/login_form.html:21
 msgid "Username or Email"
 msgstr "Nome de Usuário ou E-mail"
 
 #: ckanext/artesp_theme/templates/user/snippets/user_search.html:5
-#, fuzzy
-#| msgid "Search datasets..."
 msgid "Search Users"
-msgstr "Buscar conjuntos de dados..."
+msgstr "Buscar Usuários"
 
 #~ msgid "Developer"
 #~ msgstr "Desenvolvedor"
