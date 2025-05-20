@@ -44,6 +44,14 @@
       </div>
     </div>
 
+    <div class="main groups-section-wrapper">
+      <div class="container">
+        {% block groups %}
+        {% snippet 'home/snippets/featured_groups.html' %}
+        {% endblock %}
+      </div>
+    </div>
+
     <div class="main stats-section-wrapper">
       <div class="container">
         {% block stats %}
@@ -51,6 +59,7 @@
         {% endblock %}
       </div>
     </div>
+
   </div>
   {% endblock %}
 </div>

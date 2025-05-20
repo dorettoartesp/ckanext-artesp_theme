@@ -211,16 +211,6 @@
   justify-content: center;
 }
 
-/* Featured Sections Styles */
-.featured-groups-section,
-.featured-organizations-section {
-  margin-bottom: 2rem;
-  background-color: white;
-  padding: 2.5rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.04);
-}
-
 .section-title {
   font-family: 'Rawline', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
   color: #333333;

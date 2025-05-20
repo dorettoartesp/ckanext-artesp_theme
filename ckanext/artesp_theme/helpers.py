@@ -79,7 +79,7 @@ def get_group_count():
         groups = toolkit.get_action('group_list')({}, {'all_fields': False})
         return len(groups)
     except Exception as e:
-        print(f"Error counting groups: {str(e)}")
+        log.error(f"Error counting groups: {str(e)}")
         # Return 0 if there's an error
         return 0
 
@@ -122,6 +122,36 @@ def get_latest_resources(limit=5, org_id=None, dataset_id=None):
 
     return results
 
+def get_featured_groups(limit=3):
+    """
+    Return a list of featured groups.
+    Fetches a list of groups with their details, including title, name, image URL, and dataset count.
+    Currently, it takes the first 'limit' groups returned by the 'group_list' action.
+    This could be extended to sort by package_count or a specific 'featured' tag if needed.
+    """
+    try:
+        group_list_params = {
+            'all_fields': True,        # Fetches most group attributes
+            'include_datasets': True,  # Adds 'package_count' and 'display_name'
+            # Example: 'sort': 'name asc',
+            # To sort by dataset count (popularity), you might need to fetch all,
+            # sort in Python, then slice. For now, we take the default order.
+        }
+        groups = toolkit.get_action('group_list')({}, group_list_params)
+
+        # If sorting is desired, e.g., by package_count:
+        # groups.sort(key=lambda g: g.get('package_count', 0), reverse=True)
+
+        return groups[:limit]
+
+    except toolkit.ObjectNotFound:
+        log.info("[ckanext-artesp_theme] No groups found to feature.")
+        return []
+    except Exception as e:
+        log.error(f"[ckanext-artesp_theme] Error getting featured groups: {str(e)}", exc_info=True)
+        return []
+
+
 def get_helpers():
     return {
         "artesp_theme_hello": artesp_theme_hello,
@@ -131,5 +161,6 @@ def get_helpers():
         "get_latest_resources": get_latest_resources,
         "get_organization_count": get_organization_count,
         "get_group_count": get_group_count,
+        "get_featured_groups": get_featured_groups,
         "get_year": get_year,
     }
