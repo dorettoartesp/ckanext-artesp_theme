@@ -37,7 +37,7 @@ def get_resource_count():
 
         return resource_count
     except Exception as e:
-        print(f"Error counting resources: {str(e)}")
+        log.error(f"Error counting resources: {str(e)}")
         # Return 0 if there's an error
         return 0
 
@@ -56,7 +56,7 @@ def get_latest_datasets(limit=3):
         )
         return datasets.get('results', [])
     except Exception as e:
-        print(f"Error getting latest datasets: {str(e)}")
+        log.error(f"Error getting latest datasets: {str(e)}")
         # Return empty list if there's an error
         return []
 
@@ -68,10 +68,20 @@ def get_organization_count():
         orgs = toolkit.get_action('organization_list')({}, {'all_fields': False})
         return len(orgs)
     except Exception as e:
-        print(f"Error counting organizations: {str(e)}")
+        log.error(f"Error counting organizations: {str(e)}")
         # Return 0 if there's an error
         return 0
 
+def get_group_count():
+    """Return the number of groups in the system."""
+    try:
+        # Use group_list to get all groups
+        groups = toolkit.get_action('group_list')({}, {'all_fields': False})
+        return len(groups)
+    except Exception as e:
+        print(f"Error counting groups: {str(e)}")
+        # Return 0 if there's an error
+        return 0
 
 def get_year():
     """Return the current year."""
@@ -93,8 +103,6 @@ def get_latest_resources(limit=5, org_id=None, dataset_id=None):
 
         # Order by last_modified descending and apply limit
         resources = query.order_by(desc(Resource.last_modified)).limit(limit).all()
-        log.info('*'*30)
-        log.info(resources)
         for res in resources:
             try:
                 # Get the full dataset dictionary
@@ -122,5 +130,6 @@ def get_helpers():
         "get_latest_datasets": get_latest_datasets,
         "get_latest_resources": get_latest_resources,
         "get_organization_count": get_organization_count,
+        "get_group_count": get_group_count,
         "get_year": get_year,
     }

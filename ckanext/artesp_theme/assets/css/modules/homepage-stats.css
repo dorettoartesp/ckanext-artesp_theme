@@ -156,6 +156,10 @@
   border-left: 4px solid var(--highlight); /* Yellow left border */
 }
 
+.stats-card-black {
+  border-left: 4px solid #000000; /* Yellow left border */
+}
+
 .stats-card-icon {
   float: left;
   width: 2.5rem;
@@ -174,6 +178,10 @@
 
 .stats-card-yellow .stats-card-icon {
   color: var(--highlight); /* Yellow icon */
+}
+
+.stats-card-black .stats-card-icon {
+  color: #000000;
 }
 
 .stats-card-icon .fa {
