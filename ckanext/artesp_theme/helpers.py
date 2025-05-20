@@ -1,6 +1,13 @@
-from ckan.plugins import toolkit
 import datetime
+import logging
 
+from sqlalchemy import desc
+from ckan.plugins import toolkit
+from ckan.model.resource import Resource
+from ckan.model.package import Package
+from ckan.model.meta import Session
+
+log = logging.getLogger(__name__)
 
 def artesp_theme_hello():
     return "Hello, artesp_theme!"
@@ -30,8 +37,7 @@ def get_resource_count():
 
         return resource_count
     except Exception as e:
-        # Log the error
-        toolkit.get_logger().error(f"Error counting resources: {str(e)}")
+        print(f"Error counting resources: {str(e)}")
         # Return 0 if there's an error
         return 0
 
@@ -50,8 +56,7 @@ def get_latest_datasets(limit=3):
         )
         return datasets.get('results', [])
     except Exception as e:
-        # Log the error
-        toolkit.get_logger().error(f"Error getting latest datasets: {str(e)}")
+        print(f"Error getting latest datasets: {str(e)}")
         # Return empty list if there's an error
         return []
 
@@ -63,8 +68,7 @@ def get_organization_count():
         orgs = toolkit.get_action('organization_list')({}, {'all_fields': False})
         return len(orgs)
     except Exception as e:
-        # Log the error
-        toolkit.get_logger().error(f"Error counting organizations: {str(e)}")
+        print(f"Error counting organizations: {str(e)}")
         # Return 0 if there's an error
         return 0
 
@@ -73,6 +77,42 @@ def get_year():
     """Return the current year."""
     return datetime.datetime.now().year
 
+def get_latest_resources(limit=5, org_id=None, dataset_id=None):
+    context = {'session': Session}
+    results = []
+
+    try:
+        # Start base query
+        query = Session.query(Resource).filter(Resource.state == 'active')
+
+        # Filter by dataset or organization if provided
+        if dataset_id:
+            query = query.filter(Resource.package_id == dataset_id)
+        elif org_id:
+            query = query.join(Package).filter(Package.owner_org == org_id)
+
+        # Order by last_modified descending and apply limit
+        resources = query.order_by(desc(Resource.last_modified)).limit(limit).all()
+        log.info('*'*30)
+        log.info(resources)
+        for res in resources:
+            try:
+                # Get the full dataset dictionary
+                dataset_dict = toolkit.get_action('package_show')(context, {'id': res.package_id})
+
+                results.append({
+                    'resource': res,
+                    'dataset': dataset_dict,
+                    'parent_dataset_title': dataset_dict.get('title')  # Add title as separate key
+                })
+
+            except Exception as e:
+                log.warning(f"[ckanext-artesp_theme] Failed to fetch dataset for resource {res.id}: {str(e)}")
+
+    except Exception as e:
+        log.error("[ckanext-artesp_theme] Failed to get latest resources", exc_info=True)
+
+    return results
 
 def get_helpers():
     return {
@@ -80,6 +120,7 @@ def get_helpers():
         "get_package_count": get_package_count,
         "get_resource_count": get_resource_count,
         "get_latest_datasets": get_latest_datasets,
+        "get_latest_resources": get_latest_resources,
         "get_organization_count": get_organization_count,
         "get_year": get_year,
     }

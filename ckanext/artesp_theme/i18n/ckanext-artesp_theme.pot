@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-artesp_theme 0.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-05-19 17:46-0300\n"
+"POT-Creation-Date: 2025-05-20 08:44-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -952,18 +952,18 @@ msgstr ""
 msgid "View all datasets"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:33
+#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:34
 #, python-brace-format
 msgid "{num} Resource"
 msgid_plural "{num} Resources"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:41
+#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:42
 msgid "No description provided."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:57
+#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:59
 msgid "No datasets found."
 msgstr ""
 
@@ -1004,7 +1004,11 @@ msgid "Connect your applications directly to our data through APIs"
 msgstr ""
 
 #: ckanext/artesp_theme/templates/home/snippets/search.html:6
-msgid "Find and explore public datasets"
+msgid "Find and explore"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/search.html:6
+msgid "public datasets"
 msgstr ""
 
 #: ckanext/artesp_theme/templates/home/snippets/search.html:11

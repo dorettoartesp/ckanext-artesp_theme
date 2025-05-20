@@ -36,6 +36,14 @@
       </div>
     </div>
 
+    <div class="main latest-resources-wrapper">
+      <div class="container">
+        {% block latest_resources %}
+        {% snippet 'home/snippets/latest_resources.html' %}
+        {% endblock %}
+      </div>
+    </div>
+
     <div class="main stats-section-wrapper">
       <div class="container">
         {% block stats %}

@@ -3,7 +3,7 @@
 {% set dataset_type = h.default_package_type() %}
 
 <div class="modern-search-box">
-  <h1 class="search-heading">{{ _("Find and explore public datasets") }}</h1>
+  <h1 class="search-heading">{{ _("Find and explore") }}&nbsp;<span class="search-emphasis">{{ _("public datasets") }}</span></h1>
   <form class="search-form" method="get" action="{% url_for dataset_type ~ '.search' %}" style="width: 100%;">
     <div class="search-input-wrapper">
       <div class="search-input" style="width: 100%;">

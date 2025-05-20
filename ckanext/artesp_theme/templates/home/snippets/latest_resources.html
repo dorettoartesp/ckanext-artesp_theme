@@ -1,0 +1,65 @@
+{% set latest_resources = h.get_latest_resources(3) %}
+
+<div class="latest-resources-section">
+  <div class="section-header">
+    <h2 class="section-title">{{ _('Latest Resources') }}</h2>
+    {# Links to the main dataset search page, as resources are typically found within datasets #}
+    <a href="" class="view-all-link"></a>
+  </div>
+
+  <div class="latest-resources-container">
+    {% if latest_resources %}
+      {% for resource_item in latest_resources %}
+        <div class="resource-card">
+          {# Link to the resource's page. Assumes resource object has package_id (dataset id) and its own id. #}
+          <a href="{{ h.url_for('resource.read', id=resource_item.resource.package_id, resource_id=resource_item.resource.id) }}">
+            <div class="resource-card-content">
+              <h3 class="resource-title">
+                {# Display resource name (often used as title), fallback to truncated ID if name is not available #}
+                {{ resource_item.resource.name|upper if resource_item.resource.name else resource_item.resource.id|truncate(30)|upper }}
+              </h3>
+
+              <div class="resource-meta">
+                <div class="resource-date">
+                  <i class="fa fa-calendar" aria-hidden="true"></i>
+                  {# Show last modified date, or creation date as fallback #}
+                  {{ h.render_datetime(resource_item.resource.last_modified or resource_item.resource.created, date_format='%d/%m/%Y') }}
+                </div>
+
+                {# Display parent dataset information. parent_dataset_title is not enriched by the helper, falls back to package_id. #}
+                {% if resource_item.resource.package_id %}
+                  <div class="resource-parent-dataset">
+                    <i class="fa fa-archive" aria-hidden="true"></i> {# Icon for dataset/archive #}
+                    <a href="{{ h.url_for('dataset.read', id=resource_item.resource.package_id) }}" title="{{ _('View parent dataset') }}">
+                      {{ resource_item.parent_dataset_title or resource_item.resource.package_id }} {# Display title or fallback to ID #}
+                    </a>
+                  </div>
+                {% endif %}
+
+                {# Display resource format, if available #}
+                {% if resource_item.resource.format %}
+                  <div class="resource-format">
+                    <i class="fa fa-file-text-o" aria-hidden="true"></i> {# Icon for file/format #}
+                    {{ resource_item.resource.format|upper }}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="resource-description">
+                {% if resource_item.resource.description %}
+                  {{ h.markdown_extract(resource_item.resource.description, 150) }}
+                {% else %}
+                  <p class="empty">{{ _('No description provided for this resource.') }}</p>
+                {% endif %}
+              </div>
+            </div>
+          </a>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="no-resources">
+        <p>{{ _('No recent resources found.') }}</p>
+      </div>
+    {% endif %}
+  </div>
+</div>

@@ -72,6 +72,10 @@
   line-height: 1.3;
 }
 
+.search-emphasis {
+  color: var(--primary);
+}
+
 .search-form {
   width: 100%;
   display: flex;

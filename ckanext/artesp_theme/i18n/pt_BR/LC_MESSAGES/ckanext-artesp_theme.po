@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-artesp_theme 0.0.1\n"
 "Report-Msgid-Bugs-To: email@example.com\n"
-"POT-Creation-Date: 2025-05-19 17:46-0300\n"
+"POT-Creation-Date: 2025-05-20 08:44-0300\n"
 "PO-Revision-Date: 2025-05-19 11:25-0300\n"
 "Last-Translator: Gemini <gemini@google.com>\n"
 "Language: pt_BR\n"
@@ -1034,18 +1034,18 @@ msgstr "Conjuntos de Dados Recentes"
 msgid "View all datasets"
 msgstr "Ver todos os conjuntos de dados"
 
-#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:33
+#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:34
 #, python-brace-format
 msgid "{num} Resource"
 msgid_plural "{num} Resources"
 msgstr[0] "{num} Recurso"
 msgstr[1] "{num} Recursos"
 
-#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:41
+#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:42
 msgid "No description provided."
 msgstr "Nenhuma descrição fornecida."
 
-#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:57
+#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:59
 msgid "No datasets found."
 msgstr "Nenhum conjunto de dados encontrado."
 
@@ -1093,8 +1093,12 @@ msgid "Connect your applications directly to our data through APIs"
 msgstr "Conecte seus aplicativos diretamente aos nossos dados através de APIs"
 
 #: ckanext/artesp_theme/templates/home/snippets/search.html:6
-msgid "Find and explore public datasets"
-msgstr "Encontre e explore conjuntos de dados públicos"
+msgid "Find and explore"
+msgstr "Encontre e explore"
+
+#: ckanext/artesp_theme/templates/home/snippets/search.html:6
+msgid "public datasets"
+msgstr "dados públicos"
 
 #: ckanext/artesp_theme/templates/home/snippets/search.html:11
 msgid "Search datasets"
