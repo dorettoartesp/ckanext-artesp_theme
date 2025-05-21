@@ -114,6 +114,9 @@ a.tag, a.pill, a.label,
 .flash-messages .tag {
   color: #444 !important;
   background-color: white !important;
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 1px !important;
+  margin-bottom: 0px !important;
 }
 
 /* Direct override for #206b82 color */
@@ -141,7 +144,7 @@ a.label.active, a.label.selected,
 .pill.active, .pill.selected,
 .label:hover, .label:focus, .label:active,
 .label.active, .label.selected {
-  background-color: #f0f0f0 !important;
+  /* background-color: #f0f0f0 !important; */
   color: #444 !important;
   border-color: var(--primary) !important;
   border-width: 1px !important;
@@ -238,5 +241,5 @@ a:hover, a:focus {
 .user-dashboard .page-header a:hover,
 .user-admin .page-header a:hover,
 .user-settings .page-header a:hover {
-  color: var(--primary);
+  color: var(--gray-darker);
 }

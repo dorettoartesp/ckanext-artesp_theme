@@ -1,0 +1,41 @@
+{% set featured_groups = h.get_featured_groups(3) %} {# Adjust limit as needed, e.g., 3 or 4 groups #}
+
+<div class="featured-groups-section">
+  <div class="section-header">
+    <h2 class="section-title">{{ _('Featured Groups') }}</h2>
+    <a href="{{ h.url_for('group.index') }}" class="view-all-link">{{ _('View all groups') }} <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+  </div>
+
+  <div class="featured-groups-container">
+    {% if featured_groups %}
+      {% for group in featured_groups %}
+        <div class="group-card">
+          {# Entire card is a link to the group's page #}
+          <a href="{{ h.url_for('group.read', id=group.name or group.id) }}">
+            <div class="group-card-image-wrapper">
+              {# Display group image or a placeholder if not available #}
+              {# Assumes a placeholder image at public/images/group-placeholder.png #}
+              <img src="{{ group.image_display_url or h.url_for_static('/base/images/placeholder-group.png') }}" alt="{{ group.title or group.display_name or group.name }}" class="group-image">
+            </div>
+            <div class="group-card-content">
+              <h3 class="group-title">
+                {{ (group.title or group.display_name or group.name)|truncate(50)|upper }}
+              </h3>
+              <div class="group-meta">
+                <span class="dataset-count">
+                  <i class="fa fa-archive" aria-hidden="true"></i>
+                  {{ ungettext('{num} Dataset', '{num} Datasets', group.package_count or 0).format(num=group.package_count or 0) }}
+                </span>
+              </div>
+              <span class="view-group-link">{{ _('View Group') }} <i class="fa fa-external-link" aria-hidden="true"></i></span>
+            </div>
+          </a>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="no-groups">
+        <p>{{ _('No featured groups found.') }}</p>
+      </div>
+    {% endif %}
+  </div>
+</div>

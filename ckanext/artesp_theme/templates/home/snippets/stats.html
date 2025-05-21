@@ -1,6 +1,7 @@
 {% set dataset_count = h.get_package_count() %}
 {% set resource_count = h.get_resource_count() %}
 {% set organization_count = h.get_organization_count() %}
+{% set group_count = h.get_group_count() %}
 
 <div class="stats-section">
   <div class="stats-header">
@@ -31,8 +32,19 @@
       </div>
     </div>
 
-    <!-- ORGANIZATION CARD -->
+    <!-- GROUPS CARD -->
     <div class="stats-card stats-card-yellow">
+      <div class="stats-card-icon">
+        <i class="fa fa-object-group"></i>
+      </div>
+      <div class="stats-card-content">
+        <div class="stats-card-label">{% if group_count == 1 %}{{ _('Group') }}{% else %}{{ _('Groups') }}{% endif %}</div>
+        <div class="stats-card-count">{{ group_count }}</div>
+      </div>
+    </div>
+
+    <!-- ORGANIZATION CARD -->
+    <div class="stats-card stats-card-black">
       <div class="stats-card-icon">
         <i class="fa fa-building"></i>
       </div>

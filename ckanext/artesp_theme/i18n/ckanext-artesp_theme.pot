@@ -1,0 +1,3136 @@
+# Translations template for ckanext-artesp_theme.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the ckanext-artesp_theme
+# project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: ckanext-artesp_theme 0.0.1\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-05-20 08:44-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ckanext/artesp_theme/logic/validators.py:6
+msgid "Required"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/error_document_template.html:3
+#, python-format
+msgid "Error %(error_code)s"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/error_document_template.html:16
+msgid "You might need to login to access this page."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/error_document_template.html:16
+msgid "Click here to login"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/footer.html:17
+msgid ""
+"Portal de Dados Abertos da Agência Reguladora de Serviços Públicos Delegados "
+"de Transporte do Estado de São Paulo."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/footer.html:25
+msgid "About & Legal"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/footer.html:28
+#: ckanext/artesp_theme/templates/home/about.html:3
+#: ckanext/artesp_theme/templates/home/about.html:6
+#: ckanext/artesp_theme/templates/home/about.html:16
+msgid "About this site"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/footer.html:29
+#: ckanext/artesp_theme/templates/static/about_ckan.html:3
+msgid "About CKAN"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/footer.html:30
+#: ckanext/artesp_theme/templates/static/terms.html:1
+#: ckanext/artesp_theme/templates/static/terms.html:4
+msgid "Terms of Use"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/footer.html:31
+#: ckanext/artesp_theme/templates/static/privacy.html:1
+#: ckanext/artesp_theme/templates/static/privacy.html:4
+msgid "Privacy Policy"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/footer.html:32
+#: ckanext/artesp_theme/templates/static/contact.html:3
+msgid "Contact Us"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/footer.html:37
+msgid "Data & Resources"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/footer.html:40
+#: ckanext/artesp_theme/templates/group/read_base.html:18
+#: ckanext/artesp_theme/templates/group/snippets/info.html:42
+#: ckanext/artesp_theme/templates/header.html:69
+#: ckanext/artesp_theme/templates/home/snippets/stats.html:18
+#: ckanext/artesp_theme/templates/organization/bulk_process.html:22
+#: ckanext/artesp_theme/templates/organization/edit_base.html:15
+#: ckanext/artesp_theme/templates/organization/read_base.html:19
+#: ckanext/artesp_theme/templates/organization/snippets/info.html:53
+#: ckanext/artesp_theme/templates/package/snippets/new_package_breadcrumb.html:1
+#: ckanext/artesp_theme/templates/snippets/context/group.html:19
+#: ckanext/artesp_theme/templates/snippets/context/user.html:21
+#: ckanext/artesp_theme/templates/user/read.html:11
+#: ckanext/artesp_theme/templates/user/read_base.html:22
+#: ckanext/artesp_theme/templates/user/snippets/info.html:44
+msgid "Datasets"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/footer.html:41
+#: ckanext/artesp_theme/templates/header.html:70
+#: ckanext/artesp_theme/templates/home/snippets/stats.html:40
+#: ckanext/artesp_theme/templates/organization/edit.html:6
+#: ckanext/artesp_theme/templates/organization/edit_base.html:5
+#: ckanext/artesp_theme/templates/organization/index.html:3
+#: ckanext/artesp_theme/templates/organization/index.html:6
+#: ckanext/artesp_theme/templates/organization/index.html:18
+#: ckanext/artesp_theme/templates/organization/new.html:11
+#: ckanext/artesp_theme/templates/organization/read_base.html:5
+#: ckanext/artesp_theme/templates/organization/read_base.html:8
+#: ckanext/artesp_theme/templates/package/base.html:16
+#: ckanext/artesp_theme/templates/user/read_base.html:23
+#: ckanext/artesp_theme/templates/user/read_organizations.html:11
+#: ckanext/artesp_theme/templates/user/snippets/info.html:48
+msgid "Organizations"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/footer.html:42
+#: ckanext/artesp_theme/templates/group/edit.html:4
+#: ckanext/artesp_theme/templates/group/edit_base.html:4
+#: ckanext/artesp_theme/templates/group/index.html:4
+#: ckanext/artesp_theme/templates/group/index.html:7
+#: ckanext/artesp_theme/templates/group/index.html:19
+#: ckanext/artesp_theme/templates/group/manage_members.html:3
+#: ckanext/artesp_theme/templates/group/members.html:3
+#: ckanext/artesp_theme/templates/group/new.html:12
+#: ckanext/artesp_theme/templates/group/read_base.html:4
+#: ckanext/artesp_theme/templates/group/read_base.html:7
+#: ckanext/artesp_theme/templates/header.html:71
+#: ckanext/artesp_theme/templates/package/group_list.html:7
+#: ckanext/artesp_theme/templates/package/read_base.html:23
+#: ckanext/artesp_theme/templates/user/read_base.html:24
+#: ckanext/artesp_theme/templates/user/read_groups.html:12
+#: ckanext/artesp_theme/templates/user/snippets/info.html:52
+msgid "Groups"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/footer.html:47
+#: ckanext/artesp_theme/templates/snippets/language_selector.html:8
+msgid "Language"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/footer.html:65
+msgid "All rights reserved."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/footer.html:70
+msgid "Government of São Paulo State"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/footer.html:76
+msgid ""
+"<strong>Powered by</strong> <a class=\"hide-text ckan-footer-logo\" "
+"href=\"http://ckan.org\"></a>"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/header.html:16
+msgid "View profile"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/header.html:22
+msgid "Admin"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/header.html:24
+#: ckanext/artesp_theme/templates/user/dashboard.html:10
+msgid "Dashboard"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/header.html:25
+msgid "Settings"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/header.html:29
+#: ckanext/artesp_theme/templates/header.html:30
+msgid "Log out"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/header.html:40
+msgid "Account"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/header.html:43
+#: ckanext/artesp_theme/templates/user/logout_first.html:14
+msgid "Log in"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/header.html:45
+#: ckanext/artesp_theme/templates/user/new.html:3
+msgid "Register"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/config.html:26
+#: ckanext/artesp_theme/templates/group/about.html:3
+#: ckanext/artesp_theme/templates/group/read_base.html:20
+#: ckanext/artesp_theme/templates/header.html:72
+#: ckanext/artesp_theme/templates/organization/about.html:3
+#: ckanext/artesp_theme/templates/organization/read_base.html:21
+#: ckanext/artesp_theme/templates/user/edit_user_form.html:21
+msgid "About"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/page.html:6
+msgid "Skip to main content"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/page.html:37
+msgid "Breadcrumb"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/base.html:3
+msgid "Administration"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/base.html:8
+msgid "Sysadmins"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/base.html:9
+msgid "Config"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/base.html:10
+#: ckanext/artesp_theme/templates/admin/trash.html:28
+msgid "Trash"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/config.html:15
+msgid "Site Title"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/config.html:17
+msgid "Custom Stylesheet"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/config.html:19
+msgid "Site Tag Line"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/config.html:24
+#: ckanext/artesp_theme/templates/macros/autoform.html:62
+msgid "Site logo"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/config.html:26
+msgid "About page text"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/config.html:28
+msgid "Intro Text"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/config.html:28
+msgid "Text on home page"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/config.html:30
+msgid "Custom CSS"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/config.html:30
+msgid "Customisable css inserted into the page header"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/config.html:34
+#: ckanext/artesp_theme/templates/admin/confirm_reset.html:8
+msgid "Are you sure you want to reset the config?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/config.html:34
+msgid "Reset"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/config.html:35
+msgid "Update Config"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/config.html:44
+msgid "CKAN config options"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/config.html:51
+#, python-format
+msgid ""
+"<p><strong>Site Title:</strong> This is the title of this CKAN instance It "
+"appears in various places throughout CKAN.</p> <p><strong>Custom "
+"Stylesheet:</strong> Define an alternative main CSS file.</p> <p><strong>Site"
+" Tag Logo:</strong> This is the logo that appears in the header of all the "
+"CKAN instance templates.</p> <p><strong>About:</strong> This text will appear"
+" on this CKAN instances <a href=\"%(about_url)s\">about page</a>.</p> "
+"<p><strong>Intro Text:</strong> This text will appear on this CKAN instances "
+"<a href=\"%(home_url)s\">home page</a> as a welcome to visitors.</p> "
+"<p><strong>Custom CSS:</strong> This is a block of CSS that appears in "
+"<code>&lt;head&gt;</code> tag of every page. If you wish to customize the "
+"templates more fully we recommend <a href=\"%(docs_url)s\" target=\"_blank\" "
+"rel=\"noreferrer\">reading the documentation</a>.</p>"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/confirm_reset.html:3
+#: ckanext/artesp_theme/templates/admin/confirm_reset.html:11
+msgid "Confirm Reset"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/confirm_reset.html:10
+#: ckanext/artesp_theme/templates/group/confirm_delete.html:15
+#: ckanext/artesp_theme/templates/group/confirm_delete_member.html:16
+#: ckanext/artesp_theme/templates/organization/confirm_delete.html:15
+#: ckanext/artesp_theme/templates/organization/confirm_delete_member.html:16
+#: ckanext/artesp_theme/templates/package/collaborators/confirm_delete.html:15
+#: ckanext/artesp_theme/templates/package/confirm_delete.html:16
+#: ckanext/artesp_theme/templates/package/confirm_delete_resource.html:15
+#: ckanext/artesp_theme/templates/user/confirm_delete.html:15
+msgid "Cancel"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/index.html:4
+msgid "Current Sysadmins"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/index.html:9
+#: ckanext/artesp_theme/templates/group/manage_members.html:15
+#: ckanext/artesp_theme/templates/group/members.html:12
+#: ckanext/artesp_theme/templates/organization/manage_members.html:22
+#: ckanext/artesp_theme/templates/organization/members.html:15
+#: ckanext/artesp_theme/templates/package/collaborators/collaborators.html:19
+msgid "User"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/index.html:26
+msgid "Revoke Sysadmin permission"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/index.html:40
+#: ckanext/artesp_theme/templates/admin/index.html:60
+msgid "Promote user to Sysadmin"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/index.html:61
+msgid "Promote"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/index.html:73
+msgid "Administer CKAN"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/index.html:78
+#, python-format
+msgid ""
+"<p>As a sysadmin user you have full control over this CKAN instance. Proceed "
+"with care!</p> <p>For guidance on using sysadmin features, see the CKAN  <a "
+"href=\"%(docs_url)s\" target=\"_blank\" rel=\"noreferrer\">sysadmin "
+"guide</a></p>"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/trash.html:13
+msgid "Are you sure you want to purge everything?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/trash.html:14
+msgid "Purge all"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/trash.html:32
+msgid "Purge deleted datasets, organizations or groups forever and irreversibly."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/snippets/confirm_delete.html:3
+#: ckanext/artesp_theme/templates/admin/snippets/confirm_delete.html:18
+#: ckanext/artesp_theme/templates/group/confirm_delete.html:3
+#: ckanext/artesp_theme/templates/group/confirm_delete.html:16
+#: ckanext/artesp_theme/templates/group/confirm_delete_member.html:3
+#: ckanext/artesp_theme/templates/group/confirm_delete_member.html:17
+#: ckanext/artesp_theme/templates/organization/confirm_delete.html:3
+#: ckanext/artesp_theme/templates/organization/confirm_delete.html:16
+#: ckanext/artesp_theme/templates/organization/confirm_delete_member.html:3
+#: ckanext/artesp_theme/templates/organization/confirm_delete_member.html:17
+#: ckanext/artesp_theme/templates/package/collaborators/confirm_delete.html:3
+#: ckanext/artesp_theme/templates/package/collaborators/confirm_delete.html:16
+#: ckanext/artesp_theme/templates/package/confirm_delete.html:3
+#: ckanext/artesp_theme/templates/package/confirm_delete.html:17
+#: ckanext/artesp_theme/templates/package/confirm_delete_resource.html:3
+#: ckanext/artesp_theme/templates/package/confirm_delete_resource.html:16
+#: ckanext/artesp_theme/templates/user/confirm_delete.html:3
+#: ckanext/artesp_theme/templates/user/confirm_delete.html:16
+msgid "Confirm Delete"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/snippets/data_type.html:11
+msgid "Deleted datasets"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/snippets/data_type.html:13
+msgid "Deleted organizations"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/snippets/data_type.html:15
+msgid "Deleted groups"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/admin/snippets/data_type.html:51
+msgid "Purge"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/development/snippets/form.html:5
+msgid "Standard"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/development/snippets/form.html:5
+msgid "Standard Input"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/development/snippets/form.html:6
+msgid "Medium"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/development/snippets/form.html:6
+msgid "Medium Width Input"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/development/snippets/form.html:7
+msgid "Full"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/development/snippets/form.html:7
+msgid "Full Width Input"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/development/snippets/form.html:8
+msgid "Large"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/development/snippets/form.html:8
+msgid "Large Input"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/development/snippets/form.html:9
+msgid "Prepend"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/development/snippets/form.html:9
+msgid "Prepend Input"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/development/snippets/form.html:13
+msgid "Custom Field (empty)"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/development/snippets/form.html:19
+#: ckanext/artesp_theme/templates/snippets/custom_form_fields.html:20
+#: ckanext/artesp_theme/templates/snippets/custom_form_fields.html:37
+msgid "Custom Field"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/development/snippets/form.html:22
+msgid "Markdown"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/development/snippets/form.html:23
+msgid "Textarea"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/development/snippets/form.html:24
+msgid "Select"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/admins.html:3
+#: ckanext/artesp_theme/templates/group/admins.html:6
+#: ckanext/artesp_theme/templates/organization/admins.html:3
+#: ckanext/artesp_theme/templates/organization/admins.html:6
+msgid "Administrators"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/base_form_page.html:7
+msgid "Group Form"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/confirm_delete.html:11
+#, python-brace-format
+msgid "Are you sure you want to delete group - {name}?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/confirm_delete_member.html:11
+#: ckanext/artesp_theme/templates/organization/confirm_delete_member.html:11
+#, python-brace-format
+msgid "Are you sure you want to delete member - {name}?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/edit.html:7
+#: ckanext/artesp_theme/templates/group/edit_base.html:4
+#: ckanext/artesp_theme/templates/group/read_base.html:13
+#: ckanext/artesp_theme/templates/organization/edit.html:9
+#: ckanext/artesp_theme/templates/organization/read_base.html:14
+#: ckanext/artesp_theme/templates/package/read_base.html:17
+#: ckanext/artesp_theme/templates/user/edit.html:8
+#: ckanext/artesp_theme/templates/user/edit_base.html:3
+#: ckanext/artesp_theme/templates/user/read_base.html:17
+msgid "Manage"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/edit.html:12
+msgid "Edit Group"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/edit_base.html:9
+#: ckanext/artesp_theme/templates/organization/edit_base.html:9
+#: ckanext/artesp_theme/templates/package/resource_read.html:42
+#: ckanext/artesp_theme/templates/package/resource_views.html:4
+msgid "View"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/edit_base.html:13
+#: ckanext/artesp_theme/templates/group/manage_members.html:29
+#: ckanext/artesp_theme/templates/organization/bulk_process.html:76
+#: ckanext/artesp_theme/templates/organization/edit.html:3
+#: ckanext/artesp_theme/templates/organization/edit_base.html:14
+#: ckanext/artesp_theme/templates/organization/manage_members.html:40
+#: ckanext/artesp_theme/templates/package/collaborators/collaborators.html:33
+#: ckanext/artesp_theme/templates/package/edit_base.html:8
+#: ckanext/artesp_theme/templates/package/resource_edit.html:3
+#: ckanext/artesp_theme/templates/package/resource_edit_base.html:12
+msgid "Edit"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/edit_base.html:14
+#: ckanext/artesp_theme/templates/group/manage_members.html:3
+#: ckanext/artesp_theme/templates/group/members.html:3
+#: ckanext/artesp_theme/templates/group/read_base.html:19
+#: ckanext/artesp_theme/templates/group/snippets/info.html:46
+#: ckanext/artesp_theme/templates/organization/edit_base.html:16
+#: ckanext/artesp_theme/templates/organization/manage_members.html:3
+#: ckanext/artesp_theme/templates/organization/members.html:3
+#: ckanext/artesp_theme/templates/organization/read_base.html:20
+#: ckanext/artesp_theme/templates/organization/snippets/info.html:57
+msgid "Members"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/followers.html:3
+#: ckanext/artesp_theme/templates/group/followers.html:6
+#: ckanext/artesp_theme/templates/group/snippets/info.html:38
+#: ckanext/artesp_theme/templates/organization/snippets/info.html:49
+#: ckanext/artesp_theme/templates/package/followers.html:3
+#: ckanext/artesp_theme/templates/package/followers.html:6
+#: ckanext/artesp_theme/templates/package/snippets/info.html:25
+#: ckanext/artesp_theme/templates/snippets/context/group.html:15
+#: ckanext/artesp_theme/templates/snippets/context/user.html:17
+#: ckanext/artesp_theme/templates/user/followers.html:3
+#: ckanext/artesp_theme/templates/user/followers.html:7
+#: ckanext/artesp_theme/templates/user/snippets/info.html:40
+msgid "Followers"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/index.html:14
+#: ckanext/artesp_theme/templates/user/dashboard_groups.html:7
+msgid "Add Group"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/index.html:21
+msgid "Search groups..."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/index.html:21
+#: ckanext/artesp_theme/templates/group/read.html:15
+#: ckanext/artesp_theme/templates/organization/bulk_process.html:29
+#: ckanext/artesp_theme/templates/organization/index.html:20
+#: ckanext/artesp_theme/templates/organization/read.html:21
+#: ckanext/artesp_theme/templates/package/search.html:30
+#: ckanext/artesp_theme/templates/snippets/search_form.html:4
+#: ckanext/artesp_theme/templates/snippets/simple_search.html:10
+msgid "Name Ascending"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/index.html:21
+#: ckanext/artesp_theme/templates/group/read.html:16
+#: ckanext/artesp_theme/templates/organization/bulk_process.html:30
+#: ckanext/artesp_theme/templates/organization/index.html:20
+#: ckanext/artesp_theme/templates/organization/read.html:22
+#: ckanext/artesp_theme/templates/package/search.html:31
+#: ckanext/artesp_theme/templates/snippets/search_form.html:4
+#: ckanext/artesp_theme/templates/snippets/simple_search.html:10
+msgid "Name Descending"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/index.html:30
+msgid "There are currently no groups for this site"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/index.html:32
+#: ckanext/artesp_theme/templates/organization/index.html:31
+msgid "How about creating one?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/manage_members.html:6
+#: ckanext/artesp_theme/templates/group/member_new.html:10
+#: ckanext/artesp_theme/templates/group/member_new.html:78
+#: ckanext/artesp_theme/templates/organization/manage_members.html:8
+#: ckanext/artesp_theme/templates/organization/member_new.html:7
+#: ckanext/artesp_theme/templates/organization/member_new.html:12
+#: ckanext/artesp_theme/templates/organization/member_new.html:80
+msgid "Add Member"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/manage_members.html:7
+#: ckanext/artesp_theme/templates/organization/manage_members.html:9
+msgid "CSV"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/manage_members.html:16
+#: ckanext/artesp_theme/templates/group/member_new.html:63
+#: ckanext/artesp_theme/templates/group/member_new.html:67
+#: ckanext/artesp_theme/templates/group/members.html:13
+#: ckanext/artesp_theme/templates/organization/manage_members.html:23
+#: ckanext/artesp_theme/templates/organization/member_new.html:65
+#: ckanext/artesp_theme/templates/organization/member_new.html:69
+#: ckanext/artesp_theme/templates/organization/members.html:16
+#: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:42
+#: ckanext/artesp_theme/templates/package/collaborators/collaborators.html:20
+msgid "Role"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/manage_members.html:32
+#: ckanext/artesp_theme/templates/group/member_new.html:72
+#: ckanext/artesp_theme/templates/organization/manage_members.html:45
+#: ckanext/artesp_theme/templates/organization/member_new.html:74
+msgid "Are you sure you want to delete this member?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/manage_members.html:32
+#: ckanext/artesp_theme/templates/group/member_new.html:72
+#: ckanext/artesp_theme/templates/group/snippets/group_form.html:40
+#: ckanext/artesp_theme/templates/organization/bulk_process.html:60
+#: ckanext/artesp_theme/templates/organization/manage_members.html:45
+#: ckanext/artesp_theme/templates/organization/member_new.html:74
+#: ckanext/artesp_theme/templates/organization/snippets/organization_form.html:40
+#: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:45
+#: ckanext/artesp_theme/templates/package/collaborators/collaborators.html:36
+#: ckanext/artesp_theme/templates/package/edit_view.html:20
+#: ckanext/artesp_theme/templates/package/snippets/package_form.html:42
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:73
+#: ckanext/artesp_theme/templates/user/edit_user_form.html:93
+msgid "Delete"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/member_new.html:8
+#: ckanext/artesp_theme/templates/organization/member_new.html:10
+msgid "Back to all members"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/member_new.html:10
+#: ckanext/artesp_theme/templates/organization/member_new.html:7
+#: ckanext/artesp_theme/templates/organization/member_new.html:12
+msgid "Edit Member"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/member_new.html:20
+#: ckanext/artesp_theme/templates/organization/member_new.html:22
+#: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:20
+msgid "Existing User"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/member_new.html:23
+#: ckanext/artesp_theme/templates/organization/member_new.html:25
+#: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:23
+msgid "If you wish to add an existing user, search for their username below."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/member_new.html:42
+#: ckanext/artesp_theme/templates/organization/member_new.html:44
+msgid "or"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/member_new.html:48
+#: ckanext/artesp_theme/templates/organization/member_new.html:50
+msgid "New User"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/member_new.html:51
+#: ckanext/artesp_theme/templates/organization/member_new.html:53
+msgid "If you wish to invite a new user, enter their email address."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/member_new.html:74
+msgid "Save"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/member_new.html:91
+#: ckanext/artesp_theme/templates/organization/member_new.html:93
+msgid "What are roles?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/member_new.html:94
+msgid ""
+"<p><strong>Admin:</strong> Can edit group information, as well as manage "
+"organization members.</p> <p><strong>Member:</strong> Can add/remove datasets"
+" from groups</p>"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/new.html:3
+msgid "Create a Group"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/new_group_form.html:17
+msgid "Update Group"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/new_group_form.html:19
+msgid "Create Group"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/read.html:14
+#: ckanext/artesp_theme/templates/organization/read.html:20
+#: ckanext/artesp_theme/templates/package/search.html:29
+msgid "Relevance"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/read.html:17
+#: ckanext/artesp_theme/templates/organization/bulk_process.html:31
+#: ckanext/artesp_theme/templates/organization/read.html:23
+#: ckanext/artesp_theme/templates/package/search.html:32
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:59
+msgid "Last Modified"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/read.html:20
+#: ckanext/artesp_theme/templates/home/snippets/search.html:2
+#: ckanext/artesp_theme/templates/organization/read.html:26
+#: ckanext/artesp_theme/templates/package/search.html:35
+#: ckanext/artesp_theme/templates/snippets/search_form.html:3
+msgid "Search datasets..."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/snippets/feeds.html:2
+#, python-brace-format
+msgid "Datasets in group: {group}"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/snippets/group_form.html:12
+#: ckanext/artesp_theme/templates/organization/snippets/organization_form.html:12
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:36
+msgid "Name"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/snippets/group_form.html:12
+msgid "My Group"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/snippets/group_form.html:20
+#: ckanext/artesp_theme/templates/organization/snippets/organization_form.html:20
+#: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:15
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:30
+#: ckanext/artesp_theme/templates/package/snippets/resource_upload_field.html:107
+msgid "URL"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/snippets/group_form.html:22
+#: ckanext/artesp_theme/templates/organization/snippets/organization_form.html:22
+#: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:21
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:40
+#: ckanext/artesp_theme/templates/package/snippets/view_form.html:9
+msgid "Description"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/snippets/group_form.html:22
+msgid "A little information about my group..."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/snippets/group_form.html:40
+msgid "Are you sure you want to delete this Group?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/snippets/group_form.html:43
+msgid "Save Group"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/snippets/group_item.html:32
+#: ckanext/artesp_theme/templates/organization/snippets/organization_item.html:31
+#, python-brace-format
+msgid "{num} Dataset"
+msgid_plural "{num} Datasets"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ckanext/artesp_theme/templates/group/snippets/group_item.html:34
+#: ckanext/artesp_theme/templates/home/snippets/featured_group.html:26
+#: ckanext/artesp_theme/templates/home/snippets/featured_organization.html:26
+#: ckanext/artesp_theme/templates/organization/snippets/organization_item.html:33
+msgid "0 Datasets"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/snippets/group_item.html:39
+#: ckanext/artesp_theme/templates/organization/snippets/organization_item.html:38
+#, python-brace-format
+msgid "{num} Member"
+msgid_plural "{num} Members"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ckanext/artesp_theme/templates/group/snippets/group_item.html:41
+#: ckanext/artesp_theme/templates/organization/snippets/organization_item.html:40
+msgid "0 Members"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/snippets/group_item.html:51
+#: ckanext/artesp_theme/templates/group/snippets/group_item.html:52
+#, python-brace-format
+msgid "View {name}"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/snippets/group_item.html:56
+#: ckanext/artesp_theme/templates/macros/form/custom.html:50
+#: ckanext/artesp_theme/templates/package/snippets/resource_upload_field.html:34
+#: ckanext/artesp_theme/templates/snippets/search_form.html:77
+msgid "Remove"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/snippets/group_item.html:56
+msgid "Remove dataset from this group"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/snippets/helper.html:15
+msgid "What are Groups?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/snippets/helper.html:19
+msgid ""
+"You can use CKAN Groups to create and manage collections of datasets. This "
+"could be to catalogue datasets for a particular project or team, or on a "
+"particular theme, or as a very simple way to help people find and search your"
+" own published datasets."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/snippets/info.html:19
+#: ckanext/artesp_theme/templates/organization/bulk_process.html:85
+#: ckanext/artesp_theme/templates/organization/snippets/info.html:28
+#: ckanext/artesp_theme/templates/package/read.html:19
+#: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:117
+#: ckanext/artesp_theme/templates/snippets/package_item.html:39
+msgid "Deleted"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/group/snippets/info.html:29
+#: ckanext/artesp_theme/templates/organization/snippets/info.html:38
+msgid "read more"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/index.html:3
+msgid "Welcome"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:3
+msgid ""
+"The São Paulo State Transportation Regulatory Agency (ARTESP) is a\n"
+"    government agency responsible for the regulation, oversight, and "
+"monitoring\n"
+"    of public transportation services delegated by the State of São Paulo."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:6
+msgid ""
+"Its mission is to ensure that these services are delivered with\n"
+"    quality, safety, efficiency, and sustainability, contributing to the "
+"social\n"
+"    and economic development of the state."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:11
+msgid ""
+"In 2024, ARTESP significantly expanded its responsibilities by assuming\n"
+"    oversight of services previously managed by the Metropolitan Urban "
+"Transport\n"
+"    Company (EMTU)."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:13
+msgid ""
+"EMTU was responsible for managing intermunicipal\n"
+"    public transportation in the metropolitan regions of São Paulo, Campinas,"
+"\n"
+"    Baixada Santista, Vale do Paraíba and North Coast, and Sorocaba."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:16
+msgid ""
+"This expansion brought metropolitan bus services, light rail systems\n"
+"    (VLT), and other metropolitan transit modes under ARTESP's regulatory\n"
+"    scope."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:21
+msgid ""
+"ARTESP also assumed responsibility for regulating the state's rail\n"
+"    concessions, including both passenger and freight rail services operated\n"
+"    under public-private partnerships."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:23
+msgid ""
+"This move further strengthens\n"
+"    the agency’s strategic role in the planning and oversight of São Paulo’s\n"
+"    transport infrastructure."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:28
+msgid ""
+"Today, ARTESP regulates over 11,000 kilometers of concessioned\n"
+"    highways, hundreds of metropolitan bus lines, light rail networks, ferry\n"
+"    crossings, charter transport services, and the transport of specialized\n"
+"    cargo."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/about_text.html:31
+msgid ""
+"The agency operates with transparency and public\n"
+"    accountability, making updated and accessible information available "
+"through\n"
+"    this open data portal."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/featured_group.html:4
+msgid "Featured Groups"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/featured_group.html:24
+#: ckanext/artesp_theme/templates/home/snippets/featured_organization.html:24
+#, python-brace-format
+msgid "{num} Datasets"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/featured_group.html:31
+msgid "View Group"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/featured_group.html:37
+msgid "No featured groups available"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/featured_organization.html:4
+msgid "Featured Organizations"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/featured_organization.html:31
+msgid "View Organization"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/featured_organization.html:37
+msgid "No featured organizations available"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:5
+msgid "Latest Datasets"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:6
+msgid "View all datasets"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:34
+#, python-brace-format
+msgid "{num} Resource"
+msgid_plural "{num} Resources"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:42
+msgid "No description provided."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:59
+msgid "No datasets found."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/promoted.html:4
+msgid "About this portal"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/promoted.html:9
+msgid ""
+"Welcome to the ARTESP Open Data Portal. Here you can access and explore "
+"public datasets related to transportation, infrastructure, and regulatory "
+"information. Use the search box above to find specific data or browse through"
+" the featured collections below."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/promoted.html:14
+msgid "Open Data"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/promoted.html:15
+msgid "Access transportation and regulatory datasets in machine-readable formats"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/promoted.html:19
+msgid "Visualizations"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/promoted.html:20
+msgid "Explore interactive charts and maps of transportation data"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/promoted.html:24
+msgid "API Access"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/promoted.html:25
+msgid "Connect your applications directly to our data through APIs"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/search.html:6
+msgid "Find and explore"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/search.html:6
+msgid "public datasets"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/search.html:11
+msgid "Search datasets"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/search.html:21
+#: ckanext/artesp_theme/templates/snippets/simple_search.html:5
+#: ckanext/artesp_theme/templates/user/snippets/user_search.html:6
+msgid "Search"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/search.html:30
+msgid "Popular topics:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/stats.html:7
+msgid "ARTESP em números"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/stats.html:8
+msgid "Explore os dados disponíveis no Portal de Dados Abertos da ARTESP"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/stats.html:18
+#: ckanext/artesp_theme/templates/package/read_base.html:22
+msgid "Dataset"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/stats.html:29
+msgid "Resource"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/stats.html:29
+#: ckanext/artesp_theme/templates/package/resources.html:5
+#: ckanext/artesp_theme/templates/package/snippets/resources.html:21
+#: ckanext/artesp_theme/templates/snippets/context/dataset.html:13
+msgid "Resources"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/stats.html:40
+#: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:75
+msgid "Organization"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/macros/form/checkbox.html:28
+#: ckanext/artesp_theme/templates/macros/form/input_block.html:25
+msgid "This field is required"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/macros/form/custom.html:42
+msgid "Key"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/macros/form/custom.html:54
+#: ckanext/artesp_theme/templates/package/resource_read.html:146
+#: ckanext/artesp_theme/templates/package/snippets/additional_info.html:7
+#: ckanext/artesp_theme/templates/snippets/additional_info.html:12
+msgid "Value"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/macros/form/errors.html:18
+msgid "The form contains invalid entries:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/macros/form/image_upload.html:15
+msgid "http://example.com/my-image.jpg"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/macros/form/image_upload.html:16
+msgid "Image URL"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/macros/form/image_upload.html:17
+msgid "Image"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/macros/form/image_upload.html:52
+#: ckanext/artesp_theme/templates/package/snippets/resource_upload_field.html:77
+msgid "Clear Upload"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/macros/form/input_block.html:25
+msgid "Custom"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/macros/form/markdown.html:31
+#, python-format
+msgid ""
+"You can use <a href=\"#markdown\" title=\"Markdown quick reference\" data-bs-"
+"toggle=\"popover\" data-bs-content=\"%(markdown_tooltip)s\" data-bs-"
+"html=\"true\">Markdown formatting</a> here"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/macros/form/required_message.html:11
+msgid "Required field"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/base_form_page.html:5
+msgid "Organization Form"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/bulk_process.html:5
+#: ckanext/artesp_theme/templates/organization/bulk_process.html:13
+msgid "Edit datasets"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/bulk_process.html:18
+#, python-brace-format
+msgid " found for \"{query}\""
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/bulk_process.html:20
+#, python-brace-format
+msgid "Sorry no datasets found for \"{query}\""
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/bulk_process.html:50
+msgid "Make public"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/bulk_process.html:54
+msgid "Make private"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/bulk_process.html:83
+#: ckanext/artesp_theme/templates/package/read.html:16
+#: ckanext/artesp_theme/templates/snippets/package_item.html:37
+msgid "Draft"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/bulk_process.html:88
+#: ckanext/artesp_theme/templates/package/read.html:9
+#: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:97
+#: ckanext/artesp_theme/templates/snippets/package_item.html:26
+#: ckanext/artesp_theme/templates/snippets/private.html:2
+#: ckanext/artesp_theme/templates/user/snippets/info.html:84
+msgid "Private"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/bulk_process.html:101
+msgid "This organization has no datasets associated to it"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/confirm_delete.html:11
+#, python-brace-format
+msgid "Are you sure you want to delete organization - {name}?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/edit.html:14
+msgid "Edit Organization"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/index.html:13
+#: ckanext/artesp_theme/templates/user/dashboard_organizations.html:7
+msgid "Add Organization"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/index.html:20
+msgid "Search organizations..."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/index.html:29
+msgid "There are currently no organizations for this site"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/manage_members.html:15
+#: ckanext/artesp_theme/templates/organization/members.html:10
+#, python-brace-format
+msgid "{count} member"
+msgid_plural "{count} members"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ckanext/artesp_theme/templates/organization/member_new.html:34
+#: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:32
+#: ckanext/artesp_theme/templates/user/edit_user_form.html:12
+#: ckanext/artesp_theme/templates/user/edit_user_form.html:14
+#: ckanext/artesp_theme/templates/user/logout_first.html:10
+#: ckanext/artesp_theme/templates/user/new_user_form.html:10
+#: ckanext/artesp_theme/templates/user/perform_reset.html:23
+#: ckanext/artesp_theme/templates/user/snippets/info.html:78
+msgid "Username"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/member_new.html:56
+msgid "Email address"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/member_new.html:76
+msgid "Update Member"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/member_new.html:96
+msgid ""
+"<p><strong>Admin:</strong> Can add/edit and delete datasets, as well as "
+"manage organization members.</p> <p><strong>Editor:</strong> Can add and edit"
+" datasets, but not manage organization members.</p> "
+"<p><strong>Member:</strong> Can view the organization's private datasets, but"
+" not add new datasets.</p>"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/new.html:3
+msgid "Create an Organization"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/new_organization_form.html:19
+msgid "Update Organization"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/new_organization_form.html:21
+msgid "Create Organization"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/snippets/feeds.html:2
+#, python-brace-format
+msgid "Datasets in organization: {group}"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/snippets/helper.html:16
+msgid "What are Organizations?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/snippets/helper.html:20
+msgid ""
+"CKAN Organizations are used to create, manage and publish collections of "
+"datasets. Users can have different roles within an Organization, depending on"
+" their level of authorisation to create, edit and publish."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/snippets/info.html:41
+msgid "There is no description for this organization"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/snippets/organization_form.html:12
+msgid "My Organization"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/snippets/organization_form.html:22
+msgid "A little information about my organization..."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/snippets/organization_form.html:40
+msgid ""
+"Are you sure you want to delete this Organization? Note*: Deleting cannot be "
+"performed while public or private datasets belong to this organization."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/snippets/organization_form.html:43
+msgid "Save Organization"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/organization/snippets/organization_item.html:49
+#: ckanext/artesp_theme/templates/organization/snippets/organization_item.html:50
+#, python-brace-format
+msgid "View {organization_name}"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/base.html:24
+#: ckanext/artesp_theme/templates/package/new.html:9
+#: ckanext/artesp_theme/templates/package/snippets/new_package_breadcrumb.html:2
+#: ckanext/artesp_theme/templates/package/snippets/stages.html:25
+#: ckanext/artesp_theme/templates/package/snippets/stages.html:27
+msgid "Create Dataset"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/base_form_page.html:19
+msgid "What are datasets?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/base_form_page.html:22
+msgid ""
+"A CKAN Dataset is a collection of data resources (such as files), together "
+"with a description and other information, at a fixed URL. Datasets are what "
+"users see when searching for data."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/confirm_delete.html:12
+#, python-brace-format
+msgid "Are you sure you want to delete dataset - {name}?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/confirm_delete_resource.html:11
+#, python-brace-format
+msgid "Are you sure you want to delete resource - {name}?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/edit_base.html:13
+msgid "View dataset"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/edit_base.html:17
+msgid "Edit metadata"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/edit_base.html:18
+msgid "Reorder resources"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/collaborators/collaborators.html:3
+#: ckanext/artesp_theme/templates/package/edit_base.html:20
+msgid "Collaborators"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/edit_view.html:3
+#: ckanext/artesp_theme/templates/package/edit_view.html:4
+#: ckanext/artesp_theme/templates/package/edit_view.html:8
+#: ckanext/artesp_theme/templates/package/edit_view.html:12
+msgid "Edit view"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/edit_view.html:21
+#: ckanext/artesp_theme/templates/package/new_view.html:20
+#: ckanext/artesp_theme/templates/package/snippets/resource_item.html:46
+msgid "Preview"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/edit_view.html:22
+msgid "Update"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/group_list.html:17
+msgid "Associate this group with this dataset"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/group_list.html:17
+msgid "Add to group"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/group_list.html:27
+msgid "There are no groups associated with this dataset"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/new_package_form.html:13
+msgid "Update Dataset"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/new_resource.html:5
+msgid "Add data to the dataset"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/new_resource.html:11
+#: ckanext/artesp_theme/templates/package/new_resource_not_draft.html:8
+msgid "Add New Resource"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/new_resource_not_draft.html:3
+#: ckanext/artesp_theme/templates/package/new_resource_not_draft.html:4
+msgid "Add resource"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/new_resource_not_draft.html:16
+msgid "New resource"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/new_view.html:3
+#: ckanext/artesp_theme/templates/package/new_view.html:4
+#: ckanext/artesp_theme/templates/package/new_view.html:8
+#: ckanext/artesp_theme/templates/package/new_view.html:12
+msgid "Add view"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/new_view.html:21
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:91
+msgid "Add"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/resource_edit_base.html:18
+msgid "View resource"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/resource_edit_base.html:23
+#: ckanext/artesp_theme/templates/package/resource_edit_base.html:29
+#: ckanext/artesp_theme/templates/package/resource_read.html:32
+#: ckanext/artesp_theme/templates/package/snippets/resource_item.html:69
+#: ckanext/artesp_theme/templates/package/snippets/resources.html:37
+msgid "Edit resource"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/resource_edit_base.html:25
+#: ckanext/artesp_theme/templates/package/resource_read.html:34
+#: ckanext/artesp_theme/templates/package/snippets/resource_item.html:71
+#: ckanext/artesp_theme/templates/package/snippets/resources.html:39
+msgid "Views"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/resource_read.html:44
+msgid "API Endpoint"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/resource_read.html:46
+#: ckanext/artesp_theme/templates/package/snippets/resource_item.html:63
+msgid "Go to resource"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/resource_read.html:48
+#: ckanext/artesp_theme/templates/package/snippets/resource_item.html:60
+msgid "Download"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/resource_read.html:63
+#: ckanext/artesp_theme/templates/package/resource_read.html:65
+msgid "URL:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/resource_read.html:73
+msgid "Dataset description:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/resource_read.html:75
+#, python-format
+msgid "Source: <a href=\"%(url)s\">%(dataset)s</a>"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/resource_read.html:106
+msgid "There are no views created for this resource yet."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/resource_read.html:110
+msgid "Not seeing the views you were expecting?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/resource_read.html:112
+#: ckanext/artesp_theme/templates/package/snippets/resource_view.html:35
+msgid "Click here for more information."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/resource_read.html:115
+msgid "Here are some reasons you may not be seeing expected views:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/resource_read.html:117
+msgid "No view has been created that is suitable for this resource"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/resource_read.html:118
+msgid "The site administrators may not have enabled the relevant view plugins"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/resource_read.html:119
+msgid ""
+"If a view requires the DataStore, the DataStore plugin may not be enabled, or"
+" the data may not have been pushed to the DataStore, or the DataStore hasn't "
+"finished processing the data yet"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/resource_read.html:141
+msgid "Additional Information"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/resource_read.html:145
+#: ckanext/artesp_theme/templates/package/snippets/additional_info.html:6
+#: ckanext/artesp_theme/templates/snippets/additional_info.html:11
+msgid "Field"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/resource_read.html:151
+msgid "Data last updated"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/resource_read.html:152
+#: ckanext/artesp_theme/templates/package/resource_read.html:156
+#: ckanext/artesp_theme/templates/package/resource_read.html:160
+#: ckanext/artesp_theme/templates/package/resource_read.html:164
+msgid "unknown"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/resource_read.html:155
+msgid "Metadata last updated"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/resource_read.html:159
+#: ckanext/artesp_theme/templates/package/snippets/additional_info.html:74
+msgid "Created"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/resource_read.html:163
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:45
+#: ckanext/artesp_theme/templates/package/snippets/resource_info.html:19
+msgid "Format"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/resource_read.html:167
+#: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:32
+#: ckanext/artesp_theme/templates/snippets/license.html:20
+msgid "License"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/resource_views.html:11
+msgid "New view"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/resource_views.html:29
+msgid "This resource has no views"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/resources.html:19
+#: ckanext/artesp_theme/templates/package/snippets/resources_list.html:28
+#, python-format
+msgid ""
+"<p class=\"empty\">This dataset has no data, <a href=\"%(url)s\">why not add "
+"some?</a></p>"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/view_edit_base.html:9
+msgid "All views"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/view_edit_base.html:12
+msgid "View view"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/view_edit_base.html:37
+msgid "View preview"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:5
+#: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:10
+msgid "Edit Collaborator"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:5
+#: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:10
+#: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:51
+msgid "Add Collaborator"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:8
+msgid "Back to all collaborators"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:45
+#: ckanext/artesp_theme/templates/package/collaborators/collaborators.html:36
+msgid "Are you sure you want to delete this collaborator?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:47
+msgid "Update Collaborator"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:64
+msgid "What are the available roles?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:68
+msgid ""
+"<p><strong>Admin:</strong> In addition to managing the dataset, admins can "
+"add and remove collaborators from a dataset.</p>"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/collaborators/collaborator_new.html:72
+msgid ""
+"<p><strong>Editor:</strong> Editors can edit the dataset and its resources, "
+"as well accessing the dataset if private.</p> <p><strong>Member:</strong> "
+"Members can access the dataset if private, but not edit it.</p>"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/collaborators/collaborators.html:7
+msgid "Add Collaborators"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/collaborators/collaborators.html:14
+#, python-brace-format
+msgid "{count} collaborator"
+msgid_plural "{count} collaborators"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ckanext/artesp_theme/templates/package/collaborators/confirm_delete.html:11
+#, python-brace-format
+msgid "Are you sure you want to delete collaborator - {name}?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/additional_info.html:2
+#: ckanext/artesp_theme/templates/snippets/additional_info.html:7
+msgid "Additional Info"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/additional_info.html:14
+#: ckanext/artesp_theme/templates/package/snippets/package_metadata_fields.html:6
+msgid "Source"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/additional_info.html:29
+#: ckanext/artesp_theme/templates/package/snippets/additional_info.html:34
+#: ckanext/artesp_theme/templates/package/snippets/package_metadata_fields.html:14
+msgid "Author"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/additional_info.html:41
+#: ckanext/artesp_theme/templates/package/snippets/additional_info.html:46
+#: ckanext/artesp_theme/templates/package/snippets/package_metadata_fields.html:20
+msgid "Maintainer"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/additional_info.html:53
+#: ckanext/artesp_theme/templates/package/snippets/package_metadata_fields.html:10
+msgid "Version"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/additional_info.html:60
+#: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:113
+#: ckanext/artesp_theme/templates/user/snippets/info.html:99
+msgid "State"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/additional_info.html:66
+msgid "Last Updated"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/cannot_create_package.html:10
+msgid "Before you can create a dataset you need to create an organization."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/cannot_create_package.html:13
+msgid "Create a new organization"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/cannot_create_package.html:18
+msgid "There are no organizations to which you can assign this dataset."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/cannot_create_package.html:19
+msgid "Ask a system administrator to create an organization before you can continue."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:6
+#: ckanext/artesp_theme/templates/package/snippets/view_form.html:8
+msgid "Title"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:6
+msgid "eg. A descriptive title"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:15
+msgid "eg. my-dataset"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:21
+msgid "eg. Some useful notes about the data"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:26
+#: ckanext/artesp_theme/templates/snippets/context/dataset.html:17
+msgid "Tags"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:26
+msgid "eg. economy, mental health, government"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:36
+msgid "Please select the license"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:45
+msgid ""
+"License definitions and additional information can be found at <a "
+"href=\"http://opendefinition.org/licenses/\">opendefinition.org</a>"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:79
+msgid "No Organization"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:94
+msgid "Visibility"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:97
+msgid "Public"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:116
+msgid "Active"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/package_form.html:31
+msgid ""
+"The <i>data license</i> you select above only applies to the contents of any "
+"resource files that you add to this dataset. By submitting this form, you "
+"agree to release the <i>metadata</i> values that you enter into the form "
+"under the <a href=\"http://opendatacommons.org/licenses/odbl/1-0/\">Open "
+"Database License</a>."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/package_form.html:42
+msgid "Are you sure you want to delete this dataset?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/package_form.html:46
+msgid "Next: Add Data"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/package_metadata_fields.html:6
+msgid "http://example.com/dataset.json"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/package_metadata_fields.html:10
+msgid "1.0"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/package_metadata_fields.html:14
+#: ckanext/artesp_theme/templates/package/snippets/package_metadata_fields.html:20
+#: ckanext/artesp_theme/templates/user/new_user_form.html:11
+msgid "Joe Bloggs"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/package_metadata_fields.html:16
+msgid "Author Email"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/package_metadata_fields.html:16
+#: ckanext/artesp_theme/templates/package/snippets/package_metadata_fields.html:22
+#: ckanext/artesp_theme/templates/user/new_user_form.html:12
+msgid "joe@example.com"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/package_metadata_fields.html:22
+msgid "Maintainer Email"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_edit_form.html:12
+msgid "Update Resource"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:31
+#: ckanext/artesp_theme/templates/package/snippets/resource_upload_field.html:78
+#: ckanext/artesp_theme/templates/package/snippets/resource_upload_field.html:90
+msgid "File"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:32
+msgid "http://example.com/external-data.csv"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:36
+msgid "eg. January 2011 Gold Prices"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:40
+msgid "Some useful notes about the data"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:45
+msgid "eg. CSV, XML or JSON"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:48
+msgid "This will be guessed automatically. Leave blank if you wish"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:59
+msgid "eg. 2012-06-05"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:61
+msgid "File Size"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:61
+msgid "eg. 1024"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:63
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:65
+msgid "MIME Type"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:63
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:65
+msgid "eg. application/json"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:73
+msgid "Are you sure you want to delete this resource?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:79
+msgid "Previous"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:83
+msgid "Save & add another"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:87
+msgid "Finish"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_help.html:2
+msgid "What's a resource?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_help.html:4
+msgid "A resource can be any file or link to a file containing useful data."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_item.html:36
+msgid "Explore"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_item.html:49
+msgid "More information"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_upload_field.html:42
+msgid "Data"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_upload_field.html:47
+msgid "Upload a file on your computer"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_upload_field.html:51
+msgid "Upload"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_upload_field.html:54
+msgid "Link to a URL on the internet (you can also link to an API)"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_upload_field.html:58
+msgid "Link"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_view.html:11
+msgid "Fullscreen"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_view.html:19
+msgid "Embed"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_view.html:33
+msgid "This resource view is not available at the moment."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_view.html:42
+msgid "Download resource"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_view.html:63
+msgid "Your browser does not support iframes."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_view.html:72
+msgid "Embed resource view"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_view.html:73
+msgid "Close"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_view.html:77
+msgid ""
+"You can copy and paste the embed code into a CMS or blog software that "
+"supports raw HTML"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_view.html:80
+msgid "Width"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_view.html:83
+msgid "Height"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resource_view.html:86
+msgid "Code"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resources.html:58
+msgid "Add new resource"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resources_list.html:14
+msgid "Data and Resources"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resources_list.html:32
+msgid "This dataset has no data"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/stages.html:32
+#: ckanext/artesp_theme/templates/package/snippets/stages.html:36
+#: ckanext/artesp_theme/templates/package/snippets/stages.html:38
+msgid "Add data"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/view_form.html:8
+msgid "eg. My View"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/view_form.html:9
+msgid "eg. Information about my view"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/view_form_filters.html:16
+msgid "Add Filter"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/view_form_filters.html:28
+msgid "Remove Filter"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/view_form_filters.html:46
+msgid "Filters"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/view_help.html:2
+msgid "What's a view?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/view_help.html:4
+msgid "A view is a representation of the data held against a resource"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/snippets/add_dataset.html:4
+msgid "Add Dataset"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/snippets/datapusher_status.html:8
+#, python-brace-format
+msgid "Datapusher status: {status}."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/snippets/disqus_trackback.html:2
+msgid "Trackback URL"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/snippets/facet_list.html:77
+#, python-brace-format
+msgid "Show More {facet_type}"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/snippets/facet_list.html:80
+#, python-brace-format
+msgid "Show Only Popular {facet_type}"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/snippets/facet_list.html:84
+#, python-brace-format
+msgid "There are no {facet_type} that match this search"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/snippets/follow_button.html:4
+msgid "Unfollow"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/snippets/follow_button.html:9
+msgid "Follow"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/snippets/home_breadcrumb_item.html:2
+msgid "Home"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/snippets/language_selector.html:17
+#: ckanext/artesp_theme/templates/snippets/search_form.html:57
+#: ckanext/artesp_theme/templates/snippets/simple_search.html:15
+msgid "Go"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/snippets/license.html:8
+msgid "No License Provided"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/snippets/license.html:27
+msgid "This dataset satisfies the Open Definition."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/snippets/package_item.html:48
+msgid "There is no description for this dataset"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/snippets/search_form.html:18
+msgid "Submit"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/snippets/search_form.html:48
+#: ckanext/artesp_theme/templates/snippets/simple_search.html:8
+msgid "Order by"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/snippets/search_form.html:82
+msgid "Filter Results"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/snippets/search_form.html:89
+msgid "<p class=\"extra\">Please try another search.</p>"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/snippets/search_form.html:95
+msgid ""
+"<p id=\"search-error\"><strong>There was an error while searching.</strong> "
+"Please try again.</p>"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/snippets/search_result_text.html:15
+#, python-brace-format
+msgid "{number} dataset found for \"{query}\""
+msgid_plural "{number} datasets found for \"{query}\""
+msgstr[0] ""
+msgstr[1] ""
+
+#: ckanext/artesp_theme/templates/snippets/search_result_text.html:16
+#, python-brace-format
+msgid "No datasets found for \"{query}\""
+msgstr ""
+
+#: ckanext/artesp_theme/templates/snippets/search_result_text.html:17
+#, python-brace-format
+msgid "{number} dataset found"
+msgid_plural "{number} datasets found"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ckanext/artesp_theme/templates/snippets/search_result_text.html:18
+msgid "No datasets found"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/snippets/search_result_text.html:21
+#, python-brace-format
+msgid "{number} group found for \"{query}\""
+msgid_plural "{number} groups found for \"{query}\""
+msgstr[0] ""
+msgstr[1] ""
+
+#: ckanext/artesp_theme/templates/snippets/search_result_text.html:22
+#, python-brace-format
+msgid "No groups found for \"{query}\""
+msgstr ""
+
+#: ckanext/artesp_theme/templates/snippets/search_result_text.html:23
+#, python-brace-format
+msgid "{number} group found"
+msgid_plural "{number} groups found"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ckanext/artesp_theme/templates/snippets/search_result_text.html:24
+msgid "No groups found"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/snippets/search_result_text.html:27
+#, python-brace-format
+msgid "{number} organization found for \"{query}\""
+msgid_plural "{number} organizations found for \"{query}\""
+msgstr[0] ""
+msgstr[1] ""
+
+#: ckanext/artesp_theme/templates/snippets/search_result_text.html:28
+#, python-brace-format
+msgid "No organizations found for \"{query}\""
+msgstr ""
+
+#: ckanext/artesp_theme/templates/snippets/search_result_text.html:29
+#, python-brace-format
+msgid "{number} organization found"
+msgid_plural "{number} organizations found"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ckanext/artesp_theme/templates/snippets/search_result_text.html:30
+msgid "No organizations found"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/snippets/social.html:5
+msgid "Social"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/about_ckan.html:6
+msgid ""
+"CKAN is an open-source data management system that makes data accessible by "
+"providing tools to streamline publishing, sharing, finding and using data. "
+"CKAN is aimed at data publishers (national and regional governments, "
+"companies and organizations) wanting to make their data open and available."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/about_ckan.html:8
+msgid ""
+"CKAN is a powerful data management system that makes data accessible – by "
+"providing tools to streamline publishing, sharing, finding and using data. "
+"CKAN is aimed at data publishers (national and regional governments, "
+"companies and organizations) wanting to make their data open and available."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/about_ckan.html:10
+msgid "Key Features"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/about_ckan.html:12
+msgid "Publish and manage datasets with rich metadata"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/about_ckan.html:13
+msgid "Engage with users via comments"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/about_ckan.html:14
+msgid "Customize and extend the platform"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/about_ckan.html:15
+msgid "Federation of data catalogs between instances"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/about_ckan.html:16
+msgid "Fine-grained access control"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/about_ckan.html:17
+msgid "Resource preview for common formats"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/about_ckan.html:20
+msgid "For more information about CKAN, visit"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/contact.html:6
+msgid ""
+"We value your feedback and are here to help with any questions or concerns "
+"you may have about the ARTESP Data Portal."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/contact.html:11
+msgid "Contact Information"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/contact.html:12
+msgid "Address:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/contact.html:13
+msgid ""
+"105 Iguatemi Street\n"
+"Itaim Bibi, São Paulo, SP 01451-011\n"
+"Brazil"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/contact.html:15
+msgid "Phone:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/contact.html:16
+msgid "Email:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/contact.html:17
+msgid "Hours:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/contact.html:17
+msgid "Monday to Friday, 9:00 AM to 6:00 PM"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/contact.html:23
+msgid "Location"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:6
+msgid ""
+"ARTESP (\"Agency,\" \"we,\" \"us,\" or \"our\") is committed to protecting "
+"your\n"
+"    privacy and personal data."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:7
+msgid ""
+"This Privacy Policy outlines our\n"
+"    practices concerning the collection, use, processing, and storage of your"
+"\n"
+"    information in accordance with Brazil’s General Data Protection Law (LGPD"
+" -\n"
+"    Law No. 13,709/2018) when you access or use this portal (\"Portal\")."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:11
+msgid ""
+"We encourage you to read this policy carefully to understand how we\n"
+"    handle your personal data."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:15
+msgid "Information We Collect"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:17
+msgid "Data Collected Automatically"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:19
+msgid ""
+"When you access our Portal, we may automatically collect certain\n"
+"    technical information."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:20
+msgid ""
+"This can include your IP address, browser\n"
+"    type and version, operating system, referral source, pages visited, time\n"
+"    spent on pages, and other navigation data."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:22
+msgid ""
+"This information is\n"
+"    primarily collected through cookies and similar technologies."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:23
+msgid ""
+"We\n"
+"    use this data for analytical purposes to understand how our Portal is "
+"used,\n"
+"    for security monitoring, and to improve our services."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:25
+msgid ""
+"While this\n"
+"    technical data is generally not used to directly identify individuals, we"
+"\n"
+"    treat it with the same level of care as personal data."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:30
+msgid "Data You Provide Voluntarily"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:32
+msgid ""
+"We only collect personal data that you explicitly and voluntarily\n"
+"    provide to us, for example, when you fill out contact forms, subscribe to"
+"\n"
+"    newsletters, or submit requests."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:34
+msgid ""
+"This data may include your name,\n"
+"    email address, telephone number, and any other information you choose to\n"
+"    provide."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:36
+msgid ""
+"When we collect such data, we will inform you of the\n"
+"    specific purpose and obtain your consent, where required by the LGPD."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:38
+msgid ""
+"All personal data you provide is handled in strict accordance with LGPD\n"
+"    principles, including purpose limitation, data minimization, necessity, "
+"and\n"
+"    confidentiality."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:43
+msgid "How We Use Your Information"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:44
+msgid "We use the information collected for the following purposes:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:46
+msgid "To operate and maintain the Portal."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:48
+msgid ""
+"To respond to your inquiries, requests, and provide customer\n"
+"      support."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:52
+msgid ""
+"To improve the Portal's functionality, user experience, and\n"
+"      services."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:56
+msgid ""
+"For statistical analysis and research to understand usage\n"
+"      patterns."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:59
+msgid "To ensure the security of our Portal and prevent fraud."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:60
+msgid "To comply with legal obligations and exercise our rights."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:63
+msgid "Data Sharing and Disclosure"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:65
+msgid "ARTESP does not sell your personal data."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:65
+msgid ""
+"We may share your\n"
+"    information with third-party service providers who assist us in operating"
+"\n"
+"    the Portal, conducting our activities, or servicing you (e.g., hosting\n"
+"    providers, analytics services), so long as those parties agree to keep "
+"this\n"
+"    information confidential and comply with LGPD requirements."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:69
+msgid ""
+"We may\n"
+"    also disclose information if required by law or to protect our rights and"
+"\n"
+"    safety or the rights and safety of others."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:74
+msgid "Your Rights Under LGPD"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:76
+msgid ""
+"Under the LGPD, you have several rights regarding your personal data,\n"
+"    including:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:80
+msgid "Confirmation of the existence of processing."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:81
+msgid "Access to your data."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:82
+msgid "Correction of incomplete, inaccurate, or outdated data."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:84
+msgid ""
+"Anonymization, blocking, or deletion of unnecessary or excessive data\n"
+"      or data processed in non-compliance with the LGPD."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:88
+msgid ""
+"Portability of data to another service or product provider, upon\n"
+"      express request."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:92
+msgid ""
+"Deletion of personal data processed with your consent, except in\n"
+"      cases provided by law."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:96
+msgid ""
+"Information about public and private entities with which we have\n"
+"      shared data."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:100
+msgid ""
+"Information about the possibility of denying consent and the\n"
+"      consequences of such denial."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:103
+msgid "Revocation of consent."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:106
+msgid ""
+"To exercise these rights, please contact our Data Protection Officer\n"
+"    (DPO) as detailed below."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:110
+msgid "Data Retention"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:112
+msgid ""
+"We will retain your personal data only for as long as necessary to\n"
+"    fulfill the purposes for which it was collected, including for the "
+"purposes\n"
+"    of satisfying any legal, accounting, or reporting requirements, and in\n"
+"    accordance with the LGPD."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:118
+msgid "Data Security"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:120
+msgid "ARTESP is committed to ensuring the security of your personal data."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:121
+msgid ""
+"We implement appropriate technical and organizational measures to\n"
+"    protect your personal data against unauthorized or unlawful processing,\n"
+"    accidental loss, destruction, or damage."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:126
+msgid "Policy Updates"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:128
+msgid ""
+"We may update this Privacy Policy from time to time to reflect changes\n"
+"    in our practices or for other operational, legal, or regulatory reasons."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:130
+msgid ""
+"We will notify you of any significant changes by posting the new policy\n"
+"    on this Portal and updating the effective date, typically found at the\n"
+"    bottom or top of the policy."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:135
+msgid "Contact Us / Data Protection Officer (DPO)"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:137
+msgid ""
+"If you have any questions or concerns about this Privacy Policy, our\n"
+"    data protection practices, or if you wish to exercise your rights under "
+"the\n"
+"    LGPD, please contact ARTESP’s Data Protection Officer (DPO)."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:139
+msgid ""
+"You\n"
+"    can reach the DPO by mail at the following address:\n"
+"    dadosabertos.dpo@artesp.sp.gov.br.']."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:141
+msgid ""
+"Please clearly state that\n"
+"    your query is related to data protection."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/privacy.html:145
+#: ckanext/artesp_theme/templates/static/terms.html:140
+msgid "Last updated: June 2025"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:6
+msgid "Welcome to the ARTESP Open Data Portal (\"Portal\")."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:6
+msgid ""
+"These Terms\n"
+"    of Use (\"Terms\") govern your access to and use of the Portal and the "
+"data\n"
+"    provided herein."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:8
+msgid ""
+"By accessing, Browse, or using this Portal and its\n"
+"    datasets, you (\"User\") acknowledge that you have read, understood, and "
+"agree\n"
+"    to be bound by these Terms and to comply with all applicable laws and\n"
+"    regulations."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:11
+msgid ""
+"If you do not agree with these Terms, please do not\n"
+"    use this Portal."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:15
+msgid "1. Purpose of the Portal"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:17
+msgid ""
+"The ARTESP Open Data Portal aims to promote transparency, citizen\n"
+"    participation, and innovation by providing public access to data related "
+"to\n"
+"    transportation regulation and associated activities managed by ARTESP."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:22
+msgid "2. License and Use of Data"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:24
+msgid ""
+"All data published on this Portal is considered public unless otherwise\n"
+"    indicated and is made available for free use, reproduction, and\n"
+"    redistribution under the following conditions:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:30
+msgid "Attribution:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:30
+msgid ""
+"You must clearly and\n"
+"      appropriately credit ARTESP as the source of the data (e.g., \"Source:\n"
+"      ARTESP Open Data Portal – [Year of access/data version if\n"
+"      available]\")."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:36
+msgid "Integrity of Data:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:36
+msgid ""
+"You must not alter the\n"
+"      data in such a way that its original meaning or context is distorted or"
+"\n"
+"      misrepresented."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:41
+msgid "Non-Endorsement:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:41
+msgid ""
+"Your use of the data must\n"
+"      not imply endorsement by ARTESP of your derivative work, product, or\n"
+"      service."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:47
+msgid "3. Prohibited Uses"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:49
+msgid ""
+"The User agrees not to use the data or the Portal for any of the\n"
+"    following:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:53
+msgid "Any unlawful, fraudulent, or malicious activities."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:55
+msgid ""
+"Activities that are discriminatory, defamatory, offensive, or harmful\n"
+"      to ARTESP, third parties, or any public institutions."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:59
+msgid ""
+"Activities that could compromise the security, integrity, or\n"
+"      availability of the Portal or its data."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:63
+msgid ""
+"Any use that infringes upon the rights of others, including\n"
+"      intellectual property rights (other than the data itself as licensed\n"
+"      herein)."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:69
+msgid "4. User Responsibilities"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:72
+msgid ""
+"Users are responsible for their interpretation and use of the data\n"
+"      obtained from the Portal."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:76
+msgid ""
+"Given that datasets may be updated, corrected, or replaced\n"
+"      periodically without prior notice, Users are responsible for ensuring "
+"they\n"
+"      are using the most current and appropriate version of the data for "
+"their\n"
+"      needs."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:83
+msgid "5. Disclaimers"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:86
+msgid "No Warranty:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:86
+msgid ""
+"The data on this Portal is\n"
+"      provided on an \"as is\" and \"as available\" basis."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:87
+msgid ""
+"ARTESP makes no\n"
+"      representations or warranties of any kind, express or implied, as to "
+"the\n"
+"      accuracy, completeness, reliability, timeliness, or fitness for a\n"
+"      particular purpose of the data provided."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:90
+msgid ""
+"ARTESP disclaims all\n"
+"      warranties to the fullest extent permissible under applicable law."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:94
+msgid "Limitation of Liability:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:94
+msgid ""
+"ARTESP shall not\n"
+"      be liable for any direct, indirect, incidental, special, consequential,"
+" or\n"
+"      punitive damages, or any loss of profits or revenues, whether incurred\n"
+"      directly or indirectly, or any loss of data, use, goodwill, or other\n"
+"      intangible losses, resulting from (a) your access to or use of or\n"
+"      inability to access or use the Portal or data; (b) any conduct or "
+"content\n"
+"      of any third party on the Portal; or (c) unauthorized access, use, or\n"
+"      alteration of your transmissions or content."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:101
+msgid ""
+"Any applications,\n"
+"      analyses, interpretations, conclusions, or products created by Users "
+"based\n"
+"      on the data are the sole responsibility of their creators."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:107
+msgid "6. Intellectual Property"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:109
+msgid ""
+"While the data is provided under the terms of the license described in\n"
+"    Section 2, all other content on this Portal, including but not limited to"
+"\n"
+"    text, graphics, logos, icons, images, and the overall design and \"look "
+"and\n"
+"    feel\" of the Portal, are the property of ARTESP or its licensors and are"
+"\n"
+"    protected by copyright and other intellectual property laws."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:116
+msgid "7. Modifications to Terms"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:118
+msgid ""
+"ARTESP reserves the right to modify these Terms at any time and at its\n"
+"    sole discretion."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:119
+msgid ""
+"Any changes will be effective immediately upon\n"
+"    posting the revised Terms on this page."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:120
+msgid ""
+"Your continued use of the\n"
+"    Portal following the posting of changes will constitute your acceptance "
+"of\n"
+"    such changes."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:122
+msgid ""
+"Users are advised to review this page periodically\n"
+"    for the latest information on our Terms of Use."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:126
+msgid "8. Governing Law and Jurisdiction"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:128
+msgid ""
+"These Terms shall be governed by and construed in accordance with the\n"
+"    laws of the Federative Republic of Brazil, without regard to its conflict"
+" of\n"
+"    law principles."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:130
+msgid ""
+"Any disputes arising out of or relating to these\n"
+"    Terms or your use of the Portal shall be subject to the exclusive\n"
+"    jurisdiction of the courts of São Paulo, State of São Paulo, Brazil."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:135
+msgid "9. Contact"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/terms.html:137
+msgid ""
+"If you have any questions regarding these Terms of Use, please contact\n"
+"    ARTESP through the official communication channels available on the "
+"Portal."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/tests/mock_json_resource_preview_template.html:7
+#: ckanext/artesp_theme/templates/tests/mock_resource_preview_template.html:7
+msgid "Loading..."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/api_tokens.html:20
+msgid "Create API Token"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/api_tokens.html:30
+#: ckanext/artesp_theme/templates/user/read_base.html:26
+msgid "API Tokens"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/api_tokens.html:38
+msgid "You haven't created any API Tokens."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/confirm_delete.html:11
+#, python-brace-format
+msgid "Are you sure you want to delete user - {name}?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/dashboard.html:20
+msgid "Profile settings"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/dashboard.html:25
+#: ckanext/artesp_theme/templates/user/dashboard_datasets.html:11
+msgid "My Datasets"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/dashboard.html:26
+#: ckanext/artesp_theme/templates/user/dashboard_organizations.html:12
+msgid "My Organizations"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/dashboard.html:27
+#: ckanext/artesp_theme/templates/user/dashboard_groups.html:12
+msgid "My Groups"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/dashboard_datasets.html:16
+#: ckanext/artesp_theme/templates/user/read.html:20
+msgid "You haven't created any datasets."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/dashboard_datasets.html:18
+#: ckanext/artesp_theme/templates/user/dashboard_groups.html:24
+#: ckanext/artesp_theme/templates/user/dashboard_organizations.html:24
+#: ckanext/artesp_theme/templates/user/read.html:22
+msgid "Create one now?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/dashboard_groups.html:22
+#: ckanext/artesp_theme/templates/user/read_groups.html:20
+msgid "You are not a member of any groups."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/dashboard_organizations.html:22
+#: ckanext/artesp_theme/templates/user/read_organizations.html:19
+msgid "You are not a member of any organizations."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/edit.html:6
+#: ckanext/artesp_theme/templates/user/edit_base.html:3
+#: ckanext/artesp_theme/templates/user/list.html:6
+#: ckanext/artesp_theme/templates/user/list.html:13
+#: ckanext/artesp_theme/templates/user/read_base.html:8
+#: ckanext/artesp_theme/templates/user/read_base.html:11
+#: ckanext/artesp_theme/templates/user/snippets/user_search.html:2
+msgid "Users"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/edit.html:17
+msgid "Account Info"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/edit.html:19
+msgid "Your profile lets other CKAN users know about who you are and what you do."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/edit_user_form.html:10
+msgid "Change details"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/edit_user_form.html:17
+msgid "Full name"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/edit_user_form.html:17
+msgid "eg. Joe Bloggs"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/edit_user_form.html:19
+#: ckanext/artesp_theme/templates/user/new_user_form.html:12
+#: ckanext/artesp_theme/templates/user/snippets/info.html:84
+msgid "Email"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/edit_user_form.html:19
+msgid "eg. joe@example.com"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/edit_user_form.html:21
+msgid "A little information about yourself"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/edit_user_form.html:26
+#: ckanext/artesp_theme/templates/user/new_user_form.html:20
+msgid "Profile picture"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/edit_user_form.html:26
+#: ckanext/artesp_theme/templates/user/new_user_form.html:20
+msgid "Profile picture URL"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/edit_user_form.html:32
+msgid "Reactivate User"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/edit_user_form.html:33
+msgid ""
+"This account is deactivated, if you want to reactivate it, please click on "
+"checkbox."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/edit_user_form.html:43
+#: ckanext/artesp_theme/templates/user/edit_user_form.html:78
+#: ckanext/artesp_theme/templates/user/logout_first.html:11
+#: ckanext/artesp_theme/templates/user/new_user_form.html:13
+#: ckanext/artesp_theme/templates/user/perform_reset.html:26
+#: ckanext/artesp_theme/templates/user/snippets/login_form.html:23
+msgid "Password"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/edit_user_form.html:44
+#: ckanext/artesp_theme/templates/user/edit_user_form.html:80
+msgid "Confirm Password"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/edit_user_form.html:50
+msgid "Sysadmin password"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/edit_user_form.html:53
+msgid "Sysadmin Password"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/edit_user_form.html:67
+msgid "Change password"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/edit_user_form.html:70
+msgid "Old Password"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/edit_user_form.html:93
+msgid "Are you sure you want to delete this User?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/edit_user_form.html:97
+msgid "Reactivate Profile"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/edit_user_form.html:97
+msgid "Update Profile"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/list.html:3
+#: ckanext/artesp_theme/templates/user/snippets/user_search.html:11
+msgid "All Users"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/login.html:3
+#: ckanext/artesp_theme/templates/user/login.html:6
+#: ckanext/artesp_theme/templates/user/login.html:12
+#: ckanext/artesp_theme/templates/user/snippets/login_form.html:33
+msgid "Login"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/login.html:25
+msgid "Need an Account?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/login.html:27
+msgid "Then sign right up, it only takes a minute."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/login.html:30
+msgid "Create an Account"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/login.html:42
+msgid "Forgotten your password?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/login.html:44
+msgid "No problem, use our password recovery form to reset it."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/login.html:47
+msgid "Forgot your password?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/logout.html:3
+#: ckanext/artesp_theme/templates/user/logout.html:6
+#: ckanext/artesp_theme/templates/user/logout.html:13
+msgid "Logged Out"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/logout.html:15
+msgid "You are now logged out."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/logout.html:16
+msgid "Return to Home Page"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/logout_first.html:9
+#, python-brace-format
+msgid "You're already logged in as {user}."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/logout_first.html:9
+msgid "Logout"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/logout_first.html:12
+#: ckanext/artesp_theme/templates/user/snippets/login_form.html:25
+msgid "Remember me"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/logout_first.html:20
+msgid "You're already logged in"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/logout_first.html:22
+msgid "You need to log out before you can log in with another account."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/logout_first.html:23
+msgid "Log out now"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/new.html:6
+msgid "Registration"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/new.html:14
+msgid "Register for an Account"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/new.html:26
+msgid "Why Sign Up?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/new.html:28
+msgid "Create datasets, groups and other exciting things"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/new_user_form.html:10
+msgid "username"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/new_user_form.html:11
+msgid "Full Name"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/new_user_form.html:14
+#: ckanext/artesp_theme/templates/user/perform_reset.html:27
+msgid "Confirm"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/new_user_form.html:37
+msgid "Create Account"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/perform_reset.html:4
+#: ckanext/artesp_theme/templates/user/perform_reset.html:15
+msgid "Reset Your Password"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/perform_reset.html:7
+#: ckanext/artesp_theme/templates/user/request_reset.html:6
+msgid "Password Reset"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/perform_reset.html:22
+msgid "You can also change username. It can not be modified later."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/perform_reset.html:30
+msgid "Update Password"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/perform_reset.html:44
+#: ckanext/artesp_theme/templates/user/request_reset.html:42
+msgid "How does this work?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/perform_reset.html:46
+msgid "Simply enter a new password and we'll update your account"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/read.html:27
+msgid "User hasn't created any datasets."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/read_groups.html:22
+msgid "User isn't a member of any groups."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/read_organizations.html:21
+msgid "User isn't a member of any organizations."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/request_reset.html:3
+#: ckanext/artesp_theme/templates/user/request_reset.html:13
+msgid "Reset your password"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/request_reset.html:18
+msgid "Email or username"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/request_reset.html:28
+msgid "Request Reset"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/request_reset.html:44
+msgid ""
+"Enter your email address or username into the box and we will send you an "
+"email with a link to enter a new password."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/snippets/api_token_list.html:13
+msgid "Token"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/snippets/api_token_list.html:14
+msgid "Last access"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/snippets/api_token_list.html:15
+msgid "Actions"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/snippets/api_token_list.html:32
+msgid "Never"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/snippets/api_token_list.html:41
+msgid "Revoke"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/snippets/followers.html:9
+msgid "No followers"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/snippets/info.html:29
+msgid "You have not provided a biography."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/snippets/info.html:31
+msgid "This user has no biography."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/snippets/info.html:75
+msgid "Open ID"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/snippets/info.html:84
+msgid "This means only you can see this"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/snippets/info.html:89
+msgid "Member Since"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/snippets/info.html:94
+msgid "Last Active"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/snippets/login_form.html:21
+msgid "Username or Email"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/user/snippets/user_search.html:5
+msgid "Search Users"
+msgstr ""
+

@@ -1,9 +1,9 @@
 {% extends "page.html" %}
 
-{% block subtitle %}{{ _('About') }}{% endblock %}
+{% block subtitle %}{{ _('About this site') }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="active">{% link_for _('About'), named_route='home.about' %}</li>
+  <li class="active">{% link_for _('About this site'), named_route='home.about' %}</li>
 {% endblock %}
 
 {% block primary %}
@@ -13,7 +13,7 @@
         {% if g.site_about %}
           {{ h.render_markdown(g.site_about) }}
         {% else %}
-          <h1 class="page-heading">{{ _('About') }}</h1>
+          <h1 class="page-heading">{{ _('About this site') }}</h1>
           {% snippet 'home/snippets/about_text.html' %}
         {% endif %}
       {% endblock %}
