@@ -32,14 +32,6 @@ class ArtespThemePlugin(plugins.SingletonPlugin):
         toolkit.add_public_directory(config_, "public")
         toolkit.add_resource("assets", "artesp_theme")
 
-        # Add custom Jinja2 extensions
-        if toolkit.check_ckan_version(min_version='2.8'):
-            # CKAN 2.8 and later
-            toolkit.add_ckan_admin_tab(config_, 'admin.index', 'Admin', icon='gavel')
-
-            # Add custom Jinja2 extensions
-            config_['ckan.jinja_extensions'].append('ckanext.artesp_theme.lib.jinja_extensions.FontAwesomeIconExtension')
-
 
     # IAuthFunctions
 
