@@ -14,17 +14,37 @@
 
 {% block content_action %}
   {% if h.check_access('user_update', user) %}
-    {% link_for _('Manage'), named_route='user.edit', id=user.name, class_='btn btn-default', icon='wrench' %}
+    <a href="{{ h.url_for('user.edit', id=user.name) }}" class="btn btn-default">
+      <i class="fa fa-wrench"></i> {{ _('Manage') }}
+    </a>
   {% endif %}
 {% endblock %}
 
 {% block content_primary_nav %}
-  {{ h.build_nav_icon('user.read', h.humanize_entity_type('package', dataset_type, 'content tab') or _('Datasets'), id=user.name, icon='sitemap') }}
-  {{ h.build_nav_icon('user.read_organizations', h.humanize_entity_type('organization', org_type, 'content tab') or _('Organizations'), id=user.name, icon='building') }}
-  {{ h.build_nav_icon('user.read_groups', h.humanize_entity_type('group', group_type, 'content tab') or _('Groups'), id=user.name, icon='users') }}
-  {% if h.check_access('api_token_list', {'user': user['name']}) %}
-    {{ h.build_nav_icon('user.api_tokens', _('API Tokens'), id=user.name, icon='key') }}
-  {% endif %}
+  <ul class="nav nav-tabs">
+    <li class="nav-item {{ 'active' if c.action == 'read' }}">
+      <a href="{{ h.url_for('user.read', id=user.name) }}">
+        <i class="fa fa-sitemap"></i> {{ h.humanize_entity_type('package', dataset_type, 'content tab') or _('Datasets') }}
+      </a>
+    </li>
+    <li class="nav-item {{ 'active' if c.action == 'read_organizations' }}">
+      <a href="{{ h.url_for('user.read_organizations', id=user.name) }}">
+        <i class="fa fa-building"></i> {{ h.humanize_entity_type('organization', org_type, 'content tab') or _('Organizations') }}
+      </a>
+    </li>
+    <li class="nav-item {{ 'active' if c.action == 'read_groups' }}">
+      <a href="{{ h.url_for('user.read_groups', id=user.name) }}">
+        <i class="fa fa-users"></i> {{ h.humanize_entity_type('group', group_type, 'content tab') or _('Groups') }}
+      </a>
+    </li>
+    {% if h.check_access('api_token_list', {'user': user['name']}) %}
+      <li class="nav-item {{ 'active' if c.action == 'api_tokens' }}">
+        <a href="{{ h.url_for('user.api_tokens', id=user.name) }}">
+          <i class="fa fa-key"></i> {{ _('API Tokens') }}
+        </a>
+      </li>
+    {% endif %}
+  </ul>
 {% endblock %}
 
 {% block secondary_content %}

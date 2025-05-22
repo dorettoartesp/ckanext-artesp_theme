@@ -1,5 +1,7 @@
 import datetime
 import logging
+import re
+from markupsafe import Markup
 
 from sqlalchemy import desc
 from ckan.plugins import toolkit
@@ -11,6 +13,25 @@ log = logging.getLogger(__name__)
 
 def artesp_theme_hello():
     return "Hello, artesp_theme!"
+
+def safe_html(html_string):
+    """
+    Safely render HTML content that might have been double-encoded.
+    This is useful for fixing Font Awesome icons that are being double-encoded.
+    """
+    if not html_string:
+        return html_string
+
+    # If the string contains encoded HTML tags (common pattern for double-encoded FA icons)
+    if '&amp;lt;i class=' in html_string:
+        # First decode the double-encoded HTML
+        decoded = html_string.replace('&amp;lt;', '<').replace('&amp;gt;', '>')
+        decoded = decoded.replace('&amp;quot;', '"').replace('&amp;#39;', "'")
+        # Return as a safe Markup object to prevent further escaping
+        return Markup(decoded)
+
+    # If it's already a Markup object or doesn't need fixing, return as is
+    return html_string
 
 
 def get_package_count():
@@ -163,4 +184,5 @@ def get_helpers():
         "get_group_count": get_group_count,
         "get_featured_groups": get_featured_groups,
         "get_year": get_year,
+        "safe_html": safe_html,
     }
