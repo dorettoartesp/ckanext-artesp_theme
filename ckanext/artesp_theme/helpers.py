@@ -156,7 +156,7 @@ def get_latest_resources(limit=5, org_id=None, dataset_id=None):
 
     return results
 
-def get_featured_groups(limit=3):
+def get_featured_groups(limit=4):
     """
     Return a list of featured groups.
     Fetches a list of groups with their details, including title, name, image URL, and dataset count.
