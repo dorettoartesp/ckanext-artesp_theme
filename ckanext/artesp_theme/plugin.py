@@ -1,6 +1,7 @@
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 import os.path
+from ckanext.artesp_theme.middleware import make_middleware
 
 
 # import ckanext.artesp_theme.cli as cli
@@ -16,6 +17,7 @@ class ArtespThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IBlueprint)
     plugins.implements(plugins.ITranslation)
+    plugins.implements(plugins.IMiddleware)
 
     # plugins.implements(plugins.IAuthFunctions)
     # plugins.implements(plugins.IActions)
@@ -29,6 +31,14 @@ class ArtespThemePlugin(plugins.SingletonPlugin):
         toolkit.add_template_directory(config_, "templates")
         toolkit.add_public_directory(config_, "public")
         toolkit.add_resource("assets", "artesp_theme")
+
+        # Add custom Jinja2 extensions
+        if toolkit.check_ckan_version(min_version='2.8'):
+            # CKAN 2.8 and later
+            toolkit.add_ckan_admin_tab(config_, 'admin.index', 'Admin', icon='gavel')
+
+            # Add custom Jinja2 extensions
+            config_['ckan.jinja_extensions'].append('ckanext.artesp_theme.lib.jinja_extensions.FontAwesomeIconExtension')
 
 
     # IAuthFunctions
@@ -74,4 +84,18 @@ class ArtespThemePlugin(plugins.SingletonPlugin):
     def i18n_domain(self):
         """Return the gettext domain for this plugin."""
         return 'ckanext-artesp_theme'
+
+    # IMiddleware
+
+    def make_middleware(self, app, config):
+        """
+        Return a WSGI middleware to fix double-encoded Font Awesome icons.
+        """
+        return make_middleware(app, config)
+
+    def make_error_log_middleware(self, app, config):
+        """
+        Return a WSGI middleware for error logging.
+        """
+        return app
 

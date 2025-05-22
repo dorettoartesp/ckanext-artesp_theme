@@ -34,6 +34,19 @@ def safe_html(html_string):
     return html_string
 
 
+def fix_fontawesome_icon(icon_name):
+    """
+    Create a Font Awesome icon that won't be double-encoded.
+
+    Args:
+        icon_name: The name of the Font Awesome icon (without the 'fa-' prefix)
+
+    Returns:
+        A Markup object containing the Font Awesome icon HTML
+    """
+    return Markup(f'<i class="fa fa-{icon_name}"></i> ')
+
+
 def get_package_count():
     """Return the number of packages (datasets) in the system."""
     try:
@@ -185,4 +198,5 @@ def get_helpers():
         "get_featured_groups": get_featured_groups,
         "get_year": get_year,
         "safe_html": safe_html,
+        "fix_fontawesome_icon": fix_fontawesome_icon,
     }
