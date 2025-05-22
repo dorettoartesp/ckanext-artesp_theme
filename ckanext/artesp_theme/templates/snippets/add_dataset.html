@@ -5,11 +5,7 @@
 {% set route_name = dataset_type ~ '.new' %}
 
 {% if group %}
-    <a href="{{ h.url_for(route_name, group=group) }}" class="btn btn-primary">
-        <i class="fa fa-plus-square"></i> {{ link_label }}
-    </a>
+    {% link_for link_label, named_route=route_name, group=group, class_='btn btn-primary', icon='plus-square' %}
 {% else %}
-    <a href="{{ h.url_for(route_name) }}" class="btn btn-primary">
-        <i class="fa fa-plus-square"></i> {{ link_label }}
-    </a>
+    {% link_for link_label, named_route=route_name, class_='btn btn-primary', icon='plus-square' %}
 {% endif %}
