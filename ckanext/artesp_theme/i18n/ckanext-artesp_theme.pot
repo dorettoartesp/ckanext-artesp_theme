@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-artesp_theme 0.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-05-20 08:44-0300\n"
+"POT-Creation-Date: 2025-05-22 11:29-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,10 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
+
+#: ckanext/artesp_theme/controllers.py:36
+msgid "You must be logged in to access the statistics page."
+msgstr ""
 
 #: ckanext/artesp_theme/logic/validators.py:6
 msgid "Required"
@@ -82,7 +86,7 @@ msgstr ""
 #: ckanext/artesp_theme/templates/group/read_base.html:18
 #: ckanext/artesp_theme/templates/group/snippets/info.html:42
 #: ckanext/artesp_theme/templates/header.html:69
-#: ckanext/artesp_theme/templates/home/snippets/stats.html:18
+#: ckanext/artesp_theme/templates/home/snippets/stats.html:19
 #: ckanext/artesp_theme/templates/organization/bulk_process.html:22
 #: ckanext/artesp_theme/templates/organization/edit_base.html:15
 #: ckanext/artesp_theme/templates/organization/read_base.html:19
@@ -98,7 +102,7 @@ msgstr ""
 
 #: ckanext/artesp_theme/templates/footer.html:41
 #: ckanext/artesp_theme/templates/header.html:70
-#: ckanext/artesp_theme/templates/home/snippets/stats.html:40
+#: ckanext/artesp_theme/templates/home/snippets/stats.html:52
 #: ckanext/artesp_theme/templates/organization/edit.html:6
 #: ckanext/artesp_theme/templates/organization/edit_base.html:5
 #: ckanext/artesp_theme/templates/organization/index.html:3
@@ -126,6 +130,7 @@ msgstr ""
 #: ckanext/artesp_theme/templates/group/read_base.html:4
 #: ckanext/artesp_theme/templates/group/read_base.html:7
 #: ckanext/artesp_theme/templates/header.html:71
+#: ckanext/artesp_theme/templates/home/snippets/stats.html:41
 #: ckanext/artesp_theme/templates/package/group_list.html:7
 #: ckanext/artesp_theme/templates/package/read_base.html:23
 #: ckanext/artesp_theme/templates/user/read_base.html:24
@@ -771,6 +776,7 @@ msgid "Save Group"
 msgstr ""
 
 #: ckanext/artesp_theme/templates/group/snippets/group_item.html:32
+#: ckanext/artesp_theme/templates/home/snippets/featured_groups.html:27
 #: ckanext/artesp_theme/templates/organization/snippets/organization_item.html:31
 #, python-brace-format
 msgid "{num} Dataset"
@@ -779,7 +785,6 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: ckanext/artesp_theme/templates/group/snippets/group_item.html:34
-#: ckanext/artesp_theme/templates/home/snippets/featured_group.html:26
 #: ckanext/artesp_theme/templates/home/snippets/featured_organization.html:26
 #: ckanext/artesp_theme/templates/organization/snippets/organization_item.html:33
 msgid "0 Datasets"
@@ -914,26 +919,29 @@ msgid ""
 "    this open data portal."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/home/snippets/featured_group.html:4
+#: ckanext/artesp_theme/templates/home/snippets/featured_groups.html:5
 msgid "Featured Groups"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/home/snippets/featured_group.html:24
-#: ckanext/artesp_theme/templates/home/snippets/featured_organization.html:24
-#, python-brace-format
-msgid "{num} Datasets"
+#: ckanext/artesp_theme/templates/home/snippets/featured_groups.html:6
+msgid "View all groups"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/home/snippets/featured_group.html:31
+#: ckanext/artesp_theme/templates/home/snippets/featured_groups.html:30
 msgid "View Group"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/home/snippets/featured_group.html:37
-msgid "No featured groups available"
+#: ckanext/artesp_theme/templates/home/snippets/featured_groups.html:37
+msgid "No featured groups found."
 msgstr ""
 
 #: ckanext/artesp_theme/templates/home/snippets/featured_organization.html:4
 msgid "Featured Organizations"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/featured_organization.html:24
+#, python-brace-format
+msgid "{num} Datasets"
 msgstr ""
 
 #: ckanext/artesp_theme/templates/home/snippets/featured_organization.html:31
@@ -965,6 +973,22 @@ msgstr ""
 
 #: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:59
 msgid "No datasets found."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:5
+msgid "Latest Resources"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:33
+msgid "View parent dataset"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:52
+msgid "No description provided for this resource."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:61
+msgid "No recent resources found."
 msgstr ""
 
 #: ckanext/artesp_theme/templates/home/snippets/promoted.html:4
@@ -1025,31 +1049,35 @@ msgstr ""
 msgid "Popular topics:"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/home/snippets/stats.html:7
+#: ckanext/artesp_theme/templates/home/snippets/stats.html:8
 msgid "ARTESP em números"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/home/snippets/stats.html:8
+#: ckanext/artesp_theme/templates/home/snippets/stats.html:9
 msgid "Explore os dados disponíveis no Portal de Dados Abertos da ARTESP"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/home/snippets/stats.html:18
+#: ckanext/artesp_theme/templates/home/snippets/stats.html:19
 #: ckanext/artesp_theme/templates/package/read_base.html:22
 msgid "Dataset"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/home/snippets/stats.html:29
+#: ckanext/artesp_theme/templates/home/snippets/stats.html:30
 msgid "Resource"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/home/snippets/stats.html:29
+#: ckanext/artesp_theme/templates/home/snippets/stats.html:30
 #: ckanext/artesp_theme/templates/package/resources.html:5
 #: ckanext/artesp_theme/templates/package/snippets/resources.html:21
 #: ckanext/artesp_theme/templates/snippets/context/dataset.html:13
 msgid "Resources"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/home/snippets/stats.html:40
+#: ckanext/artesp_theme/templates/home/snippets/stats.html:41
+msgid "Group"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/stats.html:52
 #: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:75
 msgid "Organization"
 msgstr ""
