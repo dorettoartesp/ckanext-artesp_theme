@@ -88,6 +88,14 @@ class ArtespThemePlugin(plugins.SingletonPlugin):
     def make_error_log_middleware(self, app, config):
         """
         Return a WSGI middleware for error logging.
+
+        Args:
+            app: The WSGI application
+            config: The configuration dictionary (not used)
+
+        Returns:
+            The WSGI application (unchanged)
         """
+        # config parameter is required by CKAN but not used
         return app
 
