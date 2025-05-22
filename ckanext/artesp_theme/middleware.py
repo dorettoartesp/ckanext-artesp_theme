@@ -100,5 +100,25 @@ def make_middleware(app: Callable, config: Optional[Dict[str, Any]] = None) -> C
     Returns:
         The middleware
     """
-    # config parameter is required by CKAN but not used by our middleware
-    return FontAwesomeFixMiddleware(app)
+    # Check if the app is a Flask app
+    if hasattr(app, 'after_request'):
+        # If it's a Flask app, we need to modify the response after it's generated
+        @app.after_request
+        def fix_fontawesome_icons(response):
+            if response.content_type and 'text/html' in response.content_type.lower():
+                pattern = re.compile(
+                    r'&amp;lt;i\s+class=&amp;quot;fa\s+fa-([a-z0-9-]+)&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;'
+                )
+
+                def replace_icon(match):
+                    icon_name = match.group(1)
+                    return f'<i class="fa fa-{icon_name}"></i>'
+
+                response.data = pattern.sub(replace_icon, response.data.decode('utf-8')).encode('utf-8')
+            return response
+
+        # Return the Flask app with the after_request handler
+        return app
+    else:
+        # If it's not a Flask app, use our WSGI middleware
+        return FontAwesomeFixMiddleware(app)
