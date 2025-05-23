@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-artesp_theme 0.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-05-22 11:29-0300\n"
+"POT-Creation-Date: 2025-05-23 11:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: ckanext/artesp_theme/controllers.py:36
+#: ckanext/artesp_theme/controllers.py:41
 msgid "You must be logged in to access the statistics page."
 msgstr ""
 
@@ -83,6 +83,12 @@ msgid "Data & Resources"
 msgstr ""
 
 #: ckanext/artesp_theme/templates/footer.html:40
+#: ckanext/artesp_theme/templates/static/harvesting.html:1
+#: ckanext/artesp_theme/templates/static/harvesting.html:4
+msgid "Harvesting"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/footer.html:41
 #: ckanext/artesp_theme/templates/group/read_base.html:18
 #: ckanext/artesp_theme/templates/group/snippets/info.html:42
 #: ckanext/artesp_theme/templates/header.html:69
@@ -100,7 +106,7 @@ msgstr ""
 msgid "Datasets"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/footer.html:41
+#: ckanext/artesp_theme/templates/footer.html:42
 #: ckanext/artesp_theme/templates/header.html:70
 #: ckanext/artesp_theme/templates/home/snippets/stats.html:52
 #: ckanext/artesp_theme/templates/organization/edit.html:6
@@ -118,7 +124,7 @@ msgstr ""
 msgid "Organizations"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/footer.html:42
+#: ckanext/artesp_theme/templates/footer.html:43
 #: ckanext/artesp_theme/templates/group/edit.html:4
 #: ckanext/artesp_theme/templates/group/edit_base.html:4
 #: ckanext/artesp_theme/templates/group/index.html:4
@@ -139,20 +145,20 @@ msgstr ""
 msgid "Groups"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/footer.html:47
+#: ckanext/artesp_theme/templates/footer.html:48
 #: ckanext/artesp_theme/templates/snippets/language_selector.html:8
 msgid "Language"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/footer.html:65
+#: ckanext/artesp_theme/templates/footer.html:66
 msgid "All rights reserved."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/footer.html:70
+#: ckanext/artesp_theme/templates/footer.html:71
 msgid "Government of São Paulo State"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/footer.html:76
+#: ckanext/artesp_theme/templates/footer.html:77
 msgid ""
 "<strong>Powered by</strong> <a class=\"hide-text ckan-footer-logo\" "
 "href=\"http://ckan.org\"></a>"
@@ -2199,6 +2205,238 @@ msgstr ""
 msgid "Location"
 msgstr ""
 
+#: ckanext/artesp_theme/templates/static/harvesting.html:6
+msgid ""
+"This page provides information on how to harvest data from the ARTESP Open "
+"Data Portal. Harvesting allows you to automatically collect and synchronize "
+"datasets from our portal to your own systems."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:7
+msgid ""
+"We offer multiple methods for harvesting data, making it easy to integrate "
+"our open datasets into your applications, analysis tools, or other data "
+"platforms."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:10
+msgid "What is Harvesting?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:12
+msgid ""
+"Harvesting is the process of automatically collecting metadata and data from "
+"one data portal to another. It allows organizations and individuals to keep a"
+" local copy of datasets that are synchronized with the original source."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:13
+msgid "This is particularly useful for:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:16
+msgid "Creating federated or aggregated data catalogs"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:17
+msgid "Building applications that need regular data updates"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:18
+msgid "Integrating open data into your own systems"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:19
+msgid "Performing analysis across multiple datasets"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:22
+msgid "Available Harvesting Methods"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:24
+msgid "DCAT RDF Endpoints"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:26
+msgid ""
+"Our portal supports the Data Catalog Vocabulary (DCAT) standard, which "
+"provides a framework for describing datasets in a catalog."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:27
+msgid "We offer the following DCAT endpoints:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:30
+msgid "Catalog Endpoint"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:32
+msgid "Access all datasets in our catalog through:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:35
+#: ckanext/artesp_theme/templates/static/harvesting.html:54
+#, python-brace-format
+msgid "where {format} can be xml, ttl, n3, or jsonld"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:38
+msgid "Parameters:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:41
+msgid "For pagination (default: 1)"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:42
+msgid "Filter datasets modified since a specific date"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:43
+msgid "Search query to filter datasets"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:46
+#: ckanext/artesp_theme/templates/static/harvesting.html:57
+msgid "Example:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:49
+msgid "Individual Dataset Endpoints"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:51
+msgid "Access metadata for a specific dataset:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:60
+msgid "Content Negotiation"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:62
+msgid ""
+"Our portal also supports content negotiation, allowing clients to request "
+"specific formats using HTTP Accept headers:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:65
+msgid "for RDF/XML format"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:66
+msgid "for Turtle format"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:67
+msgid "for N3 format"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:68
+msgid "for JSON-LD format"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:71
+msgid "Example using curl:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:74
+msgid "DCAT Configuration"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:76
+msgid "Our DCAT implementation is configured with the following settings:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:79
+msgid "Enabled plugins: \"dcat\" and \"structured_data\""
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:80
+msgid "Schema configuration: \"ckanext.dcat.schemas:dcat_ap_recommended.yaml\""
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:81
+msgid "RDF profiles: \"euro_dcat_ap_3\""
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:82
+msgid "RDF endpoints enabled"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:83
+msgid "Content negotiation enabled"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:84
+msgid "100 datasets per page configuration"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:87
+msgid "Setting Up a Harvester"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:89
+msgid ""
+"To harvest data from our portal, you can use the CKAN Harvester extension. "
+"Here are the basic steps:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:92
+msgid "Install the ckanext-harvest extension in your CKAN instance"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:93
+msgid ""
+"Configure the harvester to use either the CKAN harvester (for CKAN-to-CKAN "
+"harvesting) or the DCAT RDF harvester (for harvesting via our DCAT endpoints)"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:94
+msgid "Create a new harvest source pointing to our portal URL"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:95
+msgid "Configure the harvester with appropriate options (frequency, filters, etc.)"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:96
+msgid "Start the harvesting process"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:99
+msgid "Example Configuration for DCAT RDF Harvester"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:101
+msgid "When setting up a DCAT RDF harvester, you can use this configuration:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:114
+msgid "Need Help?"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:116
+msgid ""
+"If you encounter any issues while setting up harvesting from our portal, "
+"please"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:116
+msgid "contact us"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:116
+msgid "for assistance."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:119
+#: ckanext/artesp_theme/templates/static/privacy.html:145
+#: ckanext/artesp_theme/templates/static/terms.html:140
+msgid "Last updated: June 2025"
+msgstr ""
+
 #: ckanext/artesp_theme/templates/static/privacy.html:6
 msgid ""
 "ARTESP (\"Agency,\" \"we,\" \"us,\" or \"our\") is committed to protecting "
@@ -2493,11 +2731,6 @@ msgstr ""
 msgid ""
 "Please clearly state that\n"
 "    your query is related to data protection."
-msgstr ""
-
-#: ckanext/artesp_theme/templates/static/privacy.html:145
-#: ckanext/artesp_theme/templates/static/terms.html:140
-msgid "Last updated: June 2025"
 msgstr ""
 
 #: ckanext/artesp_theme/templates/static/terms.html:6
