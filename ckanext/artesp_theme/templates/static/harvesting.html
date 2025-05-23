@@ -1,0 +1,121 @@
+{% extends "static/base.html" %} {% set page_title = _('Harvesting') %}
+{% block page_content %}
+<section class='static-content'>
+  <h1>{{_('Harvesting')}}</h1>
+  <p>
+    {{_('This page provides information on how to harvest data from the ARTESP Open Data Portal. Harvesting allows you to automatically collect and synchronize datasets from our portal to your own systems.')}}
+    {{_('We offer multiple methods for harvesting data, making it easy to integrate our open datasets into your applications, analysis tools, or other data platforms.')}}
+  </p>
+
+  <h2>{{_('What is Harvesting?')}}</h2>
+  <p>
+    {{_('Harvesting is the process of automatically collecting metadata and data from one data portal to another. It allows organizations and individuals to keep a local copy of datasets that are synchronized with the original source.')}}
+    {{_('This is particularly useful for:')}}
+  </p>
+  <ul>
+    <li>{{_('Creating federated or aggregated data catalogs')}}</li>
+    <li>{{_('Building applications that need regular data updates')}}</li>
+    <li>{{_('Integrating open data into your own systems')}}</li>
+    <li>{{_('Performing analysis across multiple datasets')}}</li>
+  </ul>
+
+  <h2>{{_('Available Harvesting Methods')}}</h2>
+  
+  <h3>{{_('DCAT RDF Endpoints')}}</h3>
+  <p>
+    {{_('Our portal supports the Data Catalog Vocabulary (DCAT) standard, which provides a framework for describing datasets in a catalog.')}}
+    {{_('We offer the following DCAT endpoints:')}}
+  </p>
+
+  <h4>{{_('Catalog Endpoint')}}</h4>
+  <p>
+    {{_('Access all datasets in our catalog through:')}}
+  </p>
+  <ul>
+    <li><code>https://dadosabertos.artesp.sp.gov.br/catalog.{format}</code> {{_('where {format} can be xml, ttl, n3, or jsonld')}}</li>
+  </ul>
+  <p>
+    {{_('Parameters:')}}
+  </p>
+  <ul>
+    <li><code>page={number}</code> - {{_('For pagination (default: 1)')}}</li>
+    <li><code>modified_since={ISO-date}</code> - {{_('Filter datasets modified since a specific date')}}</li>
+    <li><code>q={query}</code> - {{_('Search query to filter datasets')}}</li>
+  </ul>
+  <p>
+    {{_('Example:')}} <code>https://dadosabertos.artesp.sp.gov.br/catalog.xml?page=2&modified_since=2023-01-01</code>
+  </p>
+
+  <h4>{{_('Individual Dataset Endpoints')}}</h4>
+  <p>
+    {{_('Access metadata for a specific dataset:')}}
+  </p>
+  <ul>
+    <li><code>https://dadosabertos.artesp.sp.gov.br/dataset/{dataset-id}.{format}</code> {{_('where {format} can be xml, ttl, n3, or jsonld')}}</li>
+  </ul>
+  <p>
+    {{_('Example:')}} <code>https://dadosabertos.artesp.sp.gov.br/dataset/rodovias-concedidas.xml</code>
+  </p>
+
+  <h3>{{_('Content Negotiation')}}</h3>
+  <p>
+    {{_('Our portal also supports content negotiation, allowing clients to request specific formats using HTTP Accept headers:')}}
+  </p>
+  <ul>
+    <li><code>application/rdf+xml</code> {{_('for RDF/XML format')}}</li>
+    <li><code>text/turtle</code> {{_('for Turtle format')}}</li>
+    <li><code>text/n3</code> {{_('for N3 format')}}</li>
+    <li><code>application/ld+json</code> {{_('for JSON-LD format')}}</li>
+  </ul>
+  <p>
+    {{_('Example using curl:')}} <code>curl -H "Accept: text/turtle" https://dadosabertos.artesp.sp.gov.br/dataset/rodovias-concedidas</code>
+  </p>
+
+  <h2>{{_('DCAT Configuration')}}</h2>
+  <p>
+    {{_('Our DCAT implementation is configured with the following settings:')}}
+  </p>
+  <ul>
+    <li>{{_('Enabled plugins: "dcat" and "structured_data"')}}</li>
+    <li>{{_('Schema configuration: "ckanext.dcat.schemas:dcat_ap_recommended.yaml"')}}</li>
+    <li>{{_('RDF profiles: "euro_dcat_ap_3"')}}</li>
+    <li>{{_('RDF endpoints enabled')}}</li>
+    <li>{{_('Content negotiation enabled')}}</li>
+    <li>{{_('100 datasets per page configuration')}}</li>
+  </ul>
+
+  <h2>{{_('Setting Up a Harvester')}}</h2>
+  <p>
+    {{_('To harvest data from our portal, you can use the CKAN Harvester extension. Here are the basic steps:')}}
+  </p>
+  <ol>
+    <li>{{_('Install the ckanext-harvest extension in your CKAN instance')}}</li>
+    <li>{{_('Configure the harvester to use either the CKAN harvester (for CKAN-to-CKAN harvesting) or the DCAT RDF harvester (for harvesting via our DCAT endpoints)')}}</li>
+    <li>{{_('Create a new harvest source pointing to our portal URL')}}</li>
+    <li>{{_('Configure the harvester with appropriate options (frequency, filters, etc.)')}}</li>
+    <li>{{_('Start the harvesting process')}}</li>
+  </ol>
+
+  <h3>{{_('Example Configuration for DCAT RDF Harvester')}}</h3>
+  <p>
+    {{_('When setting up a DCAT RDF harvester, you can use this configuration:')}}
+  </p>
+  <pre>
+{
+  "rdf_format": "xml",
+  "profiles": ["euro_dcat_ap_3"],
+  "default_extras": {
+    "harvest_source_title": "ARTESP Open Data Portal",
+    "harvest_source_url": "https://dadosabertos.artesp.sp.gov.br/"
+  }
+}
+  </pre>
+
+  <h2>{{_('Need Help?')}}</h2>
+  <p>
+    {{_('If you encounter any issues while setting up harvesting from our portal, please')}} <a href="{{ h.url_for('artesp_theme.contact') }}">{{_('contact us')}}</a> {{_('for assistance.')}}
+  </p>
+
+  <p>{{ _('Last updated: June 2025') }}</p>
+</section>
+{% endblock %}
