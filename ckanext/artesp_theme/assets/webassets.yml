@@ -26,5 +26,6 @@ artesp-theme-css:
     - css/modules/homepage-groups.css
     - css/modules/dataset-search.css
     - css/modules/stages.css
+    - css/modules/auth-controls.css
     - css/modules/responsive.css
     - css/modules/user.css

@@ -1,0 +1,10 @@
+/* ==========================================================================
+   ARTESP Theme - Authentication-based Controls
+   Contains styles that show/hide elements based on authentication status
+   ========================================================================== */
+
+/* Hide Data API button and datastore badge for non-authenticated users */
+body:not(.logged-in) a[data-module="api-info"],
+body:not(.logged-in) .loader-badge {
+  display: none !important;
+}
