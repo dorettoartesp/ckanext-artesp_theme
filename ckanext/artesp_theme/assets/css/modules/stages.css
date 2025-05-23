@@ -1,0 +1,29 @@
+/* ==========================================================================
+   ARTESP Theme - Dataset Creation Workflow Stages
+   Contains styling for the dataset creation workflow stages
+   ========================================================================== */
+
+/* Target the highlight elements inside the stages list items */
+.stages li.active .highlight,
+.stages li.complete .highlight {
+  /* Change the background color from the default greenish color (rgb(140, 198, 138)) 
+     to use the --secondary CSS variable (blue) */
+  background-color: var(--secondary) !important;
+  color: white !important;
+  border-color: var(--secondary) !important;
+}
+
+/* Ensure this styling applies to the dataset creation workflow pages */
+body.dataset.new .stages li.active .highlight,
+body.dataset.new .stages li.complete .highlight {
+  background-color: var(--secondary) !important;
+  color: white !important;
+  border-color: var(--secondary) !important;
+}
+
+/* Style for the buttons in the stages */
+.stages li.complete .highlight[type="submit"] {
+  background-color: var(--secondary) !important;
+  color: white !important;
+  border-color: var(--secondary) !important;
+}
