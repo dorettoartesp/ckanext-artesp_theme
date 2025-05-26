@@ -7,7 +7,7 @@
 .latest-resources-wrapper {
   margin: 0;
   background-color: #ffffff; /* Changed from #f5f5f5 to white */
-  padding: 3rem 0 4rem 0; /* Increased padding to 4rem for top and bottom */
+  padding: 1rem 0 4rem 0; /* Increased padding to 4rem for top and bottom */
   position: relative;
 }
 
