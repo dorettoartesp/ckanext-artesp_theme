@@ -60,7 +60,7 @@
                     <div class="resource-parent-dataset">
                       <i class="fa fa-archive" aria-hidden="true"></i>
                       <a href="{{ h.url_for('dataset.read', id=resource_item.resource.package_id) }}" title="{{ _('View parent dataset') }}">
-                        {{ resource_item.parent_dataset_title or resource_item.resource.package_id }}
+                        {{ resource_item.parent_dataset_title|truncate(30) }}
                       </a>
                     </div>
                   {% endif %}

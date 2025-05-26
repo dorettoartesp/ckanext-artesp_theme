@@ -14,8 +14,8 @@
             <div class="dataset-card-content">
               <!-- Header section: title and metadata -->
               <div class="dataset-header">
-                <h3 class="dataset-title">
-                  {{ dataset.title|upper or dataset.name|upper }}
+                <h3 class="dataset-title" title="{{ dataset.title|upper or dataset.name|upper }}">
+                  {{ dataset.title|upper|truncate(30) or dataset.name|upper|truncate(30) }}
                 </h3>
 
                 <div class="dataset-meta">
