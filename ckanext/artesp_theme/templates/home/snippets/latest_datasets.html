@@ -12,44 +12,50 @@
         <div class="dataset-card">
           <a href="{{ h.url_for('dataset.read', id=dataset.name) }}">
             <div class="dataset-card-content">
-              <h3 class="dataset-title">
-                {{ dataset.title|upper or dataset.name|upper }}
-              </h3>
+              <!-- Header section: title and metadata -->
+              <div class="dataset-header">
+                <h3 class="dataset-title">
+                  {{ dataset.title|upper or dataset.name|upper }}
+                </h3>
 
-              <div class="dataset-meta">
-                <div class="dataset-date">
-                  <i class="fa fa-calendar" aria-hidden="true"></i> {{ h.render_datetime(dataset.metadata_created, date_format='%d/%m/%Y') }}
+                <div class="dataset-meta">
+                  <div class="dataset-date">
+                    <i class="fa fa-calendar" aria-hidden="true"></i> {{ h.render_datetime(dataset.metadata_created, date_format='%d/%m/%Y') }}
+                  </div>
+
+                  {% if dataset.groups and dataset.groups|length > 0 %}
+                    <div class="dataset-groups">
+                      <i class="fa fa-object-group" aria-hidden="true"></i>
+                      {% for group in dataset.groups %}
+                        {{ group.title|title or group.name|title }}{% if not loop.last %}, {% endif %}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+
+                  <div class="dataset-resources">
+                    <i class="fa fa-folder-open" aria-hidden="true"></i> {{ ungettext('{num} Resource', '{num} Resources', dataset.resources|length).format(num=dataset.resources|length) }}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Body section: description and tags -->
+              <div class="dataset-body">
+                <div class="dataset-description">
+                  {% if dataset.notes %}
+                    {{ h.markdown_extract(dataset.notes, 150) }}
+                  {% else %}
+                    <p class="empty">{{ _('No description provided.') }}</p>
+                  {% endif %}
                 </div>
 
-                {% if dataset.groups and dataset.groups|length > 0 %}
-                  <div class="dataset-groups">
-                    <i class="fa fa-object-group" aria-hidden="true"></i>
-                    {% for group in dataset.groups %}
-                      {{ group.title|title or group.name|title }}{% if not loop.last %}, {% endif %}
+                {% if dataset.tags and dataset.tags|length > 0 %}
+                  <div class="dataset-tags">
+                    {% for tag in dataset.tags %}
+                      <a href="{% url_for 'dataset.search', tags=tag.name %}" class="tag">{{ tag.display_name }}</a>
                     {% endfor %}
                   </div>
                 {% endif %}
-
-                <div class="dataset-resources">
-                  <i class="fa fa-folder-open" aria-hidden="true"></i> {{ ungettext('{num} Resource', '{num} Resources', dataset.resources|length).format(num=dataset.resources|length) }}
-                </div>
               </div>
-
-              <div class="dataset-description">
-                {% if dataset.notes %}
-                  {{ h.markdown_extract(dataset.notes, 150) }}
-                {% else %}
-                  <p class="empty">{{ _('No description provided.') }}</p>
-                {% endif %}
-              </div>
-
-              {% if dataset.tags and dataset.tags|length > 0 %}
-                <div class="dataset-tags">
-                  {% for tag in dataset.tags %}
-                    <a href="{% url_for 'dataset.search', tags=tag.name %}" class="tag">{{ tag.display_name }}</a>
-                  {% endfor %}
-                </div>
-              {% endif %}
             </div>
           </a>
         </div>
