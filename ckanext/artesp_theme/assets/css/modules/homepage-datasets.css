@@ -37,7 +37,7 @@
 
 .section-title {
   font-size: 1.5rem;
-  font-weight: 500;
+  font-weight: 600;
   color: #333333; /* Dark gray instead of blue */
   margin: 0;
   position: relative;
@@ -170,8 +170,8 @@
 
 .dataset-title {
   color: #000000;
-  font-size: 1.15rem;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 500;
   margin-top: 0;
   margin-bottom: 0.75rem;
   line-height: 1.4;

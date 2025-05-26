@@ -43,7 +43,7 @@
 
 .latest-resources-section .section-title {
   font-size: 1.5rem;
-  font-weight: 500;
+  font-weight: 600;
   color: #333333; /* Dark gray instead of blue */
   margin: 0;
   position: relative;
@@ -199,14 +199,14 @@
 
 .date-day {
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 500;
   color: #1f2937;
   margin-bottom: 2px;
 }
 
 .date-month {
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--gray-dark);
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -216,7 +216,7 @@
 .date-year {
   font-size: 0.7rem;
   color: #6b7280;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 /* Ticket content styling */
@@ -232,8 +232,8 @@
 /* Resource title */
 .ticket-card .resource-title {
   color: #1f2937;
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 500;
   margin-top: 0;
   margin-bottom: 0.75rem;
   line-height: 1.3;

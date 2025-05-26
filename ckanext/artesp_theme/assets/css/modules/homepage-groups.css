@@ -17,7 +17,7 @@
   font-size: 1.5rem;
   color: #2c3e50; /* Dark, formal blue/grey */
   margin: 0;
-  font-weight: 500; /* Semi-bold */
+  font-weight: 600; /* Semi-bold */
 }
 
 .featured-groups-section .view-all-link {
@@ -93,8 +93,8 @@
 }
 
 .group-card .group-title {
-  font-size: 1.15rem; /* 1.15em -> 1.15rem */
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 500;
   color: #333;
   margin: 0 0 0.5rem 0; /* 8px -> 0.5rem */
   min-height: 2.3rem; /* 2.3em -> 2.3rem (assuming relative to root em for consistency) */

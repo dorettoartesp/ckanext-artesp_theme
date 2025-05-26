@@ -20,6 +20,7 @@
   padding: 0;
   margin-bottom: 0;
   font-size: 0.9rem;
+  text-transform: lowercase;
 }
 
 .breadcrumb > li + li:before {
