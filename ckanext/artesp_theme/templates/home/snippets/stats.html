@@ -12,46 +12,38 @@
   <div class="stats-row">
     <!-- DATASET CARD -->
     <div class="stats-card stats-card-blue">
-      <div class="stats-card-icon">
+      <div class="stats-card-icon-circle">
         <i class="fa fa-database"></i>
       </div>
-      <div class="stats-card-content">
-        <div class="stats-card-label">{% if dataset_count == 1 %}{{ _('Dataset') }}{% else %}{{ _('Datasets') }}{% endif %}</div>
-        <div class="stats-card-count">{{ dataset_count }}</div>
-      </div>
+      <div class="stats-card-count stat-count">{{ dataset_count }}</div>
+      <div class="stats-card-label">{% if dataset_count == 1 %}{{ _('Dataset') }}{% else %}{{ _('Datasets') }}{% endif %}</div>
     </div>
 
     <!-- RESOURCE CARD -->
     <div class="stats-card stats-card-green">
-      <div class="stats-card-icon">
+      <div class="stats-card-icon-circle">
         <i class="fa fa-file-text"></i>
       </div>
-      <div class="stats-card-content">
-        <div class="stats-card-label">{% if resource_count == 1 %}{{ _('Resource') }}{% else %}{{ _('Resources') }}{% endif %}</div>
-        <div class="stats-card-count">{{ resource_count }}</div>
-      </div>
+      <div class="stats-card-count stat-count">{{ resource_count }}</div>
+      <div class="stats-card-label">{% if resource_count == 1 %}{{ _('Resource') }}{% else %}{{ _('Resources') }}{% endif %}</div>
     </div>
 
     <!-- GROUPS CARD -->
     <div class="stats-card stats-card-yellow">
-      <div class="stats-card-icon">
+      <div class="stats-card-icon-circle">
         <i class="fa fa-object-group"></i>
       </div>
-      <div class="stats-card-content">
-        <div class="stats-card-label">{% if group_count == 1 %}{{ _('Group') }}{% else %}{{ _('Groups') }}{% endif %}</div>
-        <div class="stats-card-count">{{ group_count }}</div>
-      </div>
+      <div class="stats-card-count stat-count">{{ group_count }}</div>
+      <div class="stats-card-label">{% if group_count == 1 %}{{ _('Group') }}{% else %}{{ _('Groups') }}{% endif %}</div>
     </div>
 
     <!-- ORGANIZATION CARD -->
     <div class="stats-card stats-card-black">
-      <div class="stats-card-icon">
+      <div class="stats-card-icon-circle">
         <i class="fa fa-building"></i>
       </div>
-      <div class="stats-card-content">
-        <div class="stats-card-label">{% if organization_count == 1 %}{{ _('Organization') }}{% else %}{{ _('Organizations') }}{% endif %}</div>
-        <div class="stats-card-count">{{ organization_count }}</div>
-      </div>
+      <div class="stats-card-count stat-count">{{ organization_count }}</div>
+      <div class="stats-card-label">{% if organization_count == 1 %}{{ _('Organization') }}{% else %}{{ _('Organizations') }}{% endif %}</div>
     </div>
   </div>
 </div>

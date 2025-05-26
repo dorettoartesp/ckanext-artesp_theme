@@ -61,61 +61,7 @@
   clear: both;
 }
 
-/* Stat item styling based on Crimson Data Beacon */
-.stat-item {
-  background-color: white;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: all 0.25s ease;
-  position: relative;
-  overflow: hidden;
-  animation: fadeInUp 0.6s ease-out forwards;
-  opacity: 0;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  text-align: left;
-  height: 100%;
-}
-
-/* Color variations for each stat item */
-.stat-item-blue {
-  animation-delay: 0.1s;
-  border-left: 4px solid var(--secondary); /* Blue left border */
-}
-
-.stat-item-green {
-  animation-delay: 0.2s;
-  border-left: 4px solid var(--accent); /* Green left border */
-}
-
-.stat-item-yellow {
-  animation-delay: 0.3s;
-  border-left: 4px solid var(--highlight); /* Yellow left border */
-}
-
-.stat-item:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-.stat-item-blue .stat-icon {
-  color: var(--secondary); /* Blue icon */
-}
-
-.stat-item-green .stat-icon {
-  color: var(--accent); /* Green icon */
-}
-
-.stat-item-yellow .stat-icon {
-  color: var(--highlight); /* Yellow icon */
-}
-
-.stat-content {
-  margin-left: 3.5rem;
-  text-align: left;
-}
-
-/* NEW STATS CARDS STYLING */
+/* STATS CARDS STYLING */
 .stats-row {
   display: table;
   width: 100%;
@@ -131,11 +77,31 @@
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  padding: 1.5rem;
+  padding: 2rem 1.5rem;
   position: relative;
   border: 1px solid rgba(0, 0, 0, 0.08);
   transition: all 0.25s ease;
   vertical-align: middle;
+  text-align: center;
+  animation: fadeInUp 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+/* Staggered entrance animations for cards */
+.stats-card-blue {
+  animation-delay: 0.1s;
+}
+
+.stats-card-green {
+  animation-delay: 0.2s;
+}
+
+.stats-card-yellow {
+  animation-delay: 0.3s;
+}
+
+.stats-card-black {
+  animation-delay: 0.4s;
 }
 
 .stats-card:hover {
@@ -143,109 +109,177 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* Color variations */
-.stats-card-blue {
-  border-left: 4px solid var(--secondary); /* Blue left border */
+/* Enhanced hover effects for icon circles */
+.stats-card:hover .stats-card-icon-circle {
+  animation-play-state: paused;
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
 }
 
-.stats-card-green {
-  border-left: 4px solid var(--accent); /* Green left border */
+/* Color-specific glow effects on hover */
+.stats-card-blue:hover .stats-card-icon-circle {
+  box-shadow: 0 4px 16px rgba(3, 78, 162, 0.3);
 }
 
-.stats-card-yellow {
-  border-left: 4px solid var(--highlight); /* Yellow left border */
+.stats-card-green:hover .stats-card-icon-circle {
+  box-shadow: 0 4px 16px rgba(11, 146, 71, 0.3);
 }
 
-.stats-card-black {
-  border-left: 4px solid #000000; /* Yellow left border */
+.stats-card-yellow:hover .stats-card-icon-circle {
+  box-shadow: 0 4px 16px rgba(251, 185, 0, 0.3);
 }
 
-.stats-card-icon {
-  float: left;
-  width: 2.5rem;
-  height: 2.5rem;
-  text-align: center;
-  margin-right: 1rem;
+.stats-card-black:hover .stats-card-icon-circle {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
-.stats-card-blue .stats-card-icon {
-  color: var(--secondary); /* Blue icon */
+/* Circular icon container */
+.stats-card-icon-circle {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.stats-card-green .stats-card-icon {
-  color: var(--accent); /* Green icon */
+/* Color variations for circular backgrounds */
+.stats-card-blue .stats-card-icon-circle {
+  background-color: var(--secondary); /* Blue background */
 }
 
-.stats-card-yellow .stats-card-icon {
-  color: var(--highlight); /* Yellow icon */
+.stats-card-green .stats-card-icon-circle {
+  background-color: var(--accent); /* Green background */
 }
 
-.stats-card-black .stats-card-icon {
-  color: #000000;
+.stats-card-yellow .stats-card-icon-circle {
+  background-color: var(--highlight); /* Yellow background */
 }
 
-.stats-card-icon .fa {
+.stats-card-black .stats-card-icon-circle {
+  background-color: #000000; /* Black background */
+}
+
+/* Icon styling within circular container */
+.stats-card-icon-circle .fa {
   font-size: 1.5rem;
-  line-height: 2.5rem;
+  color: white;
 }
 
-.stats-card-content {
-  margin-left: 3.5rem;
-  text-align: left;
+/* Keyframe animations for statistics cards */
+@keyframes gentlePulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+@keyframes softGlow {
+  0%, 100% {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  50% {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1), 0 0 20px rgba(255, 255, 255, 0.3);
+  }
+}
+
+@keyframes breathingScale {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animation classes for different effects */
+.stats-card-icon-circle {
+  animation: gentlePulse 3s ease-in-out infinite;
+}
+
+/* Alternative animations (can be swapped by changing the animation property above) */
+.stats-card-icon-circle.glow-effect {
+  animation: softGlow 4s ease-in-out infinite;
+}
+
+.stats-card-icon-circle.breathing-effect {
+  animation: breathingScale 2.5s ease-in-out infinite;
+}
+
+/* Staggered animation delays for visual interest */
+.stats-card-blue .stats-card-icon-circle {
+  animation-delay: 0s;
+}
+
+.stats-card-green .stats-card-icon-circle {
+  animation-delay: 0.5s;
+}
+
+.stats-card-yellow .stats-card-icon-circle {
+  animation-delay: 1s;
+}
+
+.stats-card-black .stats-card-icon-circle {
+  animation-delay: 1.5s;
+}
+
+/* Accessibility: Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .stats-card {
+    animation: none;
+    opacity: 1;
+  }
+
+  .stats-card-icon-circle {
+    animation: none;
+  }
+
+  .stats-card:hover .stats-card-icon-circle {
+    transform: none;
+    transition: none;
+  }
+
+  .stats-card:hover {
+    transform: none;
+  }
 }
 
 .stats-card-count {
-  font-size: 1.75rem;
+  font-size: 2.5rem;
   font-weight: 700;
   color: #222222;
   line-height: 1.2;
+  margin-bottom: 0.5rem;
 }
 
 .stats-card-label {
   font-size: 1rem;
   color: #666;
   font-weight: 500;
-  margin-bottom: 0.25rem;
-}
-
-.stat-icon {
-  float: left;
-  width: 2.5rem;
-  height: 2.5rem;
-  text-align: center;
-  margin-right: 1rem;
-}
-
-.stat-icon .fa {
-  font-size: 1.5rem;
-  line-height: 2.5rem;
-}
-
-.stat-count {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #222222;
-  line-height: 1.2;
   margin: 0;
 }
 
-.stat-label {
-  font-size: 1rem;
-  color: #666;
-  font-weight: 500;
-  margin: 0 0 0.25rem 0;
-}
 
-@media (max-width: 992px) {
-  .stats-container {
-    flex-wrap: wrap;
-    gap: 1.5rem;
-  }
 
-  .stat-item {
-    flex: 0 0 calc(50% - 0.75rem);
-  }
-}
+
 
 @media (max-width: 768px) {
   .stats-row {
@@ -254,24 +288,25 @@
   }
 
   .stats-card {
-    padding: 1.25rem;
+    padding: 1.5rem 1rem;
   }
 
-  .stat-icon {
-    width: 2.25rem;
-    height: 2.25rem;
+  .stats-card-icon-circle {
+    width: 3.5rem;
+    height: 3.5rem;
+    margin-bottom: 1rem;
   }
 
-  .stat-icon .fa {
+  .stats-card-icon-circle .fa {
     font-size: 1.3rem;
   }
 
-  .stat-count {
-    font-size: 1.5rem;
+  .stats-card-count {
+    font-size: 2rem;
   }
 
-  .stat-label {
-    font-size: 0.8rem;
+  .stats-card-label {
+    font-size: 0.9rem;
   }
 }
 
@@ -286,28 +321,24 @@
     display: block;
     width: 100%;
     margin-bottom: 15px;
-    padding: 1rem;
+    padding: 1.5rem 1rem;
   }
 
-  .stat-icon {
-    width: 2rem;
-    height: 2rem;
-    margin-right: 0.75rem;
+  .stats-card-icon-circle {
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 1rem;
   }
 
-  .stat-icon .fa {
+  .stats-card-icon-circle .fa {
     font-size: 1.2rem;
   }
 
-  .stat-count {
-    font-size: 1.4rem;
+  .stats-card-count {
+    font-size: 1.8rem;
   }
 
-  .stat-label {
-    font-size: 0.75rem;
-  }
-  
-  .stat-item {
-    flex: 0 0 100%;
+  .stats-card-label {
+    font-size: 0.85rem;
   }
 }
