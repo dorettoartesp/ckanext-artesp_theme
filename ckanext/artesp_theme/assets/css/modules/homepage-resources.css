@@ -120,8 +120,8 @@
   align-self: stretch;
 }
 
-/* Perforated edge on the left side of ticket main */
-.ticket-main::after {
+/* Removed perforated edge from the left side of ticket main */
+/* .ticket-main::after {
   content: '';
   position: absolute;
   top: 0;
@@ -132,13 +132,12 @@
   background-size: 2px 12px;
   background-repeat: repeat-y;
   z-index: 2;
-}
+} */
 
 /* Date section on the left */
 .ticket-date-section {
   width: 80px;
   background-color: #f8fafc;
-  border-right: 2px dashed #e5e7eb;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -148,13 +147,13 @@
   align-self: stretch;
 }
 
-/* Green accent stripe on date section */
+/* Green accent stripe on date section - moved to right side */
 .ticket-date-section::before {
   content: '';
   position: absolute;
   top: 0;
-  left: 0;
-  width: 4px;
+  right: 0;
+  width: 0.1875rem;
   height: 100%;
   background-color: var(--accent);
   z-index: 1;
@@ -239,6 +238,7 @@
   margin-bottom: 0.75rem;
   line-height: 1.3;
   font-family: 'Rawline', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  text-transform: lowercase;
 }
 
 .ticket-card .resource-title a {
@@ -306,6 +306,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-transform: uppercase;
 }
 
 .ticket-card .resource-parent-dataset a:hover {
@@ -407,7 +408,8 @@
     min-height: auto;
   }
 
-  .ticket-main::after {
+  /* Removed mobile perforated edge to match desktop changes */
+  /* .ticket-main::after {
     top: auto;
     bottom: 0;
     left: 0;
@@ -416,13 +418,12 @@
     background-image: radial-gradient(circle at 50% 1px, transparent 1.5px, #e5e7eb 1.5px);
     background-size: 12px 2px;
     background-repeat: repeat-x;
-  }
+  } */
 
   .ticket-date-section {
     width: 100%;
     height: 60px;
     border-right: none;
-    border-bottom: 2px dashed #e5e7eb;
     background-color: #f8fafc;
     order: -1;
   }
@@ -430,7 +431,7 @@
   .ticket-date-section::before {
     top: auto;
     bottom: 0;
-    left: 0;
+    right: 0;
     width: 100%;
     height: 4px;
     background-color: var(--accent);
