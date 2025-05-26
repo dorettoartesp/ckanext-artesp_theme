@@ -203,18 +203,27 @@
   padding-bottom: 0;
 }
 
-.dataset-date, .dataset-org, .dataset-resources {
+.dataset-date, .dataset-org, .dataset-resources, .dataset-groups {
   gap: 0.3rem;
   color: #555;
   font-weight: 500;
   margin-top: 0;
 }
 
-.dataset-date .fa, .dataset-org .fa, .dataset-resources .fa {
+.dataset-date .fa, .dataset-org .fa, .dataset-resources .fa, .dataset-groups .fa {
   color: #777;
   font-size: 0.85rem;
   opacity: 0.8;
   margin-right: 2px;
+}
+
+/* Truncate dataset groups text when it exceeds ~12 characters */
+.dataset-groups {
+  max-width: 7rem; /* Approximately 12 characters at 0.8rem font size */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
 }
 
 .dataset-description {
@@ -354,5 +363,10 @@
   .dataset-description {
     font-size: 0.85rem;
     margin-bottom: 1rem;
+  }
+
+  /* Adjust dataset groups truncation for mobile */
+  .dataset-groups {
+    max-width: 6rem; /* Slightly smaller on mobile for better fit */
   }
 }
