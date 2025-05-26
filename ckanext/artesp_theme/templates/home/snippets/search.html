@@ -30,7 +30,7 @@
     <span class="tags-label">{{ _("Popular topics:") }}</span>
     <div class="tags-container">
       {% for tag in tags %}
-        <a class="tag" href="{% url_for 'dataset.search', tags=tag.name %}" title="{{ tag.display_name }}">{{ tag.display_name|truncate(22) }}</a>
+        <a class="tag" href="{% url_for 'dataset.search', tags=tag.name %}" title="{{ tag.display_name }}">{{ tag.display_name|lower|truncate(22) }}</a>
       {% endfor %}
     </div>
   </div>
