@@ -1,19 +1,16 @@
-{% trans %}
-Dear {{ user_name }},
+Prezado(a) {{ user_name }},
 
-You have been invited to {{ site_title }}.
+Você foi convidado(a) para o {{ site_title }}.
 
-A user has already been created for you with the username {{ user_name }}. You can change it later.
+Um usuário já foi criado para você com o nome de usuário {{ user_name }}. Você poderá alterá-lo mais tarde.
 
-You have been added to the {{ group_type }} {{ group_title }} with the following role: {{ role_name }}.
+Você foi adicionado(a) ao {{ group_type }} {{ group_title }} com a seguinte função: {{ role_name }}.
 
-To accept this invite, please reset your password at:
+Para aceitar este convite, por favor, redefina sua senha em:
 
    {{ reset_link }}
 
-
-Have a nice day.
+Tenha um bom dia.
 
 --
-Message sent by {{ site_title }} ({{ site_url }})
-{% endtrans %}
+Mensagem enviada por {{ site_title }} ({{ site_url }})
