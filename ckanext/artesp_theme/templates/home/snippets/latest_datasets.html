@@ -15,7 +15,7 @@
               <!-- Header section: title and metadata -->
               <div class="dataset-header">
                 <h3 class="dataset-title" title="{{ dataset.title|upper or dataset.name|upper }}">
-                  {{ dataset.title|upper|truncate(36) or dataset.name|upper|truncate(36) }}
+                  {{ dataset.title|truncate(36)|upper or dataset.name|truncate(36)|upper }}
                 </h3>
 
                 <div class="dataset-meta">
