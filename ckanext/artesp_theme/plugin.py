@@ -7,9 +7,7 @@ from ckanext.artesp_theme.middleware import make_middleware
 # import ckanext.artesp_theme.cli as cli
 import ckanext.artesp_theme.helpers as helpers
 from ckanext.artesp_theme.controllers import artesp_theme
-# from ckanext.artesp_theme.logic import (
-#     action, auth, validators
-# )
+from ckanext.artesp_theme.logic import validators
 
 
 class ArtespThemePlugin(plugins.SingletonPlugin):
@@ -18,11 +16,11 @@ class ArtespThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IBlueprint)
     plugins.implements(plugins.ITranslation)
     plugins.implements(plugins.IMiddleware)
+    plugins.implements(plugins.IValidators)
 
     # plugins.implements(plugins.IAuthFunctions)
     # plugins.implements(plugins.IActions)
     # plugins.implements(plugins.IClick)
-    # plugins.implements(plugins.IValidators)
 
 
     # IConfigurer
@@ -60,8 +58,8 @@ class ArtespThemePlugin(plugins.SingletonPlugin):
 
     # IValidators
 
-    # def get_validators(self):
-    #     return validators.get_validators()
+    def get_validators(self):
+        return validators.get_validators()
 
     # ITranslation
 
