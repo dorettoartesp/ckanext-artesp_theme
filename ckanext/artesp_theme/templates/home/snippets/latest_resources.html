@@ -27,9 +27,9 @@
                   </div>
                   <div class="date-month">
                     {% set month_names = {
-                      1: _('Jan'), 2: _('Fev'), 3: _('Mar'), 4: _('Abr'),
-                      5: _('Mai'), 6: _('Jun'), 7: _('Jul'), 8: _('Ago'),
-                      9: _('Set'), 10: _('Out'), 11: _('Nov'), 12: _('Dez')
+                      1: _('Jan'), 2: _('Feb'), 3: _('Mar'), 4: _('Apr'),
+                      5: _('May'), 6: _('Jun'), 7: _('Jul'), 8: _('Aug'),
+                      9: _('Sep'), 10: _('Oct'), 11: _('Nov'), 12: _('Dec')
                     } %}
                     {{ month_names[month_num]|upper }}
                   </div>
@@ -53,6 +53,16 @@
                     <div class="resource-format-tag">
                       <span>{{ resource_item.resource.format|upper }}</span>
                     </div>
+                  {% else %}
+                    {% if resource_item.resource.url %}
+                      <div class="resource-format-tag">
+                        <span>URL</span>
+                      </div>
+                    {% else %}
+                      <div class="resource-format-tag">
+                        <span></span>
+                      </div>
+                    {% endif %}
                   {% endif %}
 
                   {# Display parent dataset information. parent_dataset_title is not enriched by the helper, falls back to package_id. #}

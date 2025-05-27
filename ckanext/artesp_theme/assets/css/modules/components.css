@@ -76,7 +76,7 @@ body .btn.btn-primary.resource-url-analytics,
 body .resource-item .btn.btn-primary.resource-url-analytics,
 a[data-module="api-info"],
 a.btn.btn-success[data-module="api-info"] {
-  color: #ffffff !important;
+  color: var(--gray-dark) !important;
 }
 
 /* Fix dropdown-item styling */
