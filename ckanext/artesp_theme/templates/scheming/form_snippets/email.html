@@ -1,0 +1,41 @@
+{#
+Email field form snippet for scheming extension.
+This template renders an email input field with validation.
+
+field - The field definition from the schema
+data - The form data dict
+errors - The form errors dict
+#}
+
+{% set field_name = field.field_name %}
+{% set field_id = 'field-' + field_name %}
+{% set is_required = field.required %}
+
+<div class="control-group{{ ' error' if errors[field_name] }}">
+  <label class="control-label" for="{{ field_id }}">
+    {{ field.label or field_name }}
+    {% if is_required %}
+      <span title="{{ _('This field is required') }}" class="control-required">*</span>
+    {% endif %}
+  </label>
+  <div class="controls">
+    <input 
+      id="{{ field_id }}" 
+      type="email" 
+      name="{{ field_name }}" 
+      value="{{ data.get(field_name, '') }}" 
+      placeholder="{{ field.form_placeholder or '' }}"
+      class="form-control"
+      {% if is_required %}required{% endif %}
+    />
+    {% if field.help_text %}
+      <div class="info-block">
+        <i class="fa fa-info-circle"></i>
+        {{ field.help_text }}
+      </div>
+    {% endif %}
+    {% if errors[field_name] %}
+      <span class="error-block">{{ errors[field_name] }}</span>
+    {% endif %}
+  </div>
+</div>
