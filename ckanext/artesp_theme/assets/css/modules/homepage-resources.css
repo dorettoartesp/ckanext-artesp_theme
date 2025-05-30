@@ -515,14 +515,14 @@
   }
 
   .date-day {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
 
   .date-month {
-    font-size: 0.65rem;
+    font-size: 1rem;
   }
 
   .date-year {
-    font-size: 0.6rem;
+    font-size: 1rem;
   }
 }

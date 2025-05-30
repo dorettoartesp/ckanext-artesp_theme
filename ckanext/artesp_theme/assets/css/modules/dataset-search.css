@@ -159,6 +159,14 @@
 
 /* Responsive styles */
 @media (max-width: 768px) {
+  .search-form {
+    margin-bottom: 0;
+  }
+
+  .search-input-wrapper {
+    margin-bottom: 0;
+  }
+
   .search-results-row {
     flex-direction: column;
     align-items: flex-start;
