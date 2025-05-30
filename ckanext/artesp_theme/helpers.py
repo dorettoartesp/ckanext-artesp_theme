@@ -167,14 +167,13 @@ def get_featured_groups(limit=4):
         group_list_params = {
             'all_fields': True,        # Fetches most group attributes
             'include_datasets': True,  # Adds 'package_count' and 'display_name'
-            # Example: 'sort': 'name asc',
-            # To sort by dataset count (popularity), you might need to fetch all,
-            # sort in Python, then slice. For now, we take the default order.
+            # We will sort by package_count in Python after fetching.
         }
         groups = toolkit.get_action('group_list')({}, group_list_params)
 
-        # If sorting is desired, e.g., by package_count:
-        # groups.sort(key=lambda g: g.get('package_count', 0), reverse=True)
+        # Sort groups by package_count in descending order
+        # Groups with no 'package_count' (shouldn't happen with include_datasets=True) default to 0
+        groups.sort(key=lambda g: g.get('package_count', 0), reverse=True)
 
         return groups[:limit]
 
