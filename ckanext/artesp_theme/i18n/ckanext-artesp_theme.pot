@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-artesp_theme 0.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-05-23 11:55+0000\n"
+"POT-Creation-Date: 2025-06-03 09:31-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,8 +22,20 @@ msgstr ""
 msgid "You must be logged in to access the statistics page."
 msgstr ""
 
-#: ckanext/artesp_theme/logic/validators.py:6
+#: ckanext/artesp_theme/logic/validators.py:8
 msgid "Required"
+msgstr ""
+
+#: ckanext/artesp_theme/logic/validators.py:41
+msgid "Data inválida. Use o formato dd/mm/aaaa"
+msgstr ""
+
+#: ckanext/artesp_theme/logic/validators.py:48
+msgid "Data deve estar no formato dd/mm/aaaa"
+msgstr ""
+
+#: ckanext/artesp_theme/logic/validators.py:64
+msgid "Data inválida. Verifique se o dia, mês e ano estão corretos"
 msgstr ""
 
 #: ckanext/artesp_theme/templates/error_document_template.html:3
@@ -69,7 +81,6 @@ msgstr ""
 
 #: ckanext/artesp_theme/templates/footer.html:31
 #: ckanext/artesp_theme/templates/static/privacy.html:1
-#: ckanext/artesp_theme/templates/static/privacy.html:4
 msgid "Privacy Policy"
 msgstr ""
 
@@ -84,14 +95,13 @@ msgstr ""
 
 #: ckanext/artesp_theme/templates/footer.html:40
 #: ckanext/artesp_theme/templates/static/harvesting.html:1
-#: ckanext/artesp_theme/templates/static/harvesting.html:4
 msgid "Harvesting"
 msgstr ""
 
 #: ckanext/artesp_theme/templates/footer.html:41
 #: ckanext/artesp_theme/templates/group/read_base.html:18
 #: ckanext/artesp_theme/templates/group/snippets/info.html:42
-#: ckanext/artesp_theme/templates/header.html:69
+#: ckanext/artesp_theme/templates/header.html:70
 #: ckanext/artesp_theme/templates/home/snippets/stats.html:19
 #: ckanext/artesp_theme/templates/organization/bulk_process.html:22
 #: ckanext/artesp_theme/templates/organization/edit_base.html:15
@@ -107,8 +117,8 @@ msgid "Datasets"
 msgstr ""
 
 #: ckanext/artesp_theme/templates/footer.html:42
-#: ckanext/artesp_theme/templates/header.html:70
-#: ckanext/artesp_theme/templates/home/snippets/stats.html:52
+#: ckanext/artesp_theme/templates/header.html:71
+#: ckanext/artesp_theme/templates/home/snippets/stats.html:46
 #: ckanext/artesp_theme/templates/organization/edit.html:6
 #: ckanext/artesp_theme/templates/organization/edit_base.html:5
 #: ckanext/artesp_theme/templates/organization/index.html:3
@@ -135,8 +145,8 @@ msgstr ""
 #: ckanext/artesp_theme/templates/group/new.html:12
 #: ckanext/artesp_theme/templates/group/read_base.html:4
 #: ckanext/artesp_theme/templates/group/read_base.html:7
-#: ckanext/artesp_theme/templates/header.html:71
-#: ckanext/artesp_theme/templates/home/snippets/stats.html:41
+#: ckanext/artesp_theme/templates/header.html:72
+#: ckanext/artesp_theme/templates/home/snippets/stats.html:37
 #: ckanext/artesp_theme/templates/package/group_list.html:7
 #: ckanext/artesp_theme/templates/package/read_base.html:23
 #: ckanext/artesp_theme/templates/user/read_base.html:24
@@ -168,34 +178,39 @@ msgstr ""
 msgid "View profile"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/header.html:22
+#: ckanext/artesp_theme/templates/header.html:21
+#: ckanext/artesp_theme/templates/snippets/home_breadcrumb_item.html:2
+msgid "Home"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/header.html:23
 msgid "Admin"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/header.html:24
+#: ckanext/artesp_theme/templates/header.html:25
 #: ckanext/artesp_theme/templates/user/dashboard.html:10
 msgid "Dashboard"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/header.html:25
+#: ckanext/artesp_theme/templates/header.html:26
 msgid "Settings"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/header.html:29
 #: ckanext/artesp_theme/templates/header.html:30
+#: ckanext/artesp_theme/templates/header.html:31
 msgid "Log out"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/header.html:40
+#: ckanext/artesp_theme/templates/header.html:41
 msgid "Account"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/header.html:43
+#: ckanext/artesp_theme/templates/header.html:44
 #: ckanext/artesp_theme/templates/user/logout_first.html:14
 msgid "Log in"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/header.html:45
+#: ckanext/artesp_theme/templates/header.html:46
 #: ckanext/artesp_theme/templates/user/new.html:3
 msgid "Register"
 msgstr ""
@@ -203,7 +218,7 @@ msgstr ""
 #: ckanext/artesp_theme/templates/admin/config.html:26
 #: ckanext/artesp_theme/templates/group/about.html:3
 #: ckanext/artesp_theme/templates/group/read_base.html:20
-#: ckanext/artesp_theme/templates/header.html:72
+#: ckanext/artesp_theme/templates/header.html:73
 #: ckanext/artesp_theme/templates/organization/about.html:3
 #: ckanext/artesp_theme/templates/organization/read_base.html:21
 #: ckanext/artesp_theme/templates/user/edit_user_form.html:21
@@ -831,11 +846,7 @@ msgid "What are Groups?"
 msgstr ""
 
 #: ckanext/artesp_theme/templates/group/snippets/helper.html:19
-msgid ""
-"You can use CKAN Groups to create and manage collections of datasets. This "
-"could be to catalogue datasets for a particular project or team, or on a "
-"particular theme, or as a very simple way to help people find and search your"
-" own published datasets."
+msgid "Groups are collections of datasets."
 msgstr ""
 
 #: ckanext/artesp_theme/templates/group/snippets/info.html:19
@@ -966,18 +977,18 @@ msgstr ""
 msgid "View all datasets"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:34
+#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:36
 #, python-brace-format
 msgid "{num} Resource"
 msgid_plural "{num} Resources"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:42
+#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:47
 msgid "No description provided."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:59
+#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:65
 msgid "No datasets found."
 msgstr ""
 
@@ -985,15 +996,59 @@ msgstr ""
 msgid "Latest Resources"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:33
+#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:30
+msgid "Jan"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:30
+msgid "Feb"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:30
+msgid "Mar"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:30
+msgid "Apr"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:31
+msgid "May"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:31
+msgid "Jun"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:31
+msgid "Jul"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:31
+msgid "Aug"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:32
+msgid "Sep"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:32
+msgid "Oct"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:32
+msgid "Nov"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:32
+msgid "Dec"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:72
 msgid "View parent dataset"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:52
-msgid "No description provided for this resource."
-msgstr ""
-
-#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:61
+#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:85
 msgid "No recent resources found."
 msgstr ""
 
@@ -1056,11 +1111,11 @@ msgid "Popular topics:"
 msgstr ""
 
 #: ckanext/artesp_theme/templates/home/snippets/stats.html:8
-msgid "ARTESP em números"
+msgid "ARTESP in numbers"
 msgstr ""
 
 #: ckanext/artesp_theme/templates/home/snippets/stats.html:9
-msgid "Explore os dados disponíveis no Portal de Dados Abertos da ARTESP"
+msgid "Explore the data available on the ARTESP Open Data Portal"
 msgstr ""
 
 #: ckanext/artesp_theme/templates/home/snippets/stats.html:19
@@ -1068,28 +1123,29 @@ msgstr ""
 msgid "Dataset"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/home/snippets/stats.html:30
+#: ckanext/artesp_theme/templates/home/snippets/stats.html:28
 msgid "Resource"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/home/snippets/stats.html:30
+#: ckanext/artesp_theme/templates/home/snippets/stats.html:28
 #: ckanext/artesp_theme/templates/package/resources.html:5
 #: ckanext/artesp_theme/templates/package/snippets/resources.html:21
 #: ckanext/artesp_theme/templates/snippets/context/dataset.html:13
 msgid "Resources"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/home/snippets/stats.html:41
+#: ckanext/artesp_theme/templates/home/snippets/stats.html:37
 msgid "Group"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/home/snippets/stats.html:52
+#: ckanext/artesp_theme/templates/home/snippets/stats.html:46
 #: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:75
 msgid "Organization"
 msgstr ""
 
 #: ckanext/artesp_theme/templates/macros/form/checkbox.html:28
 #: ckanext/artesp_theme/templates/macros/form/input_block.html:25
+#: ckanext/artesp_theme/templates/scheming/form_snippets/email.html:18
 msgid "This field is required"
 msgstr ""
 
@@ -1998,10 +2054,6 @@ msgstr ""
 msgid "Follow"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/snippets/home_breadcrumb_item.html:2
-msgid "Home"
-msgstr ""
-
 #: ckanext/artesp_theme/templates/snippets/language_selector.html:17
 #: ckanext/artesp_theme/templates/snippets/search_form.html:57
 #: ckanext/artesp_theme/templates/snippets/simple_search.html:15
@@ -2205,246 +2257,238 @@ msgstr ""
 msgid "Location"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:6
+#: ckanext/artesp_theme/templates/static/harvesting.html:5
 msgid ""
 "This page provides information on how to harvest data from the ARTESP Open "
 "Data Portal. Harvesting allows you to automatically collect and synchronize "
 "datasets from our portal to your own systems."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:7
+#: ckanext/artesp_theme/templates/static/harvesting.html:6
 msgid ""
 "We offer multiple methods for harvesting data, making it easy to integrate "
 "our open datasets into your applications, analysis tools, or other data "
 "platforms."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:10
+#: ckanext/artesp_theme/templates/static/harvesting.html:9
 msgid "What is Harvesting?"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:12
+#: ckanext/artesp_theme/templates/static/harvesting.html:11
 msgid ""
 "Harvesting is the process of automatically collecting metadata and data from "
 "one data portal to another. It allows organizations and individuals to keep a"
 " local copy of datasets that are synchronized with the original source."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:13
+#: ckanext/artesp_theme/templates/static/harvesting.html:12
 msgid "This is particularly useful for:"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:16
+#: ckanext/artesp_theme/templates/static/harvesting.html:15
 msgid "Creating federated or aggregated data catalogs"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:17
+#: ckanext/artesp_theme/templates/static/harvesting.html:16
 msgid "Building applications that need regular data updates"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:18
+#: ckanext/artesp_theme/templates/static/harvesting.html:17
 msgid "Integrating open data into your own systems"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:19
+#: ckanext/artesp_theme/templates/static/harvesting.html:18
 msgid "Performing analysis across multiple datasets"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:22
+#: ckanext/artesp_theme/templates/static/harvesting.html:21
 msgid "Available Harvesting Methods"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:24
+#: ckanext/artesp_theme/templates/static/harvesting.html:23
 msgid "DCAT RDF Endpoints"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:26
+#: ckanext/artesp_theme/templates/static/harvesting.html:25
 msgid ""
 "Our portal supports the Data Catalog Vocabulary (DCAT) standard, which "
 "provides a framework for describing datasets in a catalog."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:27
+#: ckanext/artesp_theme/templates/static/harvesting.html:26
 msgid "We offer the following DCAT endpoints:"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:30
+#: ckanext/artesp_theme/templates/static/harvesting.html:29
 msgid "Catalog Endpoint"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:32
+#: ckanext/artesp_theme/templates/static/harvesting.html:31
 msgid "Access all datasets in our catalog through:"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:35
-#: ckanext/artesp_theme/templates/static/harvesting.html:54
+#: ckanext/artesp_theme/templates/static/harvesting.html:34
+#: ckanext/artesp_theme/templates/static/harvesting.html:53
 #, python-brace-format
 msgid "where {format} can be xml, ttl, n3, or jsonld"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:38
+#: ckanext/artesp_theme/templates/static/harvesting.html:37
 msgid "Parameters:"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:41
+#: ckanext/artesp_theme/templates/static/harvesting.html:40
 msgid "For pagination (default: 1)"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:42
+#: ckanext/artesp_theme/templates/static/harvesting.html:41
 msgid "Filter datasets modified since a specific date"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:43
+#: ckanext/artesp_theme/templates/static/harvesting.html:42
 msgid "Search query to filter datasets"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:46
-#: ckanext/artesp_theme/templates/static/harvesting.html:57
+#: ckanext/artesp_theme/templates/static/harvesting.html:45
+#: ckanext/artesp_theme/templates/static/harvesting.html:56
 msgid "Example:"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:49
+#: ckanext/artesp_theme/templates/static/harvesting.html:48
 msgid "Individual Dataset Endpoints"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:51
+#: ckanext/artesp_theme/templates/static/harvesting.html:50
 msgid "Access metadata for a specific dataset:"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:60
+#: ckanext/artesp_theme/templates/static/harvesting.html:59
 msgid "Content Negotiation"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:62
+#: ckanext/artesp_theme/templates/static/harvesting.html:61
 msgid ""
 "Our portal also supports content negotiation, allowing clients to request "
 "specific formats using HTTP Accept headers:"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:65
+#: ckanext/artesp_theme/templates/static/harvesting.html:64
 msgid "for RDF/XML format"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:66
+#: ckanext/artesp_theme/templates/static/harvesting.html:65
 msgid "for Turtle format"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:67
+#: ckanext/artesp_theme/templates/static/harvesting.html:66
 msgid "for N3 format"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:68
+#: ckanext/artesp_theme/templates/static/harvesting.html:67
 msgid "for JSON-LD format"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:71
+#: ckanext/artesp_theme/templates/static/harvesting.html:70
 msgid "Example using curl:"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:74
+#: ckanext/artesp_theme/templates/static/harvesting.html:73
 msgid "DCAT Configuration"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:76
+#: ckanext/artesp_theme/templates/static/harvesting.html:75
 msgid "Our DCAT implementation is configured with the following settings:"
 msgstr ""
 
+#: ckanext/artesp_theme/templates/static/harvesting.html:78
+msgid "RDF profile: DCAT-AP 3.0"
+msgstr ""
+
 #: ckanext/artesp_theme/templates/static/harvesting.html:79
-msgid "Enabled plugins: \"dcat\" and \"structured_data\""
-msgstr ""
-
-#: ckanext/artesp_theme/templates/static/harvesting.html:80
-msgid "Schema configuration: \"ckanext.dcat.schemas:dcat_ap_recommended.yaml\""
-msgstr ""
-
-#: ckanext/artesp_theme/templates/static/harvesting.html:81
-msgid "RDF profiles: \"euro_dcat_ap_3\""
-msgstr ""
-
-#: ckanext/artesp_theme/templates/static/harvesting.html:82
 msgid "RDF endpoints enabled"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:83
+#: ckanext/artesp_theme/templates/static/harvesting.html:80
 msgid "Content negotiation enabled"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:84
+#: ckanext/artesp_theme/templates/static/harvesting.html:81
 msgid "100 datasets per page configuration"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:87
-msgid "Setting Up a Harvester"
+#: ckanext/artesp_theme/templates/static/harvesting.html:84
+msgid "Setting Up a Harvester in CKAN"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:86
+msgid ""
+"If you are using CKAN to harvest data from our portal, you can use the CKAN "
+"Harvester extension. Here are the basic steps:"
 msgstr ""
 
 #: ckanext/artesp_theme/templates/static/harvesting.html:89
-msgid ""
-"To harvest data from our portal, you can use the CKAN Harvester extension. "
-"Here are the basic steps:"
-msgstr ""
-
-#: ckanext/artesp_theme/templates/static/harvesting.html:92
 msgid "Install the ckanext-harvest extension in your CKAN instance"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:93
+#: ckanext/artesp_theme/templates/static/harvesting.html:90
 msgid ""
 "Configure the harvester to use either the CKAN harvester (for CKAN-to-CKAN "
 "harvesting) or the DCAT RDF harvester (for harvesting via our DCAT endpoints)"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:94
+#: ckanext/artesp_theme/templates/static/harvesting.html:91
 msgid "Create a new harvest source pointing to our portal URL"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:95
+#: ckanext/artesp_theme/templates/static/harvesting.html:92
 msgid "Configure the harvester with appropriate options (frequency, filters, etc.)"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:96
+#: ckanext/artesp_theme/templates/static/harvesting.html:93
 msgid "Start the harvesting process"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:99
+#: ckanext/artesp_theme/templates/static/harvesting.html:96
 msgid "Example Configuration for DCAT RDF Harvester"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:101
+#: ckanext/artesp_theme/templates/static/harvesting.html:98
 msgid "When setting up a DCAT RDF harvester, you can use this configuration:"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:114
+#: ckanext/artesp_theme/templates/static/harvesting.html:111
 msgid "Need Help?"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:116
+#: ckanext/artesp_theme/templates/static/harvesting.html:113
 msgid ""
 "If you encounter any issues while setting up harvesting from our portal, "
 "please"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:116
+#: ckanext/artesp_theme/templates/static/harvesting.html:113
 msgid "contact us"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:116
+#: ckanext/artesp_theme/templates/static/harvesting.html:113
 msgid "for assistance."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/harvesting.html:119
-#: ckanext/artesp_theme/templates/static/privacy.html:145
+#: ckanext/artesp_theme/templates/static/harvesting.html:116
+#: ckanext/artesp_theme/templates/static/privacy.html:130
 #: ckanext/artesp_theme/templates/static/terms.html:140
 msgid "Last updated: June 2025"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:6
+#: ckanext/artesp_theme/templates/static/privacy.html:5
 msgid ""
 "ARTESP (\"Agency,\" \"we,\" \"us,\" or \"our\") is committed to protecting "
 "your\n"
 "    privacy and personal data."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:7
+#: ckanext/artesp_theme/templates/static/privacy.html:6
 msgid ""
 "This Privacy Policy outlines our\n"
 "    practices concerning the collection, use, processing, and storage of your"
@@ -2454,40 +2498,40 @@ msgid ""
 "    Law No. 13,709/2018) when you access or use this portal (\"Portal\")."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:11
+#: ckanext/artesp_theme/templates/static/privacy.html:10
 msgid ""
 "We encourage you to read this policy carefully to understand how we\n"
 "    handle your personal data."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:15
+#: ckanext/artesp_theme/templates/static/privacy.html:14
 msgid "Information We Collect"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:17
+#: ckanext/artesp_theme/templates/static/privacy.html:16
 msgid "Data Collected Automatically"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:19
+#: ckanext/artesp_theme/templates/static/privacy.html:18
 msgid ""
 "When you access our Portal, we may automatically collect certain\n"
 "    technical information."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:20
+#: ckanext/artesp_theme/templates/static/privacy.html:19
 msgid ""
 "This can include your IP address, browser\n"
 "    type and version, operating system, referral source, pages visited, time\n"
 "    spent on pages, and other navigation data."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:22
+#: ckanext/artesp_theme/templates/static/privacy.html:21
 msgid ""
 "This information is\n"
 "    primarily collected through cookies and similar technologies."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:23
+#: ckanext/artesp_theme/templates/static/privacy.html:22
 msgid ""
 "We\n"
 "    use this data for analytical purposes to understand how our Portal is "
@@ -2495,7 +2539,7 @@ msgid ""
 "    for security monitoring, and to improve our services."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:25
+#: ckanext/artesp_theme/templates/static/privacy.html:24
 msgid ""
 "While this\n"
 "    technical data is generally not used to directly identify individuals, we"
@@ -2503,11 +2547,11 @@ msgid ""
 "    treat it with the same level of care as personal data."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:30
+#: ckanext/artesp_theme/templates/static/privacy.html:29
 msgid "Data You Provide Voluntarily"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:32
+#: ckanext/artesp_theme/templates/static/privacy.html:31
 msgid ""
 "We only collect personal data that you explicitly and voluntarily\n"
 "    provide to us, for example, when you fill out contact forms, subscribe to"
@@ -2515,20 +2559,20 @@ msgid ""
 "    newsletters, or submit requests."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:34
+#: ckanext/artesp_theme/templates/static/privacy.html:33
 msgid ""
 "This data may include your name,\n"
 "    email address, telephone number, and any other information you choose to\n"
 "    provide."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:36
+#: ckanext/artesp_theme/templates/static/privacy.html:35
 msgid ""
 "When we collect such data, we will inform you of the\n"
 "    specific purpose and obtain your consent, where required by the LGPD."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:38
+#: ckanext/artesp_theme/templates/static/privacy.html:37
 msgid ""
 "All personal data you provide is handled in strict accordance with LGPD\n"
 "    principles, including purpose limitation, data minimization, necessity, "
@@ -2536,53 +2580,53 @@ msgid ""
 "    confidentiality."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:43
+#: ckanext/artesp_theme/templates/static/privacy.html:42
 msgid "How We Use Your Information"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:44
+#: ckanext/artesp_theme/templates/static/privacy.html:43
 msgid "We use the information collected for the following purposes:"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:46
+#: ckanext/artesp_theme/templates/static/privacy.html:45
 msgid "To operate and maintain the Portal."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:48
+#: ckanext/artesp_theme/templates/static/privacy.html:47
 msgid ""
 "To respond to your inquiries, requests, and provide customer\n"
 "      support."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:52
+#: ckanext/artesp_theme/templates/static/privacy.html:51
 msgid ""
 "To improve the Portal's functionality, user experience, and\n"
 "      services."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:56
+#: ckanext/artesp_theme/templates/static/privacy.html:55
 msgid ""
 "For statistical analysis and research to understand usage\n"
 "      patterns."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:59
+#: ckanext/artesp_theme/templates/static/privacy.html:58
 msgid "To ensure the security of our Portal and prevent fraud."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:60
+#: ckanext/artesp_theme/templates/static/privacy.html:59
 msgid "To comply with legal obligations and exercise our rights."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:63
+#: ckanext/artesp_theme/templates/static/privacy.html:62
 msgid "Data Sharing and Disclosure"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:65
+#: ckanext/artesp_theme/templates/static/privacy.html:64
 msgid "ARTESP does not sell your personal data."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:65
+#: ckanext/artesp_theme/templates/static/privacy.html:64
 msgid ""
 "We may share your\n"
 "    information with third-party service providers who assist us in operating"
@@ -2593,7 +2637,7 @@ msgid ""
 "    information confidential and comply with LGPD requirements."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:69
+#: ckanext/artesp_theme/templates/static/privacy.html:68
 msgid ""
 "We may\n"
 "    also disclose information if required by law or to protect our rights and"
@@ -2601,73 +2645,67 @@ msgid ""
 "    safety or the rights and safety of others."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:74
+#: ckanext/artesp_theme/templates/static/privacy.html:73
 msgid "Your Rights Under LGPD"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:76
+#: ckanext/artesp_theme/templates/static/privacy.html:75
 msgid ""
 "Under the LGPD, you have several rights regarding your personal data,\n"
 "    including:"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:80
+#: ckanext/artesp_theme/templates/static/privacy.html:79
 msgid "Confirmation of the existence of processing."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:81
+#: ckanext/artesp_theme/templates/static/privacy.html:80
 msgid "Access to your data."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:82
+#: ckanext/artesp_theme/templates/static/privacy.html:81
 msgid "Correction of incomplete, inaccurate, or outdated data."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:84
+#: ckanext/artesp_theme/templates/static/privacy.html:83
 msgid ""
 "Anonymization, blocking, or deletion of unnecessary or excessive data\n"
 "      or data processed in non-compliance with the LGPD."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:88
+#: ckanext/artesp_theme/templates/static/privacy.html:87
 msgid ""
 "Portability of data to another service or product provider, upon\n"
 "      express request."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:92
+#: ckanext/artesp_theme/templates/static/privacy.html:91
 msgid ""
 "Deletion of personal data processed with your consent, except in\n"
 "      cases provided by law."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:96
+#: ckanext/artesp_theme/templates/static/privacy.html:95
 msgid ""
 "Information about public and private entities with which we have\n"
 "      shared data."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:100
+#: ckanext/artesp_theme/templates/static/privacy.html:99
 msgid ""
 "Information about the possibility of denying consent and the\n"
 "      consequences of such denial."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:103
+#: ckanext/artesp_theme/templates/static/privacy.html:102
 msgid "Revocation of consent."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:106
-msgid ""
-"To exercise these rights, please contact our Data Protection Officer\n"
-"    (DPO) as detailed below."
-msgstr ""
-
-#: ckanext/artesp_theme/templates/static/privacy.html:110
+#: ckanext/artesp_theme/templates/static/privacy.html:105
 msgid "Data Retention"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:112
+#: ckanext/artesp_theme/templates/static/privacy.html:107
 msgid ""
 "We will retain your personal data only for as long as necessary to\n"
 "    fulfill the purposes for which it was collected, including for the "
@@ -2676,61 +2714,36 @@ msgid ""
 "    accordance with the LGPD."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:118
+#: ckanext/artesp_theme/templates/static/privacy.html:113
 msgid "Data Security"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:120
+#: ckanext/artesp_theme/templates/static/privacy.html:115
 msgid "ARTESP is committed to ensuring the security of your personal data."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:121
+#: ckanext/artesp_theme/templates/static/privacy.html:116
 msgid ""
 "We implement appropriate technical and organizational measures to\n"
 "    protect your personal data against unauthorized or unlawful processing,\n"
 "    accidental loss, destruction, or damage."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:126
+#: ckanext/artesp_theme/templates/static/privacy.html:121
 msgid "Policy Updates"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:128
+#: ckanext/artesp_theme/templates/static/privacy.html:123
 msgid ""
 "We may update this Privacy Policy from time to time to reflect changes\n"
 "    in our practices or for other operational, legal, or regulatory reasons."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/static/privacy.html:130
+#: ckanext/artesp_theme/templates/static/privacy.html:125
 msgid ""
 "We will notify you of any significant changes by posting the new policy\n"
 "    on this Portal and updating the effective date, typically found at the\n"
 "    bottom or top of the policy."
-msgstr ""
-
-#: ckanext/artesp_theme/templates/static/privacy.html:135
-msgid "Contact Us / Data Protection Officer (DPO)"
-msgstr ""
-
-#: ckanext/artesp_theme/templates/static/privacy.html:137
-msgid ""
-"If you have any questions or concerns about this Privacy Policy, our\n"
-"    data protection practices, or if you wish to exercise your rights under "
-"the\n"
-"    LGPD, please contact ARTESP’s Data Protection Officer (DPO)."
-msgstr ""
-
-#: ckanext/artesp_theme/templates/static/privacy.html:139
-msgid ""
-"You\n"
-"    can reach the DPO by mail at the following address:\n"
-"    dadosabertos.dpo@artesp.sp.gov.br.']."
-msgstr ""
-
-#: ckanext/artesp_theme/templates/static/privacy.html:141
-msgid ""
-"Please clearly state that\n"
-"    your query is related to data protection."
 msgstr ""
 
 #: ckanext/artesp_theme/templates/static/terms.html:6
