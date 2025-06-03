@@ -41,18 +41,6 @@
   animation: fadeIn 1s ease-out forwards;
 }
 
-.latest-resources-section .section-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #333333; /* Dark gray instead of blue */
-  margin: 0;
-  position: relative;
-  display: inline-block;
-  padding-left: 15px;
-  border-left: 5px solid var(--primary);
-  line-height: 1.2;
-}
-
 .latest-resources-section .view-all-link {
   font-size: 0.95rem;
   color: #666;
