@@ -141,7 +141,7 @@
           {# It provides the default CKAN data dictionary. #}
           {% block resource_data_dictionary %}
             {% if res.datastore_active %}
-              {% snippet "package/snippets/resource_data_dictionary.html", resource=res %}
+              <div class="scheming-data-dictionary" data-module="resource-view" data-module-id="{{ res.id }}"></div>
             {% endif %}
           {% endblock resource_data_dictionary %}
 
