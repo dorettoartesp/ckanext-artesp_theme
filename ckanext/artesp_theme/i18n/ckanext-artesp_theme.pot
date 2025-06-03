@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-artesp_theme 0.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-03 09:31-0300\n"
+"POT-Creation-Date: 2025-06-03 09:58-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,8 +53,8 @@ msgstr ""
 
 #: ckanext/artesp_theme/templates/footer.html:17
 msgid ""
-"Portal de Dados Abertos da Agência Reguladora de Serviços Públicos Delegados "
-"de Transporte do Estado de São Paulo."
+"Open Data Portal of the São Paulo State Regulatory Agency for Delegated "
+"Public Transportation Services"
 msgstr ""
 
 #: ckanext/artesp_theme/templates/footer.html:25

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-artesp_theme 0.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-03 09:31-0300\n"
+"POT-Creation-Date: 2025-06-03 09:58-0300\n"
 "PO-Revision-Date: 2025-05-19 11:25-0300\n"
 "Last-Translator: Gemini <gemini@google.com>\n"
 "Language: pt_BR\n"
@@ -53,11 +53,12 @@ msgstr "Clique aqui para entrar"
 
 #: ckanext/artesp_theme/templates/footer.html:17
 msgid ""
-"Portal de Dados Abertos da Agência Reguladora de Serviços Públicos "
-"Delegados de Transporte do Estado de São Paulo."
+"Open Data Portal of the São Paulo State Regulatory Agency for Delegated "
+"Public Transportation Services"
 msgstr ""
+""
 "Portal de Dados Abertos da Agência Reguladora de Serviços Públicos "
-"Delegados de Transporte do Estado de São Paulo."
+"Delegados de Transporte do Estado de São Paulo"
 
 # | msgid "About CKAN"
 #: ckanext/artesp_theme/templates/footer.html:25
@@ -880,7 +881,7 @@ msgstr "O que são Grupos?"
 
 #: ckanext/artesp_theme/templates/group/snippets/helper.html:19
 msgid "Groups are collections of datasets."
-msgstr ""
+msgstr "Grupos são coleções de conjuntos de dados."
 
 #: ckanext/artesp_theme/templates/group/snippets/info.html:19
 #: ckanext/artesp_theme/templates/organization/bulk_process.html:85
@@ -1201,7 +1202,7 @@ msgstr "ARTESP em números"
 
 #: ckanext/artesp_theme/templates/home/snippets/stats.html:9
 msgid "Explore the data available on the ARTESP Open Data Portal"
-msgstr "Bem-vindo ao Portal de Dados Abertos da ARTESP (\"Portal\")."
+msgstr "Bem-vindo ao Portal de Dados Abertos da ARTESP"
 
 #: ckanext/artesp_theme/templates/home/snippets/stats.html:19
 #: ckanext/artesp_theme/templates/package/read_base.html:22
@@ -2379,8 +2380,8 @@ msgid ""
 "concerns you may have about the ARTESP Data Portal."
 msgstr ""
 "Valorizamos seu feedback e estamos aqui para ajudar com quaisquer "
-"perguntas ou preocupações que você possa ter sobre o Portal de Dados Abertos da "
-"ARTESP."
+"perguntas ou preocupações que você possa ter sobre o Portal de Dados "
+"Abertos da ARTESP."
 
 #: ckanext/artesp_theme/templates/static/contact.html:11
 msgid "Contact Information"
@@ -2614,8 +2615,8 @@ msgid ""
 "If you are using CKAN to harvest data from our portal, you can use the "
 "CKAN Harvester extension. Here are the basic steps:"
 msgstr ""
-"Se você estiver usando CKAN para coletar dados do nosso portal, você pode usar a extensão \"CKAN "
-"Harvester\". Aqui estão os passos básicos:"
+"Se você estiver usando CKAN para coletar dados do nosso portal, você pode"
+" usar a extensão \"CKAN Harvester\". Aqui estão os passos básicos:"
 
 #: ckanext/artesp_theme/templates/static/harvesting.html:89
 msgid "Install the ckanext-harvest extension in your CKAN instance"

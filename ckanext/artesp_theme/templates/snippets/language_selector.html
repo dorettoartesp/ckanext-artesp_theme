@@ -7,7 +7,7 @@
     <div class="lang-select-inner">
       <select id="field-lang-select" name="url" class="form-control" aria-label="{{ _('Language') }}" onchange="document.getElementById('language-form').submit();">
         {% for locale in ['pt_BR', 'en'] %}
-          {% set locale_display = 'Português (Brasil)' if locale == 'pt_BR' else 'English' %}
+          {% set locale_display = 'Português' if locale == 'pt_BR' else 'English' %}
           <option value="{% url_for current_url, locale=locale %}" {% if locale == current_lang %}selected="selected"{% endif %}>
             {{ locale_display }}
           </option>
