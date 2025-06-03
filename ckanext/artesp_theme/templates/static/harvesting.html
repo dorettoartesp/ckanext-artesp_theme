@@ -53,7 +53,7 @@
     <li><code>https://dadosabertos.artesp.sp.gov.br/dataset/{dataset-id}.{format}</code> {{_('where {format} can be xml, ttl, n3, or jsonld')}}</li>
   </ul>
   <p>
-    {{_('Example:')}} <code>https://dadosabertos.artesp.sp.gov.br/dataset/rodovias-concedidas.xml</code>
+    {{_('Example:')}} <code>https://dadosabertos.artesp.sp.gov.br/dataset/acidentes.xml</code>
   </p>
 
   <h3>{{_('Content Negotiation')}}</h3>
@@ -75,17 +75,15 @@
     {{_('Our DCAT implementation is configured with the following settings:')}}
   </p>
   <ul>
-    <li>{{_('Enabled plugins: "dcat" and "structured_data"')}}</li>
-    <li>{{_('Schema configuration: "ckanext.dcat.schemas:dcat_ap_recommended.yaml"')}}</li>
-    <li>{{_('RDF profiles: "euro_dcat_ap_3"')}}</li>
+    <li>{{_('RDF profile: DCAT-AP 3.0')}}</li>
     <li>{{_('RDF endpoints enabled')}}</li>
     <li>{{_('Content negotiation enabled')}}</li>
     <li>{{_('100 datasets per page configuration')}}</li>
   </ul>
 
-  <h2>{{_('Setting Up a Harvester')}}</h2>
+  <h2>{{_('Setting Up a Harvester in CKAN')}}</h2>
   <p>
-    {{_('To harvest data from our portal, you can use the CKAN Harvester extension. Here are the basic steps:')}}
+    {{_('If you are using CKAN to harvest data from our portal, you can use the CKAN Harvester extension. Here are the basic steps:')}}
   </p>
   <ol>
     <li>{{_('Install the ckanext-harvest extension in your CKAN instance')}}</li>
