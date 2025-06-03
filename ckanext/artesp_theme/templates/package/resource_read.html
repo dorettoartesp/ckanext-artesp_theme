@@ -137,6 +137,14 @@
     {% if res %}
       <section class="module">
         {% block resource_additional_information_inner %}
+          {# This block is needed for ckanext-scheming's {{ super() }} call. #}
+          {# It provides the default CKAN data dictionary. #}
+          {% block resource_data_dictionary %}
+            {% if res.datastore_active %}
+              {% snippet "package/snippets/resource_data_dictionary.html", resource=res %}
+            {% endif %}
+          {% endblock resource_data_dictionary %}
+
         <div class="module-content">
           <h2>{{ _('Additional Information') }}</h2>
           <table class="table table-striped table-bordered table-condensed" data-module="table-toggle-more">
