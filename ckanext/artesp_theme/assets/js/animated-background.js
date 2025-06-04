@@ -11,8 +11,12 @@
 
   // Configuration for single vehicle mode
   const RUN_SINGLE_VEHICLE_MODE = true; // Set to true to run only one vehicle
-  const GLOBAL_VEHICLE_Y_FACTOR = 0.71; // Vertical position factor for ALL vehicles (0.0 = top, 1.0 = bottom)
+  const GLOBAL_VEHICLE_Y_FACTOR = 0.8; // Vertical position factor for ALL vehicles (0.0 = top, 1.0 = bottom)
                                         // This factor determines the vertical center of the vehicle.
+  
+  const FADE_DURATION_MS = 500; // Duration for fade-in and fade-out in milliseconds
+  const FADE_TRANSITION_STYLE = `opacity ${FADE_DURATION_MS / 1000}s ease-in-out`;
+
  const vehicleTypes = [
     {
       type: 'airplane',
@@ -69,6 +73,13 @@
   let svg;
   let svgWidth, svgHeight; // Will be set after SVG is found
   const vehicles = [];
+  // To store the actual visible portion of the viewBox due to preserveAspectRatio="slice"
+  let visibleViewBoxXMin = 0;
+  let visibleViewBoxXMax = 0;
+  let visibleViewBoxYMin = 0;
+  let visibleViewBoxYMax = 0;
+  let currentVehicleTypeIndex = 0; // Index for selecting vehicle types in order
+  let nextMovementIsLTR = true; // To alternate movement direction
   let animationFrameId = null; // To store the request ID for canceling
 
   function getRandom(min, max) {
@@ -77,6 +88,7 @@
 
   function createVehicle(config) {
     const vehicle = { ...config }; // Clone config
+    vehicle.isFadingOut = false; // Initialize property to track fade-out state
     let element;
 
     if (config.type === 'car') {
@@ -105,6 +117,8 @@
     }
     
     vehicle.element = element;
+    // Set transition style once when the element is created.
+    vehicle.element.style.transition = FADE_TRANSITION_STYLE;
     svg.appendChild(element);
     resetVehicleState(vehicle, true);
     return vehicle;
@@ -112,26 +126,32 @@
 
   function resetVehicleState(vehicle, isInitial = false) {
     vehicle.speed = getRandom(vehicle.minSpeed, vehicle.maxSpeed);
+    vehicle.element.style.transition = FADE_TRANSITION_STYLE; // Ensure transition is set
+    vehicle.isFadingOut = false; // Reset fade-out state
 
     // Calculate the target Y position for the visual center of the vehicle
-    const targetCenterY = GLOBAL_VEHICLE_Y_FACTOR * svgHeight;
+    // Use the actual visible viewBox height for more accurate vertical positioning
+    const visibleVbHeight = visibleViewBoxYMax - visibleViewBoxYMin;
+    const targetCenterYInVisibleVb = visibleViewBoxYMin + (GLOBAL_VEHICLE_Y_FACTOR * visibleVbHeight);
+
     // Calculate the vehicle's y coordinate (top-left corner of its group/use element)
     // so that its visual center aligns with targetCenterY
-    const vehicleVisualTopY = targetCenterY - (vehicle.baseHeight / 2);
+    const vehicleVisualTopY = targetCenterYInVisibleVb - (vehicle.baseHeight / 2);
+
     vehicle.y = vehicleVisualTopY - vehicle.yOffset; // Adjust for yOffset
 
     if (vehicle.type === 'airplane') {
       vehicle.vy = 0; // Strictly horizontal movement
-
-      // Determine direction: LTR or RTL
-      const moveLTR = Math.random() < 0.5;
+      const moveLTR = nextMovementIsLTR;
       if (moveLTR) { // Moving Left-to-Right
         vehicle.vx = vehicle.speed; // Move right
         vehicle.angle = 0; // No rotation needed to face right (matches SVG orientation)
+        // Start off the original viewBox left edge
         vehicle.x = -vehicle.baseWidth - vehicle.xOffset - getRandom(0, svgWidth * 0.1);
       } else { // Moving Right-to-Left
         vehicle.vx = -vehicle.speed; // Move left
         vehicle.angle = 180; // Rotate 180 degrees to face left
+        // Start off the original viewBox right edge
         vehicle.x = svgWidth - vehicle.xOffset + getRandom(0, svgWidth * 0.1);
       }
 
@@ -142,15 +162,31 @@
       vehicle.curvePhase = 0;
     } else { // Horizontal movers (car, bus, subway, ferry)
       vehicle.vy = 0;
-      vehicle.scaleX = (vehicle.allowFlip && Math.random() < 0.5) ? -1 : 1;
+      vehicle.scaleX = nextMovementIsLTR ? 1 : -1;
       vehicle.vx = vehicle.speed * vehicle.scaleX;
 
       if (vehicle.vx > 0) { // Moving LTR
+        // Start off the original viewBox left edge
         vehicle.x = -vehicle.baseWidth - vehicle.xOffset - getRandom(0, svgWidth * 0.3);
       } else { // Moving RTL
+        // Start off the original viewBox right edge
         vehicle.x = svgWidth - vehicle.xOffset + getRandom(0, svgWidth * 0.3);
       }
     }
+
+    // Toggle direction for the next vehicle
+    nextMovementIsLTR = !nextMovementIsLTR;
+
+    // Set initial opacity to 0 for fade-in.
+    vehicle.element.style.opacity = '0';
+    // Use a slightly longer delay for setTimeout to robustly trigger the transition.
+    setTimeout(() => {
+      if (vehicle.element && vehicle.element.parentNode) { // Ensure element is still in DOM
+        // Re-assert transition just in case, then change opacity to trigger fade-in
+        vehicle.element.style.transition = FADE_TRANSITION_STYLE;
+        vehicle.element.style.opacity = '1'; // Trigger fade-in
+      }
+    }, 50); // 50ms delay
   }
 
   function updateVehicleTransform(vehicle) {
@@ -170,21 +206,6 @@
     vehicle.element.setAttribute('transform', transform);
   }
 
-  // Function to create and add a single random vehicle
-  function createRandomSingleVehicle() {
-    // Select a random vehicle type configuration
-    const config = vehicleTypes[Math.floor(Math.random() * vehicleTypes.length)];
-
-    if (config) {
-      const vehicle = createVehicle(config); // createVehicle makes one instance
-      if (vehicle) {
-        vehicles.push(vehicle); // Add the new vehicle to the array
-      }
-    } else {
-      console.error(`Could not select a random vehicle type configuration.`);
-    }
-  }
-
   function animate() {
     // Iterate backwards to allow safe removal from the array while iterating
     for (let i = vehicles.length - 1; i >= 0; i--) {
@@ -193,7 +214,7 @@
       vehicle.x += vehicle.vx;
 
       if (vehicle.type === 'airplane') {
-        // Apply curvy path for airplanes
+        // Apply curvy path for airplanes (currently disabled by curveAmplitude = 0)
         vehicle.y = vehicle.baseY +
                     vehicle.curveAmplitude * Math.sin(vehicle.curveFrequency * vehicle.x + vehicle.curvePhase);
       } else {
@@ -201,43 +222,65 @@
         vehicle.y += vehicle.vy;
       }
 
-      let isOutOfBounds = false;
       const visualX = vehicle.x + vehicle.xOffset; // Effective left edge on screen
-      const offScreenBuffer = vehicle.baseWidth;
+      const vehicleVisibleWidth = vehicle.baseWidth; // Use baseWidth as the visual width for checks
+      const offScreenBuffer = 0; // Vehicle is off-screen as soon as its bounding box clears the edge
+      
+      // Define a zone where vehicles start to fade out.
+      // Let's say it's one vehicle width from the edge.
+      const fadeOutZoneWidth = vehicleVisibleWidth; 
 
+      // Fade-out logic
+      if (!vehicle.isFadingOut) {
+        if (vehicle.vx > 0) { // Moving LTR, check if approaching right edge
+          // Use visibleViewBoxXMax for fade trigger
+          if (visualX + vehicleVisibleWidth > visibleViewBoxXMax - fadeOutZoneWidth && visualX < visibleViewBoxXMax + offScreenBuffer) {
+            vehicle.element.style.transition = FADE_TRANSITION_STYLE; // Ensure transition for fade-out
+            vehicle.element.style.opacity = '0';
+            vehicle.isFadingOut = true;
+            // vehicle.fadeOutStartTime = performance.now(); // No longer needed as replacement is immediate once off-screen
+          }
+        } else { // Moving RTL (vx < 0), check if approaching left edge
+          // Use visibleViewBoxXMin for fade trigger
+          if (visualX < visibleViewBoxXMin + fadeOutZoneWidth && (visualX + vehicleVisibleWidth) > visibleViewBoxXMin - offScreenBuffer) {
+            vehicle.element.style.transition = FADE_TRANSITION_STYLE; // Ensure transition for fade-out
+            vehicle.element.style.opacity = '0';
+            vehicle.isFadingOut = true;
+            // vehicle.fadeOutStartTime = performance.now(); // No longer needed as replacement is immediate once off-screen
+          }
+        }
+      }
+
+      // Determine if the vehicle is visually off-screen
+      let isVisuallyOffScreen = false;
       if (vehicle.vx > 0) { // Moving LTR
-        isOutOfBounds = visualX > svgWidth + offScreenBuffer;
+        isVisuallyOffScreen = visualX > visibleViewBoxXMax + offScreenBuffer;
       } else { // Moving RTL (vx < 0)
-        isOutOfBounds = (visualX + vehicle.baseWidth) < -offScreenBuffer;
+        isVisuallyOffScreen = (visualX + vehicleVisibleWidth) < visibleViewBoxXMin - offScreenBuffer;
       }
       
-      if (isOutOfBounds) {
-        const currentVehicleType = vehicle.type;
-
-        // Remove the old vehicle
-        svg.removeChild(vehicle.element);
-        vehicles.splice(i, 1); // Remove vehicle from array
-
-        // Select a new, preferably different, vehicle type
-        let potentialNewTypes = vehicleTypes.filter(vt => vt.type !== currentVehicleType);
-
-        if (potentialNewTypes.length === 0 && vehicleTypes.length > 0) {
-          // Fallback: if only one type exists or filtering failed to find a *different* one.
-          // In this case, pick from any available type.
-          console.warn(`Could not select a *different* vehicle type than '${currentVehicleType}'. Either only one type is defined, or an issue occurred. A random type will be selected from all available types.`);
-          potentialNewTypes = vehicleTypes;
+      if (isVisuallyOffScreen) {
+        // Vehicle is off-screen. Remove it and create a new one immediately.
+        // The fade-out animation was initiated when it was approaching the edge.
+        // If it's now off-screen, its visual departure is complete for replacement purposes.
+        if (vehicle.element.parentNode === svg) { // Ensure element is still part of the SVG
+          svg.removeChild(vehicle.element);
         }
+          vehicles.splice(i, 1); // Remove vehicle from array
 
-        if (potentialNewTypes.length > 0) {
-          const newConfig = potentialNewTypes[Math.floor(Math.random() * potentialNewTypes.length)];
-          const newVehicle = createVehicle(newConfig); // createVehicle also calls resetVehicleState
-          if (newVehicle) {
-            vehicles.push(newVehicle); // Add the new vehicle to the array
+          if (vehicleTypes.length > 0) {
+            const newConfig = vehicleTypes[currentVehicleTypeIndex];
+            const newVehicle = createVehicle(newConfig);
+            if (newVehicle) {
+              vehicles.push(newVehicle);
+            }
+            currentVehicleTypeIndex = (currentVehicleTypeIndex + 1) % vehicleTypes.length;
+          } else {
+            console.error("No vehicle types defined to create a replacement vehicle.");
           }
-        } else {
-          console.error("No vehicle types available to create a replacement vehicle.");
-        }
+        // If the vehicle is off-screen, it's removed and replaced; no further updates needed for it.
       } else {
+        // Vehicle is still on-screen (or fading out but not yet visually offScreen)
         updateVehicleTransform(vehicle);
       }
     }
@@ -297,9 +340,48 @@
         svgWidth = svg.viewBox.baseVal.width;
         svgHeight = svg.viewBox.baseVal.height;
 
+        // Calculate the actual visible portion of the viewBox
+        const elWidth = svg.clientWidth;
+        const elHeight = svg.clientHeight;
+
+        const vbAspect = svgWidth / svgHeight;
+        const elAspect = elWidth / elHeight;
+
+        if (elAspect < vbAspect) {
+          // Element is "taller" or "less wide" than viewBox; viewBox will be sliced horizontally
+          const scale = elHeight / svgHeight;
+          const visibleWidthInVbUnits = elWidth / scale;
+          visibleViewBoxXMin = (svgWidth - visibleWidthInVbUnits) / 2; // Centered by xMid
+          visibleViewBoxXMax = visibleViewBoxXMin + visibleWidthInVbUnits;
+          visibleViewBoxYMin = 0;
+          visibleViewBoxYMax = svgHeight;
+        } else {
+          // Element is "wider" or "less tall" than viewBox; viewBox will be sliced vertically
+          const scale = elWidth / svgWidth;
+          const visibleHeightInVbUnits = elHeight / scale;
+          visibleViewBoxYMin = (svgHeight - visibleHeightInVbUnits) / 2; // Centered by yMid
+          visibleViewBoxYMax = visibleViewBoxYMin + visibleHeightInVbUnits;
+          visibleViewBoxXMin = 0;
+          visibleViewBoxXMax = svgWidth;
+        }
+        
+        // Fallback if clientWidth/Height are zero (e.g. display:none)
+        if (elWidth === 0 || elHeight === 0) {
+            visibleViewBoxXMax = svgWidth; // Use full viewBox if element dimensions are not available
+            visibleViewBoxYMax = svgHeight;
+        }
+
         if (RUN_SINGLE_VEHICLE_MODE) {
-          // Create the initial random single vehicle
-          createRandomSingleVehicle();
+          if (vehicleTypes.length > 0) {
+            const config = vehicleTypes[currentVehicleTypeIndex];
+            const vehicle = createVehicle(config);
+            if (vehicle) {
+              vehicles.push(vehicle);
+            }
+            currentVehicleTypeIndex = (currentVehicleTypeIndex + 1) % vehicleTypes.length; // Prepare for the next replacement
+          } else {
+            console.error("No vehicle types defined to run in single vehicle mode.");
+          }
         } else {
           // Original multi-vehicle creation logic
           vehicleTypes.forEach(config => {
