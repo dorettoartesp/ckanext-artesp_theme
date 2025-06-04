@@ -25,7 +25,7 @@
     if (isNaN(target)) return;
     
     // Set the duration of the animation in milliseconds
-    const duration = 2000;
+    const duration = 1000;
     
     // Calculate the increment per step
     const increment = target / (duration / 16);
