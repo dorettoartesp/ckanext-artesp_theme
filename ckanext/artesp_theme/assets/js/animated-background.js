@@ -315,22 +315,6 @@
         if (vehicles.length > 0) {
           animate();
         }
-
-        // Add mouse event listeners for interaction
-        svg.addEventListener('mouseenter', () => {
-            if (animationFrameId) {
-                cancelAnimationFrame(animationFrameId);
-                animationFrameId = null;
-                // console.log('Animation paused'); // Optional: for debugging
-            }
-        });
-
-        svg.addEventListener('mouseleave', () => {
-            if (!animationFrameId) { // Only restart if it's currently paused
-                // console.log('Animation resumed'); // Optional: for debugging
-                animate();
-            }
-        });
       })
       .catch(error => console.error('Error loading or parsing SVG definitions:', error));
   }
