@@ -11,7 +11,7 @@
 
   // Configuration for single vehicle mode
   const RUN_SINGLE_VEHICLE_MODE = true; // Set to true to run only one vehicle
-  const GLOBAL_VEHICLE_Y_FACTOR = 0.73; // Vertical position factor for ALL vehicles (0.0 = top, 1.0 = bottom)
+  const GLOBAL_VEHICLE_Y_FACTOR = 0.71; // Vertical position factor for ALL vehicles (0.0 = top, 1.0 = bottom)
                                         // This factor determines the vertical center of the vehicle.
  const vehicleTypes = [
     {
