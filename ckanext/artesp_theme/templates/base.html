@@ -71,6 +71,8 @@
     {%- block styles %}
       {% set theme = h.get_rtl_theme() if h.is_rtl_language() else g.theme %}
       {% asset theme %}
+      
+      {% asset 'artesp_theme/artesp-theme-js' %}
       {% asset 'artesp_theme/artesp-theme-css' %}
     {% endblock %}
 
