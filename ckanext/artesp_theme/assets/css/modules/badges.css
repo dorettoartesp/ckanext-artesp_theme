@@ -104,6 +104,20 @@
   box-shadow: inset 0 0 0 1px rgba(251, 185, 0, 0.2) !important;
 }
 
+.badge[data-format=kmz],
+.badge[data-format*=kmz] {
+  background-color: rgba(68, 68, 68, 0.2) !important;
+  color: #444444 !important;
+  box-shadow: inset 0 0 0 1px rgba(75, 85, 99, 0.1)  !important;
+}
+
+.badge[data-format=kml],
+.badge[data-format*=kml] {
+  background-color: rgba(68, 68, 68, 0.2) !important;
+  color: #444444 !important;
+  box-shadow: inset 0 0 0 1px rgba(75, 85, 99, 0.1)  !important;
+}
+
 .badge[data-format=xls],
 .badge[data-format*=xls] {
   background-color: rgba(11, 146, 71, 0.15) !important; /* Verde */

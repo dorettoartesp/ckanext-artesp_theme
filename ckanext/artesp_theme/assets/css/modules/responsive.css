@@ -154,8 +154,12 @@
   }
 
   .modern-hero {
-    padding: 3rem 0 2rem; /* Adjusted for mobile */
+    padding: 0rem 0 2rem !important; /* Adjusted for mobile */
     background-position: center 30%;
+  }
+
+  .hero-content {
+    padding: 0 !important; /* Adjusted for mobile */
   }
 
   .artesp-logo {
@@ -163,8 +167,8 @@
   }
 
   .search-heading {
-    font-size: 1.4rem; /* Adjusted for mobile, decreased from 1.6rem */
-    margin-bottom: 1.5rem;
+    font-size: 1.2rem; /* Adjusted for mobile */
+    margin-bottom: 1rem; /* Adjusted for mobile */
   }
 
   .search-input-wrapper {
@@ -218,8 +222,8 @@
 /* Extra small devices */
 @media (max-width: 375px) {
   .search-heading {
-    font-size: 1.2rem;
-    margin-bottom: 1.2rem;
+    font-size: 1rem;
+    margin-bottom: 1rem;
   }
 
   .search-input input {
@@ -238,7 +242,7 @@
   }
 
   .modern-hero {
-    padding: 2.5rem 0 1.5rem;
+    padding: 0 0 1.5rem;
   }
 
   .artesp-logo {
