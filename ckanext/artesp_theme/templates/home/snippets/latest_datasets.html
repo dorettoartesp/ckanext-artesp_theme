@@ -50,8 +50,11 @@
 
                 {% if dataset.tags and dataset.tags|length > 0 %}
                   <div class="dataset-tags">
+                    {# Display a maximum of 3 tags #}
                     {% for tag in dataset.tags %}
-                      <a href="{% url_for 'dataset.search', tags=tag.name %}" class="tag">{{ tag.display_name }}</a>
+                      {% if loop.index <= 3 %}
+                        <a href="{% url_for 'dataset.search', tags=tag.name %}" class="tag">{{ tag.display_name }}</a>
+                      {% endif %}
                     {% endfor %}
                   </div>
                 {% endif %}
