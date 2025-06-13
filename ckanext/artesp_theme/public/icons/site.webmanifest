@@ -1,6 +1,6 @@
 {
-  "name": "ARTESP",
-  "short_name": "ARTESP",
+  "name": "Portal de Dados Abertos da ARTESP",
+  "short_name": "PODA",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
