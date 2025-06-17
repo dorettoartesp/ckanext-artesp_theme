@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-artesp_theme 0.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-03 09:58-0300\n"
-"PO-Revision-Date: 2025-05-19 11:25-0300\n"
-"Last-Translator: Gemini <gemini@google.com>\n"
+"POT-Creation-Date: 2025-06-17 08:33-0300\n"
+"PO-Revision-Date: 2025-06-18 10:00-0300\n"
+"Last-Translator: Gemini Code Assist <gemini@google.com>\n"
 "Language: pt_BR\n"
 "Language-Team: pt_BR <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: ckanext/artesp_theme/controllers.py:41
+#: ckanext/artesp_theme/controllers.py:36
 msgid "You must be logged in to access the statistics page."
 msgstr "Você precisa fazer login para acessar esta página."
 
@@ -56,7 +56,6 @@ msgid ""
 "Open Data Portal of the São Paulo State Regulatory Agency for Delegated "
 "Public Transportation Services"
 msgstr ""
-""
 "Portal de Dados Abertos da Agência Reguladora de Serviços Públicos "
 "Delegados de Transporte do Estado de São Paulo"
 
@@ -89,21 +88,16 @@ msgstr "Termos de Uso"
 msgid "Privacy Policy"
 msgstr "Política de Privacidade"
 
-#: ckanext/artesp_theme/templates/footer.html:32
-#: ckanext/artesp_theme/templates/static/contact.html:3
-msgid "Contact Us"
-msgstr "Contato"
-
-#: ckanext/artesp_theme/templates/footer.html:37
+#: ckanext/artesp_theme/templates/footer.html:36
 msgid "Data & Resources"
 msgstr "Dados e Recursos"
 
-#: ckanext/artesp_theme/templates/footer.html:40
+#: ckanext/artesp_theme/templates/footer.html:39
 #: ckanext/artesp_theme/templates/static/harvesting.html:1
 msgid "Harvesting"
 msgstr "Coleta de Dados"
 
-#: ckanext/artesp_theme/templates/footer.html:41
+#: ckanext/artesp_theme/templates/footer.html:40
 #: ckanext/artesp_theme/templates/group/read_base.html:18
 #: ckanext/artesp_theme/templates/group/snippets/info.html:42
 #: ckanext/artesp_theme/templates/header.html:70
@@ -121,7 +115,7 @@ msgstr "Coleta de Dados"
 msgid "Datasets"
 msgstr "Conjuntos de Dados"
 
-#: ckanext/artesp_theme/templates/footer.html:42
+#: ckanext/artesp_theme/templates/footer.html:41
 #: ckanext/artesp_theme/templates/header.html:71
 #: ckanext/artesp_theme/templates/home/snippets/stats.html:46
 #: ckanext/artesp_theme/templates/organization/edit.html:6
@@ -139,7 +133,7 @@ msgstr "Conjuntos de Dados"
 msgid "Organizations"
 msgstr "Organizações"
 
-#: ckanext/artesp_theme/templates/footer.html:43
+#: ckanext/artesp_theme/templates/footer.html:42
 #: ckanext/artesp_theme/templates/group/edit.html:4
 #: ckanext/artesp_theme/templates/group/edit_base.html:4
 #: ckanext/artesp_theme/templates/group/index.html:4
@@ -160,20 +154,20 @@ msgstr "Organizações"
 msgid "Groups"
 msgstr "Grupos"
 
-#: ckanext/artesp_theme/templates/footer.html:48
+#: ckanext/artesp_theme/templates/footer.html:47
 #: ckanext/artesp_theme/templates/snippets/language_selector.html:8
 msgid "Language"
 msgstr "Idioma"
 
-#: ckanext/artesp_theme/templates/footer.html:66
+#: ckanext/artesp_theme/templates/footer.html:65
 msgid "All rights reserved."
 msgstr "Todos os direitos reservados."
 
-#: ckanext/artesp_theme/templates/footer.html:71
+#: ckanext/artesp_theme/templates/footer.html:70
 msgid "Government of São Paulo State"
 msgstr "Governo do Estado de São Paulo"
 
-#: ckanext/artesp_theme/templates/footer.html:77
+#: ckanext/artesp_theme/templates/footer.html:76
 msgid ""
 "<strong>Powered by</strong> <a class=\"hide-text ckan-footer-logo\" "
 "href=\"http://ckan.org\"></a>"
@@ -721,6 +715,8 @@ msgstr ""
 
 #: ckanext/artesp_theme/templates/group/member_new.html:42
 #: ckanext/artesp_theme/templates/organization/member_new.html:44
+#: ckanext/artesp_theme/templates/static/harvesting.html:259
+#: ckanext/artesp_theme/templates/static/harvesting.html:265
 msgid "or"
 msgstr "ou"
 
@@ -815,6 +811,7 @@ msgstr "URL"
 #: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:21
 #: ckanext/artesp_theme/templates/package/snippets/resource_form.html:40
 #: ckanext/artesp_theme/templates/package/snippets/view_form.html:9
+#: ckanext/artesp_theme/templates/static/harvesting.html:195
 msgid "Description"
 msgstr "Descrição"
 
@@ -1066,7 +1063,7 @@ msgstr[1] "{num} Recursos"
 msgid "No description provided."
 msgstr "Nenhuma descrição fornecida."
 
-#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:65
+#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:68
 msgid "No datasets found."
 msgstr "Nenhum conjunto de dados encontrado."
 
@@ -1174,25 +1171,25 @@ msgstr "Acesso API"
 msgid "Connect your applications directly to our data through APIs"
 msgstr "Conecte seus aplicativos diretamente aos nossos dados através de APIs"
 
-#: ckanext/artesp_theme/templates/home/snippets/search.html:6
+#: ckanext/artesp_theme/templates/home/snippets/search.html:7
 msgid "Find and explore"
 msgstr "Encontre e explore"
 
-#: ckanext/artesp_theme/templates/home/snippets/search.html:6
+#: ckanext/artesp_theme/templates/home/snippets/search.html:8
 msgid "public datasets"
 msgstr "dados públicos"
 
-#: ckanext/artesp_theme/templates/home/snippets/search.html:11
+#: ckanext/artesp_theme/templates/home/snippets/search.html:20
 msgid "Search datasets"
 msgstr "Buscar conjuntos de dados"
 
-#: ckanext/artesp_theme/templates/home/snippets/search.html:21
+#: ckanext/artesp_theme/templates/home/snippets/search.html:33
 #: ckanext/artesp_theme/templates/snippets/simple_search.html:5
 #: ckanext/artesp_theme/templates/user/snippets/user_search.html:6
 msgid "Search"
 msgstr "Buscar"
 
-#: ckanext/artesp_theme/templates/home/snippets/search.html:30
+#: ckanext/artesp_theme/templates/home/snippets/search.html:54
 msgid "Popular topics:"
 msgstr "Tópicos populares:"
 
@@ -1240,7 +1237,7 @@ msgid "Key"
 msgstr "Chave"
 
 #: ckanext/artesp_theme/templates/macros/form/custom.html:54
-#: ckanext/artesp_theme/templates/package/resource_read.html:146
+#: ckanext/artesp_theme/templates/package/resource_read.html:154
 #: ckanext/artesp_theme/templates/package/snippets/additional_info.html:7
 #: ckanext/artesp_theme/templates/snippets/additional_info.html:12
 msgid "Value"
@@ -1660,43 +1657,43 @@ msgstr ""
 " habilitado, ou os dados podem não ter sido enviados para o DataStore, ou"
 " o DataStore ainda não terminou de processar os dados"
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:141
+#: ckanext/artesp_theme/templates/package/resource_read.html:149
 msgid "Additional Information"
 msgstr "Informações Adicionais"
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:145
+#: ckanext/artesp_theme/templates/package/resource_read.html:153
 #: ckanext/artesp_theme/templates/package/snippets/additional_info.html:6
 #: ckanext/artesp_theme/templates/snippets/additional_info.html:11
 msgid "Field"
 msgstr "Campo"
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:151
+#: ckanext/artesp_theme/templates/package/resource_read.html:159
 msgid "Data last updated"
 msgstr "Dados atualizados pela última vez"
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:152
-#: ckanext/artesp_theme/templates/package/resource_read.html:156
 #: ckanext/artesp_theme/templates/package/resource_read.html:160
 #: ckanext/artesp_theme/templates/package/resource_read.html:164
+#: ckanext/artesp_theme/templates/package/resource_read.html:168
+#: ckanext/artesp_theme/templates/package/resource_read.html:172
 msgid "unknown"
 msgstr "desconhecido"
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:155
+#: ckanext/artesp_theme/templates/package/resource_read.html:163
 msgid "Metadata last updated"
 msgstr "Metadados atualizados pela última vez"
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:159
+#: ckanext/artesp_theme/templates/package/resource_read.html:167
 #: ckanext/artesp_theme/templates/package/snippets/additional_info.html:74
 msgid "Created"
 msgstr "Criado"
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:163
+#: ckanext/artesp_theme/templates/package/resource_read.html:171
 #: ckanext/artesp_theme/templates/package/snippets/resource_form.html:45
 #: ckanext/artesp_theme/templates/package/snippets/resource_info.html:19
 msgid "Format"
 msgstr "Formato"
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:167
+#: ckanext/artesp_theme/templates/package/resource_read.html:175
 #: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:32
 #: ckanext/artesp_theme/templates/snippets/license.html:20
 msgid "License"
@@ -2329,50 +2326,40 @@ msgstr ""
 "organizações) que desejam tornar seus dados abertos e disponíveis."
 
 #: ckanext/artesp_theme/templates/static/about_ckan.html:8
-msgid ""
-"CKAN is a powerful data management system that makes data accessible – by"
-" providing tools to streamline publishing, sharing, finding and using "
-"data. CKAN is aimed at data publishers (national and regional "
-"governments, companies and organizations) wanting to make their data open"
-" and available."
-msgstr ""
-"O CKAN é um poderoso sistema de gerenciamento de dados que torna os dados"
-" acessíveis – fornecendo ferramentas para simplificar a publicação, "
-"compartilhamento, busca e uso de dados. O CKAN é destinado a publicadores"
-" de dados (governos nacionais e regionais, empresas e organizações) que "
-"desejam tornar seus dados abertos e disponíveis."
-
-#: ckanext/artesp_theme/templates/static/about_ckan.html:10
 msgid "Key Features"
 msgstr "Principais Características"
 
-#: ckanext/artesp_theme/templates/static/about_ckan.html:12
+#: ckanext/artesp_theme/templates/static/about_ckan.html:10
 msgid "Publish and manage datasets with rich metadata"
 msgstr "Publicar e gerenciar conjuntos de dados com metadados ricos"
 
-#: ckanext/artesp_theme/templates/static/about_ckan.html:13
+#: ckanext/artesp_theme/templates/static/about_ckan.html:11
 msgid "Engage with users via comments"
 msgstr "Interagir com usuários através de comentários"
 
-#: ckanext/artesp_theme/templates/static/about_ckan.html:14
+#: ckanext/artesp_theme/templates/static/about_ckan.html:12
 msgid "Customize and extend the platform"
 msgstr "Personalizar e estender a plataforma"
 
-#: ckanext/artesp_theme/templates/static/about_ckan.html:15
+#: ckanext/artesp_theme/templates/static/about_ckan.html:13
 msgid "Federation of data catalogs between instances"
 msgstr "Federação de catálogos de dados entre instâncias"
 
-#: ckanext/artesp_theme/templates/static/about_ckan.html:16
+#: ckanext/artesp_theme/templates/static/about_ckan.html:14
 msgid "Fine-grained access control"
 msgstr "Controle de acesso granular"
 
-#: ckanext/artesp_theme/templates/static/about_ckan.html:17
+#: ckanext/artesp_theme/templates/static/about_ckan.html:15
 msgid "Resource preview for common formats"
 msgstr "Visualização prévia de recursos para formatos comuns"
 
-#: ckanext/artesp_theme/templates/static/about_ckan.html:20
+#: ckanext/artesp_theme/templates/static/about_ckan.html:18
 msgid "For more information about CKAN, visit"
 msgstr "Para mais informações sobre o CKAN, visite"
+
+#: ckanext/artesp_theme/templates/static/contact.html:3
+msgid "Contact Us"
+msgstr "Contato"
 
 #: ckanext/artesp_theme/templates/static/contact.html:6
 msgid ""
@@ -2516,6 +2503,7 @@ msgid "where {format} can be xml, ttl, n3, or jsonld"
 msgstr "onde {format} pode ser xml, ttl, n3 ou jsonld"
 
 #: ckanext/artesp_theme/templates/static/harvesting.html:37
+#: ckanext/artesp_theme/templates/static/harvesting.html:159
 msgid "Parameters:"
 msgstr "Parâmetros:"
 
@@ -2654,27 +2642,991 @@ msgid "When setting up a DCAT RDF harvester, you can use this configuration:"
 msgstr "Ao configurar um coletor DCAT RDF, você pode usar esta configuração:"
 
 #: ckanext/artesp_theme/templates/static/harvesting.html:111
-msgid "Need Help?"
-msgstr "Precisa de Ajuda?"
+msgid "Using the CKAN API for Data Access"
+msgstr "Usando a API CKAN para acesso aos dados"
 
 #: ckanext/artesp_theme/templates/static/harvesting.html:113
 msgid ""
-"If you encounter any issues while setting up harvesting from our portal, "
-"please"
+"Beyond DCAT harvesting, the CKAN Action API offers a powerful RPC-style "
+"interface to interact with the portal programmatically. You can retrieve "
+"dataset information, search for data, and much more using HTTP requests "
+"with JSON payloads. This method provides fine-grained control over data "
+"access."
 msgstr ""
-"Se você encontrar quaisquer problemas ao configurar a coleta do nosso "
-"portal, por favor"
-
-# | msgid "Contact Us"
-#: ckanext/artesp_theme/templates/static/harvesting.html:113
-msgid "contact us"
-msgstr "entre em contato conosco"
-
-#: ckanext/artesp_theme/templates/static/harvesting.html:113
-msgid "for assistance."
-msgstr "para assistência."
+"Além da coleta DCAT, a API do CKAN oferece uma poderosa interface "
+"estilo RPC para interagir com o portal programaticamente. Você pode "
+"recuperar informações de conjuntos de dados, pesquisar dados e muito mais "
+"usando requisições HTTP com payloads JSON. Este método fornece controle "
+"granular sobre o acesso aos dados."
 
 #: ckanext/artesp_theme/templates/static/harvesting.html:116
+msgid "Introduction to the CKAN API"
+msgstr "Introdução à API CKAN"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:117
+msgid ""
+"The API allows you to perform most actions available through the web "
+"interface."
+msgstr ""
+"A API permite que você execute a maioria das ações disponíveis através da "
+"interface web."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:118
+msgid "API Base URL:"
+msgstr "URL Base da API:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:119
+msgid ""
+"For example, to list datasets, the action name is `package_list`, and the "
+"full URL would be:"
+msgstr ""
+"Por exemplo, para listar conjuntos de dados, o nome da ação é "
+"`package_list`, e a URL completa seria:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:121
+msgid "JSON Response Structure"
+msgstr "Estrutura da Resposta JSON"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:122
+msgid "A typical API response is a JSON object with the following structure:"
+msgstr "Uma resposta típica da API é um objeto JSON com a seguinte estrutura:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:125
+msgid "Help text for the called action..."
+msgstr "Texto de ajuda para a ação chamada..."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:126
+msgid "or false in case of error"
+msgstr "ou false em caso de erro"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:127
+msgid "...data returned by the action..."
+msgstr "...dados retornados pela ação..."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:128
+msgid "Present only if \"success\" is false"
+msgstr "Presente apenas se \"success\" for false"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:129
+msgid "Error message"
+msgstr "Mensagem de erro"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:130
+msgid "Error Type"
+msgstr "Tipo de Erro"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:135
+msgid "A documentation string for the API function you called."
+msgstr "Uma string de documentação para a função da API que você chamou."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:136
+msgid ""
+"A boolean indicating if the call was successful (true) or not (false). "
+"Always check this field."
+msgstr ""
+"Um booleano indicando se a chamada foi bem-sucedida (true) ou não (false). "
+"Sempre verifique este campo."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:137
+msgid ""
+"The data returned by the function. Its structure depends on the specific "
+"action."
+msgstr ""
+"Os dados retornados pela função. Sua estrutura depende da ação específica."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:138
+msgid "If `success` is false, this object contains details about the error."
+msgstr "Se `success` for false, este objeto contém detalhes sobre o erro."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:141
+msgid "API Version"
+msgstr "Versão da API"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:142
+msgid ""
+"The current and recommended API version is v3. It is good practice to "
+"include `/api/3/` in your request URLs to ensure compatibility."
+msgstr ""
+"A versão atual e recomendada da API é a v3. É uma boa prática incluir "
+"`/api/3/` nas URLs de suas requisições para garantir compatibilidade."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:144
+msgid "Authentication"
+msgstr "Autenticação"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:145
+msgid ""
+"Most read actions on public data do not require authentication. However, "
+"actions that modify data (create, update, delete) or access private "
+"datasets require an API Key. This key should be included in the "
+"`Authorization` HTTP header."
+msgstr ""
+"A maioria das ações de leitura em dados públicos não requer autenticação. No "
+"entanto, ações que modificam dados (criar, atualizar, excluir) ou acessam "
+"conjuntos de dados privados requerem uma Chave de API. Esta chave deve ser "
+"incluída no cabeçalho HTTP `Authorization`."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:146
+msgid "Example header:"
+msgstr "Exemplo de cabeçalho:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:147
+msgid ""
+"You can usually find your API key on your user profile page on the CKAN "
+"site."
+msgstr ""
+"Você geralmente pode encontrar sua chave de API na página do seu perfil de "
+"usuário no site CKAN."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:149
+msgid "Common API Actions for Data Retrieval"
+msgstr "Ações Comuns da API para Recuperação de Dados"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:150
+msgid ""
+"Here are some common read-only actions useful for accessing data and "
+"metadata:"
+msgstr ""
+"Aqui estão algumas ações comuns de somente leitura úteis para acessar dados e "
+"metadados:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:152
+msgid "List Datasets (package_list)"
+msgstr "Listar Conjuntos de Dados (package_list)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:153
+#: ckanext/artesp_theme/templates/static/harvesting.html:203
+msgid "Returns a list of the names (IDs) of all public datasets."
+msgstr "Retorna uma lista dos nomes (IDs) de todos os conjuntos de dados públicos."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:154
+msgid "Example using cURL:"
+msgstr "Exemplo usando cURL:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:157
+msgid "Show Dataset Details (package_show)"
+msgstr "Mostrar Detalhes do Conjunto de Dados (package_show)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:158
+msgid ""
+"Returns complete information about a specific dataset, including its "
+"resources."
+msgstr ""
+"Retorna informações completas sobre um conjunto de dados específico, "
+"incluindo seus recursos."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:161
+msgid "The name (ID) or UUID of the dataset."
+msgstr "O nome (ID) ou UUID do conjunto de dados."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:163
+msgid "Example using cURL (replace `your-dataset-id` with an actual ID):"
+msgstr "Exemplo usando cURL (substitua `your-dataset-id` por um ID real):"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:166
+msgid "Search Datasets (package_search)"
+msgstr "Pesquisar Conjuntos de Dados (package_search)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:167
+msgid "Allows searching for datasets based on various criteria."
+msgstr "Permite pesquisar conjuntos de dados com base em vários critérios."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:168
+msgid "Common Parameters:"
+msgstr "Parâmetros Comuns:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:170
+msgid "Search term (e.g., `q=transport`)."
+msgstr "Termo de pesquisa (ex., `q=transporte`)."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:171
+msgid ""
+"Filter query using Solr syntax (e.g., `fq=tags:economy "
+"organization:artesp`)."
+msgstr ""
+"Consulta de filtro usando a sintaxe Solr (ex., `fq=tags:economia "
+"organization:artesp`)."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:172
+msgid "Number of results per page (default 10)."
+msgstr "Número de resultados por página (padrão 10)."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:173
+msgid "Offset for pagination."
+msgstr "Deslocamento para paginação."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:174
+msgid "Sorting criteria (e.g., `sort=score desc, metadata_modified desc`)."
+msgstr "Critérios de ordenação (ex., `sort=score desc, metadata_modified desc`)."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:176
+msgid ""
+"Example using cURL (searching for \"rodovias\" and limiting to 5 results):"
+msgstr ""
+"Exemplo usando cURL (pesquisando por \"rodovias\" e limitando a 5 "
+"resultados):"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:179
+msgid "Other Listing and Show Actions"
+msgstr "Outras Ações de Listagem e Exibição"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:180
+msgid "Similar actions are available for other CKAN entities:"
+msgstr "Ações semelhantes estão disponíveis para outras entidades CKAN:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:182
+msgid "For organizations."
+msgstr "Para organizações."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:183
+msgid "For groups."
+msgstr "Para grupos."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:184
+msgid "For tags."
+msgstr "Para tags."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:185
+msgid ""
+"To get details of a specific resource (file/link within a dataset). "
+"Requires resource ID."
+msgstr ""
+"Para obter detalhes de um recurso específico (arquivo/link dentro de um "
+"conjunto de dados). Requer ID do recurso."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:188
+msgid "API Actions Cheat Sheet"
+msgstr "Guia Rápido de Ações da API"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:189
+msgid "The following table provides a quick summary of common API actions:"
+msgstr "A tabela a seguir fornece um resumo rápido das ações comuns da API:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:194
+msgid "Action Name"
+msgstr "Nome da Ação"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:196
+msgid "HTTP Method"
+msgstr "Método HTTP"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:197
+msgid "Key Parameters (in JSON body or URL query)"
+msgstr "Parâmetros Chave (no corpo JSON ou consulta URL)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:204
+#: ckanext/artesp_theme/templates/static/harvesting.html:210
+#: ckanext/artesp_theme/templates/static/harvesting.html:216
+#: ckanext/artesp_theme/templates/static/harvesting.html:222
+#: ckanext/artesp_theme/templates/static/harvesting.html:228
+#: ckanext/artesp_theme/templates/static/harvesting.html:234
+#: ckanext/artesp_theme/templates/static/harvesting.html:240
+#: ckanext/artesp_theme/templates/static/harvesting.html:246
+msgid "GET or POST"
+msgstr "GET ou POST"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:205
+#: ckanext/artesp_theme/templates/static/harvesting.html:217
+#: ckanext/artesp_theme/templates/static/harvesting.html:229
+#: ckanext/artesp_theme/templates/static/harvesting.html:241
+msgid "(int, optional)"
+msgstr "(int, opcional)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:209
+msgid "Returns detailed metadata for a specific dataset."
+msgstr "Retorna metadados detalhados para um conjunto de dados específico."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:211
+#: ckanext/artesp_theme/templates/static/harvesting.html:277
+msgid "(string, required: dataset ID or name)"
+msgstr "(string, obrigatório: ID ou nome do conjunto de dados)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:215
+msgid "Searches datasets based on various criteria."
+msgstr "Pesquisa conjuntos de dados com base em vários critérios."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:217
+msgid "(string, optional: search term)"
+msgstr "(string, opcional: termo de pesquisa)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:217
+msgid "(string, optional: filter query)"
+msgstr "(string, opcional: consulta de filtro)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:221
+msgid "Returns detailed metadata for a specific resource."
+msgstr "Retorna metadados detalhados para um recurso específico."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:223
+msgid "(string, required: resource ID)"
+msgstr "(string, obrigatório: ID do recurso)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:227
+msgid "Returns a list of names (IDs) of all public organizations."
+msgstr "Retorna uma lista de nomes (IDs) de todas as organizações públicas."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:229
+#: ckanext/artesp_theme/templates/static/harvesting.html:235
+#: ckanext/artesp_theme/templates/static/harvesting.html:241
+msgid "(boolean, optional)"
+msgstr "(booleano, opcional)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:233
+msgid "Returns detailed metadata for a specific organization."
+msgstr "Retorna metadados detalhados para uma organização específica."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:235
+msgid "(string, required: organization ID or name)"
+msgstr "(string, obrigatório: ID ou nome da organização)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:239
+msgid "Returns a list of names (IDs) of all public groups."
+msgstr "Retorna uma lista de nomes (IDs) de todos os grupos públicos."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:245
+msgid "Returns a list of all tag names."
+msgstr "Retorna uma lista de todos os nomes de tags."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:247
+#: ckanext/artesp_theme/templates/static/harvesting.html:253
+#: ckanext/artesp_theme/templates/static/harvesting.html:259
+msgid "(string, optional)"
+msgstr "(string, opcional)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:251
+msgid "Creates a new dataset. (Requires Auth)"
+msgstr "Cria um novo conjunto de dados. (Requer Autenticação)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:252
+#: ckanext/artesp_theme/templates/static/harvesting.html:258
+#: ckanext/artesp_theme/templates/static/harvesting.html:264
+#: ckanext/artesp_theme/templates/static/harvesting.html:270
+#: ckanext/artesp_theme/templates/static/harvesting.html:276
+msgid "POST"
+msgstr "POST"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:253
+#: ckanext/artesp_theme/templates/static/harvesting.html:259
+#: ckanext/artesp_theme/templates/static/harvesting.html:265
+#: ckanext/artesp_theme/templates/static/harvesting.html:271
+msgid "(string, required)"
+msgstr "(string, obrigatório)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:253
+msgid "(string, required: organization ID)"
+msgstr "(string, obrigatório: ID da organização)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:253
+msgid "(list, optional)"
+msgstr "(lista, opcional)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:257
+msgid "Adds a new resource to a dataset. (Requires Auth)"
+msgstr "Adiciona um novo recurso a um conjunto de dados. (Requer Autenticação)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:259
+msgid "(string, if not uploading)"
+msgstr "(string, se não estiver enviando arquivo)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:259
+msgid "(file, for direct upload)"
+msgstr "(arquivo, para upload direto)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:263
+msgid "Updates an existing dataset (fully or partially). (Requires Auth)"
+msgstr ""
+"Atualiza um conjunto de dados existente (total ou parcialmente). (Requer "
+"Autenticação)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:265
+msgid "other dataset fields to modify."
+msgstr "outros campos do conjunto de dados para modificar."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:269
+msgid "Updates an existing resource (fully or partially). (Requires Auth)"
+msgstr ""
+"Atualiza um recurso existente (total ou parcialmente). (Requer Autenticação)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:271
+msgid "other resource fields to modify."
+msgstr "outros campos do recurso para modificar."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:275
+msgid "Marks a dataset as deleted. (Requires Auth)"
+msgstr "Marca um conjunto de dados como excluído. (Requer Autenticação)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:283
+msgid "Using the `ckanapi` Python Client and CLI"
+msgstr "Usando o Cliente Python `ckanapi` e CLI"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:284
+msgid ""
+"For Python users and system administrators, the `ckanapi` library offers a "
+"convenient way to interact with the CKAN API, both as a Python module and "
+"a command-line interface (CLI) tool."
+msgstr ""
+"Para usuários Python e administradores de sistema, a biblioteca `ckanapi` "
+"oferece uma maneira conveniente de interagir com a API CKAN, tanto como um "
+"módulo Python quanto como uma ferramenta de interface de linha de comando "
+"(CLI)."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:285
+msgid "Installation:"
+msgstr "Instalação:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:287
+msgid "CLI Examples:"
+msgstr "Exemplos de CLI:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:289
+msgid "List datasets:"
+msgstr "Listar conjuntos de dados:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:290
+msgid "Show dataset details (replace `your-dataset-id`):"
+msgstr "Mostrar detalhes do conjunto de dados (substitua `your-dataset-id`):"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:292
+msgid ""
+"The `ckanapi` library is highly recommended for scripting interactions with "
+"the API."
+msgstr ""
+"A biblioteca `ckanapi` é altamente recomendada para interações de script com "
+"a API."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:294
+msgid "API Usage Tips and Best Practices"
+msgstr "Dicas e Melhores Práticas de Uso da API"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:296
+msgid "Check `success` Field:"
+msgstr "Verifique o Campo `success`:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:296
+msgid ""
+"Always verify the `success` field in the API response, not just the HTTP "
+"status code, to confirm the action was successful."
+msgstr ""
+"Sempre verifique o campo `success` na resposta da API, não apenas o código "
+"de status HTTP, para confirmar que a ação foi bem-sucedida."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:297
+msgid "Error Handling:"
+msgstr "Tratamento de Erros:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:297
+msgid ""
+"Implement robust error handling by parsing the `error` object when `success` "
+"is `false`."
+msgstr ""
+"Implemente um tratamento de erros robusto analisando o objeto `error` quando "
+"`success` for `false`."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:298
+msgid "Pagination:"
+msgstr "Paginação:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:298
+msgid ""
+"For actions that return lists (like `package_search` or `package_list`), "
+"use parameters like `rows` (or `limit`) and `start` (or `offset`) to "
+"paginate through results."
+msgstr ""
+"Para ações que retornam listas (como `package_search` ou `package_list`), "
+"use parâmetros como `rows` (ou `limit`) e `start` (ou `offset`) para "
+"paginar os resultados."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:299
+msgid "Rate Limiting:"
+msgstr "Limitação de Taxa:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:299
+msgid ""
+"Be aware that the API might have rate limits. Design your applications to "
+"handle potential throttling gracefully."
+msgstr ""
+"Esteja ciente de que a API pode ter limites de taxa. Projete seus "
+"aplicativos para lidar com possíveis limitações de forma elegante."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:300
+msgid "Full Documentation:"
+msgstr "Documentação Completa:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:300
+msgid ""
+"For a comprehensive list of API actions, their parameters, and more "
+"detailed examples, refer to the official CKAN API documentation (often "
+"found at `/api/3` on the CKAN instance) or specific guides provided by this "
+"portal."
+msgstr ""
+"Para uma lista abrangente de ações da API, seus parâmetros e exemplos mais "
+"detalhados, consulte a documentação oficial da API CKAN (geralmente "
+"encontrada em `/api/3` na instância CKAN) ou guias específicos fornecidos "
+"por este portal."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:113
+msgid ""
+"Beyond DCAT harvesting, the CKAN Action API offers a powerful RPC-style "
+"interface to interact with the portal programmatically. You can retrieve "
+"dataset information, search for data, and much more using HTTP requests "
+"with JSON payloads. This method provides fine-grained control over data "
+"access."
+msgstr ""
+msgid ""
+"The API allows you to perform most actions available through the web "
+"interface."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:118
+msgid "API Base URL:"
+msgstr "API URL Base:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:119
+msgid ""
+"For example, to list datasets, the action name is `package_list`, and the"
+" full URL would be:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:121
+msgid "JSON Response Structure"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:122
+msgid "A typical API response is a JSON object with the following structure:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:125
+msgid "Help text for the called action..."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:126
+msgid "or false in case of error"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:127
+msgid "...data returned by the action..."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:128
+msgid "Present only if \"success\" is false"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:129
+msgid "Error message"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:130
+msgid "Error Type"
+msgstr "Tipo Erro"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:135
+msgid "A documentation string for the API function you called."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:136
+msgid ""
+"A boolean indicating if the call was successful (true) or not (false). "
+"Always check this field."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:137
+msgid ""
+"The data returned by the function. Its structure depends on the specific "
+"action."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:138
+msgid "If `success` is false, this object contains details about the error."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:141
+msgid "API Version"
+msgstr "Versão"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:142
+msgid ""
+"The current and recommended API version is v3. It is good practice to "
+"include `/api/3/` in your request URLs to ensure compatibility."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:144
+msgid "Authentication"
+msgstr "Autenticação"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:145
+msgid ""
+"Most read actions on public data do not require authentication. However, "
+"actions that modify data (create, update, delete) or access private "
+"datasets require an API Key. This key should be included in the "
+"`Authorization` HTTP header."
+msgstr ""
+
+# | msgid "Explore"
+#: ckanext/artesp_theme/templates/static/harvesting.html:146
+msgid "Example header:"
+msgstr "Exemplo cabeçalho:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:147
+msgid ""
+"You can usually find your API key on your user profile page on the CKAN "
+"site."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:149
+msgid "Common API Actions for Data Retrieval"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:150
+msgid ""
+"Here are some common read-only actions useful for accessing data and "
+"metadata:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:152
+msgid "List Datasets (package_list)"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:153
+#: ckanext/artesp_theme/templates/static/harvesting.html:203
+msgid "Returns a list of the names (IDs) of all public datasets."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:154
+msgid "Example using cURL:"
+msgstr "Exemplo usando curl:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:157
+msgid "Show Dataset Details (package_show)"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:158
+msgid ""
+"Returns complete information about a specific dataset, including its "
+"resources."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:161
+msgid "The name (ID) or UUID of the dataset."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:163
+msgid "Example using cURL (replace `your-dataset-id` with an actual ID):"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:166
+msgid "Search Datasets (package_search)"
+msgstr "Buscar conjuntos de dados"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:167
+msgid "Allows searching for datasets based on various criteria."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:168
+msgid "Common Parameters:"
+msgstr "Parâmetros:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:170
+msgid "Search term (e.g., `q=transport`)."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:171
+msgid ""
+"Filter query using Solr syntax (e.g., `fq=tags:economy "
+"organization:artesp`)."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:172
+msgid "Number of results per page (default 10)."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:173
+msgid "Offset for pagination."
+msgstr "Offset por paginação"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:174
+msgid "Sorting criteria (e.g., `sort=score desc, metadata_modified desc`)."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:176
+msgid "Example using cURL (searching for \"rodovias\" and limiting to 5 results):"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:179
+msgid "Other Listing and Show Actions"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:180
+msgid "Similar actions are available for other CKAN entities:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:182
+msgid "For organizations."
+msgstr "Organizações"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:183
+msgid "For groups."
+msgstr "Grupos"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:184
+msgid "For tags."
+msgstr "Etiquetas"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:185
+msgid ""
+"To get details of a specific resource (file/link within a dataset). "
+"Requires resource ID."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:188
+msgid "API Actions Cheat Sheet"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:189
+msgid "The following table provides a quick summary of common API actions:"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:194
+msgid "Action Name"
+msgstr "Ações"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:196
+msgid "HTTP Method"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:197
+msgid "Key Parameters (in JSON body or URL query)"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:204
+#: ckanext/artesp_theme/templates/static/harvesting.html:210
+#: ckanext/artesp_theme/templates/static/harvesting.html:216
+#: ckanext/artesp_theme/templates/static/harvesting.html:222
+#: ckanext/artesp_theme/templates/static/harvesting.html:228
+#: ckanext/artesp_theme/templates/static/harvesting.html:234
+#: ckanext/artesp_theme/templates/static/harvesting.html:240
+#: ckanext/artesp_theme/templates/static/harvesting.html:246
+msgid "GET or POST"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:205
+#: ckanext/artesp_theme/templates/static/harvesting.html:217
+#: ckanext/artesp_theme/templates/static/harvesting.html:229
+#: ckanext/artesp_theme/templates/static/harvesting.html:241
+msgid "(int, optional)"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:209
+msgid "Returns detailed metadata for a specific dataset."
+msgstr "Acesse metadados para um conjunto de dados específico:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:211
+#: ckanext/artesp_theme/templates/static/harvesting.html:277
+msgid "(string, required: dataset ID or name)"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:215
+msgid "Searches datasets based on various criteria."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:217
+msgid "(string, optional: search term)"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:217
+msgid "(string, optional: filter query)"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:221
+msgid "Returns detailed metadata for a specific resource."
+msgstr "Acesse metadados para um conjunto de dados específico:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:223
+msgid "(string, required: resource ID)"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:227
+msgid "Returns a list of names (IDs) of all public organizations."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:229
+#: ckanext/artesp_theme/templates/static/harvesting.html:235
+#: ckanext/artesp_theme/templates/static/harvesting.html:241
+msgid "(boolean, optional)"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:233
+msgid "Returns detailed metadata for a specific organization."
+msgstr "Retorna metadados detalhados para uma organização específica."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:235
+msgid "(string, required: organization ID or name)"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:239
+msgid "Returns a list of names (IDs) of all public groups."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:245
+msgid "Returns a list of all tag names."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:247
+#: ckanext/artesp_theme/templates/static/harvesting.html:253
+#: ckanext/artesp_theme/templates/static/harvesting.html:259
+msgid "(string, optional)"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:251
+msgid "Creates a new dataset. (Requires Auth)"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:252
+#: ckanext/artesp_theme/templates/static/harvesting.html:258
+#: ckanext/artesp_theme/templates/static/harvesting.html:264
+#: ckanext/artesp_theme/templates/static/harvesting.html:270
+#: ckanext/artesp_theme/templates/static/harvesting.html:276
+msgid "POST"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:253
+#: ckanext/artesp_theme/templates/static/harvesting.html:259
+#: ckanext/artesp_theme/templates/static/harvesting.html:265
+#: ckanext/artesp_theme/templates/static/harvesting.html:271
+msgid "(string, required)"
+msgstr "(string, obrigatório)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:253
+msgid "(string, required: organization ID)"
+msgstr "(string, obrigatório: ID da organização)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:253
+msgid "(list, optional)"
+msgstr "(lista, opcional)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:257
+msgid "Adds a new resource to a dataset. (Requires Auth)"
+msgstr "Adiciona um novo recurso a um conjunto de dados. (Requer Autenticação)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:259
+msgid "(string, if not uploading)"
+msgstr "(string, se não estiver enviando arquivo)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:259
+msgid "(file, for direct upload)"
+msgstr "(arquivo, para upload direto)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:263
+msgid "Updates an existing dataset (fully or partially). (Requires Auth)"
+msgstr "Atualiza um conjunto de dados existente (total ou parcialmente). (Requer Autenticação)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:265
+msgid "other dataset fields to modify."
+msgstr "outros campos do conjunto de dados para modificar."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:269
+msgid "Updates an existing resource (fully or partially). (Requires Auth)"
+msgstr "Atualiza um recurso existente (total ou parcialmente). (Requer Autenticação)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:271
+msgid "other resource fields to modify."
+msgstr "outros campos do recurso para modificar."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:275
+msgid "Marks a dataset as deleted. (Requires Auth)"
+msgstr "Marca um conjunto de dados como excluído. (Requer Autenticação)"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:283
+msgid "Using the `ckanapi` Python Client and CLI"
+msgstr "Usando o Cliente Python `ckanapi` e CLI"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:284
+msgid ""
+"For Python users and system administrators, the `ckanapi` library offers "
+"a convenient way to interact with the CKAN API, both as a Python module "
+"and a command-line interface (CLI) tool."
+msgstr "Para usuários Python e administradores de sistema, a biblioteca `ckanapi` oferece uma maneira conveniente de interagir com a API CKAN, tanto como um módulo Python quanto como uma ferramenta de interface de linha de comando (CLI)."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:285
+msgid "Installation:"
+msgstr "Instalação:"
+
+# | msgid "Explore"
+#: ckanext/artesp_theme/templates/static/harvesting.html:287
+msgid "CLI Examples:"
+msgstr "Exemplos:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:289
+msgid "List datasets:"
+msgstr "Lista cj. de dados:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:290
+msgid "Show dataset details (replace `your-dataset-id`):"
+msgstr "Mostrar detalhes do conjunto de dados (substitua `your-dataset-id`):"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:292
+msgid ""
+"The `ckanapi` library is highly recommended for scripting interactions "
+"with the API."
+msgstr "A biblioteca `ckanapi` é altamente recomendada para interações de script com a API."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:294
+msgid "API Usage Tips and Best Practices"
+msgstr "Dicas e Melhores Práticas de Uso da API"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:296
+msgid "Check `success` Field:"
+msgstr "Verifique o Campo `success`:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:296
+msgid ""
+"Always verify the `success` field in the API response, not just the HTTP "
+"status code, to confirm the action was successful."
+msgstr "Sempre verifique o campo `success` na resposta da API, não apenas o código de status HTTP, para confirmar que a ação foi bem-sucedida."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:297
+msgid "Error Handling:"
+msgstr "Tratamento de Erros:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:297
+msgid ""
+"Implement robust error handling by parsing the `error` object when "
+"`success` is `false`."
+msgstr "Implemente um tratamento de erros robusto analisando o objeto `error` quando `success` for `false`."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:298
+msgid "Pagination:"
+msgstr "Paginação:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:298
+msgid ""
+"For actions that return lists (like `package_search` or `package_list`), "
+"use parameters like `rows` (or `limit`) and `start` (or `offset`) to "
+"paginate through results."
+msgstr "Para ações que retornam listas (como `package_search` ou `package_list`), use parâmetros como `rows` (ou `limit`) e `start` (ou `offset`) para paginar os resultados."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:299
+msgid "Rate Limiting:"
+msgstr "Limitação de Taxa:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:299
+msgid ""
+"Be aware that the API might have rate limits. Design your applications to"
+" handle potential throttling gracefully."
+msgstr "Esteja ciente de que a API pode ter limites de taxa. Projete seus aplicativos para lidar com possíveis limitações de forma elegante."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:300
+msgid "Full Documentation:"
+msgstr "Documentação Completa:"
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:300
+msgid ""
+"For a comprehensive list of API actions, their parameters, and more "
+"detailed examples, refer to the official CKAN API documentation (often "
+"found at `/api/3` on the CKAN instance) or specific guides provided by "
+"this portal."
+msgstr "Para uma lista abrangente de ações da API, seus parâmetros e exemplos mais detalhados, consulte a documentação oficial da API CKAN (geralmente encontrada em `/api/3` na instância CKAN) ou guias específicos fornecidos por este portal."
+
+#: ckanext/artesp_theme/templates/static/harvesting.html:303
 #: ckanext/artesp_theme/templates/static/privacy.html:130
 #: ckanext/artesp_theme/templates/static/terms.html:140
 msgid "Last updated: June 2025"
@@ -4532,3 +5484,43 @@ msgstr "Buscar Usuários"
 #~ msgstr ""
 #~ "Por favor, indique claramente que\n"
 #~ "    sua consulta está relacionada à proteção de dados."
+
+#~ msgid ""
+#~ "CKAN is a powerful data management "
+#~ "system that makes data accessible – "
+#~ "by providing tools to streamline "
+#~ "publishing, sharing, finding and using "
+#~ "data. CKAN is aimed at data "
+#~ "publishers (national and regional governments,"
+#~ " companies and organizations) wanting to"
+#~ " make their data open and available."
+#~ msgstr ""
+#~ "O CKAN é um poderoso sistema de"
+#~ " gerenciamento de dados que torna os"
+#~ " dados acessíveis – fornecendo ferramentas"
+#~ " para simplificar a publicação, "
+#~ "compartilhamento, busca e uso de dados."
+#~ " O CKAN é destinado a publicadores"
+#~ " de dados (governos nacionais e "
+#~ "regionais, empresas e organizações) que "
+#~ "desejam tornar seus dados abertos e "
+#~ "disponíveis."
+
+#~ msgid "Need Help?"
+#~ msgstr "Precisa de Ajuda?"
+
+#~ msgid ""
+#~ "If you encounter any issues while "
+#~ "setting up harvesting from our portal,"
+#~ " please"
+#~ msgstr ""
+#~ "Se você encontrar quaisquer problemas ao"
+#~ " configurar a coleta do nosso portal,"
+#~ " por favor"
+
+# | msgid "Contact Us"
+#~ msgid "contact us"
+#~ msgstr "entre em contato conosco"
+
+#~ msgid "for assistance."
+#~ msgstr "para assistência."

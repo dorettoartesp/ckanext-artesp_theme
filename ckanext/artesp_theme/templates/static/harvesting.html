@@ -108,10 +108,197 @@
 }
   </pre>
 
-  <h2>{{_('Need Help?')}}</h2>
+  <h1 class="page-heading">{{_('Using the CKAN API for Data Access')}}</h1>
   <p>
-    {{_('If you encounter any issues while setting up harvesting from our portal, please')}} <a href="{{ h.url_for('artesp_theme.contact') }}">{{_('contact us')}}</a> {{_('for assistance.')}}
+    {{_('Beyond DCAT harvesting, the CKAN Action API offers a powerful RPC-style interface to interact with the portal programmatically. You can retrieve dataset information, search for data, and much more using HTTP requests with JSON payloads. This method provides fine-grained control over data access.')}}
   </p>
+
+  <h3>{{_('Introduction to the CKAN API')}}</h3>
+  <p>{{_('The API allows you to perform most actions available through the web interface.')}}</p>
+  <p>{{_('API Base URL:')}} <code>https://dadosabertos.artesp.sp.gov.br/api/3/action/</code></p>
+  <p>{{_('For example, to list datasets, the action name is `package_list`, and the full URL would be:')}} <code>https://dadosabertos.artesp.sp.gov.br/api/3/action/package_list</code></p>
+
+  <h4>{{_('JSON Response Structure')}}</h4>
+  <p>{{_('A typical API response is a JSON object with the following structure:')}}</p>
+  <pre><code>
+{
+  "help": "{{_('Help text for the called action...')}}",
+  "success": true, // {{_('or false in case of error')}}
+  "result": [ /* {{_('...data returned by the action...')}} */ ],
+  "error": { // {{_('Present only if "success" is false')}}
+    "message": "{{_('Error message')}}",
+    "__type": "{{_('Error Type')}}"
+  }
+}
+  </code></pre>
+  <ul>
+    <li><code>help</code>: {{_('A documentation string for the API function you called.')}}</li>
+    <li><code>success</code>: {{_('A boolean indicating if the call was successful (true) or not (false). Always check this field.')}}</li>
+    <li><code>result</code>: {{_('The data returned by the function. Its structure depends on the specific action.')}}</li>
+    <li><code>error</code>: {{_('If `success` is false, this object contains details about the error.')}}</li>
+  </ul>
+
+  <h3>{{_('API Version')}}</h3>
+  <p>{{_('The current and recommended API version is v3. It is good practice to include `/api/3/` in your request URLs to ensure compatibility.')}}</p>
+
+  <h3>{{_('Authentication')}}</h3>
+  <p>{{_('Most read actions on public data do not require authentication. However, actions that modify data (create, update, delete) or access private datasets require an API Key. This key should be included in the `Authorization` HTTP header.')}}</p>
+  <p>{{_('Example header:')}} <code>Authorization: YOUR_API_KEY_HERE</code></p>
+  <p>{{_('You can usually find your API key on your user profile page on the CKAN site.')}}</p>
+
+  <h3>{{_('Common API Actions for Data Retrieval')}}</h3>
+  <p>{{_('Here are some common read-only actions useful for accessing data and metadata:')}}</p>
+
+  <h4>{{_('List Datasets (package_list)')}}</h4>
+  <p>{{_('Returns a list of the names (IDs) of all public datasets.')}}</p>
+  <p>{{_('Example using cURL:')}}</p>
+  <pre><code>curl -X GET "https://dadosabertos.artesp.sp.gov.br/api/3/action/package_list"</code></pre>
+
+  <h4>{{_('Show Dataset Details (package_show)')}}</h4>
+  <p>{{_('Returns complete information about a specific dataset, including its resources.')}}</p>
+  <p>{{_('Parameters:')}}</p>
+  <ul>
+    <li><code>id</code> (string): {{_('The name (ID) or UUID of the dataset.')}}</li>
+  </ul>
+  <p>{{_('Example using cURL (replace `your-dataset-id` with an actual ID):')}}</p>
+  <pre><code>curl -X GET "https://dadosabertos.artesp.sp.gov.br/api/3/action/package_show?id=your-dataset-id"</code></pre>
+
+  <h4>{{_('Search Datasets (package_search)')}}</h4>
+  <p>{{_('Allows searching for datasets based on various criteria.')}}</p>
+  <p>{{_('Common Parameters:')}}</p>
+  <ul>
+    <li><code>q</code> (string): {{_('Search term (e.g., `q=transport`).')}}</li>
+    <li><code>fq</code> (string): {{_('Filter query using Solr syntax (e.g., `fq=tags:economy organization:artesp`).')}}</li>
+    <li><code>rows</code> (int): {{_('Number of results per page (default 10).')}}</li>
+    <li><code>start</code> (int): {{_('Offset for pagination.')}}</li>
+    <li><code>sort</code> (string): {{_('Sorting criteria (e.g., `sort=score desc, metadata_modified desc`).')}}</li>
+  </ul>
+  <p>{{_('Example using cURL (searching for "rodovias" and limiting to 5 results):')}}</p>
+  <pre><code>curl -X GET "https://dadosabertos.artesp.sp.gov.br/api/3/action/package_search?q=rodovias&rows=5"</code></pre>
+
+  <h4>{{_('Other Listing and Show Actions')}}</h4>
+  <p>{{_('Similar actions are available for other CKAN entities:')}}</p>
+  <ul>
+    <li><code>organization_list</code> / <code>organization_show</code>: {{_('For organizations.')}}</li>
+    <li><code>group_list</code> / <code>group_show</code>: {{_('For groups.')}}</li>
+    <li><code>tag_list</code> / <code>tag_show</code>: {{_('For tags.')}}</li>
+    <li><code>resource_show</code>: {{_('To get details of a specific resource (file/link within a dataset). Requires resource ID.')}}</li>
+  </ul>
+
+  <h4>{{_('API Actions Cheat Sheet')}}</h4>
+  <p>{{_('The following table provides a quick summary of common API actions:')}}</p>
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>{{_('Action Name')}}</th>
+          <th>{{_('Description')}}</th>
+          <th>{{_('HTTP Method')}}</th>
+          <th>{{_('Key Parameters (in JSON body or URL query)')}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>package_list</code></td>
+          <td>{{_('Returns a list of the names (IDs) of all public datasets.')}}</td>
+          <td>{{_('GET or POST')}}</td>
+          <td><code>limit</code> {{_('(int, optional)')}}, <code>offset</code> {{_('(int, optional)')}}</td>
+        </tr>
+        <tr>
+          <td><code>package_show</code></td>
+          <td>{{_('Returns detailed metadata for a specific dataset.')}}</td>
+          <td>{{_('GET or POST')}}</td>
+          <td><code>id</code> {{_('(string, required: dataset ID or name)')}}</td>
+        </tr>
+        <tr>
+          <td><code>package_search</code></td>
+          <td>{{_('Searches datasets based on various criteria.')}}</td>
+          <td>{{_('GET or POST')}}</td>
+          <td><code>q</code> {{_('(string, optional: search term)')}}, <code>fq</code> {{_('(string, optional: filter query)')}}, <code>rows</code> {{_('(int, optional)')}}, <code>start</code> {{_('(int, optional)')}}</td>
+        </tr>
+        <tr>
+          <td><code>resource_show</code></td>
+          <td>{{_('Returns detailed metadata for a specific resource.')}}</td>
+          <td>{{_('GET or POST')}}</td>
+          <td><code>id</code> {{_('(string, required: resource ID)')}}</td>
+        </tr>
+        <tr>
+          <td><code>organization_list</code></td>
+          <td>{{_('Returns a list of names (IDs) of all public organizations.')}}</td>
+          <td>{{_('GET or POST')}}</td>
+          <td><code>limit</code> {{_('(int, optional)')}}, <code>offset</code> {{_('(int, optional)')}}, <code>all_fields</code> {{_('(boolean, optional)')}}</td>
+        </tr>
+        <tr>
+          <td><code>organization_show</code></td>
+          <td>{{_('Returns detailed metadata for a specific organization.')}}</td>
+          <td>{{_('GET or POST')}}</td>
+          <td><code>id</code> {{_('(string, required: organization ID or name)')}}, <code>include_datasets</code> {{_('(boolean, optional)')}}</td>
+        </tr>
+        <tr>
+          <td><code>group_list</code></td>
+          <td>{{_('Returns a list of names (IDs) of all public groups.')}}</td>
+          <td>{{_('GET or POST')}}</td>
+          <td><code>limit</code> {{_('(int, optional)')}}, <code>offset</code> {{_('(int, optional)')}}, <code>all_fields</code> {{_('(boolean, optional)')}}</td>
+        </tr>
+        <tr>
+          <td><code>tag_list</code></td>
+          <td>{{_('Returns a list of all tag names.')}}</td>
+          <td>{{_('GET or POST')}}</td>
+          <td><code>query</code> {{_('(string, optional)')}}, <code>vocabulary_id</code> {{_('(string, optional)')}}</td>
+        </tr>
+        <tr>
+          <td><code>package_create</code></td>
+          <td>{{_('Creates a new dataset. (Requires Auth)')}}</td>
+          <td>{{_('POST')}}</td>
+          <td><code>name</code> {{_('(string, required)')}}, <code>owner_org</code> {{_('(string, required: organization ID)')}}, <code>title</code> {{_('(string, optional)')}}, <code>resources</code> {{_('(list, optional)')}}</td>
+        </tr>
+        <tr>
+          <td><code>resource_create</code></td>
+          <td>{{_('Adds a new resource to a dataset. (Requires Auth)')}}</td>
+          <td>{{_('POST')}}</td>
+          <td><code>package_id</code> {{_('(string, required)')}}, <code>url</code> {{_('(string, if not uploading)')}} {{_('or')}} <code>upload</code> {{_('(file, for direct upload)')}}, <code>name</code> {{_('(string, optional)')}}</td>
+        </tr>
+        <tr>
+          <td><code>package_update</code> / <code>package_patch</code></td>
+          <td>{{_('Updates an existing dataset (fully or partially). (Requires Auth)')}}</td>
+          <td>{{_('POST')}}</td>
+          <td><code>id</code> {{_('or')}} <code>name</code> {{_('(string, required)')}}, {{_('other dataset fields to modify.')}}</td>
+        </tr>
+        <tr>
+          <td><code>resource_update</code> / <code>resource_patch</code></td>
+          <td>{{_('Updates an existing resource (fully or partially). (Requires Auth)')}}</td>
+          <td>{{_('POST')}}</td>
+          <td><code>id</code> {{_('(string, required)')}}, {{_('other resource fields to modify.')}}</td>
+        </tr>
+        <tr>
+          <td><code>package_delete</code></td>
+          <td>{{_('Marks a dataset as deleted. (Requires Auth)')}}</td>
+          <td>{{_('POST')}}</td>
+          <td><code>id</code> {{_('(string, required: dataset ID or name)')}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>{{_('Using the `ckanapi` Python Client and CLI')}}</h3>
+  <p>{{_('For Python users and system administrators, the `ckanapi` library offers a convenient way to interact with the CKAN API, both as a Python module and a command-line interface (CLI) tool.')}}</p>
+  <p>{{_('Installation:')}}</p>
+  <pre><code>pip install ckanapi</code></pre>
+  <p>{{_('CLI Examples:')}}</p>
+  <ul>
+    <li>{{_('List datasets:')}}<br><code>ckanapi action package_list -r https://dadosabertos.artesp.sp.gov.br</code></li>
+    <li>{{_('Show dataset details (replace `your-dataset-id`):')}}<br><code>ckanapi action package_show id=your-dataset-id -r https://dadosabertos.artesp.sp.gov.br</code></li>
+  </ul>
+  <p>{{_('The `ckanapi` library is highly recommended for scripting interactions with the API.')}}</p>
+
+  <h3>{{_('API Usage Tips and Best Practices')}}</h3>
+  <ul>
+    <li><strong>{{_('Check `success` Field:')}}</strong> {{_('Always verify the `success` field in the API response, not just the HTTP status code, to confirm the action was successful.')}}</li>
+    <li><strong>{{_('Error Handling:')}}</strong> {{_('Implement robust error handling by parsing the `error` object when `success` is `false`.')}}</li>
+    <li><strong>{{_('Pagination:')}}</strong> {{_('For actions that return lists (like `package_search` or `package_list`), use parameters like `rows` (or `limit`) and `start` (or `offset`) to paginate through results.')}}</li>
+    <li><strong>{{_('Rate Limiting:')}}</strong> {{_('Be aware that the API might have rate limits. Design your applications to handle potential throttling gracefully.')}}</li>
+    <li><strong>{{_('Full Documentation:')}}</strong> {{_('For a comprehensive list of API actions, their parameters, and more detailed examples, refer to the official CKAN API documentation (often found at `/api/3` on the CKAN instance) or specific guides provided by this portal.')}}</li>
+  </ul>
 
   <p>{{ _('Last updated: June 2025') }}</p>
 </section>
