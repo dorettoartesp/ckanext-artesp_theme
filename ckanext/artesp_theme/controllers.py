@@ -17,10 +17,6 @@ def privacy():
     return render_template('static/privacy.html')
 
 
-def contact():
-    return render_template('static/contact.html')
-
-
 def harvesting():
     return render_template('static/harvesting.html')
 
@@ -28,7 +24,6 @@ def harvesting():
 artesp_theme.add_url_rule('/about-ckan', view_func=about_ckan)
 artesp_theme.add_url_rule('/terms', view_func=terms)
 artesp_theme.add_url_rule('/privacy', view_func=privacy)
-artesp_theme.add_url_rule('/contact', view_func=contact)
 artesp_theme.add_url_rule('/harvesting', view_func=harvesting)
 
 @artesp_theme.before_app_request
