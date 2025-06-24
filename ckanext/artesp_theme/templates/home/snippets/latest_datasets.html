@@ -1,8 +1,8 @@
-{% set latest_datasets = h.get_latest_datasets(3) %}
+{% set latest_datasets = h.get_featured_datasets(3) %}
 
 <div class="latest-datasets-section">
   <div class="section-header">
-    <h2 class="section-title">{{ _('Latest Datasets') }}</h2>
+    <h2 class="section-title">{{ _('Featured Datasets') }}</h2>
     <a href="{% url_for 'dataset.search' %}" class="view-all-link">{{ _('View all datasets') }} <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
   </div>
 

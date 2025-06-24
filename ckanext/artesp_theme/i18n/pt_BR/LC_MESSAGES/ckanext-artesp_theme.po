@@ -1048,6 +1048,10 @@ msgstr "Nenhuma organização em destaque disponível"
 msgid "Latest Datasets"
 msgstr "Conjuntos de Dados Recentes"
 
+#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:5
+msgid "Featured Datasets"
+msgstr "Conjuntos de Dados em Destaque"
+
 #: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:6
 msgid "View all datasets"
 msgstr "Ver todos os conjuntos de dados"

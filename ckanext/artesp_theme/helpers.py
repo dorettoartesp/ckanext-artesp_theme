@@ -93,6 +93,30 @@ def get_latest_datasets(limit=3):
         log.error(f"Error getting latest datasets: {str(e)}")
         # Return empty list if there's an error
         return []
+    
+def get_featured_datasets(limit=3):
+    """
+    Return a list of datasets, with featured datasets appearing first.
+
+    The sorting order is:
+    1. Datasets with the custom field 'featuredDataset' set to 'true'.
+    2. All other datasets.
+    Within each group, datasets are sorted by most recently modified.
+    """
+    try:
+        # Search for all datasets, sorting by featured status and then modification date
+        search_params = {
+            'sort': 'featuredDataset desc, metadata_modified desc',
+            'rows': limit,
+            'include_private': False
+        }
+        datasets = toolkit.get_action('package_search')({}, search_params)
+        return datasets.get('results', [])
+    except Exception as e:
+        log.error(f"Error getting featured datasets: {str(e)}")
+        # Return empty list if there's an error
+        return []
+    
 
 
 def get_organization_count():
@@ -191,6 +215,7 @@ def get_helpers():
         "get_package_count": get_package_count,
         "get_resource_count": get_resource_count,
         "get_latest_datasets": get_latest_datasets,
+        "get_featured_datasets": get_featured_datasets,
         "get_latest_resources": get_latest_resources,
         "get_organization_count": get_organization_count,
         "get_group_count": get_group_count,
