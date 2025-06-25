@@ -159,8 +159,9 @@ def get_latest_resources(limit=5, org_id=None, dataset_id=None):
         elif org_id:
             query = query.join(Package).filter(Package.owner_org == org_id)
 
-        # Order by last_modified descending and apply limit
-        resources = query.order_by(desc(Resource.last_modified)).limit(limit).all()
+        # Order by metadata_modified descending. This field is more reliable
+        # for finding recently updated resources as it tracks any metadata change.
+        resources = query.order_by(desc(Resource.metadata_modified)).limit(limit).all()
         for res in resources:
             try:
                 # Get the full dataset dictionary

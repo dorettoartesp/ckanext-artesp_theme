@@ -16,7 +16,7 @@
             {# Date section on the left side #}
             <div class="ticket-date-section">
               <div class="ticket-date">
-                {% set date_string = resource_item.resource.last_modified or resource_item.resource.created %}
+                {% set date_string = resource_item.resource.metadata_modified or resource_item.resource.created %}
                 {% if date_string %}
                   {% set day = h.render_datetime(date_string, date_format='%d') %}
                   {% set month_num = h.render_datetime(date_string, date_format='%m')|int %}
