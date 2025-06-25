@@ -4,7 +4,7 @@
   <div class="section-header">
     <h2 class="section-title">{{ _('Latest Resources') }}</h2>
     {# Links to the main dataset search page, as resources are typically found within datasets #}
-    <a href="" class="view-all-link"></a>
+    <a href="{{ h.url_for('dataset.search') }}" class="view-all-link">{{ _('View All') }}</a>
   </div>
 
   <div class="latest-resources-container">
@@ -18,23 +18,14 @@
               <div class="ticket-date">
                 {% set date_string = resource_item.resource.metadata_modified or resource_item.resource.created %}
                 {% if date_string %}
-                  {% set day = h.render_datetime(date_string, date_format='%d') %}
-                  {% set month_num = h.render_datetime(date_string, date_format='%m')|int %}
-                  {% set year = h.render_datetime(date_string, date_format='%Y') %}
-
                   <div class="date-day">
-                    {{ day }}
+                    {{ h.render_datetime(date_string, date_format='%d') }}
                   </div>
                   <div class="date-month">
-                    {% set month_names = {
-                      1: _('Jan'), 2: _('Feb'), 3: _('Mar'), 4: _('Apr'),
-                      5: _('May'), 6: _('Jun'), 7: _('Jul'), 8: _('Aug'),
-                      9: _('Sep'), 10: _('Oct'), 11: _('Nov'), 12: _('Dec')
-                    } %}
-                    {{ month_names[month_num]|upper }}
+                    {{ h.render_datetime(date_string, date_format='%b')|upper }}
                   </div>
                   <div class="date-year">
-                    {{ year }}
+                    {{ h.render_datetime(date_string, date_format='%Y') }}
                   </div>
                 {% endif %}
               </div>
@@ -49,20 +40,14 @@
 
                 {# Format tag and dataset info on the same line #}
                 <div class="resource-meta-row">
-                  {% if resource_item.resource.format %}
+                  {% set format = resource_item.resource.format|upper if resource_item.resource.format else '' %}
+                  {% if not format and resource_item.resource.url %}
+                    {% set format = 'URL' %}
+                  {% endif %}
+                  {% if format %}
                     <div class="resource-format-tag">
-                      <span>{{ resource_item.resource.format|upper }}</span>
+                      <span>{{ format }}</span>
                     </div>
-                  {% else %}
-                    {% if resource_item.resource.url %}
-                      <div class="resource-format-tag">
-                        <span>URL</span>
-                      </div>
-                    {% else %}
-                      <div class="resource-format-tag">
-                        <span></span>
-                      </div>
-                    {% endif %}
                   {% endif %}
 
                   {# Display parent dataset information. parent_dataset_title is not enriched by the helper, falls back to package_id. #}
@@ -70,7 +55,7 @@
                     <div class="resource-parent-dataset">
                       <i class="fa fa-archive" aria-hidden="true"></i>
                       <a href="{{ h.url_for('dataset.read', id=resource_item.resource.package_id) }}" title="{{ _('View parent dataset') }}">
-                        {{ resource_item.parent_dataset_title|truncate(30) }}
+                        {{ (resource_item.parent_dataset_title or resource_item.resource.package_id)|truncate(30) }}
                       </a>
                     </div>
                   {% endif %}
