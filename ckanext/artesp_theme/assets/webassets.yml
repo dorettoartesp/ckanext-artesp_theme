@@ -2,8 +2,6 @@ artesp-theme-js:
   filter: rjsmin
   output: artesp_theme/artesp_theme.js
   contents:
-    - js/placeholder.js
-    - js/animated-background.js
     - js/stats-counter.js
   extra:
     preload:
