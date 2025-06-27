@@ -257,6 +257,10 @@
   transition: all 0.2s ease;
   font-weight: 500;
   letter-spacing: 0.01em;
+  max-width: 7.5rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden
 }
 
 .dataset-tags .tag:hover {
