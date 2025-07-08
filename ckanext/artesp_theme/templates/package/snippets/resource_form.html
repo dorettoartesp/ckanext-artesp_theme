@@ -32,13 +32,9 @@
         placeholder=_('http://example.com/external-data.csv') %}
     {% endblock %}
 
-    {% block basic_fields_name %}
-      {{ form.input('name', id='field-name', label=_('Name'), placeholder=_('eg. January 2011 Gold Prices'), value=data.name, error=errors.name, classes=['control-full']) }}
-    {% endblock %}
-
-    {% block basic_fields_description %}
-      {{ form.markdown('description', id='field-description', label=_('Description'), placeholder=_('Some useful notes about the data'), value=data.description, error=errors.description) }}
-    {% endblock %}
+    {% for field in resource_fields %}
+      {{ form.input(field.field_name, id='field-' + field.field_name, label=_(field.label), placeholder=_(field.form_placeholder), value=data[field.field_name], error=errors[field.field_name], classes=['control-full']) }}
+    {% endfor %}
 
     {% block basic_fields_format %}
       {% set format_attrs = {'data-module': 'autocomplete', 'data-module-source': '/api/2/util/resource/format_autocomplete?incomplete=?'} %}
