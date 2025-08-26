@@ -26,9 +26,12 @@
                   {% if dataset.groups and dataset.groups|length > 0 %}
                     <div class="dataset-groups">
                       <i class="fa fa-object-group" aria-hidden="true"></i>
-                      {% for group in dataset.groups %}
-                        {{ group.title|title or group.name|title }}{% if not loop.last %}, {% endif %}
-                      {% endfor %}
+                      {% set group_count = dataset.groups|length %}
+                      {% if group_count == 1 %}
+                        1 grupo
+                      {% else %}
+                        {{ group_count }} grupos
+                      {% endif %}
                     </div>
                   {% endif %}
 
