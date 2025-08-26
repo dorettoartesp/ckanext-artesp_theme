@@ -106,22 +106,28 @@ def artesp_date_iso_to_br(value, context):
 
 def artesp_boolean_validator(value, context):
     """
-    Convert string boolean values to actual boolean for proper display
-    as "Sim"/"Não" in forms and templates.
+    Convert string boolean values to actual boolean and validate against
+    allowed values [True, False] for proper display as "Sim"/"Não" in forms and templates.
 
     Args:
         value: String or boolean value
         context: CKAN validation context
 
     Returns:
-        Boolean value or original value if conversion not possible
+        Boolean value
+
+    Raises:
+        Invalid: If value cannot be converted to boolean or is not in allowed values
     """
     if value is None or value == '':
         return value
 
-    # If already a boolean, return as-is
+    # If already a boolean, validate it's in allowed values
     if isinstance(value, bool):
-        return value
+        if value in [True, False]:
+            return value
+        else:
+            raise tk.Invalid(tk._('Value must be one of [True, False]'))
 
     # Convert string representations to boolean
     if isinstance(value, str):
@@ -130,9 +136,11 @@ def artesp_boolean_validator(value, context):
             return True
         elif value_lower in ('false', '0', 'no', 'não', 'nao', 'falso'):
             return False
+        else:
+            raise tk.Invalid(tk._('Value must be one of [True, False]'))
 
-    # Return original value if no conversion possible
-    return value
+    # If we get here, the value type is not supported
+    raise tk.Invalid(tk._('Value must be one of [True, False]'))
 
 
 def get_validators():
