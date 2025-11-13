@@ -87,6 +87,14 @@
     {% endblock %}
 
     {%- block head_extras %}
+      <!-- Google tag (gtag.js) -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-KHRQRHE3QH"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);} 
+        gtag('js', new Date());
+        gtag('config', 'G-KHRQRHE3QH');
+      </script>
     {% endblock %}
 
   </head>
