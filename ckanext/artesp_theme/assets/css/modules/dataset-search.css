@@ -157,6 +157,18 @@
   margin-bottom: 20px;
 }
 
+/* Resource item view link hover effect */
+.dataset-item .dataset-content a[href*="/resource/"] {
+  color: #1a73e8;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.dataset-item .dataset-content a[href*="/resource/"]:hover {
+  color: var(--primary) !important;
+  text-decoration: none;
+}
+
 /* Responsive styles */
 @media (max-width: 768px) {
   .search-form {

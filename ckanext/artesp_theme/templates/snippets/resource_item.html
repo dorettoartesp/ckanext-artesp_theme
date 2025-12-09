@@ -1,0 +1,62 @@
+{#
+Displays a single resource.
+
+resource       - A resource to display.
+item_class     - The class name to use on the list item.
+
+Example:
+
+  {% snippet 'snippets/resource_item.html', resource=resource %}
+
+#}
+{% set title = resource.name or resource.id %}
+{% set notes = resource.description %}
+
+{% block resource_item %}
+  <li class="{{ item_class or "dataset-item" }}">
+    {% block content %}
+      <div class="dataset-content">
+        {% block heading %}
+          <h3 class="dataset-heading" style="margin: 0 0 8px 0; font-size: 18px; font-weight: 500; line-height: 1.4;">
+            {% block heading_title %}
+              <a href="{{ h.url_for('resource.read', id=resource.package_id, resource_id=resource.id) }}" style="color: #1a73e8; text-decoration: none;">
+                {{ title }}
+              </a>
+            {% endblock %}
+            {% block heading_format %}
+              {% if resource.format %}
+                <span class="badge badge-default" data-format="{{ resource.format.lower() }}" style="font-size: 11px; font-weight: 600; margin-left: 8px; padding: 3px 8px; vertical-align: middle;">{{ resource.format }}</span>
+              {% endif %}
+            {% endblock %}
+          </h3>
+        {% endblock %}
+        {% block notes %}
+          {% if notes %}
+            <div style="color: #545454; font-size: 14px; line-height: 1.6; margin-bottom: 6px;">{{ notes|truncate(180) }}</div>
+          {% else %}
+            <div style="color: #70757a; font-size: 14px; font-style: italic;">{{ _("No description") }}</div>
+          {% endif %}
+        {% endblock %}
+        {% block metadata %}
+          <div style="font-size: 13px; color: #70757a; margin-top: 4px;">
+            {% if resource.created %}
+              <span style="margin-right: 16px;">
+                <i class="fa fa-calendar" style="margin-right: 4px;"></i>
+                {{ h.render_datetime(resource.created, with_hours=False) }}
+              </span>
+            {% endif %}
+            {% if resource.package_name %}
+              <span style="margin-right: 16px;">
+                <i class="fa fa-sitemap" style="margin-right: 4px;"></i>
+                <a href="{{ h.url_for('dataset.read', id=resource.package_id) }}" style="color: #70757a; text-decoration: none;">{{ resource.package_name }}</a>
+              </span>
+            {% endif %}
+            <a href="{{ h.url_for('resource.read', id=resource.package_id, resource_id=resource.id) }}" style="color: #1a73e8; text-decoration: none;">
+              {{ _('View resource') }} →
+            </a>
+          </div>
+        {% endblock %}
+      </div>
+    {% endblock %}
+  </li>
+{% endblock %}

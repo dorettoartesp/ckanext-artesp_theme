@@ -29,6 +29,12 @@ Example:
   {% set text_no_query = ungettext('{number} organization found', '{number} organizations found', count) %}
   {% set text_no_query_none = _('No organizations found') %}
 
+{% elif type == 'resource' %}
+  {% set text_query = ungettext('{number} resource found for "{query}"', '{number} resources found for "{query}"', count) %}
+  {% set text_query_none = _('No resources found for "{query}"') %}
+  {% set text_no_query = ungettext('{number} resource found', '{number} resources found', count) %}
+  {% set text_no_query_none = _('No resources found') %}
+
 {% else %}
   {% set text_query_singular = '{number} ' + type + ' found for "{query}"' %}
   {% set text_query_plural = '{number} ' + type + 's found for "{query}"' %}

@@ -30,21 +30,30 @@
     {% endblock %}
   </div>
 
-  {# Second row: Results count (left) and Order by dropdown (right) #}
-  <div class="search-results-row">
-    {% block search_title %}
-      <h1>
-      {% if not error %}
-        {% snippet 'snippets/search_result_text.html', query=query, count=count, type=type %}
-      {% else %}
-        Error
-      {% endif %}
-      </h1>
-    {% endblock %}
+  {# Results count title - full width #}
+  {% block search_title %}
+    <h1>
+    {% if not error %}
+      {% snippet 'snippets/search_result_text.html', query=query, count=count, type=type %}
+    {% else %}
+      Error
+    {% endif %}
+    </h1>
+  {% endblock %}
+
+  {# Filters row: Type selector (left) and Order by dropdown (right) #}
+  <div class="search-filters-row" style="display: flex; align-items: center; margin-bottom: 20px;">
+    <div class="form-group control-search-type" style="margin-right: 15px; margin-bottom: 0;">
+      <label style="margin-right: 10px;">{{ _('Type') }}</label>
+      <div class="btn-group">
+        <a href="{{ h.url_for('dataset.search', q=query) }}" class="btn btn-{{ 'primary' if type == 'dataset' else 'default' }}">{{ _('Datasets') }}</a>
+        <a href="{{ h.url_for('artesp_theme.resource_search', q=query) }}" class="btn btn-{{ 'primary' if type == 'resource' else 'default' }}">{{ _('Resources') }}</a>
+      </div>
+    </div>
 
     {% block search_sortby %}
       {% if sorting %}
-        <div class="form-group control-order-by">
+        <div class="form-group control-order-by" style="margin-bottom: 0; margin-left: auto;">
           <label for="field-order-by">{{ _('Order by') }}</label>
           <select id="field-order-by" name="sort" class="form-control form-select">
             {% for label, value in sorting %}

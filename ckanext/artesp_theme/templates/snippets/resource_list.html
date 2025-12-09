@@ -1,0 +1,23 @@
+{#
+Displays a list of resources.
+
+resources      - A list of resources to display.
+list_class     - The class name for the list item.
+item_class     - The class name to use on each item.
+
+Example:
+
+  {% snippet 'snippets/resource_list.html', resources=resources %}
+
+#}
+{% block resource_list %}
+  {% if resources %}
+    <ul class="{{ list_class or 'dataset-list list-unstyled' }}">
+      {% block resource_list_inner %}
+        {% for resource in resources %}
+          {% snippet 'snippets/resource_item.html', resource=resource, item_class=item_class %}
+        {% endfor %}
+      {% endblock %}
+    </ul>
+  {% endif %}
+{% endblock %}

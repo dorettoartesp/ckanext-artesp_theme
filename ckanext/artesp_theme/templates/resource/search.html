@@ -1,0 +1,72 @@
+{% extends "page.html" %}
+{% import 'macros/form.html' as form %}
+
+{% block subtitle %}{{ _('Resources') }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="active">{{ h.nav_link(_('Resources'), named_route='artesp_theme.resource_search') }}</li>
+{% endblock %}
+
+{% block primary_content %}
+  <section class="module">
+    <div class="module-content">
+      {% block page_primary_action %}
+        {# No primary action for resources search #}
+      {% endblock %}
+      {% block form %}
+        {% set sorting = [
+          (_('Newest'), 'created desc'),
+          (_('Name Ascending'), 'name asc'),
+          (_('Name Descending'), 'name desc')
+          ]
+        %}
+        {% snippet 'snippets/search_form.html', form_id='resource-search-form', type='resource', query=q, sorting=sorting, sorting_selected=sort_by_selected, count=count, placeholder=_('Search resources...'), show_empty=request.args %}
+      {% endblock %}
+      {% block package_search_results_list %}
+        {% snippet 'snippets/resource_list.html', resources=resources %}
+      {% endblock %}
+    </div>
+
+    {% block page_pagination %}
+      {{ page.pager(q=q) }}
+    {% endblock %}
+  </section>
+{% endblock %}
+
+{% block secondary_content %}
+  <div class="filters">
+    <div>
+      {% if format_facets %}
+        <section class="module module-narrow module-shallow">
+          <h2 class="module-heading">
+            <i class="fa fa-filter"></i>
+            {{ _('Formats') }}
+          </h2>
+          <nav aria-label="{{ _('Formats') }}">
+            <ul class="list-unstyled nav nav-simple nav-facet">
+              {% for format, count in format_facets %}
+                <li class="nav-item {% if format_filter == format %}active{% endif %}">
+                  {% if format_filter == format %}
+                    <a href="{{ h.url_for('artesp_theme.resource_search', q=q, sort=sort_by_selected) }}" class="active" title="{{ _('Remove filter') }}">
+                      <span class="item-label">{{ format }}</span>
+                      <span class="hidden separator"> - </span>
+                      <span class="item-count badge">{{ count }}</span>
+                      <i class="fa fa-times"></i>
+                    </a>
+                  {% else %}
+                    <a href="{{ h.url_for('artesp_theme.resource_search', q=q, format=format, sort=sort_by_selected) }}" title="{{ format }}">
+                      <span class="item-label">{{ format }}</span>
+                      <span class="hidden separator"> - </span>
+                      <span class="item-count badge">{{ count }}</span>
+                    </a>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          </nav>
+        </section>
+      {% endif %}
+    </div>
+    <a class="close no-text hide-filters"><i class="fa fa-times-circle"></i><span class="text">close</span></a>
+  </div>
+{% endblock %}

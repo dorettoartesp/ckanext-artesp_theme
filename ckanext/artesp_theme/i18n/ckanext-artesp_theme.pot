@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-artesp_theme 0.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-17 08:33-0300\n"
+"POT-Creation-Date: 2025-12-09 19:52+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: ckanext/artesp_theme/controllers.py:36
+#: ckanext/artesp_theme/controllers.py:224
 msgid "You must be logged in to access the statistics page."
 msgstr ""
 
@@ -36,6 +36,12 @@ msgstr ""
 
 #: ckanext/artesp_theme/logic/validators.py:64
 msgid "Data inválida. Verifique se o dia, mês e ano estão corretos"
+msgstr ""
+
+#: ckanext/artesp_theme/logic/validators.py:130
+#: ckanext/artesp_theme/logic/validators.py:140
+#: ckanext/artesp_theme/logic/validators.py:143
+msgid "Value must be one of [True, False]"
 msgstr ""
 
 #: ckanext/artesp_theme/templates/error_document_template.html:3
@@ -105,6 +111,7 @@ msgstr ""
 #: ckanext/artesp_theme/templates/package/snippets/new_package_breadcrumb.html:1
 #: ckanext/artesp_theme/templates/snippets/context/group.html:19
 #: ckanext/artesp_theme/templates/snippets/context/user.html:21
+#: ckanext/artesp_theme/templates/snippets/search_form.html:49
 #: ckanext/artesp_theme/templates/user/read.html:11
 #: ckanext/artesp_theme/templates/user/read_base.html:22
 #: ckanext/artesp_theme/templates/user/snippets/info.html:44
@@ -523,7 +530,7 @@ msgstr ""
 
 #: ckanext/artesp_theme/templates/group/edit_base.html:9
 #: ckanext/artesp_theme/templates/organization/edit_base.html:9
-#: ckanext/artesp_theme/templates/package/resource_read.html:42
+#: ckanext/artesp_theme/templates/package/resource_read.html:48
 #: ckanext/artesp_theme/templates/package/resource_views.html:4
 msgid "View"
 msgstr ""
@@ -584,6 +591,7 @@ msgstr ""
 #: ckanext/artesp_theme/templates/organization/index.html:20
 #: ckanext/artesp_theme/templates/organization/read.html:21
 #: ckanext/artesp_theme/templates/package/search.html:30
+#: ckanext/artesp_theme/templates/resource/search.html:19
 #: ckanext/artesp_theme/templates/snippets/search_form.html:4
 #: ckanext/artesp_theme/templates/snippets/simple_search.html:10
 msgid "Name Ascending"
@@ -595,6 +603,7 @@ msgstr ""
 #: ckanext/artesp_theme/templates/organization/index.html:20
 #: ckanext/artesp_theme/templates/organization/read.html:22
 #: ckanext/artesp_theme/templates/package/search.html:31
+#: ckanext/artesp_theme/templates/resource/search.html:20
 #: ckanext/artesp_theme/templates/snippets/search_form.html:4
 #: ckanext/artesp_theme/templates/snippets/simple_search.html:10
 msgid "Name Descending"
@@ -655,7 +664,7 @@ msgstr ""
 #: ckanext/artesp_theme/templates/package/collaborators/collaborators.html:36
 #: ckanext/artesp_theme/templates/package/edit_view.html:20
 #: ckanext/artesp_theme/templates/package/snippets/package_form.html:42
-#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:73
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:64
 #: ckanext/artesp_theme/templates/user/edit_user_form.html:93
 msgid "Delete"
 msgstr ""
@@ -738,7 +747,7 @@ msgstr ""
 #: ckanext/artesp_theme/templates/organization/bulk_process.html:31
 #: ckanext/artesp_theme/templates/organization/read.html:23
 #: ckanext/artesp_theme/templates/package/search.html:32
-#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:59
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:50
 msgid "Last Modified"
 msgstr ""
 
@@ -757,7 +766,6 @@ msgstr ""
 
 #: ckanext/artesp_theme/templates/group/snippets/group_form.html:12
 #: ckanext/artesp_theme/templates/organization/snippets/organization_form.html:12
-#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:36
 msgid "Name"
 msgstr ""
 
@@ -776,7 +784,6 @@ msgstr ""
 #: ckanext/artesp_theme/templates/group/snippets/group_form.html:22
 #: ckanext/artesp_theme/templates/organization/snippets/organization_form.html:22
 #: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:21
-#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:40
 #: ckanext/artesp_theme/templates/package/snippets/view_form.html:9
 #: ckanext/artesp_theme/templates/static/harvesting.html:195
 msgid "Description"
@@ -831,7 +838,7 @@ msgstr ""
 #: ckanext/artesp_theme/templates/group/snippets/group_item.html:56
 #: ckanext/artesp_theme/templates/macros/form/custom.html:50
 #: ckanext/artesp_theme/templates/package/snippets/resource_upload_field.html:34
-#: ckanext/artesp_theme/templates/snippets/search_form.html:77
+#: ckanext/artesp_theme/templates/snippets/search_form.html:86
 msgid "Remove"
 msgstr ""
 
@@ -968,25 +975,25 @@ msgid "No featured organizations available"
 msgstr ""
 
 #: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:5
-msgid "Latest Datasets"
+msgid "Featured Datasets"
 msgstr ""
 
 #: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:6
 msgid "View all datasets"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:36
+#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:39
 #, python-brace-format
 msgid "{num} Resource"
 msgid_plural "{num} Resources"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:47
+#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:50
 msgid "No description provided."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:68
+#: ckanext/artesp_theme/templates/home/snippets/latest_datasets.html:71
 msgid "No datasets found."
 msgstr ""
 
@@ -994,59 +1001,11 @@ msgstr ""
 msgid "Latest Resources"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:30
-msgid "Jan"
-msgstr ""
-
-#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:30
-msgid "Feb"
-msgstr ""
-
-#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:30
-msgid "Mar"
-msgstr ""
-
-#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:30
-msgid "Apr"
-msgstr ""
-
-#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:31
-msgid "May"
-msgstr ""
-
-#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:31
-msgid "Jun"
-msgstr ""
-
-#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:31
-msgid "Jul"
-msgstr ""
-
-#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:31
-msgid "Aug"
-msgstr ""
-
-#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:32
-msgid "Sep"
-msgstr ""
-
-#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:32
-msgid "Oct"
-msgstr ""
-
-#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:32
-msgid "Nov"
-msgstr ""
-
-#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:32
-msgid "Dec"
-msgstr ""
-
-#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:72
+#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:55
 msgid "View parent dataset"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:85
+#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:68
 msgid "No recent resources found."
 msgstr ""
 
@@ -1104,7 +1063,7 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/home/snippets/search.html:54
+#: ckanext/artesp_theme/templates/home/snippets/search.html:43
 msgid "Popular topics:"
 msgstr ""
 
@@ -1128,7 +1087,10 @@ msgstr ""
 #: ckanext/artesp_theme/templates/home/snippets/stats.html:28
 #: ckanext/artesp_theme/templates/package/resources.html:5
 #: ckanext/artesp_theme/templates/package/snippets/resources.html:21
+#: ckanext/artesp_theme/templates/resource/search.html:4
+#: ckanext/artesp_theme/templates/resource/search.html:7
 #: ckanext/artesp_theme/templates/snippets/context/dataset.html:13
+#: ckanext/artesp_theme/templates/snippets/search_form.html:50
 msgid "Resources"
 msgstr ""
 
@@ -1152,7 +1114,7 @@ msgid "Key"
 msgstr ""
 
 #: ckanext/artesp_theme/templates/macros/form/custom.html:54
-#: ckanext/artesp_theme/templates/package/resource_read.html:154
+#: ckanext/artesp_theme/templates/package/resource_read.html:160
 #: ckanext/artesp_theme/templates/package/snippets/additional_info.html:7
 #: ckanext/artesp_theme/templates/snippets/additional_info.html:12
 msgid "Value"
@@ -1460,11 +1422,12 @@ msgid "Add view"
 msgstr ""
 
 #: ckanext/artesp_theme/templates/package/new_view.html:21
-#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:91
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:82
 msgid "Add"
 msgstr ""
 
 #: ckanext/artesp_theme/templates/package/resource_edit_base.html:18
+#: ckanext/artesp_theme/templates/snippets/resource_item.html:55
 msgid "View resource"
 msgstr ""
 
@@ -1483,103 +1446,102 @@ msgstr ""
 msgid "Views"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:44
+#: ckanext/artesp_theme/templates/package/resource_read.html:50
 msgid "API Endpoint"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:46
+#: ckanext/artesp_theme/templates/package/resource_read.html:52
 #: ckanext/artesp_theme/templates/package/snippets/resource_item.html:63
 msgid "Go to resource"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:48
+#: ckanext/artesp_theme/templates/package/resource_read.html:54
 #: ckanext/artesp_theme/templates/package/snippets/resource_item.html:60
 msgid "Download"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:63
-#: ckanext/artesp_theme/templates/package/resource_read.html:65
+#: ckanext/artesp_theme/templates/package/resource_read.html:69
+#: ckanext/artesp_theme/templates/package/resource_read.html:71
 msgid "URL:"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:73
+#: ckanext/artesp_theme/templates/package/resource_read.html:79
 msgid "Dataset description:"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:75
+#: ckanext/artesp_theme/templates/package/resource_read.html:81
 #, python-format
 msgid "Source: <a href=\"%(url)s\">%(dataset)s</a>"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:106
+#: ckanext/artesp_theme/templates/package/resource_read.html:112
 msgid "There are no views created for this resource yet."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:110
+#: ckanext/artesp_theme/templates/package/resource_read.html:116
 msgid "Not seeing the views you were expecting?"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:112
+#: ckanext/artesp_theme/templates/package/resource_read.html:118
 #: ckanext/artesp_theme/templates/package/snippets/resource_view.html:35
 msgid "Click here for more information."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:115
+#: ckanext/artesp_theme/templates/package/resource_read.html:121
 msgid "Here are some reasons you may not be seeing expected views:"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:117
+#: ckanext/artesp_theme/templates/package/resource_read.html:123
 msgid "No view has been created that is suitable for this resource"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:118
+#: ckanext/artesp_theme/templates/package/resource_read.html:124
 msgid "The site administrators may not have enabled the relevant view plugins"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:119
+#: ckanext/artesp_theme/templates/package/resource_read.html:125
 msgid ""
 "If a view requires the DataStore, the DataStore plugin may not be enabled, or"
 " the data may not have been pushed to the DataStore, or the DataStore hasn't "
 "finished processing the data yet"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:149
+#: ckanext/artesp_theme/templates/package/resource_read.html:155
 msgid "Additional Information"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:153
+#: ckanext/artesp_theme/templates/package/resource_read.html:159
 #: ckanext/artesp_theme/templates/package/snippets/additional_info.html:6
 #: ckanext/artesp_theme/templates/snippets/additional_info.html:11
 msgid "Field"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:159
+#: ckanext/artesp_theme/templates/package/resource_read.html:165
 msgid "Data last updated"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:160
-#: ckanext/artesp_theme/templates/package/resource_read.html:164
-#: ckanext/artesp_theme/templates/package/resource_read.html:168
-#: ckanext/artesp_theme/templates/package/resource_read.html:172
+#: ckanext/artesp_theme/templates/package/resource_read.html:166
+#: ckanext/artesp_theme/templates/package/resource_read.html:170
+#: ckanext/artesp_theme/templates/package/resource_read.html:174
+#: ckanext/artesp_theme/templates/package/resource_read.html:178
 msgid "unknown"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:163
+#: ckanext/artesp_theme/templates/package/resource_read.html:169
 msgid "Metadata last updated"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:167
+#: ckanext/artesp_theme/templates/package/resource_read.html:173
 #: ckanext/artesp_theme/templates/package/snippets/additional_info.html:74
 msgid "Created"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:171
-#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:45
+#: ckanext/artesp_theme/templates/package/resource_read.html:177
 #: ckanext/artesp_theme/templates/package/snippets/resource_info.html:19
 msgid "Format"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/resource_read.html:175
+#: ckanext/artesp_theme/templates/package/resource_read.html:181
 #: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:32
 #: ckanext/artesp_theme/templates/snippets/license.html:20
 msgid "License"
@@ -1834,57 +1796,41 @@ msgstr ""
 msgid "http://example.com/external-data.csv"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:36
-msgid "eg. January 2011 Gold Prices"
-msgstr ""
-
-#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:40
-msgid "Some useful notes about the data"
-msgstr ""
-
-#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:45
-msgid "eg. CSV, XML or JSON"
-msgstr ""
-
-#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:48
-msgid "This will be guessed automatically. Leave blank if you wish"
-msgstr ""
-
-#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:59
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:50
 msgid "eg. 2012-06-05"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:61
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:52
 msgid "File Size"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:61
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:52
 msgid "eg. 1024"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:63
-#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:65
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:54
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:56
 msgid "MIME Type"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:63
-#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:65
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:54
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:56
 msgid "eg. application/json"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:73
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:64
 msgid "Are you sure you want to delete this resource?"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:79
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:70
 msgid "Previous"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:83
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:74
 msgid "Save & add another"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:87
+#: ckanext/artesp_theme/templates/package/snippets/resource_form.html:78
 msgid "Finish"
 msgstr ""
 
@@ -2016,6 +1962,23 @@ msgstr ""
 msgid "A view is a representation of the data held against a resource"
 msgstr ""
 
+#: ckanext/artesp_theme/templates/resource/search.html:18
+msgid "Newest"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/resource/search.html:23
+msgid "Search resources..."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/resource/search.html:43
+#: ckanext/artesp_theme/templates/resource/search.html:45
+msgid "Formats"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/resource/search.html:50
+msgid "Remove filter"
+msgstr ""
+
 #: ckanext/artesp_theme/templates/snippets/add_dataset.html:4
 msgid "Add Dataset"
 msgstr ""
@@ -2053,7 +2016,7 @@ msgid "Follow"
 msgstr ""
 
 #: ckanext/artesp_theme/templates/snippets/language_selector.html:17
-#: ckanext/artesp_theme/templates/snippets/search_form.html:57
+#: ckanext/artesp_theme/templates/snippets/search_form.html:66
 #: ckanext/artesp_theme/templates/snippets/simple_search.html:15
 msgid "Go"
 msgstr ""
@@ -2070,24 +2033,32 @@ msgstr ""
 msgid "There is no description for this dataset"
 msgstr ""
 
+#: ckanext/artesp_theme/templates/snippets/resource_item.html:37
+msgid "No description"
+msgstr ""
+
 #: ckanext/artesp_theme/templates/snippets/search_form.html:18
 msgid "Submit"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/snippets/search_form.html:48
+#: ckanext/artesp_theme/templates/snippets/search_form.html:47
+msgid "Type"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/snippets/search_form.html:57
 #: ckanext/artesp_theme/templates/snippets/simple_search.html:8
 msgid "Order by"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/snippets/search_form.html:82
+#: ckanext/artesp_theme/templates/snippets/search_form.html:91
 msgid "Filter Results"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/snippets/search_form.html:89
+#: ckanext/artesp_theme/templates/snippets/search_form.html:98
 msgid "<p class=\"extra\">Please try another search.</p>"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/snippets/search_form.html:95
+#: ckanext/artesp_theme/templates/snippets/search_form.html:104
 msgid ""
 "<p id=\"search-error\"><strong>There was an error while searching.</strong> "
 "Please try again.</p>"
@@ -2160,6 +2131,29 @@ msgstr[1] ""
 
 #: ckanext/artesp_theme/templates/snippets/search_result_text.html:30
 msgid "No organizations found"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/snippets/search_result_text.html:33
+#, python-brace-format
+msgid "{number} resource found for \"{query}\""
+msgid_plural "{number} resources found for \"{query}\""
+msgstr[0] ""
+msgstr[1] ""
+
+#: ckanext/artesp_theme/templates/snippets/search_result_text.html:34
+#, python-brace-format
+msgid "No resources found for \"{query}\""
+msgstr ""
+
+#: ckanext/artesp_theme/templates/snippets/search_result_text.html:35
+#, python-brace-format
+msgid "{number} resource found"
+msgid_plural "{number} resources found"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ckanext/artesp_theme/templates/snippets/search_result_text.html:36
+msgid "No resources found"
 msgstr ""
 
 #: ckanext/artesp_theme/templates/snippets/social.html:5
