@@ -1080,7 +1080,7 @@ msgstr "Últimos Recursos"
 
 #: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:6
 msgid "View all resources"
-msgstr "Visualizar todos os recursos"
+msgstr "Ver todos os recursos"
 
 #: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:56
 msgid "View parent dataset"
