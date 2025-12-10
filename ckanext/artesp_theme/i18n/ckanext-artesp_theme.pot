@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-artesp_theme 0.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-12-09 19:52+0000\n"
+"POT-Creation-Date: 2025-12-10 09:26-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1001,11 +1001,15 @@ msgstr ""
 msgid "Latest Resources"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:55
+#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:6
+msgid "View all resources"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:56
 msgid "View parent dataset"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:68
+#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:69
 msgid "No recent resources found."
 msgstr ""
 

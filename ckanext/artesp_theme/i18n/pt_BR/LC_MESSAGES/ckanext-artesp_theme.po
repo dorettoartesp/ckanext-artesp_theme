@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-artesp_theme 0.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-12-09 19:52+0000\n"
+"POT-Creation-Date: 2025-12-10 09:26-0300\n"
 "PO-Revision-Date: 2025-06-18 10:00-0300\n"
 "Last-Translator: Gemini Code Assist <gemini@google.com>\n"
 "Language: pt_BR\n"
@@ -1078,11 +1078,15 @@ msgstr "Nenhum conjunto de dados encontrado."
 msgid "Latest Resources"
 msgstr "Últimos Recursos"
 
-#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:55
+#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:6
+msgid "View all resources"
+msgstr "Visualizar recurso"
+
+#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:56
 msgid "View parent dataset"
 msgstr "Ver conjunto de dado pai"
 
-#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:68
+#: ckanext/artesp_theme/templates/home/snippets/latest_resources.html:69
 msgid "No recent resources found."
 msgstr "Nenhum recurso encontrado."
 
@@ -2106,24 +2110,18 @@ msgstr "Uma visualização é uma representação dos dados contidos em um recur
 
 #: ckanext/artesp_theme/templates/resource/search.html:18
 msgid "Newest"
-msgstr ""
+msgstr "Mais recentes"
 
 #: ckanext/artesp_theme/templates/resource/search.html:23
-#, fuzzy
-#| msgid "Search groups..."
 msgid "Search resources..."
 msgstr "Buscar grupos..."
 
 #: ckanext/artesp_theme/templates/resource/search.html:43
 #: ckanext/artesp_theme/templates/resource/search.html:45
-#, fuzzy
-#| msgid "Format"
 msgid "Formats"
 msgstr "Formato"
 
 #: ckanext/artesp_theme/templates/resource/search.html:50
-#, fuzzy
-#| msgid "Remove Filter"
 msgid "Remove filter"
 msgstr "Remover Filtro"
 
@@ -2182,8 +2180,6 @@ msgid "There is no description for this dataset"
 msgstr "Não há descrição para este conjunto de dados"
 
 #: ckanext/artesp_theme/templates/snippets/resource_item.html:37
-#, fuzzy
-#| msgid "Description"
 msgid "No description"
 msgstr "Descrição"
 
@@ -2192,8 +2188,6 @@ msgid "Submit"
 msgstr "Enviar"
 
 #: ckanext/artesp_theme/templates/snippets/search_form.html:47
-#, fuzzy
-#| msgid "MIME Type"
 msgid "Type"
 msgstr "Tipo MIME"
 

@@ -17,9 +17,9 @@ Example:
     {% block content %}
       <div class="dataset-content">
         {% block heading %}
-          <h3 class="dataset-heading" style="margin: 0 0 8px 0; font-size: 18px; font-weight: 500; line-height: 1.4;">
+          <h3 class="dataset-heading resource-title">
             {% block heading_title %}
-              <a href="{{ h.url_for('resource.read', id=resource.package_id, resource_id=resource.id) }}" style="color: #1a73e8; text-decoration: none;">
+              <a href="{{ h.url_for('resource.read', id=resource.package_id, resource_id=resource.id) }}" class="resource-title-link">
                 {{ title }}
               </a>
             {% endblock %}

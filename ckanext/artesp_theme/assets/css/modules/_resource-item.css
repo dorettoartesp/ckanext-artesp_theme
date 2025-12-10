@@ -1,0 +1,22 @@
+/* ==========================================================================
+   ARTESP Theme - Resource Item
+   Contains styles for resource item snippets
+   ========================================================================== */
+
+.resource-title {
+  margin: 0 0 8px 0;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.resource-title-link {
+  color: #222222;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.resource-title-link:hover {
+  color: var(--primary);
+  text-decoration: none;
+}
