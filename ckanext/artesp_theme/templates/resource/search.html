@@ -15,7 +15,7 @@
       {% endblock %}
       {% block form %}
         {% set sorting = [
-          (_('Newest'), 'created desc'),
+          (_('Newest'), 'metadata_modified desc'),
           (_('Name Ascending'), 'name asc'),
           (_('Name Descending'), 'name desc')
           ]
