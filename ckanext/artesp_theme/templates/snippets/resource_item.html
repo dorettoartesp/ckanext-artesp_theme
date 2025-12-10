@@ -39,10 +39,11 @@ Example:
         {% endblock %}
         {% block metadata %}
           <div style="font-size: 13px; color: #70757a; margin-top: 4px;">
-            {% if resource.created %}
+            {% set date_string = resource.metadata_modified or resource.created %}
+            {% if date_string %}
               <span style="margin-right: 16px;">
                 <i class="fa fa-calendar" style="margin-right: 4px;"></i>
-                {{ h.render_datetime(resource.created, with_hours=False) }}
+                {{ h.render_datetime(date_string, with_hours=False) }}
               </span>
             {% endif %}
             {% if resource.package_name %}
