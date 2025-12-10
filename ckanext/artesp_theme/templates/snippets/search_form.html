@@ -58,7 +58,7 @@
           <select id="field-order-by" name="sort" class="form-control form-select">
             {% for label, value in sorting %}
               {% if label and value %}
-                <option value="{{ value }}"{% if sorting_selected == value %} selected="selected"{% endif %}>{{ label }}</option>
+                <option value="{{ value }}"{% if sorting_selected == value %} selected="selected"{% endif %}>{{ _(label) }}</option>
               {% endif %}
             {% endfor %}
           </select>

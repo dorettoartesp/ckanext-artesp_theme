@@ -212,7 +212,7 @@ def resource_search():
     )
 
 
-artesp_theme.add_url_rule('/resource_search', view_func=resource_search)
+artesp_theme.add_url_rule('/resources', view_func=resource_search)
 
 @artesp_theme.before_app_request
 def restrict_stats_page_access():
