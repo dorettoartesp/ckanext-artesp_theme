@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-artesp_theme 0.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-12-10 09:26-0300\n"
+"POT-Creation-Date: 2025-12-11 07:58-0300\n"
 "PO-Revision-Date: 2025-06-18 10:00-0300\n"
 "Last-Translator: Gemini Code Assist <gemini@google.com>\n"
 "Language: pt_BR\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: ckanext/artesp_theme/controllers.py:224
+#: ckanext/artesp_theme/controllers.py:197
 msgid "You must be logged in to access the statistics page."
 msgstr "Você precisa fazer login para acessar esta página."
 
@@ -1537,7 +1537,7 @@ msgid "Add"
 msgstr "Adicionar"
 
 #: ckanext/artesp_theme/templates/package/resource_edit_base.html:18
-#: ckanext/artesp_theme/templates/snippets/resource_item.html:55
+#: ckanext/artesp_theme/templates/snippets/resource_item.html:56
 msgid "View resource"
 msgstr "Visualizar recurso"
 
