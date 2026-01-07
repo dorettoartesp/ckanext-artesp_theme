@@ -43,13 +43,15 @@
 
   {# Filters row: Type selector (left) and Order by dropdown (right) #}
   <div class="search-filters-row" style="display: flex; align-items: center; margin-bottom: 20px;">
-    <div class="form-group control-search-type" style="margin-right: 15px; margin-bottom: 0;">
-      <label style="margin-right: 10px;">{{ _('Type') }}</label>
-      <div class="btn-group">
-        <a href="{{ h.url_for('dataset.search', q=query) }}" class="btn btn-{{ 'primary' if type == 'dataset' else 'default' }}">{{ _('Datasets') }}</a>
-        <a href="{{ h.url_for('artesp_theme.resource_search', q=query) }}" class="btn btn-{{ 'primary' if type == 'resource' else 'default' }}">{{ _('Resources') }}</a>
+    {% if request.endpoint in ['dataset.search', 'artesp_theme.resource_search'] %}
+      <div class="form-group control-search-type" style="margin-right: 15px; margin-bottom: 0;">
+        <label style="margin-right: 10px;">{{ _('Type') }}</label>
+        <div class="btn-group">
+          <a href="{{ h.url_for('dataset.search', q=query) }}" class="btn btn-{{ 'primary' if type == 'dataset' else 'default' }}">{{ _('Datasets') }}</a>
+          <a href="{{ h.url_for('artesp_theme.resource_search', q=query) }}" class="btn btn-{{ 'primary' if type == 'resource' else 'default' }}">{{ _('Resources') }}</a>
+        </div>
       </div>
-    </div>
+    {% endif %}
 
     {% block search_sortby %}
       {% if sorting %}

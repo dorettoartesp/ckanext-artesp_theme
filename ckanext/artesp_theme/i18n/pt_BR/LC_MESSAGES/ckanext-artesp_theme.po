@@ -2181,7 +2181,7 @@ msgstr "Não há descrição para este conjunto de dados"
 
 #: ckanext/artesp_theme/templates/snippets/resource_item.html:37
 msgid "No description"
-msgstr "Descrição"
+msgstr "Sem descrição"
 
 #: ckanext/artesp_theme/templates/snippets/search_form.html:18
 msgid "Submit"
@@ -2189,7 +2189,7 @@ msgstr "Enviar"
 
 #: ckanext/artesp_theme/templates/snippets/search_form.html:47
 msgid "Type"
-msgstr "Tipo MIME"
+msgstr "Tipo"
 
 #: ckanext/artesp_theme/templates/snippets/search_form.html:57
 #: ckanext/artesp_theme/templates/snippets/simple_search.html:8
