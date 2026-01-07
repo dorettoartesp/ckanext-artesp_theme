@@ -41,6 +41,7 @@ def resource_search():
     offset = (page - 1) * limit
     sort = request.args.get('sort', 'metadata_modified desc')
     format_filter = request.args.get('format', None)
+    group_filter = request.args.get('group', None)
 
     # Construct a Solr query for resources
     # resource_search expects 'query' parameter in the format 'field:term'
@@ -96,9 +97,37 @@ def resource_search():
         # Convert to list
         resources_list = list(all_resources.values())
 
+        # Enrich ALL resources with package (dataset) information BEFORE filtering/pagination
+        # This allows us to calculate group facets and improves performance with caching
+        package_cache = {}
+        for resource in resources_list:
+            try:
+                pkg_id = resource['package_id']
+
+                # Check cache first to avoid duplicate package_show calls
+                if pkg_id not in package_cache:
+                    package = toolkit.get_action('package_show')(None, {'id': pkg_id})
+                    package_cache[pkg_id] = package
+                else:
+                    package = package_cache[pkg_id]
+
+                # Store package metadata with resource
+                resource['package_name'] = package.get('title') or package.get('name')
+                resource['groups'] = package.get('groups', [])
+
+            except Exception as pkg_error:
+                log.warning(f"Could not fetch package info for {resource['package_id']}: {pkg_error}")
+                resource['package_name'] = None
+                resource['groups'] = []
+
         # Apply format filter
         if format_filter:
             resources_list = [r for r in resources_list if r.get('format') == format_filter]
+
+        # Apply group filter
+        if group_filter:
+            resources_list = [r for r in resources_list
+                              if any(g.get('name') == group_filter for g in r.get('groups', []))]
 
         # Apply Manual Sorting
         if sort:
@@ -130,15 +159,6 @@ def resource_search():
 
         log.info(f"Resource Search - Found {count} total results, returning {len(resources)} resources")
 
-        # Enrich resources with package (dataset) information
-        for resource in resources:
-            try:
-                package = toolkit.get_action('package_show')(None, {'id': resource['package_id']})
-                resource['package_name'] = package.get('title') or package.get('name')
-            except Exception as pkg_error:
-                log.warning(f"Could not fetch package info for {resource['package_id']}: {pkg_error}")
-                resource['package_name'] = None
-
         # Calculate format facets from ALL results (before pagination)
         format_facets = {}
         for res in resources_list:
@@ -146,13 +166,25 @@ def resource_search():
             if fmt:
                 format_facets[fmt] = format_facets.get(fmt, 0) + 1
 
+        # Calculate group facets from ALL results (before pagination)
+        group_facets = {}
+        for res in resources_list:
+            for group in res.get('groups', []):
+                group_name = group.get('name')
+                group_title = group.get('title') or group_name
+                if group_name:
+                    if group_name not in group_facets:
+                        group_facets[group_name] = {'title': group_title, 'count': 0}
+                    group_facets[group_name]['count'] += 1
+
     except Exception as e:
         log.error(f"Resource Search - Error: {e}")
         resources = []
         count = 0
         format_facets = {}
+        group_facets = {}
 
-    def pager_url(q=None, page=None, sort=None):
+    def pager_url(q=None, page=None, sort=None, format=None, group=None):
         params = {}
         if q:
             params['q'] = q
@@ -160,6 +192,10 @@ def resource_search():
             params['page'] = page
         if sort:
             params['sort'] = sort
+        if format:
+            params['format'] = format
+        if group:
+            params['group'] = group
         return toolkit.url_for('artesp_theme.resource_search', **params)
 
     page_obj = Page(
@@ -167,11 +203,18 @@ def resource_search():
         page=page,
         items_per_page=limit,
         item_count=count,
-        url=lambda **kwargs: pager_url(q=kwargs.get('q', q), page=kwargs.get('page'), sort=kwargs.get('sort', sort)),
+        url=lambda **kwargs: pager_url(
+            q=kwargs.get('q', q),
+            page=kwargs.get('page'),
+            sort=kwargs.get('sort', sort),
+            format=kwargs.get('format', format_filter),
+            group=kwargs.get('group', group_filter)
+        ),
     )
 
     # Sort facets by count (descending)
     sorted_facets = sorted(format_facets.items(), key=lambda x: x[1], reverse=True)
+    sorted_group_facets = sorted(group_facets.items(), key=lambda x: x[1]['count'], reverse=True)
 
     return render_template(
         'resource/search.html',
@@ -181,7 +224,9 @@ def resource_search():
         count=count,
         sort_by_selected=sort,
         format_facets=sorted_facets,
-        format_filter=format_filter
+        format_filter=format_filter,
+        group_facets=sorted_group_facets,
+        group_filter=group_filter
     )
 
 

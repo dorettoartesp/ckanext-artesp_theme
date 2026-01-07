@@ -36,6 +36,37 @@
 {% block secondary_content %}
   <div class="filters">
     <div>
+      {% if group_facets %}
+        <section class="module module-narrow module-shallow">
+          <h2 class="module-heading">
+            <i class="fa fa-users"></i>
+            {{ _('Groups') }}
+          </h2>
+          <nav aria-label="{{ _('Groups') }}">
+            <ul class="list-unstyled nav nav-simple nav-facet">
+              {% for group_name, group_data in group_facets %}
+                <li class="nav-item {% if group_filter == group_name %}active{% endif %}">
+                  {% if group_filter == group_name %}
+                    <a href="{{ h.url_for('artesp_theme.resource_search', q=q, sort=sort_by_selected, format=format_filter) }}" class="active" title="{{ _('Remove filter') }}">
+                      <span class="item-label">{{ group_data.title }}</span>
+                      <span class="hidden separator"> - </span>
+                      <span class="item-count badge">{{ group_data.count }}</span>
+                      <i class="fa fa-times"></i>
+                    </a>
+                  {% else %}
+                    <a href="{{ h.url_for('artesp_theme.resource_search', q=q, group=group_name, sort=sort_by_selected, format=format_filter) }}" title="{{ group_data.title }}">
+                      <span class="item-label">{{ group_data.title }}</span>
+                      <span class="hidden separator"> - </span>
+                      <span class="item-count badge">{{ group_data.count }}</span>
+                    </a>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          </nav>
+        </section>
+      {% endif %}
+
       {% if format_facets %}
         <section class="module module-narrow module-shallow">
           <h2 class="module-heading">
@@ -47,14 +78,14 @@
               {% for format, count in format_facets %}
                 <li class="nav-item {% if format_filter == format %}active{% endif %}">
                   {% if format_filter == format %}
-                    <a href="{{ h.url_for('artesp_theme.resource_search', q=q, sort=sort_by_selected) }}" class="active" title="{{ _('Remove filter') }}">
+                    <a href="{{ h.url_for('artesp_theme.resource_search', q=q, sort=sort_by_selected, group=group_filter) }}" class="active" title="{{ _('Remove filter') }}">
                       <span class="item-label">{{ format }}</span>
                       <span class="hidden separator"> - </span>
                       <span class="item-count badge">{{ count }}</span>
                       <i class="fa fa-times"></i>
                     </a>
                   {% else %}
-                    <a href="{{ h.url_for('artesp_theme.resource_search', q=q, format=format, sort=sort_by_selected) }}" title="{{ format }}">
+                    <a href="{{ h.url_for('artesp_theme.resource_search', q=q, format=format, sort=sort_by_selected, group=group_filter) }}" title="{{ format }}">
                       <span class="item-label">{{ format }}</span>
                       <span class="hidden separator"> - </span>
                       <span class="item-count badge">{{ count }}</span>

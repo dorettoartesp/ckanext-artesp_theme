@@ -2114,7 +2114,7 @@ msgstr "Mais recentes"
 
 #: ckanext/artesp_theme/templates/resource/search.html:23
 msgid "Search resources..."
-msgstr "Buscar grupos..."
+msgstr "Buscar recursos..."
 
 #: ckanext/artesp_theme/templates/resource/search.html:43
 #: ckanext/artesp_theme/templates/resource/search.html:45
