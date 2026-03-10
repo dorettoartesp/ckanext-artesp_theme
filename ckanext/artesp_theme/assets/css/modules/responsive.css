@@ -111,6 +111,26 @@
   }
 }
 
+@media (max-width: 767px) {
+  .wrapper.resource-read-layout {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .wrapper.resource-read-layout > * {
+    width: 100%;
+  }
+
+  .wrapper.resource-read-layout > .primary {
+    order: 1;
+  }
+
+  .wrapper.resource-read-layout > .secondary {
+    order: 2;
+    margin-top: 1.5rem;
+  }
+}
+
 @media (max-width: 576px) {
   .featured-groups-container {
     grid-template-columns: 1fr;

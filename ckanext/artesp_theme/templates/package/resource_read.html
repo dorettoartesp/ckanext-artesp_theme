@@ -18,6 +18,8 @@
   <li class="active"><a href="" title="{{ h.resource_display_name(res) }}">{{ h.resource_display_name(res)|truncate(30) }}</a></li>
 {% endblock %}
 
+{% block wrapper_class %} resource-read-layout{% endblock %}
+
 {% block pre_primary %}
   {% block resource %}
     <section class="module module-resource" role="complementary">

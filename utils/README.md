@@ -1,5 +1,39 @@
 # CKAN Utilities
 
+## Seed Test Data Script
+
+O script `seed_test_data.py` cria uma carga de teste idempotente com:
+
+- organizacoes e grupos de apoio;
+- varios datasets regulares;
+- um dataset dedicado a testes com muitos recursos.
+
+### Uso recomendado neste projeto
+
+Use o wrapper em `bin/seed_test_data`, que cria um token temporario no
+container `ckan-dev` e executa a seed dentro do ambiente Docker:
+
+```bash
+bin/seed_test_data
+```
+
+Exemplo com carga maior:
+
+```bash
+bin/seed_test_data \
+  --dataset-count 15 \
+  --resources-per-dataset 10 \
+  --heavy-dataset-resources 180
+```
+
+### Parametros uteis
+
+- `--prefix`: muda o prefixo dos slugs criados.
+- `--dataset-count`: numero de datasets regulares.
+- `--resources-per-dataset`: numero de recursos por dataset regular.
+- `--heavy-dataset-resources`: numero de recursos no dataset pesado.
+- `--skip-heavy-dataset`: pula o dataset com muitos recursos.
+
 ## Extract Resources Script
 
 The `extract_resources.py` script extracts all resources from the CKAN instance with their metadata.
