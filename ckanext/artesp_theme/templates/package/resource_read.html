@@ -109,26 +109,43 @@
                     {% endif %}
                   {% endfor %}
               {% else %}
-                {# Views not created #}
-                <div class="data-viewer-info">
-                  <p>{{ _("There are no views created for this resource yet.") }}</p>
-                  {% if h.check_access('resource_view_create', {'resource_id': resource.id}) %}
-                    <p class="text-muted">
-                      <i class="fa fa-info-circle"></i>
-                      {{ _("Not seeing the views you were expecting?")}}
-                      <a href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#data-view-info">
-                        {{ _('Click here for more information.') }}</a>
-                    </p>
-                    <div id="data-view-info" class="collapse">
-                      <p>{{ _('Here are some reasons you may not be seeing expected views:') }}</p>
-                      <ul>
-                        <li>{{ _("No view has been created that is suitable for this resource")}}</li>
-                        <li>{{ _("The site administrators may not have enabled the relevant view plugins")}}</li>
-                        <li>{{ _("If a view requires the DataStore, the DataStore plugin may not be enabled, or the data may not have been pushed to the DataStore, or the DataStore hasn't finished processing the data yet")}}</li>
-                      </ul>
-                    </div>
-                  {% endif %}
-                </div>
+                {% set office_formats = ['DOC', 'DOCX', 'PPT', 'PPTX'] %}
+                {% if res.format and res.format.upper() in office_formats and res.url and h.is_url(res.url) %}
+                  {% set _office_url = res.url | replace(config.get('ckan.site_url', ''), request.host_url[:-1]) %}
+                  <div class="office-preview">
+                    <iframe
+                      src="https://view.officeapps.live.com/op/view.aspx?src={{ _office_url | urlencode }}"
+                      width="100%"
+                      height="600"
+                      frameborder="0"
+                      title="{{ h.resource_display_name(res) }}"
+                      allowfullscreen
+                    >
+                      <p>{{ _('Your browser does not support iframes.') }}</p>
+                    </iframe>
+                  </div>
+                {% else %}
+                  {# original "no views" message — formats not Office #}
+                  <div class="data-viewer-info">
+                    <p>{{ _("There are no views created for this resource yet.") }}</p>
+                    {% if h.check_access('resource_view_create', {'resource_id': resource.id}) %}
+                      <p class="text-muted">
+                        <i class="fa fa-info-circle"></i>
+                        {{ _("Not seeing the views you were expecting?")}}
+                        <a href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#data-view-info">
+                          {{ _('Click here for more information.') }}</a>
+                      </p>
+                      <div id="data-view-info" class="collapse">
+                        <p>{{ _('Here are some reasons you may not be seeing expected views:') }}</p>
+                        <ul>
+                          <li>{{ _("No view has been created that is suitable for this resource")}}</li>
+                          <li>{{ _("The site administrators may not have enabled the relevant view plugins")}}</li>
+                          <li>{{ _("If a view requires the DataStore, the DataStore plugin may not be enabled, or the data may not have been pushed to the DataStore, or the DataStore hasn't finished processing the data yet")}}</li>
+                        </ul>
+                      </div>
+                    {% endif %}
+                  </div>
+                {% endif %}
               {% endif %}
             </div>
           {% endblock %}
