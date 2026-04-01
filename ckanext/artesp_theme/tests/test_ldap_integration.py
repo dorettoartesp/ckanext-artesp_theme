@@ -120,7 +120,13 @@ class TestSessionPatchCompatibility:
     """Tests that the session.save() → session.modified patch is correct."""
 
     def test_flask_session_has_modified_attribute(self):
-        """Verify Flask's SecureCookieSession supports .modified = True."""
+        """
+        Verify Flask's SecureCookieSession supports .modified = True.
+        
+        Why: CKAN 2.10+ replaced Beaker sessions with Flask's SecureCookieSession.
+        Flask handles session persistence automatically at the end of the request
+        if the 'modified' flag is set. This test ensures our target attribute exists.
+        """
         from flask.sessions import SecureCookieSession
 
         session = SecureCookieSession()
@@ -129,7 +135,14 @@ class TestSessionPatchCompatibility:
         assert session.modified is True
 
     def test_flask_session_lacks_save(self):
-        """Confirm the bug: SecureCookieSession has no .save() method."""
+        """
+        Confirm the bug: SecureCookieSession has no .save() method.
+        
+        Why: The 'AttributeError: SecureCookieSession object has no attribute save'
+        is a known issue (#154) in ckanext-ldap when running on CKAN 2.10+.
+        This test confirms that the default Flask session object indeed lacks the 
+        method that causes the crash, justifying the need for our patch.
+        """
         from flask.sessions import SecureCookieSession
 
         session = SecureCookieSession()
@@ -253,3 +266,59 @@ class TestLdapEmailMigrationPatch:
                 
                 # Should call user_create because update is False
                 mock_toolkit.get_action.assert_any_call('user_create')
+
+
+@pytest.mark.skipif(ldap_helpers is None, reason="ckanext-ldap not installed")
+class TestLdapTranslations:
+    """
+    Tests to ensure that ckanext-ldap error messages are correctly translated.
+    
+    Why: ckanext-ldap does not provide native i18n support for Portuguese.
+    To provide a consistent experience for ARTESP users, we patch the source
+    code of the extension to replace English strings with Portuguese ones.
+    These tests verify that our build-time patches (via Docker/Ansible) were
+    applied correctly to the installed package.
+    """
+
+    def test_login_py_contains_portuguese_strings(self):
+        """
+        Verify that the source code of ckanext-ldap has been patched with translations.
+        
+        Why: Since we use 'sed' to replace strings in the filesystem, we need to 
+        ensure the replacement actually happened in the environment where the 
+        tests are running.
+        """
+        import ckanext.ldap.routes.login as login_module
+        import inspect
+
+        # Get the path to the installed login.py
+        source_path = inspect.getsourcefile(login_module)
+        
+        with open(source_path, 'r') as f:
+            content = f.read()
+            
+        # Check for our translated strings
+        assert "Nome de usuário ou senha incorretos." in content
+        assert "Conflito de nome de usuário." in content
+        assert "Por favor, insira o nome de usuário e a senha." in content
+        
+        # Ensure English originals are gone (for the specific toolkit._ calls)
+        assert "toolkit._('Bad username or password.')" not in content
+
+    def test_helpers_py_contains_session_patch(self):
+        """
+        Verify that the session.save() call was replaced in _helpers.py.
+        
+        Why: This confirms the session patch is physically applied to the 
+        source code in the current environment.
+        """
+        import ckanext.ldap.routes._helpers as helpers_module
+        import inspect
+
+        source_path = inspect.getsourcefile(helpers_module)
+        
+        with open(source_path, 'r') as f:
+            content = f.read()
+            
+        assert "session.modified = True" in content
+        assert "session.save()" not in content
