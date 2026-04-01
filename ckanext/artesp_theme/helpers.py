@@ -210,9 +210,15 @@ def get_featured_groups(limit=4):
         return []
 
 
+def artesp_ldap_enabled():
+    """Check if LDAP authentication is enabled."""
+    return bool(toolkit.config.get('ckanext.ldap.uri', ''))
+
+
 def get_helpers():
     return {
         "artesp_theme_hello": artesp_theme_hello,
+        "artesp_ldap_enabled": artesp_ldap_enabled,
         "get_package_count": get_package_count,
         "get_resource_count": get_resource_count,
         "get_latest_datasets": get_latest_datasets,

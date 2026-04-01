@@ -31,6 +31,21 @@ artesp_theme.add_url_rule('/privacy', view_func=privacy)
 artesp_theme.add_url_rule('/harvesting', view_func=harvesting)
 
 
+def _user_verify():
+    """Authentication endpoint that delegates to the configured identity provider."""
+    try:
+        from ckanext.ldap.routes.login import login_handler
+        return login_handler()
+    except ImportError:
+        log.warning("ckanext-ldap not available, falling back to default login")
+        return redirect_to(toolkit.url_for('user.login'))
+
+
+artesp_theme.add_url_rule(
+    '/user/verify', view_func=_user_verify, methods=['POST']
+)
+
+
 def resource_search():
     """
     Controller for searching resources directly.
