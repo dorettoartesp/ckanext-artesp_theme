@@ -134,3 +134,122 @@ class TestSessionPatchCompatibility:
 
         session = SecureCookieSession()
         assert not hasattr(session, "save")
+
+
+# We try to import the patched function from ckanext-ldap for testing the patch itself.
+try:
+    from ckanext.ldap.routes import _helpers as ldap_helpers
+except ImportError:
+    ldap_helpers = None
+
+
+@pytest.mark.skipif(ldap_helpers is None, reason="ckanext-ldap not installed")
+class TestLdapEmailMigrationPatch:
+    """
+    Tests for the email-based migration logic added via patch in ckanext-ldap.
+    Note: These test the patched logic inside ckanext-ldap._helpers.
+    """
+
+    @patch("ckanext.ldap.routes._helpers.toolkit")
+    @patch("ckanext.ldap.routes._helpers.LdapUser")
+    @patch("ckanext.ldap.routes._helpers.Session")
+    @patch("ckanext.ldap.routes._helpers.User")
+    def test_migrate_by_email_when_username_differs(
+        self, mock_user_model, mock_session, mock_ldap_user_model, mock_toolkit
+    ):
+        """
+        Test that if LDAP username is 'ldap_user' and CKAN username is 'ckan_user'
+        but both have same email 'test@example.com', migration works.
+        """
+        # 1. Setup LDAP user data
+        ldap_user_dict = {
+            'username': 'ldap_user',
+            'email': 'test@example.com',
+            'fullname': 'Test User'
+        }
+
+        # 2. Mock config
+        mock_toolkit.config = MagicMock()
+        config_data = {
+            'ckanext.ldap.migrate': True,
+            'ckanext.ldap.organization.id': 'artesp',
+            'ckanext.ldap.organization.role': 'member'
+        }
+        mock_toolkit.config.get.side_effect = lambda k, default=None: config_data.get(k, default)
+        mock_toolkit.config.__getitem__.side_effect = lambda k: config_data[k]
+        mock_toolkit.config.__contains__.side_effect = lambda k: k in config_data
+
+        # 3. Mock LdapUser.by_ldap_id to return None (user not yet linked to LDAP)
+        mock_ldap_user_model.by_ldap_id.return_value = None
+
+        # 4. Mock ckan_user_exists to return False for 'ldap_user'
+        with patch("ckanext.ldap.routes._helpers.ckan_user_exists") as mock_exists:
+            mock_exists.return_value = {'exists': False, 'is_ldap': False}
+
+            # 5. Mock the database lookup by email (this is the patched part)
+            mock_email_user = MagicMock()
+            mock_email_user.id = 'existing-user-id'
+            mock_email_user.name = 'ckan_user'
+            
+            with patch("ckan.model.Session") as mock_ckan_session, \
+                 patch("ckan.model.User") as mock_ckan_user_class:
+                
+                mock_ckan_session.query.return_value.filter.return_value.first.return_value = mock_email_user
+                
+                # 6. Mock toolkit.get_action('user_show') to return the existing user
+                existing_user_dict = {
+                    'id': 'existing-user-id',
+                    'name': 'ckan_user',
+                    'email': 'test@example.com'
+                }
+                
+                def get_action_side_effect(action_name):
+                    mock_action = MagicMock()
+                    if action_name == 'user_show':
+                        mock_action.return_value = existing_user_dict
+                    elif action_name == 'user_update':
+                        mock_action.return_value = existing_user_dict
+                    elif action_name == 'member_create':
+                        mock_action.return_value = {}
+                    return mock_action
+                
+                mock_toolkit.get_action.side_effect = get_action_side_effect
+                
+                # 7. Call the function
+                result_username = ldap_helpers.get_or_create_ldap_user(ldap_user_dict)
+                
+                # 8. Assertions
+                assert result_username == 'ckan_user'
+                mock_toolkit.get_action.assert_any_call('user_update')
+
+    @patch("ckanext.ldap.routes._helpers.toolkit")
+    @patch("ckanext.ldap.routes._helpers.LdapUser")
+    @patch("ckanext.ldap.routes._helpers.Session")
+    @patch("ckanext.ldap.routes._helpers.User")
+    def test_no_migration_when_disabled(
+        self, mock_user_model, mock_session, mock_ldap_user_model, mock_toolkit
+    ):
+        """Test that if migrate is False, it still tries to create a new user."""
+        ldap_user_dict = {
+            'username': 'ldap_user',
+            'email': 'test@example.com'
+        }
+
+        mock_toolkit.config = MagicMock()
+        config_data = {'ckanext.ldap.migrate': False}
+        mock_toolkit.config.__getitem__.side_effect = lambda k: config_data[k]
+        
+        mock_ldap_user_model.by_ldap_id.return_value = None
+        
+        with patch("ckanext.ldap.routes._helpers.ckan_user_exists") as mock_exists:
+            mock_exists.return_value = {'exists': False, 'is_ldap': False}
+            
+            with patch("ckanext.ldap.routes._helpers.get_unique_user_name") as mock_unique:
+                mock_unique.return_value = 'ldap_user'
+                
+                mock_toolkit.get_action.return_value.return_value = {'id': 'new-id'}
+                
+                ldap_helpers.get_or_create_ldap_user(ldap_user_dict)
+                
+                # Should call user_create because update is False
+                mock_toolkit.get_action.assert_any_call('user_create')
