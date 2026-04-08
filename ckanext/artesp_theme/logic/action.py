@@ -1,5 +1,6 @@
 import ckan.plugins.toolkit as tk
 from ckan.logic.action.create import (
+    group_create as core_group_create,
     package_collaborator_create as core_package_collaborator_create,
 )
 from ckan.logic.action.create import package_create as core_package_create
@@ -52,8 +53,20 @@ def package_collaborator_create(context, data_dict):
     return core_package_collaborator_create(action_context, normalized_data)
 
 
+def group_create(context, data_dict):
+    tk.check_access("group_create", context, data_dict)
+
+    action_context = dict(context)
+    action_context["ignore_auth"] = True
+
+    group = core_group_create(action_context, dict(data_dict or {}))
+    auth_helpers.ensure_all_ldap_users_in_group(group.get("id") or group.get("name"))
+    return group
+
+
 def get_actions():
     return {
+        "group_create": group_create,
         "package_create": package_create,
         "package_collaborator_create": package_collaborator_create,
         "artesp_theme_get_sum": artesp_theme_get_sum,

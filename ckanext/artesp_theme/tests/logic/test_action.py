@@ -52,3 +52,37 @@ def test_package_collaborator_create_uses_normalized_payload(monkeypatch):
     assert captured["check_access"][2] == normalized_data
     assert captured["core_action"][0]["ignore_auth"] is True
     assert captured["core_action"][1] == normalized_data
+
+
+def test_group_create_syncs_existing_ldap_users(monkeypatch):
+    captured = {}
+    created_group = {"id": "group-id", "name": "group-name"}
+
+    def fake_check_access(action_name, context, data_dict):
+        captured["check_access"] = (action_name, context.copy(), dict(data_dict))
+
+    def fake_core_action(context, data_dict):
+        captured["core_action"] = (context.copy(), dict(data_dict))
+        return dict(created_group)
+
+    def fake_sync(group_identifier):
+        captured["sync"] = group_identifier
+        return 2
+
+    monkeypatch.setattr(artesp_action.tk, "check_access", fake_check_access)
+    monkeypatch.setattr(artesp_action, "core_group_create", fake_core_action)
+    monkeypatch.setattr(
+        artesp_action.auth_helpers,
+        "ensure_all_ldap_users_in_group",
+        fake_sync,
+    )
+
+    result = artesp_action.group_create(
+        {"user": "ckan_admin"},
+        {"name": "grupo-operacional", "title": "Grupo Operacional"},
+    )
+
+    assert result == created_group
+    assert captured["check_access"][0] == "group_create"
+    assert captured["core_action"][0]["ignore_auth"] is True
+    assert captured["sync"] == "group-id"

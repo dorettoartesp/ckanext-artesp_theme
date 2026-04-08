@@ -3,11 +3,13 @@ from __future__ import annotations
 import ckan.authz as authz
 import ckan.model as model
 import ckan.plugins.toolkit as tk
+from sqlalchemy import text
 
 
 DEFAULT_ARTESP_ORG_IDENTIFIER = u"artesp"
 DEFAULT_ARTESP_ORG_TITLE = u"ARTESP"
 DEFAULT_DATASET_COLLABORATOR_CAPACITY = u"editor"
+DEFAULT_GROUP_MEMBERSHIP_CAPACITY = u"member"
 EDIT_CAPACITIES = ("editor", "admin")
 ADMIN_CAPACITY = "admin"
 
@@ -36,6 +38,9 @@ def get_authenticated_user(context):
 def get_user(user_identifier):
     if not user_identifier:
         return None
+
+    if getattr(user_identifier, "id", None):
+        return user_identifier
 
     return model.User.get(user_identifier)
 
@@ -85,6 +90,16 @@ def get_artesp_org():
     return None
 
 
+def get_group(group_identifier):
+    if not group_identifier:
+        return None
+
+    if getattr(group_identifier, "id", None):
+        return group_identifier
+
+    return model.Group.get(group_identifier)
+
+
 def get_artesp_org_title():
     configured_title = dict(tk.config).get("ckanext.ldap.organization.title")
     if configured_title:
@@ -123,6 +138,34 @@ def get_default_dataset_collaborator_capacity():
     return capacity
 
 
+def get_active_groups():
+    groups = (
+        model.Session.query(model.Group)
+        .filter(model.Group.state == "active")
+        .all()
+    )
+    return [group for group in groups if not getattr(group, "is_organization", False)]
+
+
+def get_ldap_users():
+    try:
+        rows = model.Session.execute(text("select user_id from ldap_user")).fetchall()
+    except Exception:
+        model.Session.rollback()
+        return []
+
+    user_ids = [row[0] for row in rows if row and row[0]]
+    if not user_ids:
+        return []
+
+    return (
+        model.Session.query(model.User)
+        .filter(model.User.id.in_(user_ids))
+        .filter(model.User.state == "active")
+        .all()
+    )
+
+
 def is_artesp_owner_org(owner_org):
     if not owner_org:
         return False
@@ -134,41 +177,81 @@ def is_artesp_owner_org(owner_org):
     return owner_org in (org.id, org.name)
 
 
-def ensure_user_membership_in_artesp(user_identifier):
+def ensure_user_membership(user_identifier, group_identifier, desired_capacity, enforce_capacity):
     user = get_user(user_identifier)
-    org = get_artesp_org()
+    group = get_group(group_identifier)
 
-    if not is_valid_user(user) or not org:
+    if not is_valid_user(user) or not group or getattr(group, "state", None) != "active":
         return False
-
-    desired_capacity = tk.config.get("ckanext.ldap.organization.role", "member")
 
     membership = (
         model.Session.query(model.Member)
         .filter(model.Member.table_name == "user")
         .filter(model.Member.table_id == user.id)
-        .filter(model.Member.group_id == org.id)
+        .filter(model.Member.group_id == group.id)
         .order_by(model.Member.state.asc())
         .first()
     )
 
-    if (
-        membership
-        and membership.state == "active"
-        and membership.capacity == desired_capacity
-    ):
-        return True
+    if membership and membership.state == "active":
+        if not enforce_capacity:
+            return True
+        if membership.capacity == desired_capacity:
+            return True
 
     tk.get_action("member_create")(
         context={"ignore_auth": True},
         data_dict={
-            "id": org.id,
+            "id": group.id,
             "object": user.name,
             "object_type": "user",
             "capacity": desired_capacity,
         },
     )
     return True
+
+
+def ensure_user_membership_in_artesp(user_identifier):
+    desired_capacity = tk.config.get("ckanext.ldap.organization.role", "member")
+    return ensure_user_membership(
+        user_identifier,
+        get_artesp_org(),
+        desired_capacity,
+        enforce_capacity=True,
+    )
+
+
+def ensure_user_memberships_in_all_groups(user_identifier):
+    ensured_memberships = 0
+
+    for group in get_active_groups():
+        if ensure_user_membership(
+            user_identifier,
+            group,
+            DEFAULT_GROUP_MEMBERSHIP_CAPACITY,
+            enforce_capacity=False,
+        ):
+            ensured_memberships += 1
+
+    return ensured_memberships
+
+
+def ensure_all_ldap_users_in_group(group_identifier):
+    group = get_group(group_identifier)
+    if not group or getattr(group, "is_organization", False):
+        return 0
+
+    ensured_memberships = 0
+    for user in get_ldap_users():
+        if ensure_user_membership(
+            user,
+            group,
+            DEFAULT_GROUP_MEMBERSHIP_CAPACITY,
+            enforce_capacity=False,
+        ):
+            ensured_memberships += 1
+
+    return ensured_memberships
 
 
 def ensure_artesp_org_state():
@@ -294,6 +377,7 @@ def resolve_or_create_collaborator_user(user_identifier):
         raise tk.ValidationError({"username": [tk._(str(exc))]})
 
     ensure_user_membership_in_artesp(user_name)
+    ensure_user_memberships_in_all_groups(user_name)
     return find_local_user_by_identifier(user_name)
 
 

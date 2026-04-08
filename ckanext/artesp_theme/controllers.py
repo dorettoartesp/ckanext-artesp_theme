@@ -60,6 +60,7 @@ def _user_verify():
                         auth_helpers.ensure_artesp_org_state()
                     user_name = _helpers.get_or_create_ldap_user(ldap_user_dict)
                     auth_helpers.ensure_user_membership_in_artesp(user_name)
+                    auth_helpers.ensure_user_memberships_in_all_groups(user_name)
                 except UserConflictError as e:
                     return _helpers.login_failed(error=str(e))
                 return _helpers.login_success(user_name, came_from=came_from)

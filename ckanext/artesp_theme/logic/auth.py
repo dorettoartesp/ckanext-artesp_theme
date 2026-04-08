@@ -37,25 +37,56 @@ def package_create(context, data_dict=None):
 
 
 def organization_create(context, data_dict=None):
-    if auth_helpers.is_sysadmin(context):
-        return auth_helpers.allow()
+    return _sysadmin_only_management_operation(
+        context,
+        "Only sysadmins can create organizations.",
+    )
 
-    user = auth_helpers.get_authenticated_user(context)
-    if not auth_helpers.is_valid_user(user):
-        return auth_helpers.deny("Only sysadmins can create organizations.")
 
-    return auth_helpers.deny("Only sysadmins can create organizations.")
+def organization_update(context, data_dict=None):
+    return _sysadmin_only_management_operation(
+        context,
+        "Only sysadmins can update organizations.",
+    )
+
+
+def organization_delete(context, data_dict=None):
+    return _sysadmin_only_management_operation(
+        context,
+        "Only sysadmins can delete organizations.",
+    )
 
 
 def group_create(context, data_dict=None):
+    return _sysadmin_only_management_operation(
+        context,
+        "Only sysadmins can create groups.",
+    )
+
+
+def group_update(context, data_dict=None):
+    return _sysadmin_only_management_operation(
+        context,
+        "Only sysadmins can update groups.",
+    )
+
+
+def group_delete(context, data_dict=None):
+    return _sysadmin_only_management_operation(
+        context,
+        "Only sysadmins can delete groups.",
+    )
+
+
+def _sysadmin_only_management_operation(context, message):
     if auth_helpers.is_sysadmin(context):
         return auth_helpers.allow()
 
     user = auth_helpers.get_authenticated_user(context)
     if not auth_helpers.is_valid_user(user):
-        return auth_helpers.deny("Only sysadmins can create groups.")
+        return auth_helpers.deny(message)
 
-    return auth_helpers.deny("Only sysadmins can create groups.")
+    return auth_helpers.deny(message)
 
 
 def package_update(context, data_dict=None):
@@ -142,7 +173,11 @@ def get_auth_functions():
     return {
         "artesp_theme_get_sum": artesp_theme_get_sum,
         "organization_create": organization_create,
+        "organization_update": organization_update,
+        "organization_delete": organization_delete,
         "group_create": group_create,
+        "group_update": group_update,
+        "group_delete": group_delete,
         "package_create": package_create,
         "package_update": package_update,
         "package_delete": package_delete,

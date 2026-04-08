@@ -179,6 +179,45 @@ def test_only_sysadmin_can_create_organizations():
     _assert_auth_denied(regular_user, "organization_create")
 
 
+def test_only_sysadmin_can_update_and_delete_organizations():
+    sysadmin = factories.Sysadmin()
+    regular_user = factories.User()
+
+    organization = _call_action_as(
+        sysadmin,
+        "organization_create",
+        name=_unique_name("org-manage"),
+        title="Org managed by sysadmin",
+    )
+
+    updated_org = _call_action_as(
+        sysadmin,
+        "organization_update",
+        id=organization["id"],
+        name=organization["name"],
+        title="Updated org title",
+    )
+    assert updated_org["title"] == "Updated org title"
+
+    _assert_action_denied(
+        regular_user,
+        "organization_update",
+        id=organization["id"],
+        name=organization["name"],
+        title="Blocked org title",
+    )
+    _assert_auth_denied(regular_user, "organization_update", id=organization["id"])
+
+    _assert_action_denied(
+        regular_user,
+        "organization_delete",
+        id=organization["id"],
+    )
+    _assert_auth_denied(regular_user, "organization_delete", id=organization["id"])
+
+    _call_action_as(sysadmin, "organization_delete", id=organization["id"])
+
+
 def test_only_sysadmin_can_create_groups():
     sysadmin = factories.Sysadmin()
     regular_user = factories.User()
@@ -198,6 +237,45 @@ def test_only_sysadmin_can_create_groups():
         title="Group blocked for user",
     )
     _assert_auth_denied(regular_user, "group_create")
+
+
+def test_only_sysadmin_can_update_and_delete_groups():
+    sysadmin = factories.Sysadmin()
+    regular_user = factories.User()
+
+    group = _call_action_as(
+        sysadmin,
+        "group_create",
+        name=_unique_name("group-manage"),
+        title="Group managed by sysadmin",
+    )
+
+    updated_group = _call_action_as(
+        sysadmin,
+        "group_update",
+        id=group["id"],
+        name=group["name"],
+        title="Updated group title",
+    )
+    assert updated_group["title"] == "Updated group title"
+
+    _assert_action_denied(
+        regular_user,
+        "group_update",
+        id=group["id"],
+        name=group["name"],
+        title="Blocked group title",
+    )
+    _assert_auth_denied(regular_user, "group_update", id=group["id"])
+
+    _assert_action_denied(
+        regular_user,
+        "group_delete",
+        id=group["id"],
+    )
+    _assert_auth_denied(regular_user, "group_delete", id=group["id"])
+
+    _call_action_as(sysadmin, "group_delete", id=group["id"])
 
 
 def test_package_update_and_delete_follow_creator_collaborator_and_sysadmin_rules():

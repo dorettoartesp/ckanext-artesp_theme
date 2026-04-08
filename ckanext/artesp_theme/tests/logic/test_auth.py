@@ -20,22 +20,34 @@ def test_artesp_theme_get_sum():
     assert artesp_auth.artesp_theme_get_sum({"model": model}, {})["success"]
 
 
-def test_get_auth_functions_export_group_and_organization_create():
+def test_get_auth_functions_export_group_and_organization_management():
     auth_functions = artesp_auth.get_auth_functions()
 
     assert auth_functions["organization_create"] is artesp_auth.organization_create
+    assert auth_functions["organization_update"] is artesp_auth.organization_update
+    assert auth_functions["organization_delete"] is artesp_auth.organization_delete
     assert auth_functions["group_create"] is artesp_auth.group_create
+    assert auth_functions["group_update"] is artesp_auth.group_update
+    assert auth_functions["group_delete"] is artesp_auth.group_delete
 
 
-def test_organization_create_is_reserved_for_sysadmins():
+@pytest.mark.parametrize(
+    "action_name",
+    [
+        "organization_create",
+        "organization_update",
+        "organization_delete",
+    ],
+)
+def test_organization_management_is_reserved_for_sysadmins(action_name):
     regular_user = factories.User()
     sysadmin = factories.Sysadmin()
 
-    denied = artesp_auth.organization_create(
+    denied = getattr(artesp_auth, action_name)(
         {"model": model, "user": regular_user["name"]},
         {},
     )
-    allowed = artesp_auth.organization_create(
+    allowed = getattr(artesp_auth, action_name)(
         {"model": model, "user": sysadmin["name"]},
         {},
     )
@@ -44,15 +56,23 @@ def test_organization_create_is_reserved_for_sysadmins():
     assert allowed["success"] is True
 
 
-def test_group_create_is_reserved_for_sysadmins():
+@pytest.mark.parametrize(
+    "action_name",
+    [
+        "group_create",
+        "group_update",
+        "group_delete",
+    ],
+)
+def test_group_management_is_reserved_for_sysadmins(action_name):
     regular_user = factories.User()
     sysadmin = factories.Sysadmin()
 
-    denied = artesp_auth.group_create(
+    denied = getattr(artesp_auth, action_name)(
         {"model": model, "user": regular_user["name"]},
         {},
     )
-    allowed = artesp_auth.group_create(
+    allowed = getattr(artesp_auth, action_name)(
         {"model": model, "user": sysadmin["name"]},
         {},
     )

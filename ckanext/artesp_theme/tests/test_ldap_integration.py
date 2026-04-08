@@ -111,6 +111,9 @@ class TestUserVerifyRoute:
             ), patch.object(
                 ctrl.auth_helpers,
                 "ensure_user_membership_in_artesp",
+            ) as mock_ensure_org_membership, patch.object(
+                ctrl.auth_helpers,
+                "ensure_user_memberships_in_all_groups",
             ) as mock_ensure_membership:
                 mock_toolkit.request.values = {
                     "login": "joao.silva",
@@ -123,6 +126,7 @@ class TestUserVerifyRoute:
 
                 mock_ensure_org.assert_called_once_with()
                 mock_helpers.get_or_create_ldap_user.assert_called_once()
+                mock_ensure_org_membership.assert_called_once_with("joao_silva")
                 mock_ensure_membership.assert_called_once_with("joao_silva")
                 mock_helpers.login_success.assert_called_once_with(
                     "joao_silva",
