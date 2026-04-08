@@ -9,8 +9,6 @@ def artesp_theme_get_sum(context, data_dict):
 
 
 def package_create(context, data_dict=None):
-    data_dict = data_dict or {}
-
     if auth_helpers.is_sysadmin(context):
         return auth_helpers.allow()
 
@@ -18,15 +16,17 @@ def package_create(context, data_dict=None):
     if not auth_helpers.is_valid_user(user):
         return auth_helpers.deny("Authentication is required to create datasets.")
 
-    if not data_dict:
-        return auth_helpers.deny("Dataset creation requires a payload.")
-
-    if "owner_org" not in data_dict or not data_dict.get("owner_org"):
-        return auth_helpers.deny("Datasets must define owner_org.")
-
     artesp_org = auth_helpers.get_artesp_org()
     if not artesp_org:
         return auth_helpers.deny("The ARTESP organization is not available.")
+
+    data_dict = data_dict or {}
+
+    if not data_dict:
+        return auth_helpers.allow()
+
+    if "owner_org" not in data_dict or not data_dict.get("owner_org"):
+        return auth_helpers.deny("Datasets must define owner_org.")
 
     if not auth_helpers.is_artesp_owner_org(data_dict.get("owner_org")):
         return auth_helpers.deny(
@@ -45,6 +45,17 @@ def organization_create(context, data_dict=None):
         return auth_helpers.deny("Only sysadmins can create organizations.")
 
     return auth_helpers.deny("Only sysadmins can create organizations.")
+
+
+def group_create(context, data_dict=None):
+    if auth_helpers.is_sysadmin(context):
+        return auth_helpers.allow()
+
+    user = auth_helpers.get_authenticated_user(context)
+    if not auth_helpers.is_valid_user(user):
+        return auth_helpers.deny("Only sysadmins can create groups.")
+
+    return auth_helpers.deny("Only sysadmins can create groups.")
 
 
 def package_update(context, data_dict=None):
@@ -131,6 +142,7 @@ def get_auth_functions():
     return {
         "artesp_theme_get_sum": artesp_theme_get_sum,
         "organization_create": organization_create,
+        "group_create": group_create,
         "package_create": package_create,
         "package_update": package_update,
         "package_delete": package_delete,
@@ -282,18 +294,34 @@ def _authorize_collaborator_operation(
 
     if validate_requested_capacity:
         capacity = data_dict.get("capacity")
-        if not capacity:
+        if not capacity and auth_helpers.is_sysadmin(context):
             return auth_helpers.deny("A collaborator capacity is required.")
+        if not capacity:
+            capacity = auth_helpers.get_default_dataset_collaborator_capacity()
         if not auth_helpers.requested_capacity_is_allowed(capacity):
             if capacity == auth_helpers.ADMIN_CAPACITY:
                 return auth_helpers.deny("Admin collaborators are disabled.")
             return auth_helpers.deny("Invalid collaborator capacity.")
+        if (
+            not auth_helpers.is_sysadmin(context)
+            and capacity != auth_helpers.get_default_dataset_collaborator_capacity()
+        ):
+            return auth_helpers.deny("Only sysadmins can change collaborator roles.")
 
     target_user = None
     if require_target_user:
         target_user = auth_helpers.get_target_user(data_dict)
         if not target_user:
             return auth_helpers.deny("Collaborator user not found.")
+
+    if (
+        validate_requested_capacity
+        and target_user
+        and not auth_helpers.is_sysadmin(context)
+    ):
+        collaborator = auth_helpers.get_collaborator_by_user_id(package, target_user.id)
+        if collaborator:
+            return auth_helpers.deny("Only sysadmins can change collaborator roles.")
 
     if require_existing_collaborator:
         collaborator = auth_helpers.get_collaborator_by_user_id(package, target_user.id)

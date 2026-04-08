@@ -12,6 +12,9 @@ pytestmark = [
     pytest.mark.ckan_config("ckan.plugins", "artesp_theme"),
     pytest.mark.ckan_config("ckan.auth.allow_dataset_collaborators", True),
     pytest.mark.ckan_config("ckan.auth.allow_admin_collaborators", True),
+    pytest.mark.ckan_config(
+        "ckanext.artesp_theme.default_dataset_collaborator_capacity", "editor"
+    ),
     pytest.mark.usefixtures("with_plugins", "clean_db"),
 ]
 
@@ -103,6 +106,14 @@ def _delete_collaborator_as(user, package, collaborator):
     )
 
 
+def _collaborator_capacities(package):
+    collaborators = test_helpers.call_action(
+        "package_collaborator_list",
+        id=package["id"],
+    )
+    return {row["user_id"]: row["capacity"] for row in collaborators}
+
+
 def test_package_create_rules_for_sysadmin_and_regular_users():
     artesp_org = factories.Organization(name="artesp")
     other_org = factories.Organization(name="other-org")
@@ -130,6 +141,23 @@ def test_package_create_rules_for_sysadmin_and_regular_users():
     )
 
 
+def test_package_create_auth_allows_ui_preflight_for_authenticated_users():
+    factories.Organization(name="artesp")
+    regular_user = factories.User()
+
+    assert test_helpers.call_auth(
+        "package_create",
+        context=_auth_context(regular_user),
+    )
+
+    _assert_action_denied(
+        regular_user,
+        "package_create",
+        name=_unique_name("missing-owner-org"),
+        title="Missing owner_org on submission",
+    )
+
+
 def test_only_sysadmin_can_create_organizations():
     sysadmin = factories.Sysadmin()
     regular_user = factories.User()
@@ -149,6 +177,27 @@ def test_only_sysadmin_can_create_organizations():
         title="Org blocked for user",
     )
     _assert_auth_denied(regular_user, "organization_create")
+
+
+def test_only_sysadmin_can_create_groups():
+    sysadmin = factories.Sysadmin()
+    regular_user = factories.User()
+
+    created_group = _call_action_as(
+        sysadmin,
+        "group_create",
+        name=_unique_name("group"),
+        title="Group created by sysadmin",
+    )
+    assert created_group["name"].startswith("group-")
+
+    _assert_action_denied(
+        regular_user,
+        "group_create",
+        name=_unique_name("group"),
+        title="Group blocked for user",
+    )
+    _assert_auth_denied(regular_user, "group_create")
 
 
 def test_package_update_and_delete_follow_creator_collaborator_and_sysadmin_rules():
@@ -254,20 +303,38 @@ def test_creator_can_list_add_update_and_remove_collaborators_on_own_dataset():
 
     assert _list_collaborators_as(creator, package) == []
 
-    _add_collaborator_as(creator, package, member_user, "member")
-    _add_collaborator_as(creator, package, editor_user, "editor")
-    _add_collaborator_as(creator, package, admin_user, "admin")
+    _call_action_as(
+        creator,
+        "package_collaborator_create",
+        id=package["id"],
+        user_id=member_user["id"],
+    )
+    _call_action_as(
+        creator,
+        "package_collaborator_create",
+        id=package["id"],
+        user_id=editor_user["id"],
+    )
 
     collaborators = _list_collaborators_as(creator, package)
     capacities = {row["user_id"]: row["capacity"] for row in collaborators}
-    assert capacities[member_user["id"]] == "member"
     assert capacities[editor_user["id"]] == "editor"
-    assert capacities[admin_user["id"]] == "admin"
-
-    _add_collaborator_as(creator, package, member_user, "editor")
-    collaborators = _list_collaborators_as(creator, package)
-    capacities = {row["user_id"]: row["capacity"] for row in collaborators}
     assert capacities[member_user["id"]] == "editor"
+
+    _assert_action_denied(
+        creator,
+        "package_collaborator_create",
+        id=package["id"],
+        user_id=admin_user["id"],
+        capacity="member",
+    )
+    _assert_action_denied(
+        creator,
+        "package_collaborator_create",
+        id=package["id"],
+        user_id=member_user["id"],
+        capacity="member",
+    )
 
     _delete_collaborator_as(creator, package, editor_user)
     collaborators = _list_collaborators_as(creator, package)
@@ -327,14 +394,20 @@ def test_admin_collaborator_can_manage_only_their_dataset():
     creator = factories.User()
     dataset_admin = factories.User()
     target_user = factories.User()
+    sysadmin = factories.Sysadmin()
 
     owned_package = _create_dataset_as(creator, artesp_org["id"])
     other_package = _create_dataset_as(creator, artesp_org["id"])
 
-    _add_collaborator_as(creator, owned_package, dataset_admin, "admin")
+    _add_collaborator_as(sysadmin, owned_package, dataset_admin, "admin")
 
     _list_collaborators_as(dataset_admin, owned_package)
-    _add_collaborator_as(dataset_admin, owned_package, target_user, "member")
+    _call_action_as(
+        dataset_admin,
+        "package_collaborator_create",
+        id=owned_package["id"],
+        user_id=target_user["id"],
+    )
     _delete_collaborator_as(dataset_admin, owned_package, target_user)
 
     _assert_action_denied(dataset_admin, "package_collaborator_list", id=other_package["id"])
@@ -364,6 +437,23 @@ def test_sysadmin_can_manage_collaborators_on_any_dataset():
     collaborators = _list_collaborators_as(sysadmin, package)
     collaborator_ids = {row["user_id"] for row in collaborators}
     assert collaborator["id"] not in collaborator_ids
+
+
+def test_sysadmin_can_define_and_update_collaborator_roles():
+    artesp_org = factories.Organization(name="artesp")
+    creator = factories.User()
+    sysadmin = factories.Sysadmin()
+    collaborator = factories.User()
+
+    package = _create_dataset_as(creator, artesp_org["id"])
+
+    _add_collaborator_as(sysadmin, package, collaborator, "member")
+    capacities = _collaborator_capacities(package)
+    assert capacities[collaborator["id"]] == "member"
+
+    _add_collaborator_as(sysadmin, package, collaborator, "admin")
+    capacities = _collaborator_capacities(package)
+    assert capacities[collaborator["id"]] == "admin"
 
 
 def test_admin_collaborator_assignment_requires_config_flag():

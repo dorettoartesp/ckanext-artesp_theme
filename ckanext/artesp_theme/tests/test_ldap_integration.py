@@ -64,29 +64,87 @@ class TestUserVerifyRoute:
         from ckanext.artesp_theme.controllers import _user_verify
         assert callable(_user_verify)
 
-    def test_verify_delegates_to_ldap_login_handler(self):
-        mock_handler = MagicMock(return_value="ldap_response")
+    def test_verify_reconciles_artesp_membership_after_successful_ldap_login(self):
+        import importlib
+        import types
+        import ckanext.artesp_theme.controllers as ctrl
+
+        mock_helpers = MagicMock()
+        mock_helpers.check_ldap_password.return_value = True
+        mock_helpers.get_or_create_ldap_user.return_value = "joao_silva"
+        mock_helpers.login_success.return_value = "ldap_response"
+
+        mock_search = types.SimpleNamespace(
+            find_ldap_user=MagicMock(
+                return_value={"cn": "cn=Joao Silva", "username": "joao.silva"}
+            )
+        )
+
+        class MultipleMatchError(Exception):
+            pass
+
+        class UserConflictError(Exception):
+            pass
+
+        mock_exceptions = types.SimpleNamespace(
+            MultipleMatchError=MultipleMatchError,
+            UserConflictError=UserConflictError,
+        )
+        mock_routes = types.SimpleNamespace(_helpers=mock_helpers)
+
         with patch.dict(
             "sys.modules",
-            {"ckanext.ldap.routes.login": MagicMock(login_handler=mock_handler)},
+            {
+                "ckanext.ldap.lib.exceptions": mock_exceptions,
+                "ckanext.ldap.lib.search": mock_search,
+                "ckanext.ldap.routes": mock_routes,
+            },
         ):
-            from ckanext.artesp_theme.controllers import _user_verify
-
-            # Need to re-import to pick up the mocked module
-            import importlib
-            import ckanext.artesp_theme.controllers as ctrl
             importlib.reload(ctrl)
+            with patch.object(ctrl, "toolkit") as mock_toolkit, patch.object(
+                ctrl.auth_helpers,
+                "ensure_artesp_org_state",
+            ) as mock_ensure_org, patch.object(
+                ctrl.auth_helpers,
+                "should_reconcile_ldap_login",
+                return_value=True,
+            ), patch.object(
+                ctrl.auth_helpers,
+                "ensure_user_membership_in_artesp",
+            ) as mock_ensure_membership:
+                mock_toolkit.request.values = {
+                    "login": "joao.silva",
+                    "password": "senha123",
+                }
+                mock_toolkit.config = {"ckanext.ldap.ckan_fallback": True}
+                mock_toolkit._.side_effect = lambda value: value
 
-            result = ctrl._user_verify()
-            mock_handler.assert_called_once()
-            assert result == "ldap_response"
+                result = ctrl._user_verify()
+
+                mock_ensure_org.assert_called_once_with()
+                mock_helpers.get_or_create_ldap_user.assert_called_once()
+                mock_ensure_membership.assert_called_once_with("joao_silva")
+                mock_helpers.login_success.assert_called_once_with(
+                    "joao_silva",
+                    came_from=None,
+                )
+                assert result == "ldap_response"
+
+        importlib.reload(ctrl)
 
     def test_verify_falls_back_when_ldap_not_installed(self):
         """When ckanext-ldap is not installed, _user_verify logs a warning and redirects."""
         import importlib
         import ckanext.artesp_theme.controllers as ctrl
 
-        with patch.dict("sys.modules", {"ckanext.ldap.routes.login": None}):
+        with patch.dict(
+            "sys.modules",
+            {
+                "ckanext.ldap.lib.exceptions": None,
+                "ckanext.ldap.lib.search": None,
+                "ckanext.ldap.routes": None,
+            },
+        ):
             importlib.reload(ctrl)
             with patch.object(ctrl, "redirect_to", return_value="redirect_response") as mock_redirect, \
                  patch.object(ctrl, "toolkit") as mock_toolkit:

@@ -4,6 +4,8 @@ from ckan.lib.helpers import flash_error, redirect_to
 from ckan.lib.pagination import Page
 import logging
 
+from ckanext.artesp_theme.logic import auth_helpers
+
 log = logging.getLogger(__name__)
 
 artesp_theme = Blueprint('artesp_theme', __name__)
@@ -34,8 +36,64 @@ artesp_theme.add_url_rule('/harvesting', view_func=harvesting)
 def _user_verify():
     """Authentication endpoint that delegates to the configured identity provider."""
     try:
-        from ckanext.ldap.routes.login import login_handler
-        return login_handler()
+        from ckan.model import User
+        from ckanext.ldap.lib.exceptions import MultipleMatchError, UserConflictError
+        from ckanext.ldap.lib.search import find_ldap_user
+        from ckanext.ldap.routes import _helpers
+
+        params = toolkit.request.values
+        came_from = params.get('came_from', None)
+
+        if 'login' in params and 'password' in params:
+            login = params['login']
+            password = params['password']
+            try:
+                ldap_user_dict = find_ldap_user(login)
+            except MultipleMatchError as e:
+                return _helpers.login_failed(notice=str(e))
+
+            if ldap_user_dict and _helpers.check_ldap_password(
+                ldap_user_dict['cn'], password
+            ):
+                try:
+                    if auth_helpers.should_reconcile_ldap_login():
+                        auth_helpers.ensure_artesp_org_state()
+                    user_name = _helpers.get_or_create_ldap_user(ldap_user_dict)
+                    auth_helpers.ensure_user_membership_in_artesp(user_name)
+                except UserConflictError as e:
+                    return _helpers.login_failed(error=str(e))
+                return _helpers.login_success(user_name, came_from=came_from)
+            elif ldap_user_dict:
+                if toolkit.config['ckanext.ldap.ckan_fallback']:
+                    exists = _helpers.ckan_user_exists(login)
+                    if exists['exists'] and not exists['is_ldap']:
+                        return _helpers.login_failed(
+                            error=toolkit._(
+                                'Conflito de nome de usuário. Por favor, entre em contato com o administrador do site.'
+                            )
+                        )
+                return _helpers.login_failed(
+                    error=toolkit._('Nome de usuário ou senha incorretos.') + ' [LDAP1]'
+                )
+            elif toolkit.config['ckanext.ldap.ckan_fallback']:
+                try:
+                    user_dict = _helpers.get_user_dict(login)
+                    user = User.by_name(user_dict['name'])
+                except toolkit.ObjectNotFound:
+                    user = None
+                if user and user.validate_password(password):
+                    return _helpers.login_success(user.name, came_from=came_from)
+                return _helpers.login_failed(
+                    error=toolkit._('Nome de usuário ou senha incorretos.') + ' [LDAP2]'
+                )
+            else:
+                return _helpers.login_failed(
+                    error=toolkit._('Nome de usuário ou senha incorretos.') + ' [LDAP3]'
+                )
+
+        return _helpers.login_failed(
+            error=toolkit._('Por favor, insira o nome de usuário e a senha.')
+        )
     except ImportError:
         log.warning("ckanext-ldap not available, falling back to default login")
         return redirect_to(toolkit.url_for('user.login'))
@@ -43,6 +101,51 @@ def _user_verify():
 
 artesp_theme.add_url_rule(
     '/user/verify', view_func=_user_verify, methods=['POST']
+)
+
+
+def _dataset_collaborator_submit(id):
+    from ckan.common import current_user
+
+    context = {'user': getattr(current_user, 'name', '')}
+    username = (request.form.get('username') or '').strip()
+    capacity = (request.form.get('capacity') or '').strip()
+
+    data_dict = {
+        'id': id,
+        'username': username,
+    }
+    if capacity:
+        data_dict['capacity'] = capacity
+
+    try:
+        toolkit.get_action('package_collaborator_create')(context, data_dict)
+    except toolkit.NotAuthorized as exc:
+        flash_error(str(exc))
+    except toolkit.ObjectNotFound:
+        flash_error(toolkit._('User not found'))
+    except toolkit.ValidationError as exc:
+        message = exc.error_summary
+        if not message and exc.error_dict:
+            message = '; '.join(
+                '{}: {}'.format(field, ', '.join(errors))
+                for field, errors in exc.error_dict.items()
+            )
+        flash_error(message or toolkit._('Unable to save collaborator.'))
+    else:
+        return redirect_to(toolkit.url_for('dataset.collaborators_read', id=id))
+
+    redirect_kwargs = {'id': id}
+    if request.args.get('user_id'):
+        redirect_kwargs['user_id'] = request.args['user_id']
+    return redirect_to(toolkit.url_for('dataset.new_collaborator', **redirect_kwargs))
+
+
+artesp_theme.add_url_rule(
+    '/dataset/collaborators/<id>/submit',
+    endpoint='dataset_collaborator_submit',
+    view_func=_dataset_collaborator_submit,
+    methods=['POST'],
 )
 
 

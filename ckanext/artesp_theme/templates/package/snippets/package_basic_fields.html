@@ -57,36 +57,33 @@
     <input type="hidden" name="groups__0__id" value="{{ data.group_id }}" />
   {% endif %}
 
+  {% set artesp_org = h.get_artesp_organization() %}
   {% set dataset_is_draft = data.get('state', 'draft').startswith('draft') or data.get('state', 'none') ==  'none' %}
-  {% set dataset_has_organization = data.owner_org or data.group_id %}
-  {% set organizations_available = h.organizations_available('create_dataset') %}
-  {% set user_can_update_owner_org = h.can_update_owner_org(data, organizations_available) %}
   {% set user_is_sysadmin = h.check_access('sysadmin') %}
-  {% set show_organizations_selector = organizations_available and user_can_update_owner_org %}
-  {% set show_visibility_selector = dataset_has_organization or (organizations_available and (user_is_sysadmin or dataset_is_draft)) %}
+  {% set fixed_owner_org = data.owner_org or data.group_id or (artesp_org.id if artesp_org else None) %}
+  {% set fixed_owner_org_name = artesp_org.display_name if artesp_org else data.owner_org or data.group_id %}
+  {% set dataset_has_organization = fixed_owner_org %}
+  {% set show_visibility_selector = dataset_has_organization or user_is_sysadmin or dataset_is_draft %}
 
-  {% if show_organizations_selector and show_visibility_selector %}
+  {% if show_visibility_selector %}
     <div data-module="dataset-visibility">
   {% endif %}
 
-  {% if show_organizations_selector %}
-    {% set existing_org = data.owner_org or data.group_id %}
+  {% if fixed_owner_org %}
+    <input type="hidden" name="owner_org" value="{{ fixed_owner_org }}" />
     <div class="form-group control-medium">
-      <label for="field-organizations" class="form-label">{{ h.humanize_entity_type('organization', default_group_type, 'default label') or _('Organization') }}</label>
+      <label for="field-fixed-organization" class="form-label">{{ h.humanize_entity_type('organization', default_group_type, 'default label') or _('Organization') }}</label>
       <div class="controls">
-        <select id="field-organizations" name="owner_org" data-module="autocomplete">
-          {% if h.check_config_permission('create_unowned_dataset') %}
-            <option value="" {% if not selected_org and data.id %} selected="selected" {% endif %}>{{ h.humanize_entity_type('organization', default_group_type, 'no label') or _('No Organization') }}</option>
-          {% endif %}
-          {% for organization in organizations_available %}
-            {# get out first org from users list only if there is not an existing org #}
-          {% set selected_org = (existing_org and existing_org == organization.id) or (not existing_org and not data.id and organization.id == organizations_available[0].id) %}
-          <option value="{{ organization.id }}" {% if selected_org %} selected="selected" {% endif %}>{{ organization.display_name }}</option>
-          {% endfor %}
-        </select>
+        <input
+          id="field-fixed-organization"
+          type="text"
+          class="form-control"
+          value="{{ fixed_owner_org_name }}"
+          disabled="disabled"
+        />
       </div>
     </div>
-    {% endif %}
+  {% endif %}
 
     {% if show_visibility_selector %}
     {% block package_metadata_fields_visibility %}
@@ -103,7 +100,7 @@
     {% endblock %}
     {% endif %}
 
-    {% if show_organizations_selector and show_visibility_selector %}
+    {% if show_visibility_selector %}
   </div>
   {% endif %}
 

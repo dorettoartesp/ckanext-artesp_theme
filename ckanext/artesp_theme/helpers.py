@@ -9,6 +9,8 @@ from ckan.model.resource import Resource
 from ckan.model.package import Package
 from ckan.model.meta import Session
 
+from ckanext.artesp_theme.logic import auth_helpers
+
 log = logging.getLogger(__name__)
 
 def artesp_theme_hello():
@@ -215,6 +217,23 @@ def artesp_ldap_enabled():
     return bool(toolkit.config.get('ckanext.ldap.uri', ''))
 
 
+def get_artesp_organization():
+    org = auth_helpers.get_artesp_org()
+    if not org:
+        return None
+
+    return {
+        "id": org.id,
+        "name": org.name,
+        "title": org.title,
+        "display_name": auth_helpers.get_artesp_org_display_name(),
+    }
+
+
+def get_default_dataset_collaborator_capacity():
+    return auth_helpers.get_default_dataset_collaborator_capacity()
+
+
 def get_helpers():
     return {
         "artesp_theme_hello": artesp_theme_hello,
@@ -230,4 +249,6 @@ def get_helpers():
         "get_year": get_year,
         "safe_html": safe_html,
         "fix_fontawesome_icon": fix_fontawesome_icon,
+        "get_artesp_organization": get_artesp_organization,
+        "get_default_dataset_collaborator_capacity": get_default_dataset_collaborator_capacity,
     }

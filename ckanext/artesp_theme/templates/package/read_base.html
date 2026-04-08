@@ -16,11 +16,17 @@
   {% if h.check_access('package_update', {'id':pkg.id }) %}
     {% link_for _('Manage'), named_route=pkg.type ~ '.edit', id=pkg.name, class_='btn btn-light', icon='wrench' %}
   {% endif %}
+  {% if h.check_config_permission('allow_dataset_collaborators') and h.check_access('package_collaborator_list', {'id': pkg.id}) %}
+    {% link_for _('Collaborators'), named_route=pkg.type ~ '.collaborators_read', id=pkg.name, class_='btn btn-light', icon='users' %}
+  {% endif %}
 {% endblock %}
 
 {% block content_primary_nav %}
   {{ h.build_nav_icon(dataset_type ~ '.read', _('Dataset'),  id=pkg.name, icon='sitemap') }}
   {{ h.build_nav_icon(dataset_type ~ '.groups', h.humanize_entity_type('group', default_group_type, 'content tab') or _('Groups'), id=pkg.name, icon='users') }}
+  {% if h.check_config_permission('allow_dataset_collaborators') and h.check_access('package_collaborator_list', {'id': pkg.id}) %}
+    {{ h.build_nav_icon(dataset_type ~ '.collaborators_read', _('Collaborators'), id=pkg.name, icon='users') }}
+  {% endif %}
 {% endblock %}
 
 {% block secondary_content %}
