@@ -130,6 +130,27 @@ def test_package_create_rules_for_sysadmin_and_regular_users():
     )
 
 
+def test_only_sysadmin_can_create_organizations():
+    sysadmin = factories.Sysadmin()
+    regular_user = factories.User()
+
+    created_org = _call_action_as(
+        sysadmin,
+        "organization_create",
+        name=_unique_name("org"),
+        title="Org created by sysadmin",
+    )
+    assert created_org["name"].startswith("org-")
+
+    _assert_action_denied(
+        regular_user,
+        "organization_create",
+        name=_unique_name("org"),
+        title="Org blocked for user",
+    )
+    _assert_auth_denied(regular_user, "organization_create")
+
+
 def test_package_update_and_delete_follow_creator_collaborator_and_sysadmin_rules():
     artesp_org = factories.Organization(name="artesp")
     creator = factories.User()

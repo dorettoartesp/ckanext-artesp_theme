@@ -36,6 +36,17 @@ def package_create(context, data_dict=None):
     return auth_helpers.allow()
 
 
+def organization_create(context, data_dict=None):
+    if auth_helpers.is_sysadmin(context):
+        return auth_helpers.allow()
+
+    user = auth_helpers.get_authenticated_user(context)
+    if not auth_helpers.is_valid_user(user):
+        return auth_helpers.deny("Only sysadmins can create organizations.")
+
+    return auth_helpers.deny("Only sysadmins can create organizations.")
+
+
 def package_update(context, data_dict=None):
     return _authorize_package_operation(
         context,
@@ -119,6 +130,7 @@ def package_collaborator_delete(context, data_dict=None):
 def get_auth_functions():
     return {
         "artesp_theme_get_sum": artesp_theme_get_sum,
+        "organization_create": organization_create,
         "package_create": package_create,
         "package_update": package_update,
         "package_delete": package_delete,
