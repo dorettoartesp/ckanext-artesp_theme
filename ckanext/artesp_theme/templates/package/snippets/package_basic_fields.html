@@ -1,6 +1,7 @@
 {% import 'macros/form.html' as form %}
 
 {% set default_group_type = h.default_group_type('organization') %}
+{% set default_dataset_group_type = h.default_group_type('group') %}
 
 {% block package_basic_fields_title %}
   {{ form.input('title', id='field-title', label=_('Title'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['control-full', 'control-large'], attrs={'data-module': 'slug-preview-target', 'class': 'form-control'}) }}
@@ -52,11 +53,6 @@
 {% endblock %}
 
 {% block package_basic_fields_org %}
-  {# if we have a default group then this wants remembering #}
-  {% if data.group_id %}
-    <input type="hidden" name="groups__0__id" value="{{ data.group_id }}" />
-  {% endif %}
-
   {% set artesp_org = h.get_artesp_organization() %}
   {% set dataset_is_draft = data.get('state', 'draft').startswith('draft') or data.get('state', 'none') ==  'none' %}
   {% set user_is_sysadmin = h.check_access('sysadmin') %}
@@ -65,6 +61,11 @@
   {% set dataset_has_organization = fixed_owner_org %}
   {% set show_visibility_selector = dataset_has_organization or user_is_sysadmin or dataset_is_draft %}
   {% set use_dataset_visibility_module = show_visibility_selector and not fixed_owner_org %}
+  {% set available_groups = h.groups_available(am_member=True) if not data.id else [] %}
+  {% set selected_group_id = data.group_id or '' %}
+  {% if not selected_group_id and data.groups %}
+    {% set selected_group_id = data.groups[0].id %}
+  {% endif %}
 
   {% if use_dataset_visibility_module %}
     <div data-module="dataset-visibility">
@@ -84,6 +85,23 @@
         />
       </div>
     </div>
+  {% endif %}
+
+  {% if available_groups %}
+    {% set group_options = [{'value': '', 'text': _('No group')}] %}
+    {% for group in available_groups %}
+      {% do group_options.append({'value': group.id, 'text': group.display_name}) %}
+    {% endfor %}
+    {{ form.select(
+      'groups__0__id',
+      id='field-groups__0__id',
+      label=h.humanize_entity_type('group', default_dataset_group_type, 'label') or _('Group'),
+      options=group_options,
+      selected=selected_group_id,
+      error=errors.get('groups__0__id'),
+      classes=['control-medium'],
+      attrs={'class': 'form-control', 'data-module': 'autocomplete'}
+    ) }}
   {% endif %}
 
     {% if show_visibility_selector %}

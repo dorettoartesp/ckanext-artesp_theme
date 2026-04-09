@@ -63,11 +63,15 @@ def test_package_basic_fields_keep_visibility_enabled_for_fixed_artesp_org(app, 
     )
 
 
-@pytest.mark.ckan_config("ckan.plugins", "artesp_theme scheming_datasets")
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
 @pytest.mark.usefixtures("with_plugins")
-def test_scheming_organization_snippet_keeps_visibility_enabled_for_fixed_artesp_org(
+def test_package_basic_fields_render_optional_group_selector_after_organization(
     app, reset_db
 ):
+    groups = [
+        {"id": "grupo-1", "display_name": "Grupo 1"},
+        {"id": "grupo-2", "display_name": "Grupo 2"},
+    ]
     artesp_org = SimpleNamespace(id="artesp-id", name="artesp", title="ARTESP")
 
     with patch(
@@ -76,7 +80,44 @@ def test_scheming_organization_snippet_keeps_visibility_enabled_for_fixed_artesp
     ), patch(
         "ckanext.artesp_theme.logic.auth_helpers.get_artesp_org_display_name",
         return_value="ARTESP",
-    ):
+    ), patch.object(tk.h, "groups_available", return_value=groups):
+        with app.flask_app.test_request_context("/dataset/new?group=grupo-2"):
+            html = base.render_snippet(
+                "package/snippets/package_basic_fields.html",
+                data={"group_id": "grupo-2"},
+                errors={},
+            )
+
+    assert 'id="field-groups__0__id"' in html
+    assert 'name="groups__0__id"' in html
+    assert "Grupo 1" in html
+    assert "Grupo 2" in html
+    assert '<option value=""' in html
+    assert '<option value="grupo-2" selected>' in html
+    assert html.index('id="field-fixed-organization"') < html.index(
+        'id="field-groups__0__id"'
+    )
+    assert html.index('id="field-groups__0__id"') < html.index('id="field-private"')
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme scheming_datasets")
+@pytest.mark.usefixtures("with_plugins")
+def test_scheming_organization_snippet_keeps_visibility_enabled_for_fixed_artesp_org(
+    app, reset_db
+):
+    artesp_org = SimpleNamespace(id="artesp-id", name="artesp", title="ARTESP")
+    groups = [
+        {"id": "grupo-1", "display_name": "Grupo 1"},
+        {"id": "grupo-2", "display_name": "Grupo 2"},
+    ]
+
+    with patch(
+        "ckanext.artesp_theme.logic.auth_helpers.get_artesp_org",
+        return_value=artesp_org,
+    ), patch(
+        "ckanext.artesp_theme.logic.auth_helpers.get_artesp_org_display_name",
+        return_value="ARTESP",
+    ), patch.object(tk.h, "groups_available", return_value=groups):
         with app.flask_app.test_request_context("/dataset/new"):
             html = base.render_snippet(
                 "scheming/form_snippets/organization.html",
@@ -87,7 +128,10 @@ def test_scheming_organization_snippet_keeps_visibility_enabled_for_fixed_artesp
 
     assert 'data-module="dataset-visibility"' not in html
     assert 'name="owner_org" value="{0}"'.format(artesp_org.id) in html
+    assert 'id="field-groups__0__id"' in html
     assert (
         '<select id="field-private" name="private" class="form-control form-select">'
         in html
     )
+    assert html.index('field-owner_org') < html.index('id="field-groups__0__id"')
+    assert html.index('id="field-groups__0__id"') < html.index('id="field-private"')

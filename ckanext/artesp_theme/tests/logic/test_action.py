@@ -269,9 +269,15 @@ def test_package_create_syncs_unfold_views_for_created_resources(monkeypatch):
 
     result = artesp_action.package_create(
         {"user": "creator"},
-        {"name": "dataset", "title": "Dataset", "owner_org": "artesp-id"},
+        {
+            "name": "dataset",
+            "title": "Dataset",
+            "owner_org": "artesp-id",
+            "groups": [{"id": "group-id"}],
+        },
     )
 
     assert result == created_package
     assert captured["core_action"][0]["ignore_auth"] is True
+    assert captured["core_action"][1]["groups"] == [{"id": "group-id"}]
     assert captured["sync"][1] == created_package["resources"]

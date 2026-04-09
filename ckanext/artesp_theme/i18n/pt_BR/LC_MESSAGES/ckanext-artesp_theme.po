@@ -1794,6 +1794,11 @@ msgstr "Mantenedor"
 msgid "Version"
 msgstr "Versão"
 
+#: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:91
+#: ckanext/artesp_theme/templates/scheming/form_snippets/organization.html:54
+msgid "No group"
+msgstr "Nenhum grupo"
+
 #: ckanext/artesp_theme/templates/package/snippets/additional_info.html:60
 #: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:113
 #: ckanext/artesp_theme/templates/user/snippets/info.html:99

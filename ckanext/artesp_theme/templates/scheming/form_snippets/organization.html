@@ -1,8 +1,16 @@
 {# This is specific to datasets' owner_org field and won't work #}
 {# if used with other fields #}
 
+{% import 'macros/form.html' as form %}
+
 {% set artesp_org = h.get_artesp_organization() %}
 {% set use_dataset_visibility_module = not artesp_org %}
+{% set default_group_type = h.default_group_type('group') %}
+{% set available_groups = h.groups_available(am_member=True) if not data.id else [] %}
+{% set selected_group_id = data.group_id or '' %}
+{% if not selected_group_id and data.groups %}
+  {% set selected_group_id = data.groups[0].id %}
+{% endif %}
 
 {% macro organization_option_tag(organization, selected_org) %}
   {% block organization_option scoped %}
@@ -40,6 +48,23 @@
       org_required=not h.check_config_permission('create_unowned_dataset')
         or h.scheming_field_required(field),
       organization_option_tag=organization_option_tag %}
+  {% endif %}
+
+  {% if available_groups %}
+    {% set group_options = [{'value': '', 'text': _('No group')}] %}
+    {% for group in available_groups %}
+      {% do group_options.append({'value': group.id, 'text': group.display_name}) %}
+    {% endfor %}
+    {{ form.select(
+      'groups__0__id',
+      id='field-groups__0__id',
+      label=h.humanize_entity_type('group', default_group_type, 'label') or _('Group'),
+      options=group_options,
+      selected=selected_group_id,
+      error=errors.get('groups__0__id'),
+      classes=['control-medium'],
+      attrs={'class': 'form-control form-select', 'data-module': 'autocomplete'}
+    ) }}
   {% endif %}
 
   {% block package_metadata_fields_visibility %}
