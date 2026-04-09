@@ -64,8 +64,9 @@
   {% set fixed_owner_org_name = artesp_org.display_name if artesp_org else data.owner_org or data.group_id %}
   {% set dataset_has_organization = fixed_owner_org %}
   {% set show_visibility_selector = dataset_has_organization or user_is_sysadmin or dataset_is_draft %}
+  {% set use_dataset_visibility_module = show_visibility_selector and not fixed_owner_org %}
 
-  {% if show_visibility_selector %}
+  {% if use_dataset_visibility_module %}
     <div data-module="dataset-visibility">
   {% endif %}
 
@@ -100,7 +101,7 @@
     {% endblock %}
     {% endif %}
 
-    {% if show_visibility_selector %}
+    {% if use_dataset_visibility_module %}
   </div>
   {% endif %}
 

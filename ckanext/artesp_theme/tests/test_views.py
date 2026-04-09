@@ -1,16 +1,93 @@
 """Tests for views.py."""
 
 import pytest
-
-import ckanext.artesp_theme.validators as validators
-
+from types import SimpleNamespace
+from unittest.mock import patch
 
 import ckan.plugins.toolkit as tk
+from ckan.lib import base
 
 
 @pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
 @pytest.mark.usefixtures("with_plugins")
 def test_artesp_theme_blueprint(app, reset_db):
-    resp = app.get(tk.h.url_for("artesp_theme.page"))
+    resp = app.get(tk.h.url_for("artesp_theme.about_ckan"))
     assert resp.status_code == 200
-    assert resp.body == "Hello, artesp_theme!"
+    assert "CKAN" in resp.text
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.usefixtures("with_plugins")
+def test_resource_form_renders_without_scheming_fields(app, reset_db):
+    with app.flask_app.test_request_context("/dataset/teste/resource/new"):
+        html = base.render_snippet(
+            "package/snippets/resource_form.html",
+            data={},
+            errors={},
+            error_summary={},
+            include_metadata=False,
+            pkg_name="teste",
+            stage=None,
+            dataset_type="dataset",
+        )
+
+    assert 'id="field-name"' in html
+    assert 'id="field-format"' in html
+    assert 'resource-edit' in html
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.usefixtures("with_plugins")
+def test_package_basic_fields_keep_visibility_enabled_for_fixed_artesp_org(app, reset_db):
+    artesp_org = SimpleNamespace(id="artesp-id", name="artesp", title="ARTESP")
+
+    with patch(
+        "ckanext.artesp_theme.logic.auth_helpers.get_artesp_org",
+        return_value=artesp_org,
+    ), patch(
+        "ckanext.artesp_theme.logic.auth_helpers.get_artesp_org_display_name",
+        return_value="ARTESP",
+    ):
+        with app.flask_app.test_request_context("/dataset/new"):
+            html = base.render_snippet(
+                "package/snippets/package_basic_fields.html",
+                data={},
+                errors={},
+            )
+
+    assert 'data-module="dataset-visibility"' not in html
+    assert 'name="owner_org" value="{0}"'.format(artesp_org.id) in html
+    assert (
+        '<select id="field-private" name="private" class="form-control">'
+        in html
+    )
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme scheming_datasets")
+@pytest.mark.usefixtures("with_plugins")
+def test_scheming_organization_snippet_keeps_visibility_enabled_for_fixed_artesp_org(
+    app, reset_db
+):
+    artesp_org = SimpleNamespace(id="artesp-id", name="artesp", title="ARTESP")
+
+    with patch(
+        "ckanext.artesp_theme.logic.auth_helpers.get_artesp_org",
+        return_value=artesp_org,
+    ), patch(
+        "ckanext.artesp_theme.logic.auth_helpers.get_artesp_org_display_name",
+        return_value="ARTESP",
+    ):
+        with app.flask_app.test_request_context("/dataset/new"):
+            html = base.render_snippet(
+                "scheming/form_snippets/organization.html",
+                field={"field_name": "owner_org", "label": "Organization"},
+                data={},
+                errors={},
+            )
+
+    assert 'data-module="dataset-visibility"' not in html
+    assert 'name="owner_org" value="{0}"'.format(artesp_org.id) in html
+    assert (
+        '<select id="field-private" name="private" class="form-control form-select">'
+        in html
+    )

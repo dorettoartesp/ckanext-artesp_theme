@@ -2,6 +2,7 @@
 {# if used with other fields #}
 
 {% set artesp_org = h.get_artesp_organization() %}
+{% set use_dataset_visibility_module = not artesp_org %}
 
 {% macro organization_option_tag(organization, selected_org) %}
   {% block organization_option scoped %}
@@ -11,7 +12,9 @@
   {% endblock %}
 {% endmacro %}
 
+{% if use_dataset_visibility_module %}
 <div data-module="dataset-visibility">
+{% endif %}
   {% if artesp_org %}
     <input type="hidden" name="{{ field.field_name }}" value="{{ artesp_org.id }}" />
     <div class="control-group form-group control-medium">
@@ -51,4 +54,6 @@
       </div>
     </div>
   {% endblock %}
+{% if use_dataset_visibility_module %}
 </div>
+{% endif %}
