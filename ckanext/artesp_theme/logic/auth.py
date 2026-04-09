@@ -8,6 +8,22 @@ def artesp_theme_get_sum(context, data_dict):
     return {"success": True}
 
 
+def request_reset(context, data_dict=None):
+    if _ldap_password_reset_disabled():
+        return auth_helpers.deny(
+            "Password reset is disabled for LDAP users. Use the institutional password recovery flow."
+        )
+    return auth_helpers.allow()
+
+
+def user_reset(context, data_dict=None):
+    if _ldap_password_reset_disabled():
+        return auth_helpers.deny(
+            "Password reset is disabled for LDAP users. Use the institutional password recovery flow."
+        )
+    return auth_helpers.allow()
+
+
 def package_create(context, data_dict=None):
     if auth_helpers.is_sysadmin(context):
         return auth_helpers.allow()
@@ -172,6 +188,8 @@ def package_collaborator_delete(context, data_dict=None):
 def get_auth_functions():
     return {
         "artesp_theme_get_sum": artesp_theme_get_sum,
+        "request_reset": request_reset,
+        "user_reset": user_reset,
         "organization_create": organization_create,
         "organization_update": organization_update,
         "organization_delete": organization_delete,
@@ -188,6 +206,10 @@ def get_auth_functions():
         "package_collaborator_create": package_collaborator_create,
         "package_collaborator_delete": package_collaborator_delete,
     }
+
+
+def _ldap_password_reset_disabled():
+    return bool(tk.config.get("ckanext.ldap.uri", ""))
 
 
 def _authorize_package_operation(

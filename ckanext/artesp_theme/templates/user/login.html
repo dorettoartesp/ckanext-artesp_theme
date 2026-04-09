@@ -1,8 +1,7 @@
 {% ckan_extends %}
 
-{% block secondary_content %}
-  {{ super() }}
-  {% if h.artesp_ldap_enabled() %}
-    <style>.module-narrow:has(a[href*="request_reset"]) { display: none; }</style>
+{% block help_forgotten %}
+  {% if not h.artesp_ldap_enabled() %}
+    {{ super() }}
   {% endif %}
 {% endblock %}

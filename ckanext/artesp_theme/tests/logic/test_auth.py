@@ -23,6 +23,8 @@ def test_artesp_theme_get_sum():
 def test_get_auth_functions_export_group_and_organization_management():
     auth_functions = artesp_auth.get_auth_functions()
 
+    assert auth_functions["request_reset"] is artesp_auth.request_reset
+    assert auth_functions["user_reset"] is artesp_auth.user_reset
     assert auth_functions["organization_create"] is artesp_auth.organization_create
     assert auth_functions["organization_update"] is artesp_auth.organization_update
     assert auth_functions["organization_delete"] is artesp_auth.organization_delete
@@ -79,6 +81,22 @@ def test_group_management_is_reserved_for_sysadmins(action_name):
 
     assert denied["success"] is False
     assert allowed["success"] is True
+
+
+@pytest.mark.ckan_config("ckanext.ldap.uri", "ldap://ldap:389")
+@pytest.mark.parametrize("action_name", ["request_reset", "user_reset"])
+def test_password_reset_is_disabled_when_ldap_is_enabled(action_name):
+    result = getattr(artesp_auth, action_name)({"model": model}, {})
+
+    assert result["success"] is False
+    assert "Password reset is disabled for LDAP users" in result["msg"]
+
+
+@pytest.mark.parametrize("action_name", ["request_reset", "user_reset"])
+def test_password_reset_is_allowed_when_ldap_is_disabled(action_name):
+    result = getattr(artesp_auth, action_name)({"model": model}, {})
+
+    assert result["success"] is True
 
 
 def test_package_collaborator_create_blocks_non_sysadmin_role_override():

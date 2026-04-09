@@ -17,6 +17,38 @@ def test_artesp_theme_blueprint(app, reset_db):
 
 
 @pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.ckan_config("ckanext.ldap.uri", "ldap://ldap:389")
+@pytest.mark.usefixtures("with_plugins")
+def test_login_page_hides_forgot_password_when_ldap_enabled(app, reset_db):
+    resp = app.get(tk.h.url_for("user.login"))
+
+    assert resp.status_code == 200
+    assert 'action="/user/verify"' in resp.text
+    assert "Forgotten your password?" not in resp.text
+    assert "Forgot your password?" not in resp.text
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.ckan_config("ckanext.ldap.uri", "ldap://ldap:389")
+@pytest.mark.usefixtures("with_plugins")
+def test_request_reset_route_is_forbidden_when_ldap_enabled(app, reset_db):
+    resp = app.get(tk.h.url_for("user.request_reset"), status=403)
+
+    assert resp.status_code == 403
+    assert "Unauthorized to request reset password." in resp.text
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.usefixtures("with_plugins")
+def test_login_page_keeps_forgot_password_when_ldap_disabled(app, reset_db):
+    resp = app.get(tk.h.url_for("user.login"))
+
+    assert resp.status_code == 200
+    assert "Forgotten your password?" in resp.text
+    assert "Forgot your password?" in resp.text
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
 @pytest.mark.usefixtures("with_plugins")
 def test_resource_form_renders_without_scheming_fields(app, reset_db):
     with app.flask_app.test_request_context("/dataset/teste/resource/new"):
