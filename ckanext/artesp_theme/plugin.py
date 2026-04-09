@@ -20,6 +20,7 @@ class ArtespThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IValidators)
     plugins.implements(plugins.IAuthFunctions)
     plugins.implements(plugins.IActions)
+    plugins.implements(plugins.IResourceController, inherit=True)
 
     def update_config(self, config_):
         toolkit.add_template_directory(config_, "templates")
@@ -31,6 +32,17 @@ class ArtespThemePlugin(plugins.SingletonPlugin):
 
     def get_actions(self):
         return artesp_action.get_actions()
+
+    def after_resource_create(self, context, resource):
+        artesp_action.sync_unfold_resource_view(context, resource)
+
+    def after_resource_update(self, context, resource):
+        artesp_action.sync_unfold_resource_view(context, resource)
+
+    def before_resource_show(self, resource):
+        artesp_action.normalize_resource_for_unfold(resource)
+        artesp_action.sync_unfold_resource_view({}, resource)
+        return resource
 
     def get_blueprint(self):
         return [artesp_theme]
