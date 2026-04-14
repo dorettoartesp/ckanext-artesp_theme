@@ -22,6 +22,7 @@
                       {% if c.userobj.sysadmin %}
                       <li><a href="{{ h.url_for('admin.index') }}"><i class="fa fa-gavel"></i> {{ _('Admin') }}</a></li>
                       {% endif %}
+                      <li><a href="{{ h.url_for('artesp_theme.statistics') }}"><i class="fa fa-bar-chart"></i> {{ _('Statistics') }}</a></li>
                       <li><a href="{{ h.url_for('dashboard.datasets') }}"><i class="fa fa-tachometer"></i> {{ _('Dashboard') }}</a></li>
                       <li><a href="{{ h.url_for('user.edit', id=c.userobj.name) }}"><i class="fa fa-cog"></i> {{ _('Settings') }}</a></li>
                       <li>
