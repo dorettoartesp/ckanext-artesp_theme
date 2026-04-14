@@ -1,8 +1,10 @@
 """Tests for views.py."""
 
-import pytest
+from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
+
+import pytest
 
 import ckan.plugins.toolkit as tk
 from ckan.lib import base
@@ -149,6 +151,11 @@ def test_statistics_page_is_public_and_renders_dashboard(app, reset_db):
     assert "Painel do Portal de Dados Abertos" in resp.text
     assert "Indicadores principais do portal" in resp.text
     assert "Rodoviário concentra 20 recurso(s)" in resp.text
+    assert 'data-artesp-style="official-portal"' in resp.text
+    assert "dashboard-statistics__brandline" in resp.text
+    assert "dashboard-statistics__section-title" in resp.text
+    assert "dashboard-statistics__filter-icon" in resp.text
+    assert "dashboard-statistics__stat-icon fa fa-database" in resp.text
     assert 'name="theme"' in resp.text
     assert 'value="rodoviario"' in resp.text
     assert 'name="period"' in resp.text
@@ -158,6 +165,23 @@ def test_statistics_page_is_public_and_renders_dashboard(app, reset_db):
     assert "chart.umd.min.js" not in resp.text
     assert "<canvas" not in resp.text
     assert "Acidentes" in resp.text
+
+
+def test_dashboard_statistics_css_uses_artesp_style_baseline_tokens():
+    css_path = (
+        Path(__file__).resolve().parents[1]
+        / "assets/css/modules/dashboard-statistics.css"
+    )
+    css = css_path.read_text(encoding="utf-8").lower()
+
+    assert "--artesp-red: #ff161f" in css
+    assert "--artesp-blue: #034ea2" in css
+    assert "--artesp-text: #333333" in css
+    assert "--artesp-muted: #888888" in css
+    assert "--artesp-border: #bfbfbf" in css
+    assert "font-family: rawline" in css
+    assert "border-left: 4px solid var(--artesp-red)" in css
+    assert "border-radius: 25px" in css
 
 
 @pytest.mark.ckan_config("ckan.plugins", "artesp_theme")

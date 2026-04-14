@@ -202,8 +202,13 @@
     root.toggleAttribute('data-dashboard-loading', isLoading);
     const button = root.querySelector('.dashboard-statistics__filter-submit');
     if (button) {
+      const label = button.querySelector('.dashboard-statistics__filter-label');
       button.disabled = isLoading;
-      button.textContent = isLoading ? 'Atualizando...' : 'Atualizar painel';
+      if (label) {
+        label.textContent = isLoading ? 'Atualizando...' : 'Atualizar painel';
+      } else {
+        button.textContent = isLoading ? 'Atualizando...' : 'Atualizar painel';
+      }
     }
   }
 
