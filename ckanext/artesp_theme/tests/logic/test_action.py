@@ -1,6 +1,7 @@
 """Tests for action.py."""
 
 import ckan.model as model
+import ckan.plugins.toolkit as tk
 
 from ckanext.artesp_theme.logic import action as artesp_action
 
@@ -11,6 +12,54 @@ def test_artesp_theme_get_sum():
         {"left": 10, "right": 30},
     )
     assert result["sum"] == 40
+
+
+def test_dashboard_statistics_action_delegates_to_dashboard_builder(monkeypatch):
+    captured = {}
+
+    def fake_check_access(action_name, context, data_dict):
+        captured["check_access"] = (action_name, context.copy(), dict(data_dict))
+
+    def fake_dashboard(data_dict):
+        captured["dashboard"] = dict(data_dict)
+        return {"filters": dict(data_dict), "kpis": {}}
+
+    monkeypatch.setattr(artesp_action.tk, "check_access", fake_check_access)
+    monkeypatch.setattr(
+        artesp_action.dashboard_statistics,
+        "get_dashboard_statistics",
+        fake_dashboard,
+    )
+
+    result = artesp_action.artesp_theme_dashboard_statistics(
+        {"user": ""},
+        {"theme": "rodoviario", "period": "6m"},
+    )
+
+    assert captured["check_access"][0] == "artesp_theme_dashboard_statistics"
+    assert captured["dashboard"] == {"theme": "rodoviario", "period": "6m"}
+    assert result["filters"] == {"theme": "rodoviario", "period": "6m"}
+
+
+def test_dashboard_statistics_action_exports_validation_errors(monkeypatch):
+    def fake_dashboard(data_dict):
+        raise tk.ValidationError({"period": ["Periodo invalido."]})
+
+    monkeypatch.setattr(
+        artesp_action.dashboard_statistics,
+        "get_dashboard_statistics",
+        fake_dashboard,
+    )
+
+    try:
+        artesp_action.artesp_theme_dashboard_statistics(
+            {"ignore_auth": True},
+            {"period": "36m"},
+        )
+    except tk.ValidationError as exc:
+        assert "period" in exc.error_dict
+    else:
+        raise AssertionError("ValidationError was not raised")
 
 
 def test_package_collaborator_create_uses_normalized_payload(monkeypatch):
@@ -281,3 +330,10 @@ def test_package_create_syncs_unfold_views_for_created_resources(monkeypatch):
     assert captured["core_action"][0]["ignore_auth"] is True
     assert captured["core_action"][1]["groups"] == [{"id": "group-id"}]
     assert captured["sync"][1] == created_package["resources"]
+
+
+def test_get_actions_exports_dashboard_statistics_action():
+    assert (
+        artesp_action.get_actions()["artesp_theme_dashboard_statistics"]
+        is artesp_action.artesp_theme_dashboard_statistics
+    )

@@ -20,9 +20,19 @@ def test_artesp_theme_get_sum():
     assert artesp_auth.artesp_theme_get_sum({"model": model}, {})["success"]
 
 
+def test_dashboard_statistics_allows_anonymous_access():
+    assert artesp_auth.artesp_theme_dashboard_statistics({"model": model}, {})[
+        "success"
+    ]
+
+
 def test_get_auth_functions_export_group_and_organization_management():
     auth_functions = artesp_auth.get_auth_functions()
 
+    assert (
+        auth_functions["artesp_theme_dashboard_statistics"]
+        is artesp_auth.artesp_theme_dashboard_statistics
+    )
     assert auth_functions["request_reset"] is artesp_auth.request_reset
     assert auth_functions["user_reset"] is artesp_auth.user_reset
     assert auth_functions["organization_create"] is artesp_auth.organization_create

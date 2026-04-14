@@ -50,6 +50,118 @@ def test_login_page_keeps_forgot_password_when_ldap_disabled(app, reset_db):
 
 @pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
 @pytest.mark.usefixtures("with_plugins")
+def test_header_includes_public_statistics_nav_item(app, reset_db):
+    resp = app.get(tk.h.url_for("artesp_theme.about_ckan"))
+
+    assert resp.status_code == 200
+    assert 'href="/estatisticas"' in resp.text
+    assert "Estatísticas" in resp.text
+    assert 'href="https://www.artesp.sp.gov.br/artesp"' in resp.text
+    assert 'target="_blank"' in resp.text
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.usefixtures("with_plugins")
+def test_statistics_page_is_public_and_renders_dashboard(app, reset_db):
+    dashboard = {
+        "generated_at_label": "09/04/2026 10:30",
+        "has_data": True,
+        "filters": {
+            "theme": "rodoviario",
+            "theme_label": "Rodoviário",
+            "period": "6m",
+            "period_label": "Últimos 6 meses",
+            "available_themes": [
+                {"value": "all", "label": "Todos os temas"},
+                {"value": "rodoviario", "label": "Rodoviário"},
+            ],
+            "available_periods": [
+                {"value": "6m", "label": "Últimos 6 meses"},
+                {"value": "12m", "label": "Últimos 12 meses"},
+            ],
+        },
+        "kpis": {
+            "dataset_count": 12,
+            "resource_count": 44,
+            "theme_count": 5,
+            "format_count": 6,
+            "organization_count": 1,
+            "average_resources_per_dataset_label": "3,7",
+            "empty_theme_count": 2,
+            "datasets_without_theme_count": 1,
+        },
+        "topic_labels": ["Legislação", "Rodoviário", "Sem grupo"],
+        "insights": [
+            {
+                "title": "Rodoviário concentra 20 recurso(s)",
+                "description": "Tema com maior volume.",
+            },
+            {
+                "title": "Acidentes reúne 9 recurso(s)",
+                "description": "Maior conjunto.",
+            },
+            {
+                "title": "CSV é o formato mais recorrente",
+                "description": "Formato dominante.",
+            },
+        ],
+        "charts": {
+            "resources_by_theme": [
+                {"label": "Rodoviário", "value": 20, "percent": 100.0}
+            ],
+            "datasets_by_theme": [
+                {"label": "Rodoviário", "value": 5, "percent": 100.0}
+            ],
+            "timeline": [{"label": "2025", "value": 3, "percent": 100.0}],
+            "top_datasets": [
+                {"label": "Acidentes", "value": 9, "percent": 100.0}
+            ],
+            "formats": [{"label": "CSV", "value": 8, "percent": 100.0}],
+        },
+        "table_rows": [
+            {
+                "rank": 1,
+                "name": "acidentes",
+                "title": "Acidentes",
+                "theme": "Rodoviário",
+                "resource_count": 9,
+                "formats_label": "CSV",
+                "modified_label": "09/04/2026",
+                "share_percent": 20.5,
+                "share_label": "20,5",
+            }
+        ],
+        "table_total_count": 1,
+    }
+
+    with patch(
+        "ckanext.artesp_theme.controllers.artesp_helpers.get_dashboard_statistics",
+        return_value=dashboard,
+    ) as get_dashboard_statistics:
+        resp = app.get(
+            tk.h.url_for("artesp_theme.statistics", theme="rodoviario", period="6m")
+        )
+
+    assert resp.status_code == 200
+    get_dashboard_statistics.assert_called_once_with(
+        {"theme": "rodoviario", "period": "6m"}
+    )
+    assert "Painel do Portal de Dados Abertos" in resp.text
+    assert "Indicadores principais do portal" in resp.text
+    assert "Rodoviário concentra 20 recurso(s)" in resp.text
+    assert 'name="theme"' in resp.text
+    assert 'value="rodoviario"' in resp.text
+    assert 'name="period"' in resp.text
+    assert 'value="6m"' in resp.text
+    assert 'data-dashboard-endpoint="/api/3/action/artesp_theme_dashboard_statistics"' in resp.text
+    assert "cdn.jsdelivr.net" not in resp.text
+    assert "chart.umd.min.js" not in resp.text
+    assert "<canvas" not in resp.text
+    assert "Acidentes" in resp.text
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.usefixtures("with_plugins")
 def test_resource_form_renders_without_scheming_fields(app, reset_db):
     with app.flask_app.test_request_context("/dataset/teste/resource/new"):
         html = base.render_snippet(
