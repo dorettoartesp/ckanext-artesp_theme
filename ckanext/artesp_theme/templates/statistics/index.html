@@ -1,0 +1,297 @@
+{% extends "page.html" %}
+
+{% macro render_bar_list(items, label, empty_message) %}
+  {% if items %}
+    <ol class="dashboard-statistics__bar-list" aria-label="{{ label }}">
+      {% for item in items %}
+        <li class="dashboard-statistics__bar-item">
+          <div class="dashboard-statistics__bar-label">
+            <span>{{ item.label }}</span>
+            <strong>{{ item.value }}</strong>
+          </div>
+          <div class="dashboard-statistics__bar-track" aria-hidden="true">
+            <span style="width: {{ item.percent|default(0) }}%;"></span>
+          </div>
+        </li>
+      {% endfor %}
+    </ol>
+  {% else %}
+    <p class="dashboard-statistics__empty">{{ empty_message }}</p>
+  {% endif %}
+{% endmacro %}
+
+{% block subtitle %}Estatísticas{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="active"><a href="{{ h.url_for('artesp_theme.statistics') }}">Estatísticas</a></li>
+{% endblock %}
+
+{% block secondary %}{% endblock %}
+
+{% block wrapper_class %} dashboard-statistics-wrapper{% endblock %}
+
+{% block primary %}
+  <div
+    class="primary col-md-12 col-xs-12 dashboard-statistics-page"
+    role="main"
+    data-dashboard-root
+    data-dashboard-endpoint="/api/3/action/artesp_theme_dashboard_statistics"
+  >
+    <article class="module dashboard-statistics">
+      <header class="module-content page-header dashboard-statistics__hero">
+        <span class="dashboard-statistics__kicker">Estatísticas</span>
+        <h1>Painel do Portal de Dados Abertos</h1>
+        <p>
+          Leitura pública e consolidada do catálogo da ARTESP, com métricas reais de conjuntos de dados,
+          recursos, temas, formatos e evolução histórica das publicações.
+        </p>
+        <div class="dashboard-statistics__meta">
+          <span>Última consolidação: {{ dashboard.generated_at_label }}</span>
+          <span>{{ dashboard.kpis.organization_count }} organização(ões) com dados públicos</span>
+          <span>{{ dashboard.kpis.datasets_without_theme_count }} conjunto(s) ainda sem grupo vinculado</span>
+        </div>
+      </header>
+
+      <div class="module-content dashboard-statistics__content">
+        <section class="dashboard-statistics__section dashboard-statistics__section--filters" aria-labelledby="dashboard-statistics-filters-title">
+          <div class="dashboard-statistics__section-header">
+            <small>Filtros</small>
+            <h2 id="dashboard-statistics-filters-title">Recorte do painel</h2>
+            <p>Filtre a leitura pública por tema e janela de publicação dos conjuntos.</p>
+          </div>
+          <form class="dashboard-statistics__filters" method="get" action="{{ h.url_for('artesp_theme.statistics') }}" data-dashboard-filter-form>
+            <div class="dashboard-statistics__filter-field">
+              <label for="dashboard-statistics-theme">Tema</label>
+              <select id="dashboard-statistics-theme" name="theme">
+                {% for option in dashboard.filters.available_themes %}
+                  <option value="{{ option.value }}" {% if option.value == dashboard.filters.theme %}selected{% endif %}>{{ option.label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="dashboard-statistics__filter-field">
+              <label for="dashboard-statistics-period">Período</label>
+              <select id="dashboard-statistics-period" name="period">
+                {% for option in dashboard.filters.available_periods %}
+                  <option value="{{ option.value }}" {% if option.value == dashboard.filters.period %}selected{% endif %}>{{ option.label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <button class="dashboard-statistics__filter-submit" type="submit">Atualizar painel</button>
+            <p class="dashboard-statistics__filter-status" data-dashboard-status role="status" aria-live="polite">
+              Exibindo {{ dashboard.filters.theme_label }} em {{ dashboard.filters.period_label|lower }}.
+            </p>
+          </form>
+        </section>
+
+        <section class="dashboard-statistics__section">
+          <div class="dashboard-statistics__section-header">
+            <small>Indicadores</small>
+            <h2>Indicadores principais do portal</h2>
+            <p>Métricas consolidadas para leitura executiva do acervo publicado.</p>
+          </div>
+          <div class="dashboard-statistics__stats-grid">
+            <article class="dashboard-statistics__stat-card">
+              <span class="dashboard-statistics__stat-label">Conjuntos de dados</span>
+              <strong class="dashboard-statistics__stat-value" data-dashboard-metric="dataset_count">{{ dashboard.kpis.dataset_count }}</strong>
+              <span class="dashboard-statistics__stat-sub">Catálogo público acompanhado neste painel.</span>
+            </article>
+            <article class="dashboard-statistics__stat-card">
+              <span class="dashboard-statistics__stat-label">Recursos publicados</span>
+              <strong class="dashboard-statistics__stat-value" data-dashboard-metric="resource_count">{{ dashboard.kpis.resource_count }}</strong>
+              <span class="dashboard-statistics__stat-sub">Arquivos e links associados aos conjuntos.</span>
+            </article>
+            <article class="dashboard-statistics__stat-card">
+              <span class="dashboard-statistics__stat-label">Temas catalogados</span>
+              <strong class="dashboard-statistics__stat-value" data-dashboard-metric="theme_count">{{ dashboard.kpis.theme_count }}</strong>
+              <span class="dashboard-statistics__stat-sub">Grupos existentes no portal usados como eixo temático.</span>
+            </article>
+            <article class="dashboard-statistics__stat-card">
+              <span class="dashboard-statistics__stat-label">Formatos identificados</span>
+              <strong class="dashboard-statistics__stat-value" data-dashboard-metric="format_count">{{ dashboard.kpis.format_count }}</strong>
+              <span class="dashboard-statistics__stat-sub">Formatos ativos reconhecidos nos recursos publicados.</span>
+            </article>
+            <article class="dashboard-statistics__stat-card">
+              <span class="dashboard-statistics__stat-label">Média por conjunto</span>
+              <strong class="dashboard-statistics__stat-value" data-dashboard-metric="average_resources_per_dataset_label">{{ dashboard.kpis.average_resources_per_dataset_label }}</strong>
+              <span class="dashboard-statistics__stat-sub">Recursos ativos por conjunto de dados.</span>
+            </article>
+            <article class="dashboard-statistics__stat-card">
+              <span class="dashboard-statistics__stat-label">Temas sem conteúdo</span>
+              <strong class="dashboard-statistics__stat-value" data-dashboard-metric="empty_theme_count">{{ dashboard.kpis.empty_theme_count }}</strong>
+              <span class="dashboard-statistics__stat-sub">Grupos existentes ainda sem conjuntos vinculados.</span>
+            </article>
+          </div>
+        </section>
+
+        <section class="dashboard-statistics__section">
+          <div class="dashboard-statistics__section-header">
+            <small>Grupos temáticos</small>
+            <h2>Temas representados no catálogo</h2>
+            <p>Classificação temática derivada dos grupos CKAN atualmente vinculados aos conjuntos.</p>
+          </div>
+          <ul class="dashboard-statistics__topics">
+            {% for label in dashboard.topic_labels %}
+              <li>{{ label }}</li>
+            {% else %}
+              <li>Sem grupos cadastrados</li>
+            {% endfor %}
+          </ul>
+        </section>
+
+        <section class="dashboard-statistics__section">
+          <div class="dashboard-statistics__section-header">
+            <small>Painel</small>
+            <h2>Evolução e leitura executiva</h2>
+            <p>Resumo gerencial do catálogo e série histórica de criação dos conjuntos públicos.</p>
+          </div>
+          <div class="dashboard-statistics__grid dashboard-statistics__grid--split">
+            <article class="dashboard-statistics__panel">
+              <div class="dashboard-statistics__panel-head">
+                <h3>Leitura resumida</h3>
+                <p>Destaques principais do acervo publicado.</p>
+              </div>
+              <div class="dashboard-statistics__panel-body" data-dashboard-insights>
+                <div class="dashboard-statistics__insights">
+                  {% for insight in dashboard.insights %}
+                    <div class="dashboard-statistics__insight">
+                      <strong>{{ insight.title }}</strong>
+                      <span>{{ insight.description }}</span>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </article>
+            <article class="dashboard-statistics__panel">
+              <div class="dashboard-statistics__panel-head">
+                <h3>Evolução temporal das publicações</h3>
+                <p>Janela móvel mensal dos últimos 12 meses, com meses vazios exibidos como zero.</p>
+              </div>
+              <div class="dashboard-statistics__panel-body">
+                <div data-dashboard-chart="timeline">
+                  {{ render_bar_list(dashboard.charts.timeline, 'Evolução temporal das publicações', 'Ainda não há séries temporais suficientes para exibição.') }}
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="dashboard-statistics__section">
+          <div class="dashboard-statistics__section-header">
+            <small>Distribuição</small>
+            <h2>Composição do acervo</h2>
+            <p>Distribuição de recursos, conjuntos e formatos mais recorrentes no catálogo.</p>
+          </div>
+          <div class="dashboard-statistics__grid dashboard-statistics__grid--two">
+            <article class="dashboard-statistics__panel">
+              <div class="dashboard-statistics__panel-head">
+                <h3>Recursos por tema</h3>
+                <p>Volume de arquivos e links distribuídos pelos grupos temáticos.</p>
+              </div>
+              <div class="dashboard-statistics__panel-body">
+                <div data-dashboard-chart="resources_by_theme">
+                  {{ render_bar_list(dashboard.charts.resources_by_theme, 'Recursos por tema', 'Ainda não há recursos suficientes para distribuição temática.') }}
+                </div>
+              </div>
+            </article>
+            <article class="dashboard-statistics__panel">
+              <div class="dashboard-statistics__panel-head">
+                <h3>Conjuntos por tema</h3>
+                <p>Distribuição dos conjuntos públicos pelos temas ativos.</p>
+              </div>
+              <div class="dashboard-statistics__panel-body">
+                <div data-dashboard-chart="datasets_by_theme">
+                  {{ render_bar_list(dashboard.charts.datasets_by_theme, 'Conjuntos por tema', 'Ainda não há conjuntos suficientes para distribuição temática.') }}
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="dashboard-statistics__section">
+          <div class="dashboard-statistics__grid dashboard-statistics__grid--wide">
+            <article class="dashboard-statistics__panel">
+              <div class="dashboard-statistics__panel-head">
+                <h3>Conjuntos com maior volume de recursos</h3>
+                <p>Ranking dos conjuntos públicos com mais arquivos ou links ativos.</p>
+              </div>
+              <div class="dashboard-statistics__panel-body">
+                <div data-dashboard-chart="top_datasets">
+                  {{ render_bar_list(dashboard.charts.top_datasets, 'Conjuntos com maior volume de recursos', 'Ainda não há recursos suficientes para compor o ranking.') }}
+                </div>
+              </div>
+            </article>
+            <article class="dashboard-statistics__panel">
+              <div class="dashboard-statistics__panel-head">
+                <h3>Formatos de publicação</h3>
+                <p>Participação relativa dos formatos ativos identificados no catálogo.</p>
+              </div>
+              <div class="dashboard-statistics__panel-body">
+                <div data-dashboard-chart="formats">
+                  {{ render_bar_list(dashboard.charts.formats, 'Formatos de publicação', 'Ainda não há formatos suficientes para consolidação.') }}
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="dashboard-statistics__section">
+          <div class="dashboard-statistics__section-header">
+            <small>Inventário resumido</small>
+            <h2>Conjuntos com maior volume publicado</h2>
+            <p>Visão resumida dos conjuntos públicos com maior concentração de recursos ativos.</p>
+          </div>
+          <article class="dashboard-statistics__panel">
+            <div class="dashboard-statistics__table-wrap">
+              <table class="dashboard-statistics__table">
+                <thead>
+                  <tr>
+                    <th style="width: 68px;">#</th>
+                    <th>Conjunto de dados</th>
+                    <th style="width: 180px;">Tema</th>
+                    <th style="width: 120px;">Recursos</th>
+                    <th style="width: 220px;">Participação relativa</th>
+                  </tr>
+                </thead>
+                <tbody data-dashboard-table-body>
+                  {% for row in dashboard.table_rows %}
+                    <tr>
+                      <td>{{ row.rank }}</td>
+                      <td>
+                        <a class="dashboard-statistics__dataset-link" href="{{ h.url_for('dataset.read', id=row.name) }}">
+                          {{ row.title }}
+                        </a>
+                        <span class="dashboard-statistics__dataset-meta">
+                          {{ row.formats_label }} · atualizado em {{ row.modified_label }}
+                        </span>
+                      </td>
+                      <td><span class="dashboard-statistics__badge">{{ row.theme }}</span></td>
+                      <td>{{ row.resource_count }}</td>
+                      <td>
+                        <div class="dashboard-statistics__share">
+                          <div class="dashboard-statistics__share-bar">
+                            <span style="width: {{ row.share_percent }}%;"></span>
+                          </div>
+                          <span>{{ row.share_label }}%</span>
+                        </div>
+                      </td>
+                    </tr>
+                  {% else %}
+                    <tr>
+                      <td colspan="5">Ainda não há conjuntos públicos suficientes para compor a tabela.</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <div class="dashboard-statistics__panel-body">
+              <p class="dashboard-statistics__table-note">
+                Exibindo até 20 conjuntos, ordenados pela quantidade de recursos ativos. Total consolidado no catálogo:
+                <span data-dashboard-table-total>{{ dashboard.table_total_count }}</span> conjunto(s).
+              </p>
+            </div>
+          </article>
+        </section>
+      </div>
+    </article>
+  </div>
+{% endblock %}
