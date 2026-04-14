@@ -16,6 +16,7 @@ class SeedConfig:
     ckan_url: str
     api_key: str
     prefix: str
+    owner_org: str | None
     organization_count: int
     group_count: int
     dataset_count: int
@@ -46,6 +47,14 @@ def parse_args() -> SeedConfig:
         "--prefix",
         default="seed-artesp",
         help="Prefixo usado para organizacoes, grupos e datasets.",
+    )
+    parser.add_argument(
+        "--owner-org",
+        default="",
+        help=(
+            "Organizacao fixa para todos os datasets. Use quando o ambiente "
+            "restringe criacao a uma unica organizacao, como a ARTESP."
+        ),
     )
     parser.add_argument(
         "--organization-count",
@@ -108,10 +117,13 @@ def parse_args() -> SeedConfig:
             "Todos os contadores devem ser maiores ou iguais a zero: "
             + ", ".join(invalid_fields)
         )
-    if args.dataset_count > 0 and args.organization_count == 0:
+    owner_org = slugify(args.owner_org) if args.owner_org else None
+
+    if args.dataset_count > 0 and args.organization_count == 0 and not owner_org:
         parser.error(
             "--organization-count deve ser maior que zero quando "
-            "--dataset-count for maior que zero."
+            "--dataset-count for maior que zero, exceto quando --owner-org "
+            "for informado."
         )
     if args.dataset_count > 0 and args.group_count == 0:
         parser.error(
@@ -119,10 +131,10 @@ def parse_args() -> SeedConfig:
             "for maior que zero."
         )
     if not args.skip_heavy_dataset and args.heavy_dataset_resources > 0:
-        if args.organization_count == 0:
+        if args.organization_count == 0 and not owner_org:
             parser.error(
                 "--organization-count deve ser maior que zero para criar o "
-                "dataset pesado."
+                "dataset pesado, exceto quando --owner-org for informado."
             )
         if args.group_count == 0:
             parser.error(
@@ -134,6 +146,7 @@ def parse_args() -> SeedConfig:
         ckan_url=args.ckan_url.rstrip("/"),
         api_key=args.api_key,
         prefix=slugify(args.prefix),
+        owner_org=owner_org,
         organization_count=args.organization_count,
         group_count=args.group_count,
         dataset_count=args.dataset_count,
@@ -184,6 +197,18 @@ def ensure_organization(
         description=f"Organizacao de teste {title}.",
     )
     print(f"Organizacao criada: {organization_name}")
+
+
+def require_existing_organization(
+    ckan: ckanapi.RemoteCKAN,
+    organization_name: str,
+) -> None:
+    try:
+        ckan.action.organization_show(id=organization_name)
+    except errors.NotFound as exc:
+        raise SystemExit(
+            f"Organizacao obrigatoria nao encontrada: {organization_name}"
+        ) from exc
 
 
 def ensure_group(
@@ -459,6 +484,9 @@ def seed_data(config: SeedConfig) -> None:
     organizations = make_organization_names(config)
     groups = make_group_names(config)
 
+    if config.owner_org:
+        require_existing_organization(ckan, config.owner_org)
+
     for index, organization_name in enumerate(organizations, start=1):
         ensure_organization(
             ckan=ckan,
@@ -473,17 +501,23 @@ def seed_data(config: SeedConfig) -> None:
             title=f"Grupo de teste {index:02d}",
         )
 
+    dataset_organizations = (
+        [config.owner_org]
+        if config.owner_org
+        else organizations
+    )
+
     regular_dataset_count, regular_resources_created = seed_regular_datasets(
         ckan=ckan,
         config=config,
-        organizations=organizations,
+        organizations=dataset_organizations,
         groups=groups,
     )
 
     heavy_dataset_count, heavy_resources_created = seed_heavy_dataset(
         ckan=ckan,
         config=config,
-        organization_name=cycle_pick(organizations, 0),
+        organization_name=cycle_pick(dataset_organizations, 0),
         group_name=cycle_pick(groups, 0),
     )
 

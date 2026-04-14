@@ -29,6 +29,7 @@ bin/seed_test_data \
 ### Parametros uteis
 
 - `--prefix`: muda o prefixo dos slugs criados.
+- `--owner-org`: fixa a organizacao dos datasets, util para ambientes com governanca restrita a `artesp`.
 - `--dataset-count`: numero de datasets regulares.
 - `--resources-per-dataset`: numero de recursos por dataset regular.
 - `--heavy-dataset-resources`: numero de recursos no dataset pesado.
