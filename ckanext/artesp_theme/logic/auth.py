@@ -8,6 +8,11 @@ def artesp_theme_get_sum(context, data_dict):
     return {"success": True}
 
 
+@tk.auth_allow_anonymous_access
+def artesp_theme_dashboard_statistics(context, data_dict=None):
+    return {"success": True}
+
+
 def request_reset(context, data_dict=None):
     if _ldap_password_reset_disabled():
         return auth_helpers.deny(
@@ -187,6 +192,7 @@ def package_collaborator_delete(context, data_dict=None):
 
 def get_auth_functions():
     return {
+        "artesp_theme_dashboard_statistics": artesp_theme_dashboard_statistics,
         "artesp_theme_get_sum": artesp_theme_get_sum,
         "request_reset": request_reset,
         "user_reset": user_reset,

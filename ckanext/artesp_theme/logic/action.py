@@ -11,6 +11,7 @@ from ckan.logic.action.create import package_create as core_package_create
 
 import ckanext.artesp_theme.logic.schema as schema
 from ckanext.artesp_theme.logic import auth_helpers
+from ckanext.artesp_theme.logic import dashboard_statistics
 
 try:
     from ckanext.unfold.adapters import ADAPTERS as UNFOLD_ADAPTERS
@@ -56,6 +57,12 @@ def artesp_theme_get_sum(context, data_dict):
         "right": data["right"],
         "sum": data["left"] + data["right"],
     }
+
+
+@tk.side_effect_free
+def artesp_theme_dashboard_statistics(context, data_dict):
+    tk.check_access("artesp_theme_dashboard_statistics", context, data_dict)
+    return dashboard_statistics.get_dashboard_statistics(data_dict or {})
 
 
 def package_create(context, data_dict):
@@ -212,6 +219,7 @@ def _extract_unfold_extension(value):
 
 def get_actions():
     return {
+        "artesp_theme_dashboard_statistics": artesp_theme_dashboard_statistics,
         "group_create": group_create,
         "package_create": package_create,
         "package_collaborator_create": package_collaborator_create,

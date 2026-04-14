@@ -1,6 +1,5 @@
 import datetime
 import logging
-import re
 from markupsafe import Markup
 
 from sqlalchemy import desc
@@ -10,6 +9,7 @@ from ckan.model.package import Package
 from ckan.model.meta import Session
 
 from ckanext.artesp_theme.logic import auth_helpers
+from ckanext.artesp_theme.logic import dashboard_statistics
 
 log = logging.getLogger(__name__)
 
@@ -212,6 +212,14 @@ def get_featured_groups(limit=4):
         return []
 
 
+def clear_dashboard_statistics_cache():
+    dashboard_statistics.clear_dashboard_statistics_cache()
+
+
+def get_dashboard_statistics(data_dict=None):
+    return dashboard_statistics.get_dashboard_statistics(data_dict or {})
+
+
 def artesp_ldap_enabled():
     """Check if LDAP authentication is enabled."""
     return bool(toolkit.config.get('ckanext.ldap.uri', ''))
@@ -246,6 +254,7 @@ def get_helpers():
         "get_organization_count": get_organization_count,
         "get_group_count": get_group_count,
         "get_featured_groups": get_featured_groups,
+        "get_dashboard_statistics": get_dashboard_statistics,
         "get_year": get_year,
         "safe_html": safe_html,
         "fix_fontawesome_icon": fix_fontawesome_icon,

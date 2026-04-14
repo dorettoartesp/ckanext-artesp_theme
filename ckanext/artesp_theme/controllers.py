@@ -4,6 +4,7 @@ from ckan.lib.helpers import flash_error, redirect_to
 from ckan.lib.pagination import Page
 import logging
 
+import ckanext.artesp_theme.helpers as artesp_helpers
 from ckanext.artesp_theme.logic import auth_helpers
 
 log = logging.getLogger(__name__)
@@ -27,10 +28,21 @@ def harvesting():
     return render_template('static/harvesting.html')
 
 
+def statistics():
+    dashboard = artesp_helpers.get_dashboard_statistics(
+        {
+            "theme": request.args.get("theme"),
+            "period": request.args.get("period"),
+        }
+    )
+    return render_template("statistics/index.html", dashboard=dashboard)
+
+
 artesp_theme.add_url_rule('/about-ckan', view_func=about_ckan)
 artesp_theme.add_url_rule('/terms', view_func=terms)
 artesp_theme.add_url_rule('/privacy', view_func=privacy)
 artesp_theme.add_url_rule('/harvesting', view_func=harvesting)
+artesp_theme.add_url_rule('/estatisticas', view_func=statistics)
 
 
 def _user_verify():
