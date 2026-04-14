@@ -99,6 +99,11 @@ msgid "Data & Resources"
 msgstr "Dados e Recursos"
 
 #: ckanext/artesp_theme/templates/footer.html:39
+#: ckanext/artesp_theme/templates/header.html:73
+msgid "Statistics"
+msgstr "Estatísticas"
+
+#: ckanext/artesp_theme/templates/footer.html:39
 #: ckanext/artesp_theme/templates/static/harvesting.html:1
 msgid "Harvesting"
 msgstr "Coleta de Dados"
