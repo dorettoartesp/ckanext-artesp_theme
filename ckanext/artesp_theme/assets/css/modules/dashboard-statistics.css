@@ -399,7 +399,7 @@
 
 .dashboard-statistics-page .dashboard-statistics__bar-track span,
 .dashboard-statistics-page .dashboard-statistics__share-bar span {
-  background: var(--artesp-red);
+  background: #555555;
   border-radius: inherit;
   display: block;
   height: 100%;
