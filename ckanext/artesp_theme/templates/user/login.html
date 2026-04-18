@@ -5,3 +5,16 @@
     {{ super() }}
   {% endif %}
 {% endblock %}
+
+{% block form %}
+  {{ super() }}
+  <div class="govbr-login-separator" style="text-align:center;margin:1em 0;">
+    <span>{{ _('ou') }}</span>
+  </div>
+  <div class="govbr-login-button" style="text-align:center;">
+    <a href="{{ h.url_for('govbr.login') }}" class="btn btn-primary btn-block">
+      <img src="{{ h.url_for_static('images/govbr-logo.svg') }}" alt="Gov.br" height="20" style="margin-right:8px;vertical-align:middle;" onerror="this.style.display='none'">
+      {{ _('Entrar com Gov.br') }}
+    </a>
+  </div>
+{% endblock %}

@@ -70,6 +70,20 @@ def is_sysadmin(context):
     return bool(user and user.sysadmin)
 
 
+def is_external_user(user_or_id) -> bool:
+    """Return True iff the user has user_type == 'external' in plugin_extras."""
+    if user_or_id is None:
+        return False
+    if isinstance(user_or_id, str):
+        user = model.User.get(user_or_id)
+    else:
+        user = user_or_id
+    if not user:
+        return False
+    extras = getattr(user, "plugin_extras", None) or {}
+    return extras.get("artesp", {}).get("user_type") == "external"
+
+
 def get_artesp_org_identifier():
     configured_identifier = dict(tk.config).get("ckanext.ldap.organization.id")
     if configured_identifier:

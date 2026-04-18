@@ -1,0 +1,27 @@
+{% set govbr_sub = user.get('plugin_extras', {}).get('artesp', {}).get('govbr_sub') %}
+
+<div class="module module-narrow module-shallow govbr-link-module" style="margin-top:1em;">
+  <h2 class="module-heading">
+    <i class="fa fa-id-card"></i>
+    {{ _('Conta Gov.br') }}
+  </h2>
+  <div class="module-content">
+    {% if govbr_sub %}
+      <p class="text-success">
+        <i class="fa fa-check-circle"></i>
+        {{ _('Conta Gov.br vinculada.') }}
+      </p>
+      <form method="post" action="{{ h.url_for('govbr.unlink') }}">
+        <input type="hidden" name="_csrf_token" value="{{ h.get_flashed_messages() and '' or '' }}">
+        <button type="submit" class="btn btn-danger btn-sm">
+          {{ _('Desvincular Gov.br') }}
+        </button>
+      </form>
+    {% else %}
+      <p class="text-muted">{{ _('Nenhuma conta Gov.br vinculada.') }}</p>
+      <a href="{{ h.url_for('govbr.link') }}" class="btn btn-default btn-sm">
+        {{ _('Vincular conta Gov.br') }}
+      </a>
+    {% endif %}
+  </div>
+</div>

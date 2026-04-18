@@ -5,6 +5,7 @@ import ckan.plugins.toolkit as toolkit
 
 import ckanext.artesp_theme.helpers as helpers
 from ckanext.artesp_theme.controllers import artesp_theme
+from ckanext.artesp_theme.govbr.blueprint import govbr as govbr_blueprint
 from ckanext.artesp_theme.logic import action as artesp_action
 from ckanext.artesp_theme.logic import auth as artesp_auth
 from ckanext.artesp_theme.logic import validators
@@ -13,6 +14,7 @@ from ckanext.artesp_theme.middleware import make_middleware
 
 class ArtespThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
+    plugins.implements(plugins.IConfigDeclaration)
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IBlueprint)
     plugins.implements(plugins.ITranslation)
@@ -26,6 +28,20 @@ class ArtespThemePlugin(plugins.SingletonPlugin):
         toolkit.add_template_directory(config_, "templates")
         toolkit.add_public_directory(config_, "public")
         toolkit.add_resource("assets", "artesp_theme")
+
+    def declare_config_options(self, declaration, key):
+        declaration.annotate("GovBR OAuth2 integration")
+        declaration.declare_bool(key.ckanext.artesp.govbr.enabled).set_default(False)
+        declaration.declare(key.ckanext.artesp.govbr.client_id).set_default("")
+        declaration.declare(key.ckanext.artesp.govbr.client_secret).set_default("")
+        declaration.declare(key.ckanext.artesp.govbr.base_url).set_default(
+            "https://sso.staging.acesso.gov.br"
+        )
+        declaration.declare(key.ckanext.artesp.govbr.redirect_uri).set_default("")
+        declaration.declare(key.ckanext.artesp.govbr.link_redirect_uri).set_default("")
+        declaration.declare(key.ckanext.artesp.govbr.scopes).set_default(
+            "openid email profile"
+        )
 
     def get_auth_functions(self):
         return artesp_auth.get_auth_functions()
@@ -45,7 +61,7 @@ class ArtespThemePlugin(plugins.SingletonPlugin):
         return resource
 
     def get_blueprint(self):
-        return [artesp_theme]
+        return [artesp_theme, govbr_blueprint]
 
     def get_helpers(self):
         return helpers.get_helpers()

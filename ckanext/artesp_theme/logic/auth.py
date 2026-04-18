@@ -29,7 +29,16 @@ def user_reset(context, data_dict=None):
     return auth_helpers.allow()
 
 
+def _deny_if_external(context):
+    user = auth_helpers.get_authenticated_user(context)
+    if auth_helpers.is_external_user(user):
+        return auth_helpers.deny("External users cannot perform write operations.")
+    return None
+
+
 def package_create(context, data_dict=None):
+    if (guard := _deny_if_external(context)):
+        return guard
     if auth_helpers.is_sysadmin(context):
         return auth_helpers.allow()
 
@@ -100,6 +109,8 @@ def group_delete(context, data_dict=None):
 
 
 def _sysadmin_only_management_operation(context, message):
+    if (guard := _deny_if_external(context)):
+        return guard
     if auth_helpers.is_sysadmin(context):
         return auth_helpers.allow()
 
@@ -226,6 +237,8 @@ def _authorize_package_operation(
 ):
     data_dict = data_dict or {}
 
+    if (guard := _deny_if_external(context)):
+        return guard
     if auth_helpers.is_sysadmin(context):
         return auth_helpers.allow()
 
@@ -273,6 +286,8 @@ def _authorize_resource_operation(
 ):
     data_dict = data_dict or {}
 
+    if (guard := _deny_if_external(context)):
+        return guard
     if auth_helpers.is_sysadmin(context):
         return auth_helpers.allow()
 
