@@ -94,4 +94,5 @@ def test_artesp_boolean_validator_false_strings():
 
 
 def test_artesp_boolean_validator_invalid_string():
-    assert validators.artesp_boolean_validator("invalid", {}) == "invalid"
+    with pytest.raises(tk.Invalid):
+        validators.artesp_boolean_validator("invalid", {})

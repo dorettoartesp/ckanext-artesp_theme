@@ -32,6 +32,44 @@ def test_login_page_hides_forgot_password_when_ldap_enabled(app, reset_db):
 
 @pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
 @pytest.mark.ckan_config("ckanext.ldap.uri", "ldap://ldap:389")
+@pytest.mark.ckan_config("ckanext.artesp.govbr.enabled", "true")
+@pytest.mark.ckan_config("ckanext.artesp.govbr.client_id", "govbr-client-id")
+@pytest.mark.usefixtures("with_plugins")
+def test_login_form_snippet_shows_govbr_button_when_ldap_template_is_active(
+    app, reset_db
+):
+    with app.flask_app.test_request_context("/user/login"):
+        html = base.render_snippet(
+            "user/snippets/login_form.html",
+            action="/user/verify",
+            error_summary={},
+        )
+
+    assert 'action="/user/verify"' in html
+    assert 'href="/user/oidc/login"' in html
+    assert "Entrar com Gov.br" in html
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.ckan_config("ckanext.ldap.uri", "ldap://ldap:389")
+@pytest.mark.ckan_config("ckanext.artesp.govbr.enabled", "true")
+@pytest.mark.ckan_config("ckanext.artesp.govbr.client_id", "")
+@pytest.mark.usefixtures("with_plugins")
+def test_login_form_snippet_hides_govbr_button_without_client_id(app, reset_db):
+    with app.flask_app.test_request_context("/user/login"):
+        html = base.render_snippet(
+            "user/snippets/login_form.html",
+            action="/user/verify",
+            error_summary={},
+        )
+
+    assert 'action="/user/verify"' in html
+    assert 'href="/user/oidc/login"' not in html
+    assert "Entrar com Gov.br" not in html
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.ckan_config("ckanext.ldap.uri", "ldap://ldap:389")
 @pytest.mark.usefixtures("with_plugins")
 def test_request_reset_route_is_forbidden_when_ldap_enabled(app, reset_db):
     resp = app.get(tk.h.url_for("user.request_reset"), status=403)

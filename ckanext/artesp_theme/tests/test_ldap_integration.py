@@ -44,6 +44,47 @@ class TestLdapHelperRegistration:
         helper_dict = helpers.get_helpers()
         assert "artesp_ldap_enabled" in helper_dict
         assert helper_dict["artesp_ldap_enabled"] == helpers.artesp_ldap_enabled
+        assert "artesp_govbr_login_enabled" in helper_dict
+        assert (
+            helper_dict["artesp_govbr_login_enabled"]
+            == helpers.artesp_govbr_login_enabled
+        )
+
+
+class TestArtespGovbrLoginEnabled:
+    """Tests for the artesp_govbr_login_enabled() helper function."""
+
+    @patch("ckanext.artesp_theme.helpers.toolkit")
+    def test_returns_true_when_govbr_enabled_and_client_id_configured(
+        self, mock_toolkit
+    ):
+        mock_toolkit.config.get.side_effect = {
+            "ckanext.artesp.govbr.enabled": "true",
+            "ckanext.artesp.govbr.client_id": "client-id",
+        }.get
+        mock_toolkit.asbool.return_value = True
+
+        assert helpers.artesp_govbr_login_enabled() is True
+
+    @patch("ckanext.artesp_theme.helpers.toolkit")
+    def test_returns_false_when_govbr_client_id_is_empty(self, mock_toolkit):
+        mock_toolkit.config.get.side_effect = {
+            "ckanext.artesp.govbr.enabled": "true",
+            "ckanext.artesp.govbr.client_id": "",
+        }.get
+        mock_toolkit.asbool.return_value = True
+
+        assert helpers.artesp_govbr_login_enabled() is False
+
+    @patch("ckanext.artesp_theme.helpers.toolkit")
+    def test_returns_false_when_govbr_is_disabled(self, mock_toolkit):
+        mock_toolkit.config.get.side_effect = {
+            "ckanext.artesp.govbr.enabled": "false",
+            "ckanext.artesp.govbr.client_id": "client-id",
+        }.get
+        mock_toolkit.asbool.return_value = False
+
+        assert helpers.artesp_govbr_login_enabled() is False
 
 
 class TestUserVerifyRoute:
@@ -313,6 +354,7 @@ class TestLdapEmailMigrationPatch:
         mock_toolkit.config = MagicMock()
         config_data = {'ckanext.ldap.migrate': False}
         mock_toolkit.config.__getitem__.side_effect = lambda k: config_data[k]
+        mock_toolkit.config.get.side_effect = lambda k, default=None: config_data.get(k, default)
         
         mock_ldap_user_model.by_ldap_id.return_value = None
         

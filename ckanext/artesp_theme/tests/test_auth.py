@@ -537,6 +537,7 @@ def test_sysadmin_can_define_and_update_collaborator_roles():
 def test_admin_collaborator_assignment_requires_config_flag():
     artesp_org = factories.Organization(name="artesp")
     creator = factories.User()
+    sysadmin = factories.Sysadmin()
     collaborator = factories.User()
 
     package = _create_dataset_as(creator, artesp_org["id"])
@@ -546,7 +547,7 @@ def test_admin_collaborator_assignment_requires_config_flag():
     try:
         with pytest.raises(toolkit.ValidationError):
             _call_action_as(
-                creator,
+                sysadmin,
                 "package_collaborator_create",
                 id=package["id"],
                 user_id=collaborator["id"],

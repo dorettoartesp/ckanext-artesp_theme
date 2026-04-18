@@ -13,7 +13,7 @@ class TestResourceSearchSorting:
         Test that the default sort order is by metadata_modified (last update) descending.
         """
         user = factories.Sysadmin()
-        org = factories.Organization(user=user)
+        org = factories.Organization(name="artesp", user=user)
         dataset = factories.Dataset(owner_org=org['id'], user=user)
         
         # Create first resource
@@ -65,7 +65,7 @@ class TestResourceSearchSorting:
         """
         Test explicit sorting.
         """
-        org = factories.Organization()
+        org = factories.Organization(name="artesp")
         dataset = factories.Dataset(owner_org=org['id'])
         
         res1 = factories.Resource(package_id=dataset['id'], name="A Resource")

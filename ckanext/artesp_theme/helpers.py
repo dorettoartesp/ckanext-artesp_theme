@@ -225,6 +225,12 @@ def artesp_ldap_enabled():
     return bool(toolkit.config.get('ckanext.ldap.uri', ''))
 
 
+def artesp_govbr_login_enabled():
+    enabled = toolkit.asbool(toolkit.config.get("ckanext.artesp.govbr.enabled", False))
+    client_id = toolkit.config.get("ckanext.artesp.govbr.client_id", "")
+    return enabled and bool(client_id.strip())
+
+
 def get_artesp_organization():
     org = auth_helpers.get_artesp_org()
     if not org:
@@ -246,6 +252,7 @@ def get_helpers():
     return {
         "artesp_theme_hello": artesp_theme_hello,
         "artesp_ldap_enabled": artesp_ldap_enabled,
+        "artesp_govbr_login_enabled": artesp_govbr_login_enabled,
         "get_package_count": get_package_count,
         "get_resource_count": get_resource_count,
         "get_latest_datasets": get_latest_datasets,

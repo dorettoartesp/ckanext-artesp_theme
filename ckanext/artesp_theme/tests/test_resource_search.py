@@ -21,7 +21,7 @@ class TestResourceSearch:
         This verifies the Solr query construction in the controller.
         """
         # Create an organization first
-        org = factories.Organization()
+        org = factories.Organization(name="artesp")
 
         # Create a dataset with a resource named "Disponibilidade"
         dataset = factories.Dataset(owner_org=org['id'])
@@ -50,7 +50,7 @@ class TestResourceSearch:
         Test searching by a partial term.
         """
         # Create an organization first
-        org = factories.Organization()
+        org = factories.Organization(name="artesp")
 
         dataset = factories.Dataset(owner_org=org['id'])
         resource = factories.Resource(
