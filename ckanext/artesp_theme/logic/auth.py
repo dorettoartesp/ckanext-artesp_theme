@@ -339,6 +339,8 @@ def _authorize_collaborator_operation(
 ):
     data_dict = data_dict or {}
 
+    if (guard := _deny_if_external(context)):
+        return guard
     if auth_helpers.is_sysadmin(context):
         return auth_helpers.allow()
 

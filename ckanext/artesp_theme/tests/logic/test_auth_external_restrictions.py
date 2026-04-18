@@ -1,4 +1,5 @@
 """TDD: auth functions block write operations for external users."""
+from contextlib import ExitStack
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -70,6 +71,117 @@ class TestExternalUserBlocked:
         with patch.object(auth_helpers, "is_external_user", return_value=True):
             result = auth_fn(ctx, {"id": "some-resource", "package_id": "pkg"})
         assert result["success"] is False
+
+    @pytest.mark.parametrize(
+        ("auth_fn", "payload", "existing_collaborator"),
+        [
+            (
+                artesp_auth.package_collaborator_list,
+                {"id": "some-dataset"},
+                None,
+            ),
+            (
+                artesp_auth.package_collaborator_create,
+                {
+                    "id": "some-dataset",
+                    "user_id": "target-user-id",
+                    "capacity": "editor",
+                },
+                None,
+            ),
+            (
+                artesp_auth.package_collaborator_delete,
+                {"id": "some-dataset", "user_id": "target-user-id"},
+                MagicMock(),
+            ),
+        ],
+    )
+    def test_dataset_collaborator_actions_denied_for_external_user(
+        self,
+        auth_fn,
+        payload,
+        existing_collaborator,
+    ):
+        user = _external_user()
+        target_user = MagicMock()
+        target_user.id = "target-user-id"
+        package = MagicMock()
+        ctx = _ctx(user)
+
+        with ExitStack() as stack:
+            stack.enter_context(
+                patch.object(auth_helpers, "is_external_user", return_value=True)
+            )
+            stack.enter_context(
+                patch.object(auth_helpers, "is_sysadmin", return_value=False)
+            )
+            stack.enter_context(
+                patch.object(
+                    auth_helpers,
+                    "get_authenticated_user",
+                    return_value=user,
+                )
+            )
+            stack.enter_context(
+                patch.object(auth_helpers, "is_valid_user", return_value=True)
+            )
+            stack.enter_context(
+                patch.object(
+                    auth_helpers,
+                    "is_dataset_collaborators_enabled",
+                    return_value=True,
+                )
+            )
+            stack.enter_context(
+                patch.object(auth_helpers, "get_package", return_value=package)
+            )
+            stack.enter_context(
+                patch.object(
+                    auth_helpers,
+                    "dataset_belongs_to_artesp",
+                    return_value=True,
+                )
+            )
+            stack.enter_context(
+                patch.object(
+                    auth_helpers,
+                    "user_can_manage_collaborators",
+                    return_value=True,
+                )
+            )
+            stack.enter_context(
+                patch.object(
+                    auth_helpers,
+                    "requested_capacity_is_allowed",
+                    return_value=True,
+                )
+            )
+            stack.enter_context(
+                patch.object(
+                    auth_helpers,
+                    "get_default_dataset_collaborator_capacity",
+                    return_value="editor",
+                )
+            )
+            stack.enter_context(
+                patch.object(
+                    auth_helpers,
+                    "get_target_user",
+                    return_value=target_user,
+                )
+            )
+            stack.enter_context(
+                patch.object(
+                    auth_helpers,
+                    "get_collaborator_by_user_id",
+                    return_value=existing_collaborator,
+                )
+            )
+
+            result = auth_fn(ctx, payload)
+
+        assert result["success"] is False
+        assert "External users cannot perform write operations." in result["msg"]
 
 
 class TestInternalUserNotAffected:
