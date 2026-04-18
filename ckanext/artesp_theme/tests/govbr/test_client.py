@@ -166,6 +166,16 @@ class TestGetUserinfo:
             with pytest.raises(GovBRAuthError):
                 client.get_userinfo("bad_token")
 
+    def test_userinfo_url_has_no_trailing_slash(self, client):
+        """navikt mock-oauth2-server serve /userinfo sem trailing slash."""
+        with patch("requests.get", return_value=MagicMock(
+            status_code=200,
+            json=lambda: {"sub": "1", "name": "T", "email": "t@t.com"},
+        )) as mock_get:
+            client.get_userinfo("tok")
+            url = mock_get.call_args[0][0]
+            assert not url.endswith("/"), f"userinfo URL não deve ter trailing slash: {url}"
+
     def test_bearer_token_in_header(self, client):
         mock_response = MagicMock()
         mock_response.status_code = 200

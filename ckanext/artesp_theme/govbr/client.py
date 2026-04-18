@@ -68,7 +68,7 @@ class GovBRClient:
     def get_userinfo(self, access_token: str) -> UserInfo:
         """Fetch user info from GovBR /userinfo/. Raises GovBRAuthError on failure."""
         response = requests.get(
-            f"{self._config.base_url}/userinfo/",
+            f"{self._config.base_url}/userinfo",
             headers={"Authorization": f"Bearer {access_token}"},
         )
         if response.status_code != 200:
