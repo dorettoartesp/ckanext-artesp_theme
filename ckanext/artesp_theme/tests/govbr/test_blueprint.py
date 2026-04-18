@@ -28,8 +28,8 @@ def _mock_config():
     cfg.client_secret = "cs"
     cfg.base_url = "https://sso.staging.acesso.gov.br"
     cfg.scopes = ["openid", "email", "profile"]
-    cfg.redirect_uri = "http://localhost:5000/user/govbr/callback"
-    cfg.link_redirect_uri = "http://localhost:5000/user/govbr/link/callback"
+    cfg.redirect_uri = "http://localhost:5000/user/oidc/callback"
+    cfg.link_redirect_uri = "http://localhost:5000/user/oidc/link/callback"
     return cfg
 
 
@@ -75,11 +75,11 @@ def _patches(mock_client):
 class TestRoutesExist:
     def test_login_route_exists(self, app, mock_client):
         with _patches(mock_client)[0], _patches(mock_client)[1]:
-            resp = app.get("/user/govbr/login", follow_redirects=False)
+            resp = app.get("/user/oidc/login", follow_redirects=False)
         assert resp.status_code in (302, 303)
 
     def test_callback_route_exists(self, app):
-        resp = app.get("/user/govbr/callback", follow_redirects=False)
+        resp = app.get("/user/oidc/callback", follow_redirects=False)
         assert resp.status_code in (302, 303, 400)
 
     def test_logout_route_exists(self, app, mock_client):
@@ -89,15 +89,15 @@ class TestRoutesExist:
             patch("ckanext.artesp_theme.govbr.blueprint.toolkit") as mock_tk,
         ):
             mock_tk.h.url_for.return_value = "http://localhost:5000/"
-            resp = app.get("/user/govbr/logout", follow_redirects=False)
+            resp = app.get("/user/oidc/logout", follow_redirects=False)
         assert resp.status_code in (302, 303)
 
     def test_link_route_exists(self, app):
-        resp = app.get("/user/govbr/link", follow_redirects=False)
+        resp = app.get("/user/oidc/link", follow_redirects=False)
         assert resp.status_code in (302, 303, 401)
 
     def test_link_callback_route_exists(self, app):
-        resp = app.get("/user/govbr/link/callback", follow_redirects=False)
+        resp = app.get("/user/oidc/link/callback", follow_redirects=False)
         assert resp.status_code in (302, 303, 400)
 
 
@@ -108,13 +108,13 @@ class TestRoutesExist:
 class TestLoginRoute:
     def test_login_redirects_to_govbr_url(self, app, mock_client):
         with _patches(mock_client)[0], _patches(mock_client)[1]:
-            resp = app.get("/user/govbr/login", follow_redirects=False)
+            resp = app.get("/user/oidc/login", follow_redirects=False)
         location = resp.headers.get("Location", "")
         assert "sso.staging.acesso.gov.br" in location
 
     def test_login_calls_get_authorization_url(self, app, mock_client):
         with _patches(mock_client)[0], _patches(mock_client)[1]:
-            app.get("/user/govbr/login", follow_redirects=False)
+            app.get("/user/oidc/login", follow_redirects=False)
         mock_client.get_authorization_url.assert_called_once()
 
 
@@ -125,11 +125,11 @@ class TestLoginRoute:
 class TestCallbackRoute:
     def test_callback_no_state_redirects(self, app):
         # No session state set → state mismatch → redirect away
-        resp = app.get("/user/govbr/callback?code=abc&state=anything", follow_redirects=False)
+        resp = app.get("/user/oidc/callback?code=abc&state=anything", follow_redirects=False)
         assert resp.status_code in (302, 303)
 
     def test_callback_no_code_redirects(self, app):
-        resp = app.get("/user/govbr/callback", follow_redirects=False)
+        resp = app.get("/user/oidc/callback", follow_redirects=False)
         assert resp.status_code in (302, 303)
 
 
@@ -139,11 +139,11 @@ class TestCallbackRoute:
 
 class TestLinkRoute:
     def test_unauthenticated_link_redirects_to_login(self, app):
-        resp = app.get("/user/govbr/link", follow_redirects=False)
+        resp = app.get("/user/oidc/link", follow_redirects=False)
         assert resp.status_code in (302, 303)
         location = resp.headers.get("Location", "")
         assert "login" in location or resp.status_code in (302, 303)
 
     def test_unauthenticated_link_callback_redirects(self, app):
-        resp = app.get("/user/govbr/link/callback?code=c&state=wrong", follow_redirects=False)
+        resp = app.get("/user/oidc/link/callback?code=c&state=wrong", follow_redirects=False)
         assert resp.status_code in (302, 303)

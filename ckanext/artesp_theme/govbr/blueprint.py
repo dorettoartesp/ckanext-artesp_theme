@@ -50,7 +50,7 @@ def _get_client() -> GovBRClient:
 # login flow
 # ---------------------------------------------------------------------------
 
-@govbr.route("/user/govbr/login")
+@govbr.route("/user/oidc/login")
 def login():
     client = _get_client()
     config = GovBRConfig.from_ckan_config()
@@ -61,7 +61,7 @@ def login():
     return redirect(url)
 
 
-@govbr.route("/user/govbr/callback")
+@govbr.route("/user/oidc/callback")
 def callback():
     code = request.args.get("code")
     state = request.args.get("state")
@@ -102,7 +102,7 @@ def callback():
 # logout
 # ---------------------------------------------------------------------------
 
-@govbr.route("/user/govbr/logout")
+@govbr.route("/user/oidc/logout")
 def logout():
     client = _get_client()
     post_logout_uri = toolkit.h.url_for("home.index", qualified=True)
@@ -119,7 +119,7 @@ def logout():
 # link flow (authenticated LDAP user linking their GovBR account)
 # ---------------------------------------------------------------------------
 
-@govbr.route("/user/govbr/link")
+@govbr.route("/user/oidc/link")
 def link():
     if not toolkit.c.user:
         return redirect(url_for("user.login"))
@@ -133,7 +133,7 @@ def link():
     return redirect(url)
 
 
-@govbr.route("/user/govbr/link/callback")
+@govbr.route("/user/oidc/link/callback")
 def link_callback():
     if not toolkit.c.user:
         return redirect(url_for("user.login"))
@@ -184,7 +184,7 @@ def link_callback():
 # unlink (POST only)
 # ---------------------------------------------------------------------------
 
-@govbr.route("/user/govbr/unlink", methods=["POST"])
+@govbr.route("/user/oidc/unlink", methods=["POST"])
 def unlink():
     if not toolkit.c.user:
         return redirect(url_for("user.login"))

@@ -19,8 +19,8 @@ def config():
         client_secret="test_secret",
         base_url="https://sso.staging.acesso.gov.br",
         scopes=["openid", "email", "profile"],
-        redirect_uri="http://localhost:5000/user/govbr/callback",
-        link_redirect_uri="http://localhost:5000/user/govbr/link/callback",
+        redirect_uri="http://localhost:5000/user/oidc/callback",
+        link_redirect_uri="http://localhost:5000/user/oidc/link/callback",
     )
 
 
