@@ -131,6 +131,29 @@ def test_header_includes_public_statistics_nav_item(app, reset_db):
 
 @pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
 @pytest.mark.usefixtures("with_plugins")
+def test_header_shows_followed_datasets_for_internal_users(app, reset_db):
+    user = SimpleNamespace(
+        id="usuario-interno-id",
+        name="usuario-interno",
+        display_name="Usuario Interno",
+        sysadmin=False,
+    )
+
+    with patch.object(tk.h, "artesp_is_external_user", return_value=False), patch.object(
+        tk.h, "user_image", return_value=""
+    ), patch.object(tk.h, "csrf_input", return_value=""):
+        with app.flask_app.test_request_context("/dataset/exemplo"):
+            tk.c.user = user.name
+            tk.c.userobj = user
+            html = base.render("header.html")
+
+    assert 'href="/user/usuario-interno/followed-datasets"' in html
+    assert "Datasets Seguidos" in html
+    assert 'href="/dashboard/datasets"' in html
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.usefixtures("with_plugins")
 def test_statistics_page_is_public_and_renders_dashboard(app, reset_db):
     dashboard = {
         "generated_at_label": "09/04/2026 10:30",

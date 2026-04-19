@@ -2173,7 +2173,7 @@ msgstr "Não há {facet_type} que correspondam a esta pesquisa"
 
 #: ckanext/artesp_theme/templates/snippets/follow_button.html:4
 msgid "Unfollow"
-msgstr "Deixar de seguir"
+msgstr "Desseguir"
 
 #: ckanext/artesp_theme/templates/snippets/follow_button.html:9
 msgid "Follow"
