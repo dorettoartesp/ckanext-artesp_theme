@@ -218,7 +218,7 @@ def followed_datasets(id: str):
         {"ignore_auth": True},
         {"id": id, "include_plugin_extras": True},
     )
-    followees = toolkit.get_action("package_followee_list")(
+    followees = toolkit.get_action("dataset_followee_list")(
         {"ignore_auth": True},
         {"id": id},
     )
