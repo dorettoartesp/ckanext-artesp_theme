@@ -252,12 +252,21 @@ def artesp_is_external_user():
     return auth_helpers.is_external_user(toolkit.c.userobj)
 
 
+def artesp_is_user_external(user_dict):
+    """Verifica se um usuário (dict) é do tipo externo (GovBR)."""
+    if not user_dict:
+        return False
+    extras = (user_dict.get("plugin_extras") or {}).get("artesp", {})
+    return extras.get("user_type") == "external"
+
+
 def get_helpers():
     return {
         "artesp_theme_hello": artesp_theme_hello,
         "artesp_ldap_enabled": artesp_ldap_enabled,
         "artesp_govbr_login_enabled": artesp_govbr_login_enabled,
         "artesp_is_external_user": artesp_is_external_user,
+        "artesp_is_user_external": artesp_is_user_external,
         "get_package_count": get_package_count,
         "get_resource_count": get_resource_count,
         "get_latest_datasets": get_latest_datasets,

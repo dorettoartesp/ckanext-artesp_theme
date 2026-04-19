@@ -1,30 +1,17 @@
 {% extends "user/read_base.html" %}
 
 {% block primary_content_inner %}
-  <h2>{{ _('Conjuntos de Dados Seguidos') }}</h2>
+  <h2 class="hide-heading">{{ _('Conjuntos de Dados Seguidos') }}</h2>
 
   {% if followees %}
-    <ul class="dataset-list unstyled">
-      {% for pkg in followees %}
-        <li class="dataset-item module-content">
-          <h3 class="dataset-heading">
-            <a href="{{ h.url_for('dataset.read', id=pkg.name) }}">
-              {{ pkg.title or pkg.name }}
-            </a>
-          </h3>
-          {% if pkg.notes %}
-            <div class="notes">
-              {{ h.markdown_extract(pkg.notes, extract_length=200) }}
-            </div>
-          {% endif %}
-        </li>
-      {% endfor %}
-    </ul>
+    {% snippet 'snippets/package_list.html', packages=followees %}
   {% else %}
-    <p class="empty">{{ _('Você ainda não segue nenhum conjunto de dados.') }}</p>
+    <p class="empty">
+      {{ _('Você ainda não segue nenhum conjunto de dados.') }}
+    </p>
     <p>
       <a href="{{ h.url_for('dataset.search') }}" class="btn btn-default">
-        {{ _('Explorar conjuntos de dados') }}
+        <i class="fa fa-search"></i> {{ _('Explorar conjuntos de dados') }}
       </a>
     </p>
   {% endif %}

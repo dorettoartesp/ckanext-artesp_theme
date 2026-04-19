@@ -19,10 +19,13 @@
 {% endblock %}
 
 {% block content_primary_nav %}
-  {{ h.build_nav_icon('user.read', h.humanize_entity_type('package', dataset_type, 'content tab') or _('Datasets'), id=user.name, icon='sitemap') }}
-  {{ h.build_nav_icon('user.read_organizations', h.humanize_entity_type('organization', org_type, 'content tab') or _('Organizations'), id=user.name, icon='building') }}
-  {{ h.build_nav_icon('user.read_groups', h.humanize_entity_type('group', group_type, 'content tab') or _('Groups'), id=user.name, icon='users') }}
-  {% if is_myself %}
+  {% set profile_is_external = h.artesp_is_user_external(user) %}
+  {% if not profile_is_external %}
+    {{ h.build_nav_icon('user.read', h.humanize_entity_type('package', dataset_type, 'content tab') or _('Datasets'), id=user.name, icon='sitemap') }}
+    {{ h.build_nav_icon('user.read_organizations', h.humanize_entity_type('organization', org_type, 'content tab') or _('Organizations'), id=user.name, icon='building') }}
+    {{ h.build_nav_icon('user.read_groups', h.humanize_entity_type('group', group_type, 'content tab') or _('Groups'), id=user.name, icon='users') }}
+  {% endif %}
+  {% if is_myself or profile_is_external %}
     {{ h.build_nav_icon('govbr.followed_datasets', _('Conjuntos seguidos'), id=user.name, icon='bookmark') }}
   {% endif %}
   {% if h.check_access('api_token_list', {'user': user['name']}) %}
