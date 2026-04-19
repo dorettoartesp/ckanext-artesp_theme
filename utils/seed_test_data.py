@@ -50,10 +50,11 @@ def parse_args() -> SeedConfig:
     )
     parser.add_argument(
         "--owner-org",
-        default="",
+        default=os.environ.get("CKAN_SEED_OWNER_ORG", ""),
         help=(
             "Organizacao fixa para todos os datasets. Use quando o ambiente "
-            "restringe criacao a uma unica organizacao, como a ARTESP."
+            "restringe criacao a uma unica organizacao, como a ARTESP. "
+            "Padrao: variavel CKAN_SEED_OWNER_ORG"
         ),
     )
     parser.add_argument(

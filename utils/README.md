@@ -17,6 +17,16 @@ container `ckan-dev` e executa a seed dentro do ambiente Docker:
 bin/seed_test_data
 ```
 
+No ambiente local deste projeto, o wrapper usa `CKAN_SEED_OWNER_ORG=artesp`
+por padrao para respeitar a governanca que limita datasets a organizacao
+ARTESP.
+
+Tambem existe um atalho no `Makefile`:
+
+```bash
+make seed
+```
+
 Exemplo com carga maior:
 
 ```bash
@@ -24,6 +34,12 @@ bin/seed_test_data \
   --dataset-count 15 \
   --resources-per-dataset 10 \
   --heavy-dataset-resources 180
+```
+
+Exemplo sobrescrevendo a organizacao fixa ou adicionando argumentos extras:
+
+```bash
+make seed SEED_OWNER_ORG=artesp SEED_ARGS="--dataset-count 15 --resources-per-dataset 10"
 ```
 
 ### Parametros uteis
