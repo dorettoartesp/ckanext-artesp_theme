@@ -28,7 +28,7 @@
   {% if is_myself or profile_is_external %}
     {{ h.build_nav_icon('govbr.followed_datasets', _('Conjuntos seguidos'), id=user.name, icon='bookmark') }}
   {% endif %}
-  {% if h.check_access('api_token_list', {'user': user['name']}) %}
+  {% if not profile_is_external and h.check_access('api_token_list', {'user': user['name']}) %}
     {{ h.build_nav_icon('user.api_tokens', _('API Tokens'), id=user.name, icon='key') }}
   {% endif %}
 {% endblock %}
