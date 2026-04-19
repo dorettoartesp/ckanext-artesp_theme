@@ -22,20 +22,12 @@ _SESSION_LINK_VERIFIER = "govbr_link_code_verifier"
 # ---------------------------------------------------------------------------
 
 def _set_repoze_user(username: str) -> None:
-    """Persist the logged-in user in the CKAN/Flask session."""
-    from ckan.common import g
-    try:
-        import ckan.model as model
-        user = model.User.get(username)
-        if user:
-            toolkit.c.user = username
-            toolkit.c.userobj = user
-    except Exception:
-        pass
-    # Set session key used by CKAN's auth middleware
-    from ckan.lib.base import config as ckan_config  # noqa
-    session["ckan.user"] = username
-    session.modified = True
+    """Persist the logged-in user via CKAN's official login_user."""
+    import ckan.model as model
+    from ckan.common import login_user
+    user_obj = model.User.get(username)
+    if user_obj:
+        login_user(user_obj)
 
 
 def _flash_error(msg: str):
