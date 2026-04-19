@@ -253,11 +253,21 @@ def artesp_is_external_user():
 
 
 def artesp_is_user_external(user_dict):
-    """Verifica se um usuário (dict) é do tipo externo (GovBR)."""
+    """Verifica se um usuário (dict) é do tipo externo (GovBR).
+
+    user_show só retorna plugin_extras para sysadmin; busca no modelo como fallback.
+    """
     if not user_dict:
         return False
-    extras = (user_dict.get("plugin_extras") or {}).get("artesp", {})
-    return extras.get("user_type") == "external"
+    plugin_extras = user_dict.get("plugin_extras")
+    if not plugin_extras:
+        try:
+            import ckan.model as model
+            user_obj = model.User.get(user_dict.get("name") or user_dict.get("id", ""))
+            plugin_extras = (user_obj.plugin_extras if user_obj else None) or {}
+        except Exception:
+            plugin_extras = {}
+    return (plugin_extras or {}).get("artesp", {}).get("user_type") == "external"
 
 
 def get_helpers():

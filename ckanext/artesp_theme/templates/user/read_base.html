@@ -4,6 +4,7 @@
 {% set dataset_type = h.default_package_type() %}
 {% set org_type = h.default_group_type('organization') %}
 {% set group_type = h.default_group_type('group') %}
+{% set profile_is_external = h.artesp_is_user_external(user) %}
 
 {% block subtitle %}{{ user.display_name }} {{ g.template_title_delimiter }} {{ _('Users') }}{% endblock %}
 
@@ -19,7 +20,6 @@
 {% endblock %}
 
 {% block content_primary_nav %}
-  {% set profile_is_external = h.artesp_is_user_external(user) %}
   {% if not profile_is_external %}
     {{ h.build_nav_icon('user.read', h.humanize_entity_type('package', dataset_type, 'content tab') or _('Datasets'), id=user.name, icon='sitemap') }}
     {{ h.build_nav_icon('user.read_organizations', h.humanize_entity_type('organization', org_type, 'content tab') or _('Organizations'), id=user.name, icon='building') }}
@@ -35,7 +35,7 @@
 
 {% block secondary_content %}
   {% snippet "user/snippets/info.html", user=user, is_myself=is_myself, is_sysadmin=is_sysadmin, dataset_type=dataset_type, org_type=org_type, group_type=group_type, am_following=am_following %}
-  {% if is_myself %}
+  {% if is_myself and not profile_is_external %}
     {% snippet "user/snippets/govbr_link.html", user=user %}
   {% endif %}
 {% endblock %}
