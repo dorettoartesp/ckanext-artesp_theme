@@ -1,0 +1,146 @@
+/* ==========================================================================
+   ARTESP Theme - User Pages
+   Contains user account and login page styles
+   ========================================================================== */
+
+.artesp-login-access {
+  display: flex;
+  max-width: 420px;
+  margin: 18px auto 0;
+  flex-direction: column;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.artesp-govbr-login,
+.artesp-govbr-login:visited {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 22px;
+  border: 1px solid #1351b4;
+  border-radius: 8px;
+  background-color: #1351b4;
+  color: #ffffff !important;
+  font-size: 1rem;
+  font-weight: 500;
+  gap: 4px;
+  line-height: 1.2;
+  text-decoration: none !important;
+}
+
+.artesp-govbr-login strong {
+  font-weight: 800;
+}
+
+.artesp-govbr-login:hover,
+.artesp-govbr-login:focus {
+  border-color: #0c3f8a;
+  background-color: #0c3f8a;
+  color: #ffffff !important;
+}
+
+.artesp-login-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--gray-dark);
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  text-transform: lowercase;
+}
+
+.artesp-login-divider::before,
+.artesp-login-divider::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 1px;
+  background-color: #e5e7eb;
+}
+
+.artesp-login-divider span {
+  flex: 0 0 auto;
+}
+
+.artesp-ldap-toggle {
+  display: inline-flex;
+  width: 100%;
+  min-height: 44px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  border: 1px solid var(--gray-light);
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: var(--gray-darker);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: left;
+}
+
+.artesp-ldap-toggle:hover,
+.artesp-ldap-toggle:focus {
+  border-color: var(--secondary);
+  color: var(--secondary);
+}
+
+.artesp-ldap-toggle__label {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+}
+
+.artesp-ldap-toggle__icon {
+  flex: 0 0 auto;
+}
+
+.artesp-ldap-panel {
+  max-width: 420px;
+  margin: 18px auto 0;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: #f9fafb;
+}
+
+.artesp-ldap-panel[hidden] {
+  display: none !important;
+}
+
+.artesp-ldap-panel .form-actions {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.artesp-ldap-panel .btn-primary {
+  min-height: 40px;
+  border-radius: 8px;
+}
+
+.artesp-login-form-only {
+  max-width: 520px;
+}
+
+.artesp-login-sidebar-text {
+  margin-top: 8px;
+  color: var(--gray-dark);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 767px) {
+  .artesp-govbr-login,
+  .artesp-ldap-toggle {
+    width: 100%;
+  }
+
+  .artesp-ldap-panel {
+    padding: 16px;
+  }
+}

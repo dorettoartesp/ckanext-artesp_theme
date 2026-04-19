@@ -1,7 +1,72 @@
 {% ckan_extends %}
 
-{% block help_forgotten %}
-  {% if not h.artesp_ldap_enabled() %}
-    {{ super() }}
-  {% endif %}
+{% block primary_content %}
+<section class="module">
+  <div class="module-content">
+    <h1 class="page-heading">{{ _('Entrar') }}</h1>
+
+    {% if h.artesp_govbr_login_enabled() %}
+      {% set ldap_open = error_summary and h.artesp_ldap_enabled() %}
+
+      <div class="artesp-login-access">
+        <a href="{{ h.url_for('govbr.login') }}" class="btn artesp-govbr-login">
+          <span>{{ _('Entrar com') }}</span><strong>gov.br</strong>
+        </a>
+
+        {% if h.artesp_ldap_enabled() %}
+        <div class="artesp-login-divider" aria-hidden="true">
+          <span>{{ _('ou') }}</span>
+        </div>
+        <button type="button"
+                class="btn btn-default artesp-ldap-toggle"
+                id="govbr-ldap-toggle"
+                aria-expanded="{{ 'true' if ldap_open else 'false' }}"
+                aria-controls="govbr-ldap-form"
+                data-artesp-login-toggle>
+          <span class="artesp-ldap-toggle__label">
+            <i class="fa fa-id-card" aria-hidden="true"></i>
+            {{ _('Sou servidor ARTESP') }}
+          </span>
+          <i class="fa {{ 'fa-chevron-up' if ldap_open else 'fa-chevron-down' }} artesp-ldap-toggle__icon" aria-hidden="true"></i>
+        </button>
+        {% endif %}
+      </div>
+
+      {% if h.artesp_ldap_enabled() %}
+      <div id="govbr-ldap-form" class="artesp-ldap-panel"{% if not ldap_open %} hidden{% endif %}>
+        {% snippet "user/snippets/login_form.html", error_summary=error_summary %}
+      </div>
+      {% endif %}
+
+    {% else %}
+      <div class="artesp-login-form-only">
+        {% snippet "user/snippets/login_form.html", error_summary=error_summary %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
+
+{% block secondary_content %}
+<section class="module module-narrow module-shallow">
+  <div class="module-content">
+    <p><strong>Portal de Dados Abertos</strong></p>
+    <p class="artesp-login-sidebar-text">
+      Acesse informações públicas sobre a infraestrutura de transportes concedidos do Estado de São Paulo.
+    </p>
+  </div>
+</section>
+{% if not h.artesp_ldap_enabled() %}
+<section class="module module-narrow module-shallow">
+  <h2 class="module-heading">{{ _('Forgotten your password?') }}</h2>
+  <div class="module-content">
+    <p>{{ _('No problem, use our password recovery form to reset it.') }}</p>
+    <p class="action">
+      <a class="btn btn-default" href="{{ h.url_for('user.request_reset') }}">
+        {{ _('Forgot your password?') }}
+      </a>
+    </p>
+  </div>
+</section>
+{% endif %}
 {% endblock %}

@@ -2,6 +2,7 @@ artesp-theme-js:
   filter: rjsmin
   output: artesp_theme/artesp_theme.js
   contents:
+    - js/login.js
     - js/stats-counter.js
     - js/dashboard-statistics.js
   extra:

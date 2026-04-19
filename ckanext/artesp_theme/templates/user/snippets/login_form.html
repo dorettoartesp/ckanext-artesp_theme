@@ -38,14 +38,3 @@ Example:
     {% endblock %}
   </div>
 </form>
-
-{% if h.artesp_govbr_login_enabled() %}
-  <div class="govbr-login-separator" style="text-align:center;margin:1em 0;">
-    <span>{{ _('ou') }}</span>
-  </div>
-  <div class="govbr-login-button" style="text-align:center;">
-    <a href="{{ h.url_for('govbr.login') }}" class="btn btn-primary btn-block">
-      {{ _('Entrar com Gov.br') }}
-    </a>
-  </div>
-{% endif %}

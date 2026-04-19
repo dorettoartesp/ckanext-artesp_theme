@@ -35,19 +35,29 @@ def test_login_page_hides_forgot_password_when_ldap_enabled(app, reset_db):
 @pytest.mark.ckan_config("ckanext.artesp.govbr.enabled", "true")
 @pytest.mark.ckan_config("ckanext.artesp.govbr.client_id", "govbr-client-id")
 @pytest.mark.usefixtures("with_plugins")
-def test_login_form_snippet_shows_govbr_button_when_ldap_template_is_active(
-    app, reset_db
-):
-    with app.flask_app.test_request_context("/user/login"):
-        html = base.render_snippet(
-            "user/snippets/login_form.html",
-            action="/user/verify",
-            error_summary={},
-        )
+def test_login_page_shows_centered_govbr_and_ldap_actions(app, reset_db):
+    resp = app.get(tk.h.url_for("user.login"))
 
-    assert 'action="/user/verify"' in html
-    assert 'href="/user/oidc/login"' in html
-    assert "Entrar com Gov.br" in html
+    assert resp.status_code == 200
+    assert "artesp-login-access" in resp.text
+    assert 'href="/user/oidc/login"' in resp.text
+    assert "artesp-govbr-login" in resp.text
+    assert "<span>Entrar com</span><strong>gov.br</strong>" in resp.text
+    assert "artesp-login-divider" in resp.text
+    assert "<span>ou</span>" in resp.text
+    assert "artesp-ldap-toggle" in resp.text
+    assert 'aria-expanded="false"' in resp.text
+    assert 'aria-controls="govbr-ldap-form"' in resp.text
+    assert "data-artesp-login-toggle" in resp.text
+    assert 'id="govbr-ldap-form" class="artesp-ldap-panel" hidden' in resp.text
+    assert 'action="/user/verify"' in resp.text
+    assert "Acesso ao portal" not in resp.text
+    assert "Use sua conta gov.br" not in resp.text
+    assert "Servidores ARTESP podem usar credenciais internas" not in resp.text
+    assert (
+        "Acesse informações públicas sobre a infraestrutura de transportes "
+        "concedidos do Estado de São Paulo."
+    ) in resp.text
 
 
 @pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
@@ -55,17 +65,15 @@ def test_login_form_snippet_shows_govbr_button_when_ldap_template_is_active(
 @pytest.mark.ckan_config("ckanext.artesp.govbr.enabled", "true")
 @pytest.mark.ckan_config("ckanext.artesp.govbr.client_id", "")
 @pytest.mark.usefixtures("with_plugins")
-def test_login_form_snippet_hides_govbr_button_without_client_id(app, reset_db):
-    with app.flask_app.test_request_context("/user/login"):
-        html = base.render_snippet(
-            "user/snippets/login_form.html",
-            action="/user/verify",
-            error_summary={},
-        )
+def test_login_page_hides_govbr_actions_without_client_id(app, reset_db):
+    resp = app.get(tk.h.url_for("user.login"))
 
-    assert 'action="/user/verify"' in html
-    assert 'href="/user/oidc/login"' not in html
-    assert "Entrar com Gov.br" not in html
+    assert resp.status_code == 200
+    assert 'action="/user/verify"' in resp.text
+    assert 'href="/user/oidc/login"' not in resp.text
+    assert "artesp-govbr-login" not in resp.text
+    assert "artesp-login-divider" not in resp.text
+    assert "artesp-ldap-toggle" not in resp.text
 
 
 @pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
@@ -86,6 +94,27 @@ def test_login_page_keeps_forgot_password_when_ldap_disabled(app, reset_db):
     assert resp.status_code == 200
     assert "Forgotten your password?" in resp.text
     assert "Forgot your password?" in resp.text
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.ckan_config("ckanext.ldap.uri", "ldap://ldap:389")
+@pytest.mark.ckan_config("ckanext.artesp.govbr.enabled", "true")
+@pytest.mark.ckan_config("ckanext.artesp.govbr.client_id", "govbr-client-id")
+@pytest.mark.usefixtures("with_plugins")
+def test_login_page_opens_ldap_panel_when_error_summary_is_present(app, reset_db):
+    with app.flask_app.test_request_context(
+        "/user/login",
+        environ_base={"CKAN_CURRENT_URL": "/user/login"},
+    ):
+        html = base.render(
+            "user/login.html",
+            extra_vars={"error_summary": {"login": ["Login failed"]}},
+        )
+
+    assert 'aria-expanded="true"' in html
+    assert 'id="govbr-ldap-form" class="artesp-ldap-panel">' in html
+    assert 'id="govbr-ldap-form" class="artesp-ldap-panel" hidden' not in html
+    assert "Login failed" in html
 
 
 @pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
