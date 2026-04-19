@@ -38,7 +38,7 @@ class GovBRClient:
             "code_challenge": code_challenge,
             "code_challenge_method": "S256",
         }
-        url = f"{self._config.base_url}/authorize?{urllib.parse.urlencode(params)}"
+        url = f"{self._config.effective_authorize_base_url}/authorize?{urllib.parse.urlencode(params)}"
         return url, state, code_verifier
 
     def exchange_code(

@@ -37,6 +37,7 @@ class ArtespThemePlugin(plugins.SingletonPlugin):
         declaration.declare(key.ckanext.artesp.govbr.base_url).set_default(
             "https://sso.staging.acesso.gov.br"
         )
+        declaration.declare(key.ckanext.artesp.govbr.authorize_base_url).set_default("")
         declaration.declare(key.ckanext.artesp.govbr.redirect_uri).set_default("")
         declaration.declare(key.ckanext.artesp.govbr.link_redirect_uri).set_default("")
         declaration.declare(key.ckanext.artesp.govbr.scopes).set_default(

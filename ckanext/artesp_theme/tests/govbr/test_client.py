@@ -67,6 +67,36 @@ class TestGovBRConfig:
 
 
 class TestPKCE:
+    def test_get_authorization_url_uses_authorize_base_url_when_set(self):
+        """authorize_base_url permite browser usar IP enquanto container usa hostname."""
+        cfg = GovBRConfig(
+            client_id="cid",
+            client_secret="cs",
+            base_url="http://mock-oauth2-server:8888/oidc",
+            authorize_base_url="http://127.0.0.1:8888/oidc",
+            scopes=["openid"],
+            redirect_uri="http://localhost/cb",
+            link_redirect_uri="http://localhost/link/cb",
+        )
+        client = GovBRClient(cfg)
+        url, _, _ = client.get_authorization_url("http://localhost/cb")
+        assert url.startswith("http://127.0.0.1:8888/oidc/authorize")
+        assert "mock-oauth2-server" not in url
+
+    def test_get_authorization_url_falls_back_to_base_url_when_authorize_not_set(self):
+        cfg = GovBRConfig(
+            client_id="cid",
+            client_secret="cs",
+            base_url="https://sso.staging.acesso.gov.br",
+            authorize_base_url=None,
+            scopes=["openid"],
+            redirect_uri="http://localhost/cb",
+            link_redirect_uri="http://localhost/link/cb",
+        )
+        client = GovBRClient(cfg)
+        url, _, _ = client.get_authorization_url("http://localhost/cb")
+        assert url.startswith("https://sso.staging.acesso.gov.br/authorize")
+
     def test_get_authorization_url_returns_three_values(self, client):
         url, state, verifier = client.get_authorization_url(
             "http://localhost/cb"

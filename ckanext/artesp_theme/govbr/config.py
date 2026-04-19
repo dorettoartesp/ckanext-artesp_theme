@@ -11,6 +11,11 @@ class GovBRConfig:
     scopes: list
     redirect_uri: str
     link_redirect_uri: str
+    authorize_base_url: str = None
+
+    @property
+    def effective_authorize_base_url(self) -> str:
+        return (self.authorize_base_url or self.base_url).rstrip("/")
 
     @classmethod
     def from_ckan_config(cls) -> "GovBRConfig":
@@ -22,6 +27,9 @@ class GovBRConfig:
         scopes_str = toolkit.config.get(
             "ckanext.artesp.govbr.scopes", "openid email profile"
         )
+        authorize_base_url = toolkit.config.get(
+            "ckanext.artesp.govbr.authorize_base_url", ""
+        ).rstrip("/") or None
         return cls(
             client_id=client_id,
             client_secret=toolkit.config.get(
@@ -31,6 +39,7 @@ class GovBRConfig:
                 "ckanext.artesp.govbr.base_url",
                 "https://sso.staging.acesso.gov.br",
             ).rstrip("/"),
+            authorize_base_url=authorize_base_url,
             scopes=scopes_str.split(),
             redirect_uri=toolkit.config.get(
                 "ckanext.artesp.govbr.redirect_uri", ""
