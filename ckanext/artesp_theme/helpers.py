@@ -248,11 +248,16 @@ def get_default_dataset_collaborator_capacity():
     return auth_helpers.get_default_dataset_collaborator_capacity()
 
 
+def artesp_is_external_user():
+    return auth_helpers.is_external_user(toolkit.c.userobj)
+
+
 def get_helpers():
     return {
         "artesp_theme_hello": artesp_theme_hello,
         "artesp_ldap_enabled": artesp_ldap_enabled,
         "artesp_govbr_login_enabled": artesp_govbr_login_enabled,
+        "artesp_is_external_user": artesp_is_external_user,
         "get_package_count": get_package_count,
         "get_resource_count": get_resource_count,
         "get_latest_datasets": get_latest_datasets,

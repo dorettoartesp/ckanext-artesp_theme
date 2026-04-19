@@ -6,10 +6,23 @@ from ckan.plugins import toolkit
 from .client import GovBRAuthError, GovBRClient
 from .config import GovBRConfig
 from .services import ExternalUserService, GovBRLinkError
+from ckanext.artesp_theme.logic.auth_helpers import is_external_user
 
 log = logging.getLogger(__name__)
 
 govbr = Blueprint("govbr", __name__)
+
+
+@govbr.before_app_request
+def redirect_external_from_dashboard():
+    if not request.path.startswith("/dashboard"):
+        return
+    try:
+        from ckan.common import current_user
+        if current_user.is_authenticated and is_external_user(current_user):
+            return redirect(url_for("govbr.followed_datasets", id=current_user.name))
+    except Exception:
+        pass
 
 _SESSION_STATE = "govbr_state"
 _SESSION_VERIFIER = "govbr_code_verifier"
