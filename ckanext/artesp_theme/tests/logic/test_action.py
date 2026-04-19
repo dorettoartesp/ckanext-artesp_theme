@@ -337,3 +337,75 @@ def test_get_actions_exports_dashboard_statistics_action():
         artesp_action.get_actions()["artesp_theme_dashboard_statistics"]
         is artesp_action.artesp_theme_dashboard_statistics
     )
+
+
+class TestUserUpdate:
+    def _make_user(self, sysadmin=False):
+        from unittest.mock import MagicMock
+        u = MagicMock()
+        u.sysadmin = sysadmin
+        return u
+
+    def test_non_sysadmin_strips_restricted_fields(self, monkeypatch):
+        captured = {}
+
+        def fake_core(context, data_dict):
+            captured["data_dict"] = dict(data_dict)
+            return {}
+
+        monkeypatch.setattr(
+            "ckanext.artesp_theme.logic.action.model.User.get",
+            lambda id: self._make_user(sysadmin=False),
+        )
+        monkeypatch.setattr(
+            "ckan.logic.action.update.user_update", fake_core
+        )
+
+        artesp_action.user_update(
+            {"user": "regular"},
+            {
+                "id": "uid",
+                "name": "hacked_name",
+                "email": "hacked@example.com",
+                "password1": "newpass",
+                "about": "legit about",
+                "image_url": "http://example.com/pic.png",
+            },
+        )
+
+        dd = captured["data_dict"]
+        assert dd.get("about") == "legit about"
+        assert dd.get("image_url") == "http://example.com/pic.png"
+        assert "name" not in dd
+        assert "email" not in dd
+        assert "password1" not in dd
+
+    def test_sysadmin_passes_all_fields(self, monkeypatch):
+        captured = {}
+
+        def fake_core(context, data_dict):
+            captured["data_dict"] = dict(data_dict)
+            return {}
+
+        monkeypatch.setattr(
+            "ckanext.artesp_theme.logic.action.model.User.get",
+            lambda id: self._make_user(sysadmin=True),
+        )
+        monkeypatch.setattr(
+            "ckan.logic.action.update.user_update", fake_core
+        )
+
+        artesp_action.user_update(
+            {"user": "ckan_admin"},
+            {
+                "id": "uid",
+                "name": "newname",
+                "email": "new@example.com",
+                "about": "bio",
+            },
+        )
+
+        dd = captured["data_dict"]
+        assert dd.get("name") == "newname"
+        assert dd.get("email") == "new@example.com"
+        assert dd.get("about") == "bio"

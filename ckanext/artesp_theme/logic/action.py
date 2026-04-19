@@ -217,6 +217,20 @@ def _extract_unfold_extension(value):
     return None
 
 
+_USER_UPDATE_ALLOWED = frozenset({"about", "image_url", "image_upload", "clear_upload"})
+
+
+def user_update(context, data_dict):
+    """Restringe user_update a apenas 'about' e foto para não-sysadmin."""
+    from ckan.logic.action.update import user_update as core_user_update
+    requester = context.get("auth_user_obj") or model.User.get(context.get("user", ""))
+    if requester and not requester.sysadmin:
+        allowed = {k: v for k, v in data_dict.items() if k in _USER_UPDATE_ALLOWED}
+        allowed["id"] = data_dict.get("id") or data_dict.get("name", "")
+        data_dict = allowed
+    return core_user_update(context, data_dict)
+
+
 def get_actions():
     return {
         "artesp_theme_dashboard_statistics": artesp_theme_dashboard_statistics,
@@ -224,4 +238,5 @@ def get_actions():
         "package_create": package_create,
         "package_collaborator_create": package_collaborator_create,
         "artesp_theme_get_sum": artesp_theme_get_sum,
+        "user_update": user_update,
     }
