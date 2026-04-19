@@ -31,12 +31,8 @@
 {% endblock %}
 
 {% block secondary_content %}
-  {{ super() }}
+  {% snippet "user/snippets/info.html", user=user, is_myself=is_myself, is_sysadmin=is_sysadmin, dataset_type=dataset_type, org_type=org_type, group_type=group_type, am_following=am_following %}
   {% if is_myself %}
     {% snippet "user/snippets/govbr_link.html", user=user %}
   {% endif %}
-{% endblock %}
-
-{% block secondary_content %}
-  {% snippet "user/snippets/info.html", user=user, is_myself=is_myself, is_sysadmin=is_sysadmin, dataset_type=dataset_type, org_type=org_type, group_type=group_type, am_following=am_following %}
 {% endblock %}
