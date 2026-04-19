@@ -131,7 +131,7 @@ def test_header_includes_public_statistics_nav_item(app, reset_db):
 
 @pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
 @pytest.mark.usefixtures("with_plugins")
-def test_header_shows_followed_datasets_for_internal_users(app, reset_db):
+def test_header_shows_following_for_internal_users(app, reset_db):
     user = SimpleNamespace(
         id="usuario-interno-id",
         name="usuario-interno",
@@ -142,13 +142,16 @@ def test_header_shows_followed_datasets_for_internal_users(app, reset_db):
     with patch.object(tk.h, "artesp_is_external_user", return_value=False), patch.object(
         tk.h, "user_image", return_value=""
     ), patch.object(tk.h, "csrf_input", return_value=""):
-        with app.flask_app.test_request_context("/dataset/exemplo"):
+        with app.flask_app.test_request_context(
+            "/dataset/exemplo",
+            environ_overrides={"CKAN_LANG": "pt_BR"},
+        ):
             tk.c.user = user.name
             tk.c.userobj = user
             html = base.render("header.html")
 
-    assert 'href="/user/usuario-interno/followed-datasets"' in html
-    assert "Datasets Seguidos" in html
+    assert 'href="/user/usuario-interno/followed"' in html
+    assert "Seguindo" in html
     assert 'href="/dashboard/datasets"' in html
 
 
@@ -183,6 +186,91 @@ def test_package_info_renders_follow_button_translated_for_pt_br(app, reset_db):
         'hx-post="/dataset/unfollow/90986ead-e102-4cc8-affc-d01245497032"'
         in html
     )
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.usefixtures("with_plugins")
+def test_followed_page_lists_mixed_followees_with_clear_types(app, reset_db):
+    user_dict = {
+        "id": "usuario-interno-id",
+        "name": "usuario-interno",
+        "display_name": "Usuario Interno",
+        "number_created_packages": 0,
+        "email": "usuario-interno@example.com",
+        "created": "2026-04-19T00:00:00.000000",
+        "state": "active",
+        "plugin_extras": {"artesp": {"user_type": "internal"}},
+    }
+    followees = [
+        {
+            "type": "dataset",
+            "display_name": "Base de Acidentes",
+            "dict": {"id": "dataset-id", "name": "base-de-acidentes"},
+        },
+        {
+            "type": "organization",
+            "display_name": "ARTESP",
+            "dict": {"id": "org-id", "name": "artesp"},
+        },
+        {
+            "type": "group",
+            "display_name": "Rodoviário",
+            "dict": {"id": "group-id", "name": "rodoviario"},
+        },
+        {
+            "type": "user",
+            "display_name": "Maria Santos",
+            "dict": {"id": "user-id", "name": "maria-santos"},
+        },
+    ]
+
+    def fake_get_action(name):
+        actions = {
+            "user_show": lambda context, data_dict: user_dict,
+            "followee_list": lambda context, data_dict: followees,
+        }
+        return actions[name]
+
+    with patch(
+        "ckanext.artesp_theme.govbr.blueprint.toolkit.get_action",
+        side_effect=fake_get_action,
+    ), patch(
+        "ckan.model.User.get",
+        return_value=SimpleNamespace(name="usuario-interno", sysadmin=False),
+    ), patch.object(
+        tk.h, "organizations_available", return_value=[]
+    ), patch.object(
+        tk.h, "groups_available", return_value=[]
+    ), patch.object(
+        tk.h, "follow_count", return_value=0
+    ), patch.object(
+        tk.h, "user_image", return_value=""
+    ), patch.object(
+        tk.h, "SI_number_span", side_effect=lambda value: str(value)
+    ), patch.object(
+        tk.h, "render_datetime", return_value="19/04/2026"
+    ), patch.object(
+        tk.h, "check_access", return_value=False
+    ):
+        resp = app.get(
+            "/user/usuario-interno/followed",
+            extra_environ={"CKAN_LANG": "pt_BR"},
+        )
+
+    assert resp.status_code == 200
+    assert "Seguindo" in resp.text
+    assert "Conjunto de Dados" in resp.text
+    assert "Organização" in resp.text
+    assert "Grupo" in resp.text
+    assert "Usuário" in resp.text
+    assert 'href="/dataset/base-de-acidentes"' in resp.text
+    assert 'href="/organization/artesp"' in resp.text
+    assert 'href="/group/rodoviario"' in resp.text
+    assert 'href="/user/maria-santos"' in resp.text
+    assert "Base de Acidentes" in resp.text
+    assert "ARTESP" in resp.text
+    assert "Rodoviário" in resp.text
+    assert "Maria Santos" in resp.text
 
 
 @pytest.mark.ckan_config("ckan.plugins", "artesp_theme")

@@ -1,0 +1,46 @@
+{% extends "user/read_base.html" %}
+
+{% macro followee_label(followee_type) -%}
+  {%- if followee_type == 'dataset' -%}
+    {{ _('Dataset') }}
+  {%- elif followee_type == 'organization' -%}
+    {{ _('Organization') }}
+  {%- elif followee_type == 'group' -%}
+    {{ _('Group') }}
+  {%- elif followee_type == 'user' -%}
+    {{ _('User') }}
+  {%- else -%}
+    {{ _('Type') }}
+  {%- endif -%}
+{%- endmacro %}
+
+{% macro followee_url(followee) -%}
+  {%- set followee_dict = followee.dict -%}
+  {%- set followee_id = followee_dict.name or followee_dict.id -%}
+  {%- if followee.type == 'dataset' -%}
+    {{ h.url_for('dataset.read', id=followee_id) }}
+  {%- elif followee.type == 'organization' -%}
+    {{ h.url_for('organization.read', id=followee_id) }}
+  {%- elif followee.type == 'group' -%}
+    {{ h.url_for('group.read', id=followee_id) }}
+  {%- elif followee.type == 'user' -%}
+    {{ h.url_for('user.read', id=followee_id) }}
+  {%- endif -%}
+{%- endmacro %}
+
+{% block primary_content_inner %}
+  <h2 class="hide-heading">{{ _('Following') }}</h2>
+
+  {% if followees %}
+    <ul class="list-group">
+      {% for followee in followees %}
+        <li class="list-group-item">
+          <p><strong>{{ followee_label(followee.type) }}</strong></p>
+          <a href="{{ followee_url(followee) }}">{{ followee.display_name }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="empty">{{ _('You are not following anything yet.') }}</p>
+  {% endif %}
+{% endblock %}

@@ -20,7 +20,7 @@ def redirect_external_from_dashboard():
     try:
         from ckan.common import current_user
         if current_user.is_authenticated and is_external_user(current_user):
-            return redirect(url_for("govbr.followed_datasets", id=current_user.name))
+            return redirect(url_for("govbr.followed", id=current_user.name))
     except Exception:
         pass
 
@@ -205,27 +205,26 @@ def unlink():
 
 
 # ---------------------------------------------------------------------------
-# followed datasets (for external users and any user)
+# followed items (for external users and any user)
 # ---------------------------------------------------------------------------
 
-@govbr.route("/user/<id>/followed-datasets")
-def followed_datasets(id: str):
+@govbr.route("/user/<id>/followed")
+def followed(id: str):
     import ckan.model as model
     from ckan.lib.base import render
-    from ckan.common import g
 
     user_dict = toolkit.get_action("user_show")(
         {"ignore_auth": True},
         {"id": id, "include_plugin_extras": True},
     )
-    followees = toolkit.get_action("dataset_followee_list")(
+    followees = toolkit.get_action("followee_list")(
         {"ignore_auth": True},
         {"id": id},
     )
     user_obj = model.User.get(id)
     is_myself = toolkit.c.user and toolkit.c.user == user_dict.get("name")
     return render(
-        "user/govbr_followed_datasets.html",
+        "user/govbr_followed.html",
         extra_vars={
             "user_dict": user_dict,
             "user": user_dict,

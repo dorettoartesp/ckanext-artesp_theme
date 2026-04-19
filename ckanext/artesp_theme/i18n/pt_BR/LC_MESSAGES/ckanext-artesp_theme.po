@@ -1189,7 +1189,7 @@ msgstr "Recursos"
 
 #: ckanext/artesp_theme/templates/home/snippets/stats.html:37
 msgid "Group"
-msgstr "Grupos"
+msgstr "Grupo"
 
 #: ckanext/artesp_theme/templates/home/snippets/stats.html:46
 #: ckanext/artesp_theme/templates/package/snippets/package_basic_fields.html:75
@@ -2178,6 +2178,16 @@ msgstr "Desseguir"
 #: ckanext/artesp_theme/templates/snippets/follow_button.html:9
 msgid "Follow"
 msgstr "Seguir"
+
+#: ckanext/artesp_theme/templates/header.html:27
+#: ckanext/artesp_theme/templates/user/govbr_followed.html:28
+#: ckanext/artesp_theme/templates/user/read_base.html:29
+msgid "Following"
+msgstr "Seguindo"
+
+#: ckanext/artesp_theme/templates/user/govbr_followed.html:39
+msgid "You are not following anything yet."
+msgstr "Você ainda não segue nenhum item."
 
 #: ckanext/artesp_theme/templates/snippets/language_selector.html:17
 #: ckanext/artesp_theme/templates/snippets/search_form.html:66
