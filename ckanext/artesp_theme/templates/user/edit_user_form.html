@@ -12,6 +12,11 @@
           {{ form.input('name', label=_('Username'), id='field-username', value=data.name, error=errors.name, classes=['control-medium'], is_required=true) }}
           {{ form.input('fullname', label=_('Full name'), id='field-fullname', value=data.fullname, error=errors.fullname, placeholder=_('eg. Joe Bloggs'), classes=['control-medium']) }}
           {{ form.input('email', label=_('Email'), id='field-email', type='email', value=data.email, error=errors.email, placeholder=_('eg. joe@example.com'), classes=['control-medium'], is_required=true) }}
+        {% else %}
+          {# Campos obrigatórios pelo view do CKAN — ocultos, imutáveis no backend #}
+          <input type="hidden" name="name" value="{{ data.name }}">
+          <input type="hidden" name="email" value="{{ data.email }}">
+          <input type="hidden" name="fullname" value="{{ data.fullname }}">
         {% endif %}
 
         {{ form.markdown('about', label=_('About'), id='field-about', value=data.about, error=errors.about, placeholder=_('A little information about yourself')) }}
