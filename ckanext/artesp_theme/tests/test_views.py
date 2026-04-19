@@ -154,6 +154,39 @@ def test_header_shows_followed_datasets_for_internal_users(app, reset_db):
 
 @pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
 @pytest.mark.usefixtures("with_plugins")
+def test_package_info_renders_follow_button_translated_for_pt_br(app, reset_db):
+    pkg = SimpleNamespace(
+        id="90986ead-e102-4cc8-affc-d01245497032",
+        name="seed-artesp-dataset-muitos-recursos",
+        title="Dataset de teste com muitos recursos",
+    )
+    current_user = SimpleNamespace(is_authenticated=True)
+
+    with patch("flask_login.utils._get_user", return_value=current_user), patch.object(
+        tk.h, "follow_count", return_value=2
+    ):
+        with app.flask_app.test_request_context(
+            "/dataset/seed-artesp-dataset-muitos-recursos",
+            environ_overrides={"CKAN_LANG": "pt_BR"},
+        ):
+            html = base.render_snippet(
+                "package/snippets/info.html",
+                pkg=pkg,
+                am_following=True,
+            )
+
+    assert "Dataset de teste com muitos recursos" in html
+    assert "Seguidores" in html
+    assert "Desseguir" in html
+    assert "Unfollow" not in html
+    assert (
+        'hx-post="/dataset/unfollow/90986ead-e102-4cc8-affc-d01245497032"'
+        in html
+    )
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.usefixtures("with_plugins")
 def test_statistics_page_is_public_and_renders_dashboard(app, reset_db):
     dashboard = {
         "generated_at_label": "09/04/2026 10:30",
