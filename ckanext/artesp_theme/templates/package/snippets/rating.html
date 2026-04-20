@@ -25,10 +25,11 @@
   {% if current_user.is_authenticated %}
     {% set user_rating = h.get_current_user_dataset_rating(pkg.id) %}
     {% if h.rating_comment_captcha_enabled() %}
+      <link
+        href="{{ h.get_rating_comment_captcha_stylesheet_url() }}"
+        rel="stylesheet"
+      >
       <script
-        async
-        defer
-        type="module"
         src="{{ h.get_rating_comment_captcha_script_url() }}"
       ></script>
     {% endif %}

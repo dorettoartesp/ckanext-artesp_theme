@@ -15,7 +15,10 @@ log = logging.getLogger(__name__)
 
 RATING_COMMENT_ALTCHA_CONFIG_KEY = "ckanext.artesp.rating.altcha_hmac_secret"
 RATING_COMMENT_ALTCHA_SCRIPT_URL = (
-    "https://cdn.jsdelivr.net/gh/altcha-org/altcha@v3.0.4/dist/altcha.min.js"
+    "https://cdn.jsdelivr.net/npm/altcha@3.0.4/dist/main/altcha.i18n.min.js"
+)
+RATING_COMMENT_ALTCHA_STYLESHEET_URL = (
+    "https://cdn.jsdelivr.net/npm/altcha@3.0.4/dist/external/altcha.min.css"
 )
 
 def artesp_theme_hello():
@@ -313,6 +316,10 @@ def get_rating_comment_captcha_script_url() -> str:
     return RATING_COMMENT_ALTCHA_SCRIPT_URL
 
 
+def get_rating_comment_captcha_stylesheet_url() -> str:
+    return RATING_COMMENT_ALTCHA_STYLESHEET_URL
+
+
 def get_helpers():
     return {
         "artesp_theme_hello": artesp_theme_hello,
@@ -339,4 +346,5 @@ def get_helpers():
         "rating_comment_captcha_enabled": rating_comment_captcha_enabled,
         "get_rating_comment_captcha_challenge_url": get_rating_comment_captcha_challenge_url,
         "get_rating_comment_captcha_script_url": get_rating_comment_captcha_script_url,
+        "get_rating_comment_captcha_stylesheet_url": get_rating_comment_captcha_stylesheet_url,
     }

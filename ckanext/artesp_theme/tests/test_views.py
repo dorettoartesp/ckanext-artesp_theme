@@ -129,6 +129,8 @@ def test_rating_snippet_renders_altcha_for_comments(app, reset_db):
     assert "/dataset-rating/comment-captcha/challenge" in html
     assert 'challenge="/dataset-rating/comment-captcha/challenge"' in html
     assert "challengeurl=" not in html
+    assert "https://cdn.jsdelivr.net/npm/altcha@3.0.4/dist/main/altcha.i18n.min.js" in html
+    assert "https://cdn.jsdelivr.net/npm/altcha@3.0.4/dist/external/altcha.min.css" in html
     assert 'class="artesp-rating__comment-captcha"' in html
     assert 'class="artesp-rating__comment-captcha" hidden' not in html
     assert "g-recaptcha" not in html
