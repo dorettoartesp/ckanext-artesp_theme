@@ -126,6 +126,40 @@ class TestRatingSubmitView:
 
 
 class TestRatingCommentCaptcha:
+    def test_serialize_altcha_challenge_flattens_parameters(self):
+        from ckanext.artesp_theme.controllers import _serialize_altcha_challenge
+
+        class FakeParameters:
+            def to_dict(self):
+                return {
+                    "algorithm": "PBKDF2/SHA-256",
+                    "cost": 5000,
+                    "keyLength": 32,
+                    "keyPrefix": "00",
+                    "nonce": "nonce-value",
+                    "salt": "salt-value",
+                }
+
+        class FakeChallenge:
+            signature = "signed-payload"
+            parameters = FakeParameters()
+
+            def to_dict(self):
+                return {
+                    "parameters": self.parameters.to_dict(),
+                    "signature": self.signature,
+                }
+
+        assert _serialize_altcha_challenge(FakeChallenge()) == {
+            "algorithm": "PBKDF2/SHA-256",
+            "cost": 5000,
+            "keyLength": 32,
+            "keyPrefix": "00",
+            "nonce": "nonce-value",
+            "salt": "salt-value",
+            "signature": "signed-payload",
+        }
+
     def test_missing_altcha_config_blocks_comment_submission(self, app_with_user, user, pkg):
         """Commented submissions must fail closed when ALTCHA is not configured."""
         app, env = app_with_user

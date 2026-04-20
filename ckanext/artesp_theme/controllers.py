@@ -375,28 +375,64 @@ def _get_rating_comment_altcha_secret() -> str:
     return (toolkit.config.get(RATING_COMMENT_ALTCHA_CONFIG_KEY) or "").strip()
 
 
+def _altcha_component_to_dict(component) -> dict:
+    if component is None:
+        return {}
+    if isinstance(component, dict):
+        return dict(component)
+    if hasattr(component, "to_dict"):
+        payload = component.to_dict()
+        if isinstance(payload, dict):
+            return dict(payload)
+    if hasattr(component, "__dict__"):
+        return {
+            key: value
+            for key, value in vars(component).items()
+            if not key.startswith("_") and value is not None
+        }
+    return {}
+
+
 def _serialize_altcha_challenge(challenge) -> dict:
-    if hasattr(challenge, "to_dict"):
-        return challenge.to_dict()
-    if hasattr(challenge, "__dict__"):
-        return dict(challenge.__dict__)
+    raw_challenge = _altcha_component_to_dict(challenge)
+
+    parameters = _altcha_component_to_dict(getattr(challenge, "parameters", None))
+    if not parameters and raw_challenge.get("parameters") is not None:
+        parameters = _altcha_component_to_dict(raw_challenge.get("parameters"))
+    if not parameters and "algorithm" in raw_challenge:
+        parameters = {
+            key: value for key, value in raw_challenge.items() if key != "signature"
+        }
+
+    signature = raw_challenge.get("signature")
+    if signature is None:
+        signature = getattr(challenge, "signature", None)
+
+    if parameters:
+        serialized = dict(parameters)
+        if signature is not None:
+            serialized["signature"] = signature
+        return serialized
 
     serialized = {}
-    for field in (
-        "algorithm",
-        "challenge",
-        "cost",
-        "data",
-        "expires",
-        "expires_at",
-        "key_prefix",
-        "maxnumber",
-        "salt",
-        "signature",
+    for attr_name, output_name in (
+        ("algorithm", "algorithm"),
+        ("challenge", "challenge"),
+        ("cost", "cost"),
+        ("data", "data"),
+        ("expires", "expires"),
+        ("expires_at", "expiresAt"),
+        ("key_length", "keyLength"),
+        ("key_prefix", "keyPrefix"),
+        ("maxnumber", "maxNumber"),
+        ("max_number", "maxNumber"),
+        ("nonce", "nonce"),
+        ("salt", "salt"),
+        ("signature", "signature"),
     ):
-        value = getattr(challenge, field, None)
+        value = getattr(challenge, attr_name, None)
         if value is not None:
-            serialized[field] = value
+            serialized[output_name] = value
     return serialized
 
 
