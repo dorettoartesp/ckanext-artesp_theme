@@ -102,10 +102,10 @@
         <textarea name="comment" rows="4" maxlength="5000">{{ user_rating.comment if user_rating and user_rating.comment else '' }}</textarea>
       </div>
 
-      <div class="artesp-rating__comment-captcha" hidden>
+      <div class="artesp-rating__comment-captcha">
         {% if altcha_challenge_url %}
           <div class="artesp-rating__comment-captcha-label">
-            {{ _('Para enviar comentário, conclua a verificação anti-spam.') }}
+            {{ _('Se quiser enviar um comentário, conclua a verificação anti-spam.') }}
           </div>
           <altcha-widget
             challengeurl="{{ altcha_challenge_url }}"

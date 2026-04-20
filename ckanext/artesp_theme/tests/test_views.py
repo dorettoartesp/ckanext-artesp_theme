@@ -127,6 +127,8 @@ def test_rating_snippet_renders_altcha_for_comments(app, reset_db):
 
     assert "altcha-widget" in html
     assert "/dataset-rating/comment-captcha/challenge" in html
+    assert 'class="artesp-rating__comment-captcha"' in html
+    assert 'class="artesp-rating__comment-captcha" hidden' not in html
     assert "g-recaptcha" not in html
 
 

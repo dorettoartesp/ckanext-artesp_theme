@@ -125,17 +125,11 @@
     function hasComment() {
       return Boolean(commentInput.value && commentInput.value.trim());
     }
-
-    function syncCaptchaVisibility() {
-      var commentPresent = hasComment();
-      captchaBox.hidden = !commentPresent;
-      if (!commentPresent) {
+    commentInput.addEventListener("input", function () {
+      if (!hasComment()) {
         captchaBox.classList.remove("artesp-rating__comment-captcha--error");
       }
-    }
-
-    commentInput.addEventListener("input", syncCaptchaVisibility);
-    syncCaptchaVisibility();
+    });
 
     form.addEventListener("submit", function (e) {
       if (!hasComment()) {
@@ -148,7 +142,6 @@
 
       if (!altchaWidget || !altchaVerified) {
         e.preventDefault();
-        captchaBox.hidden = false;
         captchaBox.classList.add("artesp-rating__comment-captcha--error");
         captchaBox.scrollIntoView({ block: "nearest", behavior: "smooth" });
       } else {
