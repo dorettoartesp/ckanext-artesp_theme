@@ -363,6 +363,65 @@ def resource_search():
 
 artesp_theme.add_url_rule('/resources', view_func=resource_search)
 
+
+def _check_captcha_fail_closed():
+    from ckan.lib import captcha as _captcha
+    if not toolkit.config.get("ckan.recaptcha.privatekey"):
+        raise toolkit.ValidationError({"captcha": [toolkit._("Captcha not configured")]})
+    _captcha.check_recaptcha(request)
+
+
+def rating_submit(package_name: str):
+    from ckan.common import current_user
+    from ckan.lib.helpers import flash_error as _flash_error, flash_success as _flash_success
+    from ckanext.artesp_theme.logic.rating import RATING_CRITERIA
+
+    if not getattr(current_user, "is_authenticated", False):
+        return redirect_to(toolkit.url_for("user.login"))
+
+    try:
+        _check_captcha_fail_closed()
+    except toolkit.ValidationError:
+        flash_error(toolkit._("Captcha validation failed. Please try again."))
+        return redirect_to(toolkit.url_for("dataset.read", id=package_name))
+
+    criteria = {}
+    for key in RATING_CRITERIA:
+        raw = (request.form.get(f"criteria_{key}") or "").strip().lower()
+        if raw:
+            criteria[key] = raw in ("true", "1", "yes")
+
+    try:
+        pkg = toolkit.get_action("package_show")({"ignore_auth": True}, {"id": package_name})
+        toolkit.get_action("dataset_rating_upsert")(
+            {"user": current_user.name},
+            {
+                "package_id": pkg["id"],
+                "overall_rating": request.form.get("overall_rating"),
+                "criteria": criteria,
+                "comment": request.form.get("comment", ""),
+            },
+        )
+        _flash_success(toolkit._("Your rating was submitted successfully."))
+    except toolkit.ValidationError as exc:
+        errors = "; ".join(
+            v[0] if isinstance(v, list) else str(v)
+            for v in exc.error_dict.values()
+        )
+        flash_error(toolkit._("Invalid rating: {errors}").format(errors=errors))
+    except toolkit.NotAuthorized:
+        flash_error(toolkit._("You are not authorized to rate this dataset."))
+
+    return redirect_to(toolkit.url_for("dataset.read", id=package_name))
+
+
+artesp_theme.add_url_rule(
+    "/dataset/<package_name>/rate",
+    endpoint="rating_submit",
+    view_func=rating_submit,
+    methods=["POST"],
+)
+
 @artesp_theme.before_app_request
 def restrict_stats_page_access():
     """

@@ -202,11 +202,11 @@ def package_collaborator_delete(context, data_dict=None):
 
 
 def dataset_rating_upsert(context, data_dict=None):
+    import ckan.model as _model
     user = context.get("auth_user_obj") or (
-        __import__("ckan.model", fromlist=["model"]).User.get(context.get("user", ""))
-        if context.get("user") else None
+        _model.User.get(context.get("user", "")) if context.get("user") else None
     )
-    if not user or not user.is_active():
+    if not user or not user.is_active:
         return auth_helpers.deny("Must be a logged-in user to submit a rating.")
     return auth_helpers.allow()
 
