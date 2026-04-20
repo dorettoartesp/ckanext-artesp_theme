@@ -201,6 +201,26 @@ def package_collaborator_delete(context, data_dict=None):
     )
 
 
+def dataset_rating_upsert(context, data_dict=None):
+    user = context.get("auth_user_obj") or (
+        __import__("ckan.model", fromlist=["model"]).User.get(context.get("user", ""))
+        if context.get("user") else None
+    )
+    if not user or not user.is_active():
+        return auth_helpers.deny("Must be a logged-in user to submit a rating.")
+    return auth_helpers.allow()
+
+
+@tk.auth_allow_anonymous_access
+def dataset_rating_show(context, data_dict=None):
+    return {"success": True}
+
+
+@tk.auth_allow_anonymous_access
+def dataset_rating_summary(context, data_dict=None):
+    return {"success": True}
+
+
 def get_auth_functions():
     return {
         "artesp_theme_dashboard_statistics": artesp_theme_dashboard_statistics,
@@ -222,6 +242,9 @@ def get_auth_functions():
         "package_collaborator_list": package_collaborator_list,
         "package_collaborator_create": package_collaborator_create,
         "package_collaborator_delete": package_collaborator_delete,
+        "dataset_rating_upsert": dataset_rating_upsert,
+        "dataset_rating_show": dataset_rating_show,
+        "dataset_rating_summary": dataset_rating_summary,
     }
 
 
