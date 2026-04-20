@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 
 RATING_COMMENT_ALTCHA_CONFIG_KEY = "ckanext.artesp.rating.altcha_hmac_secret"
 RATING_COMMENT_ALTCHA_SCRIPT_URL = (
-    "https://cdn.jsdelivr.net/gh/altcha-org/altcha@v2.3.0/dist/altcha.min.js"
+    "https://cdn.jsdelivr.net/gh/altcha-org/altcha@v3.0.4/dist/altcha.min.js"
 )
 
 def artesp_theme_hello():
