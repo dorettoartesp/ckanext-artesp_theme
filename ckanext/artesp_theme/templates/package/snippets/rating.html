@@ -1,114 +1,109 @@
 {#
   Dataset rating widget — sidebar module.
-
-  Parameters:
-    pkg  - The package dict (must have 'id' and 'name').
-
-  Usage:
-    {% snippet 'package/snippets/rating.html', pkg=pkg %}
+  pkg  - The package dict (must have 'id' and 'name').
 #}
 {% set summary = h.get_dataset_rating_summary(pkg.id) %}
-{% set user_rating = h.get_current_user_dataset_rating(pkg.id) %}
 {% set overall = summary.overall %}
 
 <div class="artesp-rating" id="dataset-rating-{{ pkg.id }}">
 
-  {# ── Aggregate: Classificação Geral ── #}
+  {# ── Aggregate display (always visible) ── #}
   <div class="artesp-rating__aggregate">
     <span class="artesp-rating__label">
       {{ _('Classificação Geral') }}
-      <span class="artesp-rating__info-icon" title="{{ _('Média das avaliações recebidas') }}">ℹ</span>
+      <span class="artesp-rating__info" title="{{ _('Média das avaliações recebidas') }}">ℹ</span>
     </span>
-    <div class="artesp-rating__stars artesp-rating__stars--display">
+    <div class="artesp-rating__stars-row">
       {% for i in range(1, 6) %}
-        <span class="artesp-rating__star{% if overall.average and i <= (overall.average | round(0, 'floor') | int) %} artesp-rating__star--filled{% endif %}">★</span>
+        <span class="artesp-rating__star-static{% if overall.average and i <= (overall.average | round(0, 'floor') | int) %} filled{% endif %}">★</span>
       {% endfor %}
       <span class="artesp-rating__count">({{ overall.count }})</span>
     </div>
   </div>
 
-  {# ── User input form ── #}
-  <form method="post"
-        action="{{ h.url_for('artesp_theme.rating_submit', package_name=pkg.name) }}"
-        class="artesp-rating__form">
+  {% if current_user.is_authenticated %}
+    {% set user_rating = h.get_current_user_dataset_rating(pkg.id) %}
 
-    {# Overall star input #}
-    <div class="artesp-rating__field">
-      <span class="artesp-rating__label">{{ _('Como você classifica esse conjunto de dados?') }}</span>
-      <div class="artesp-rating__stars artesp-rating__stars--input" role="radiogroup" aria-label="{{ _('Classificação geral') }}">
+    {# ── Input: own rating ── #}
+    <form method="post"
+          action="{{ h.url_for('artesp_theme.rating_submit', package_name=pkg.name) }}"
+          class="artesp-rating__form">
+
+      <div class="artesp-rating__own-label">{{ _('Como você classifica esse conjunto de dados?') }}</div>
+
+      <div class="artesp-rating__stars-input" role="radiogroup" data-rating="{{ user_rating.overall_rating if user_rating else 0 }}">
         {% for i in range(1, 6) %}
-          <label class="artesp-rating__star-label">
-            <input type="radio" name="overall_rating" value="{{ i }}" class="sr-only"
-              {% if user_rating and user_rating.overall_rating == i %}checked{% endif %}
-              required>
-            <span class="artesp-rating__star" aria-label="{{ i }} {{ _('estrela') if i == 1 else _('estrelas') }}">★</span>
-          </label>
+          <span class="artesp-rating__star-btn{% if user_rating and user_rating.overall_rating >= i %} filled{% endif %}"
+                data-value="{{ i }}" tabindex="0" role="radio"
+                aria-checked="{{ 'true' if user_rating and user_rating.overall_rating == i else 'false' }}"
+                aria-label="{{ i }} {{ _('estrela') if i == 1 else _('estrelas') }}">★</span>
         {% endfor %}
+        <input type="hidden" name="overall_rating" id="rating-value-{{ pkg.id }}"
+               value="{{ user_rating.overall_rating if user_rating else '' }}">
       </div>
+
       {% if not user_rating %}
-        <span class="artesp-rating__no-rating">{{ _('sem classificação enviada.') }}</span>
+        <div class="artesp-rating__no-rating">{{ _('sem classificação enviada.') }}</div>
       {% endif %}
-    </div>
 
-    {# Criteria — collapsible #}
-    <details class="artesp-rating__criteria-details">
-      <summary class="artesp-rating__criteria-summary">{{ _('Avalie mais pontos') }}</summary>
+      {# ── Criteria collapsible ── #}
+      <details class="artesp-rating__criteria">
+        <summary class="artesp-rating__criteria-toggle">{{ _('Avalie mais pontos') }}</summary>
 
-      {% set criteria_config = [
-        ('links_work',      _('Os links dos dados funcionam?'),      _('Links funcionam')),
-        ('up_to_date',      _('Os dados estão atualizados?'),        _('Dados atualizados')),
-        ('well_structured', _('Os dados estão bem estruturados?'),   _('Bem estruturado'))
-      ] %}
+        {% set criteria_list = [
+          ('links_work',      _('Os links dos dados funcionam?')),
+          ('up_to_date',      _('Os dados estão atualizados?')),
+          ('well_structured', _('Os dados estão bem estruturados?'))
+        ] %}
 
-      {% for key, question, label in criteria_config %}
-        {% set agg = overall.criteria.get(key, {'yes': 0, 'no': 0}) %}
-        {% set total = (agg.yes + agg.no) %}
-        {% set yes_pct = ((agg.yes / total * 100) | int) if total > 0 else 0 %}
-        {% set user_val = user_rating.criteria.get(key) if user_rating and user_rating.criteria else none %}
+        {% for key, question in criteria_list %}
+          {% set agg = overall.criteria.get(key, {'yes': 0, 'no': 0}) %}
+          {% set total = (agg.yes + agg.no) %}
+          {% set yes_pct = ((agg.yes / total * 100) | int) if total > 0 else 0 %}
+          {% set user_val = user_rating.criteria.get(key) if user_rating and user_rating.criteria else none %}
 
-        <div class="artesp-rating__criterion">
-          <span class="artesp-rating__criterion-label">
-            {{ question }}
-            <span class="artesp-rating__info-icon" title="{{ label }}">ℹ</span>
-          </span>
-          <div class="artesp-rating__thumbs">
-            <label class="artesp-rating__thumb artesp-rating__thumb--yes{% if user_val == true %} artesp-rating__thumb--selected{% endif %}">
-              <input type="radio" name="criteria_{{ key }}" value="true" class="sr-only"
-                {% if user_val == true %}checked{% endif %}>
-              <span aria-label="{{ _('Sim') }}">👍</span>
-            </label>
-            <label class="artesp-rating__thumb artesp-rating__thumb--no{% if user_val == false %} artesp-rating__thumb--selected{% endif %}">
-              <input type="radio" name="criteria_{{ key }}" value="false" class="sr-only"
-                {% if user_val == false %}checked{% endif %}>
-              <span aria-label="{{ _('Não') }}">👎</span>
-            </label>
+          <div class="artesp-rating__criterion">
+            <div class="artesp-rating__criterion-q">
+              {{ question }}
+              <span class="artesp-rating__info" title="{{ question }}">ℹ</span>
+            </div>
+            <div class="artesp-rating__thumbs">
+              <button type="button"
+                      class="artesp-rating__thumb{% if user_val == true %} selected{% endif %}"
+                      data-criterion="{{ key }}" data-value="true"
+                      aria-pressed="{{ 'true' if user_val == true else 'false' }}">👍</button>
+              <button type="button"
+                      class="artesp-rating__thumb{% if user_val == false %} selected{% endif %}"
+                      data-criterion="{{ key }}" data-value="false"
+                      aria-pressed="{{ 'true' if user_val == false else 'false' }}">👎</button>
+              <input type="hidden" name="criteria_{{ key }}"
+                     value="{{ 'true' if user_val == true else ('false' if user_val == false else '') }}">
+            </div>
+            <div class="artesp-rating__bar">
+              <div class="artesp-rating__bar-fill" style="width:{{ yes_pct }}%"></div>
+            </div>
+            <span class="artesp-rating__bar-label">{{ agg.yes }}/{{ total }}</span>
           </div>
-          <div class="artesp-rating__bar" role="progressbar" aria-valuenow="{{ yes_pct }}" aria-valuemin="0" aria-valuemax="100">
-            <div class="artesp-rating__bar-fill" style="width: {{ yes_pct }}%"></div>
-          </div>
-          <span class="artesp-rating__bar-label">{{ agg.yes }}/{{ total }}</span>
-        </div>
-      {% endfor %}
-    </details>
+        {% endfor %}
+      </details>
 
-    {# Comment #}
-    <div class="artesp-rating__comment">
-      <label for="rating-comment-{{ pkg.id }}">
-        {{ _('Deixe aqui um comentário sobre esse conjunto de dados:') }}
-      </label>
-      <textarea id="rating-comment-{{ pkg.id }}" name="comment" rows="3" maxlength="5000">{{ user_rating.comment if user_rating and user_rating.comment else '' }}</textarea>
-    </div>
+      {# ── Comment ── #}
+      <div class="artesp-rating__comment">
+        <div class="artesp-rating__comment-label">{{ _('Deixe aqui um comentário sobre esse conjunto de dados:') }}</div>
+        <textarea name="comment" rows="4" maxlength="5000">{{ user_rating.comment if user_rating and user_rating.comment else '' }}</textarea>
+      </div>
 
-    {% if current_user.is_authenticated %}
       {% snippet 'user/snippets/recaptcha.html' %}
-      <button type="submit" class="btn btn-primary artesp-rating__submit">
-        {{ _('Enviar') }}
-      </button>
-    {% else %}
-      <p class="artesp-rating__login-prompt">
-        <a href="{{ h.url_for('user.login') }}">{{ _('Entre') }}</a> {{ _('para avaliar este dataset.') }}
-      </p>
-    {% endif %}
+      <button type="submit" class="artesp-rating__submit">{{ _('Enviar') }}</button>
 
-  </form>
+    </form>
+
+  {% else %}
+
+    <div class="artesp-rating__login-prompt">
+      <a href="{{ h.url_for('user.login') }}">{{ _('Cadastre-se ou faça login') }}</a> {{ _('para classificar esse conjunto de dados.') }}
+    </div>
+
+  {% endif %}
+
 </div>
