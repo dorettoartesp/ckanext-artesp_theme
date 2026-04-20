@@ -5,6 +5,7 @@ artesp-theme-js:
     - js/login.js
     - js/stats-counter.js
     - js/dashboard-statistics.js
+    - js/rating.js
   extra:
     preload:
       - base/main
@@ -31,3 +32,4 @@ artesp-theme-css:
     - css/modules/auth-controls.css
     - css/modules/responsive.css
     - css/modules/user.css
+    - css/modules/rating.css
