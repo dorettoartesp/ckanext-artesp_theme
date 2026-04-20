@@ -1,157 +1,233 @@
 /* ── Dataset Rating Widget ── */
 
 .artesp-rating {
-  padding: 0.75rem 0;
+  padding: 0.75rem 0 1rem;
   border-bottom: 1px solid #e5e5e5;
   margin-bottom: 0.75rem;
   font-size: 0.875rem;
 }
 
-/* Labels */
-.artesp-rating__label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 0.25rem;
-  color: #333;
-}
-
-.artesp-rating__info-icon {
-  display: inline-block;
+/* ── Info icon (ℹ) ── */
+.artesp-rating__info {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 1rem;
   height: 1rem;
-  line-height: 1rem;
-  text-align: center;
   border-radius: 50%;
-  background: #aaa;
+  background: #999;
   color: #fff;
-  font-size: 0.65rem;
+  font-size: 0.6rem;
+  font-weight: 700;
   cursor: help;
   vertical-align: middle;
-  margin-left: 0.2rem;
+  margin-left: 0.25rem;
+  text-decoration: none;
 }
 
-/* Aggregate summary */
+.artesp-rating__info::after {
+  content: attr(title);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.8);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 400;
+  white-space: nowrap;
+  padding: 0.25rem 0.5rem;
+  border-radius: 3px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 100;
+}
+
+.artesp-rating__info:hover::after {
+  opacity: 1;
+}
+
+/* ── Aggregate (sempre visível) ── */
 .artesp-rating__aggregate {
   margin-bottom: 0.75rem;
 }
 
-.artesp-rating__stars {
+.artesp-rating__label {
   display: flex;
   align-items: center;
-  gap: 0.1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.3rem;
+  font-size: 0.875rem;
 }
 
-.artesp-rating__star {
-  font-size: 1.4rem;
+.artesp-rating__stars-row {
+  display: flex;
+  align-items: center;
+  gap: 0.05rem;
+}
+
+.artesp-rating__star-static {
+  font-size: 1.3rem;
   color: #ccc;
-  cursor: pointer;
-  transition: color 0.15s;
+  line-height: 1;
 }
 
-.artesp-rating__stars--display .artesp-rating__star--filled {
-  color: #f0ad4e;
+.artesp-rating__star-static.filled {
+  color: #f5a623;
 }
 
 .artesp-rating__count {
   margin-left: 0.4rem;
-  color: #666;
+  color: #777;
   font-size: 0.8rem;
 }
 
-/* Star input */
-.artesp-rating__stars--input {
-  flex-direction: row-reverse;
-  justify-content: flex-end;
+/* ── Form ── */
+.artesp-rating__form {
+  margin-top: 0.5rem;
 }
 
-.artesp-rating__star-label {
+.artesp-rating__own-label {
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 0.4rem;
+  font-size: 0.8rem;
+}
+
+/* ── Star input ── */
+.artesp-rating__stars-input {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+  margin-bottom: 0.25rem;
+}
+
+.artesp-rating__star-btn {
+  font-size: 1.6rem;
+  color: #ccc;
   cursor: pointer;
-  margin: 0;
+  line-height: 1;
+  transition: color 0.1s, transform 0.1s;
+  user-select: none;
+  -webkit-user-select: none;
+  padding: 0 0.05rem;
+  border-radius: 2px;
+  outline: none;
 }
 
-.artesp-rating__stars--input .artesp-rating__star-label:hover .artesp-rating__star,
-.artesp-rating__stars--input .artesp-rating__star-label:hover ~ .artesp-rating__star-label .artesp-rating__star,
-.artesp-rating__stars--input input:checked ~ .artesp-rating__star-label .artesp-rating__star,
-.artesp-rating__stars--input input:checked + .artesp-rating__star-label .artesp-rating__star {
-  color: #f0ad4e;
+.artesp-rating__star-btn.filled {
+  color: #f5a623;
+}
+
+.artesp-rating__star-btn:hover {
+  color: #f5a623;
+  transform: scale(1.15);
+}
+
+.artesp-rating__star-btn:focus-visible {
+  outline: 2px solid #337ab7;
+  outline-offset: 2px;
 }
 
 .artesp-rating__no-rating {
-  display: block;
-  color: #888;
-  font-size: 0.8rem;
-  margin-top: 0.15rem;
+  color: #999;
+  font-size: 0.78rem;
+  margin-bottom: 0.5rem;
 }
 
-/* Criteria collapsible */
-.artesp-rating__criteria-details {
-  margin: 0.5rem 0;
+/* ── Criteria collapsible ── */
+.artesp-rating__criteria {
+  margin: 0.6rem 0;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  overflow: hidden;
 }
 
-.artesp-rating__criteria-summary {
+.artesp-rating__criteria-toggle {
   cursor: pointer;
   font-weight: 600;
   color: #337ab7;
-  padding: 0.25rem 0;
+  padding: 0.4rem 0.6rem;
   list-style: none;
+  font-size: 0.82rem;
+  background: #f9f9f9;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-.artesp-rating__criteria-summary::after {
-  content: ' ▼';
-  font-size: 0.75rem;
+.artesp-rating__criteria-toggle::-webkit-details-marker {
+  display: none;
 }
 
-.artesp-rating__criteria-details[open] .artesp-rating__criteria-summary::after {
-  content: ' ▲';
+.artesp-rating__criteria-toggle::before {
+  content: '▶ ';
+  font-size: 0.65rem;
+  transition: transform 0.15s;
+  display: inline-block;
 }
 
-/* Individual criterion */
+.artesp-rating__criteria[open] .artesp-rating__criteria-toggle::before {
+  transform: rotate(90deg);
+}
+
 .artesp-rating__criterion {
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #f0f0f0;
+  padding: 0.5rem 0.6rem;
+  border-top: 1px solid #f0f0f0;
 }
 
 .artesp-rating__criterion:last-child {
   border-bottom: none;
 }
 
-.artesp-rating__criterion-label {
-  display: block;
+.artesp-rating__criterion-q {
+  display: flex;
+  align-items: center;
   margin-bottom: 0.35rem;
   color: #444;
+  font-size: 0.82rem;
 }
 
-/* Thumbs */
+/* ── Thumbs ── */
 .artesp-rating__thumbs {
   display: flex;
   gap: 0.5rem;
-  margin-bottom: 0.35rem;
+  align-items: center;
+  margin-bottom: 0.3rem;
 }
 
 .artesp-rating__thumb {
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0.15rem 0.4rem;
   cursor: pointer;
-  font-size: 1.1rem;
-  opacity: 0.4;
-  transition: opacity 0.15s, transform 0.1s;
-  margin: 0;
-}
-
-.artesp-rating__thumb:hover,
-.artesp-rating__thumb--selected {
-  opacity: 1;
+  font-size: 1rem;
+  opacity: 0.45;
+  transition: opacity 0.15s, transform 0.1s, border-color 0.15s;
+  line-height: 1.4;
 }
 
 .artesp-rating__thumb:hover {
-  transform: scale(1.2);
+  opacity: 0.85;
+  transform: scale(1.1);
 }
 
-/* Progress bar */
+.artesp-rating__thumb.selected {
+  opacity: 1;
+  border-color: #337ab7;
+  background: #f0f7ff;
+}
+
+/* ── Progress bar ── */
 .artesp-rating__bar {
   height: 4px;
-  background: #e0e0e0;
+  background: #e8e8e8;
   border-radius: 2px;
   overflow: hidden;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.15rem;
 }
 
 .artesp-rating__bar-fill {
@@ -162,20 +238,20 @@
 }
 
 .artesp-rating__bar-label {
-  color: #888;
-  font-size: 0.75rem;
+  color: #999;
+  font-size: 0.73rem;
 }
 
-/* Comment */
+/* ── Comment ── */
 .artesp-rating__comment {
   margin: 0.75rem 0 0.5rem;
 }
 
-.artesp-rating__comment label {
-  display: block;
+.artesp-rating__comment-label {
   font-weight: 600;
-  margin-bottom: 0.3rem;
   color: #444;
+  margin-bottom: 0.3rem;
+  font-size: 0.82rem;
 }
 
 .artesp-rating__comment textarea {
@@ -183,32 +259,52 @@
   border: 1px solid #ccc;
   border-radius: 3px;
   padding: 0.4rem;
-  font-size: 0.875rem;
+  font-size: 0.85rem;
   resize: vertical;
+  font-family: inherit;
 }
 
-/* Submit */
+.artesp-rating__comment textarea:focus {
+  border-color: #66afe9;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(102,175,233,0.25);
+}
+
+/* ── Submit ── */
 .artesp-rating__submit {
   width: 100%;
   margin-top: 0.5rem;
+  display: block;
+  padding: 0.45rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #fff;
+  background: #337ab7;
+  border: 1px solid #2e6da4;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s;
+  text-align: center;
 }
 
-/* Login prompt */
+.artesp-rating__submit:hover {
+  background: #286090;
+  border-color: #204d74;
+}
+
+/* ── Login prompt ── */
 .artesp-rating__login-prompt {
-  color: #666;
-  font-size: 0.85rem;
   margin-top: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  background: #f9f9f9;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  color: #555;
+  font-size: 0.85rem;
+  line-height: 1.4;
 }
 
-/* Utility */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
+.artesp-rating__login-prompt a {
+  color: #337ab7;
+  font-weight: 600;
 }
