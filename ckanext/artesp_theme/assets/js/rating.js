@@ -96,7 +96,28 @@
     });
   }
 
+  function initFormValidation(root) {
+    var form = root.querySelector(".artesp-rating__form");
+    if (!form) return;
+    form.addEventListener("submit", function (e) {
+      var hiddenInput = root.querySelector("input[name='overall_rating']");
+      if (!hiddenInput || !hiddenInput.value) {
+        e.preventDefault();
+        var starsInput = root.querySelector(".artesp-rating__stars-input");
+        if (starsInput) {
+          starsInput.classList.add("artesp-rating__stars-input--error");
+          setTimeout(function () {
+            starsInput.classList.remove("artesp-rating__stars-input--error");
+          }, 2500);
+        }
+      }
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".artesp-rating").forEach(initRatingWidget);
+    document.querySelectorAll(".artesp-rating").forEach(function (root) {
+      initRatingWidget(root);
+      initFormValidation(root);
+    });
   });
 })();

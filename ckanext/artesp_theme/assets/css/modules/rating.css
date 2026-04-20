@@ -132,6 +132,24 @@
   outline-offset: 2px;
 }
 
+.artesp-rating__stars-input--error .artesp-rating__star-btn {
+  color: #d9534f;
+  animation: artesp-shake 0.4s ease;
+}
+
+@keyframes artesp-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-4px); }
+  60% { transform: translateX(4px); }
+  80% { transform: translateX(-2px); }
+}
+
+.artesp-rating__required {
+  color: #c9302c;
+  font-weight: 700;
+  margin-left: 2px;
+}
+
 .artesp-rating__no-rating {
   color: #999;
   font-size: 0.78rem;

@@ -29,7 +29,7 @@
           action="{{ h.url_for('artesp_theme.rating_submit', package_name=pkg.name) }}"
           class="artesp-rating__form">
 
-      <div class="artesp-rating__own-label">{{ _('Como você classifica esse conjunto de dados?') }}</div>
+      <div class="artesp-rating__own-label">{{ _('Como você classifica esse conjunto de dados?') }} <span class="artesp-rating__required" aria-hidden="true">*</span></div>
 
       <div class="artesp-rating__stars-input" role="radiogroup" data-rating="{{ user_rating.overall_rating if user_rating else 0 }}">
         {% for i in range(1, 6) %}
