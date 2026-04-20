@@ -270,6 +270,30 @@ def artesp_is_user_external(user_dict):
     return (plugin_extras or {}).get("artesp", {}).get("user_type") == "external"
 
 
+def get_dataset_rating_summary(package_id: str) -> dict:
+    import ckan.plugins.toolkit as tk
+    try:
+        return tk.get_action("dataset_rating_summary")({}, {"package_id": package_id})
+    except Exception:
+        return {
+            "package_id": package_id,
+            "overall": {"count": 0, "average": None, "criteria": {}},
+        }
+
+
+def get_current_user_dataset_rating(package_id: str) -> dict | None:
+    import ckan.plugins.toolkit as tk
+    from ckan.common import current_user
+    if not getattr(current_user, "is_authenticated", False):
+        return None
+    try:
+        return tk.get_action("dataset_rating_show")(
+            {"user": current_user.name}, {"package_id": package_id}
+        )
+    except Exception:
+        return None
+
+
 def get_helpers():
     return {
         "artesp_theme_hello": artesp_theme_hello,
@@ -291,4 +315,6 @@ def get_helpers():
         "fix_fontawesome_icon": fix_fontawesome_icon,
         "get_artesp_organization": get_artesp_organization,
         "get_default_dataset_collaborator_capacity": get_default_dataset_collaborator_capacity,
+        "get_dataset_rating_summary": get_dataset_rating_summary,
+        "get_current_user_dataset_rating": get_current_user_dataset_rating,
     }
