@@ -44,27 +44,40 @@ def app_with_user(app, user):
 
 
 class TestRatingSubmitView:
-    def test_captcha_not_configured_blocks_submit(self, app_with_user, user, pkg):
+    def test_rating_without_comment_does_not_require_captcha(self, app_with_user, user, pkg):
         app, env = app_with_user
         app.post(
             f"/dataset/{pkg['name']}/rate",
-            data={"overall_rating": "4", "g-recaptcha-response": "token"},
+            data={"overall_rating": "4"},
+            environ_base=env,
+        )
+        u = model.User.get(user["name"])
+        rating = DatasetRating.get_for(u.id, pkg["id"])
+        assert rating is not None
+        assert rating.comment == ""
+
+    def test_comment_without_altcha_config_blocks_submit(self, app_with_user, user, pkg):
+        app, env = app_with_user
+        app.post(
+            f"/dataset/{pkg['name']}/rate",
+            data={"overall_rating": "4", "comment": "Needs a captcha"},
             environ_base=env,
         )
         u = model.User.get(user["name"])
         assert DatasetRating.get_for(u.id, pkg["id"]) is None
 
-    def test_captcha_configured_and_valid_creates_rating(self, app_with_user, user, pkg):
+    def test_comment_with_valid_altcha_creates_rating(self, app_with_user, user, pkg):
         app, env = app_with_user
-        with patch("ckanext.artesp_theme.controllers._check_captcha_fail_closed"):
+        with patch("ckanext.artesp_theme.controllers._validate_rating_comment_captcha"):
             app.post(
                 f"/dataset/{pkg['name']}/rate",
                 data={
                     "overall_rating": "4",
+                    "comment": "Useful context",
                     "criteria_links_work": "true",
                     "criteria_up_to_date": "false",
                     "criteria_well_structured": "true",
-                    "g-recaptcha-response": "token",
+                    "altcha": "mock-payload",
                 },
                 environ_base=env,
             )
@@ -72,6 +85,7 @@ class TestRatingSubmitView:
         rating = DatasetRating.get_for(u.id, pkg["id"])
         assert rating is not None
         assert rating.overall_rating == 4
+        assert rating.comment == "Useful context"
 
     def test_anonymous_redirects_to_login(self, app, pkg):
         resp = app.post(
@@ -83,12 +97,11 @@ class TestRatingSubmitView:
 
     def test_invalid_rating_does_not_persist(self, app_with_user, user, pkg):
         app, env = app_with_user
-        with patch("ckanext.artesp_theme.controllers._check_captcha_fail_closed"):
-            app.post(
-                f"/dataset/{pkg['name']}/rate",
-                data={"overall_rating": "99", "g-recaptcha-response": "token"},
-                environ_base=env,
-            )
+        app.post(
+            f"/dataset/{pkg['name']}/rate",
+            data={"overall_rating": "99"},
+            environ_base=env,
+        )
         u = model.User.get(user["name"])
         assert DatasetRating.get_for(u.id, pkg["id"]) is None
 
@@ -101,25 +114,24 @@ class TestRatingSubmitView:
             private=True,
         )
 
-        with patch("ckanext.artesp_theme.controllers._check_captcha_fail_closed"):
-            resp = app.post(
-                f"/dataset/{private_pkg['name']}/rate",
-                data={"overall_rating": "4", "g-recaptcha-response": "token"},
-                environ_base={"REMOTE_USER": outsider["name"]},
-            )
+        resp = app.post(
+            f"/dataset/{private_pkg['name']}/rate",
+            data={"overall_rating": "4"},
+            environ_base={"REMOTE_USER": outsider["name"]},
+        )
 
         outsider_obj = model.User.get(outsider["name"])
         assert DatasetRating.get_for(outsider_obj.id, private_pkg["id"]) is None
         assert "dataset" in resp.request.url or "search" in resp.request.url
 
 
-class TestRatingCaptchaFailClosed:
-    def test_missing_privatekey_blocks_even_with_token(self, app_with_user, user, pkg):
-        """No privatekey configured → must block (fail-closed), not allow."""
+class TestRatingCommentCaptcha:
+    def test_missing_altcha_config_blocks_comment_submission(self, app_with_user, user, pkg):
+        """Commented submissions must fail closed when ALTCHA is not configured."""
         app, env = app_with_user
         app.post(
             f"/dataset/{pkg['name']}/rate",
-            data={"overall_rating": "4", "g-recaptcha-response": "any-token"},
+            data={"overall_rating": "4", "comment": "Need verification", "altcha": "any-token"},
             environ_base=env,
         )
         u = model.User.get(user["name"])

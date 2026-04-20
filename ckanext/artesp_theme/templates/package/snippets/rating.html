@@ -4,6 +4,7 @@
 #}
 {% set summary = h.get_dataset_rating_summary(pkg.id) %}
 {% set overall = summary.overall %}
+{% set altcha_challenge_url = h.get_rating_comment_captcha_challenge_url() %}
 
 <div class="artesp-rating" id="dataset-rating-{{ pkg.id }}">
 
@@ -23,6 +24,14 @@
 
   {% if current_user.is_authenticated %}
     {% set user_rating = h.get_current_user_dataset_rating(pkg.id) %}
+    {% if h.rating_comment_captcha_enabled() %}
+      <script
+        async
+        defer
+        type="module"
+        src="{{ h.get_rating_comment_captcha_script_url() }}"
+      ></script>
+    {% endif %}
 
     {# ── Input: own rating ── #}
     <form method="post"
@@ -93,7 +102,22 @@
         <textarea name="comment" rows="4" maxlength="5000">{{ user_rating.comment if user_rating and user_rating.comment else '' }}</textarea>
       </div>
 
-      {% snippet 'user/snippets/recaptcha.html' %}
+      <div class="artesp-rating__comment-captcha" hidden>
+        {% if altcha_challenge_url %}
+          <div class="artesp-rating__comment-captcha-label">
+            {{ _('Para enviar comentário, conclua a verificação anti-spam.') }}
+          </div>
+          <altcha-widget
+            challengeurl="{{ altcha_challenge_url }}"
+            language="pt"
+          ></altcha-widget>
+        {% else %}
+          <div class="artesp-rating__comment-captcha-warning">
+            {{ _('Comentários estão temporariamente indisponíveis até a verificação anti-spam ser configurada.') }}
+          </div>
+        {% endif %}
+      </div>
+
       <button type="submit" class="artesp-rating__submit">{{ _('Enviar') }}</button>
 
     </form>

@@ -4,6 +4,7 @@
   function initRatingWidget(root) {
     initStars(root);
     initThumbs(root);
+    initCommentCaptcha(root);
   }
 
   function initStars(root) {
@@ -110,6 +111,48 @@
             starsInput.classList.remove("artesp-rating__stars-input--error");
           }, 2500);
         }
+      }
+    });
+  }
+
+  function initCommentCaptcha(root) {
+    var form = root.querySelector(".artesp-rating__form");
+    var commentInput = root.querySelector("textarea[name='comment']");
+    var captchaBox = root.querySelector(".artesp-rating__comment-captcha");
+
+    if (!form || !commentInput || !captchaBox) return;
+
+    function hasComment() {
+      return Boolean(commentInput.value && commentInput.value.trim());
+    }
+
+    function syncCaptchaVisibility() {
+      var commentPresent = hasComment();
+      captchaBox.hidden = !commentPresent;
+      if (!commentPresent) {
+        captchaBox.classList.remove("artesp-rating__comment-captcha--error");
+      }
+    }
+
+    commentInput.addEventListener("input", syncCaptchaVisibility);
+    syncCaptchaVisibility();
+
+    form.addEventListener("submit", function (e) {
+      if (!hasComment()) {
+        return;
+      }
+
+      var altchaWidget = captchaBox.querySelector("altcha-widget");
+      var altchaInput = form.querySelector("input[name='altcha']");
+      var altchaVerified = Boolean(altchaInput && altchaInput.value);
+
+      if (!altchaWidget || !altchaVerified) {
+        e.preventDefault();
+        captchaBox.hidden = false;
+        captchaBox.classList.add("artesp-rating__comment-captcha--error");
+        captchaBox.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      } else {
+        captchaBox.classList.remove("artesp-rating__comment-captcha--error");
       }
     });
   }

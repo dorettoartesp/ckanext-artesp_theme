@@ -44,6 +44,8 @@ class ArtespThemePlugin(plugins.SingletonPlugin):
         declaration.declare(key.ckanext.artesp.govbr.scopes).set_default(
             "openid email profile"
         )
+        declaration.annotate("Dataset rating comment captcha")
+        declaration.declare(key.ckanext.artesp.rating.altcha_hmac_secret).set_default("")
 
     def get_auth_functions(self):
         return artesp_auth.get_auth_functions()

@@ -97,6 +97,40 @@ def test_login_page_keeps_forgot_password_when_ldap_disabled(app, reset_db):
 
 
 @pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.ckan_config("ckan.recaptcha.publickey", "legacy-google-key")
+@pytest.mark.usefixtures("with_plugins")
+def test_login_page_does_not_render_captcha(app, reset_db):
+    resp = app.get(tk.h.url_for("user.login"))
+
+    assert resp.status_code == 200
+    assert "g-recaptcha" not in resp.text
+    assert "Recaptcha" not in resp.text
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.ckan_config("ckanext.artesp.rating.altcha_hmac_secret", "rating-altcha-secret")
+@pytest.mark.usefixtures("with_plugins")
+def test_rating_snippet_renders_altcha_for_comments(app, reset_db):
+    pkg = SimpleNamespace(
+        id="90986ead-e102-4cc8-affc-d01245497032",
+        name="seed-artesp-dataset-muitos-recursos",
+        title="Dataset de teste com muitos recursos",
+    )
+    current_user = SimpleNamespace(is_authenticated=True)
+
+    with patch("flask_login.utils._get_user", return_value=current_user):
+        with app.flask_app.test_request_context(
+            "/dataset/seed-artesp-dataset-muitos-recursos",
+            environ_overrides={"CKAN_LANG": "pt_BR"},
+        ):
+            html = base.render_snippet("package/snippets/rating.html", pkg=pkg)
+
+    assert "altcha-widget" in html
+    assert "/dataset-rating/comment-captcha/challenge" in html
+    assert "g-recaptcha" not in html
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
 @pytest.mark.ckan_config("ckanext.ldap.uri", "ldap://ldap:389")
 @pytest.mark.ckan_config("ckanext.artesp.govbr.enabled", "true")
 @pytest.mark.ckan_config("ckanext.artesp.govbr.client_id", "govbr-client-id")

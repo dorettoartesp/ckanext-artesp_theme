@@ -289,6 +289,40 @@
   box-shadow: 0 0 0 3px rgba(3, 78, 162, 0.15);
 }
 
+.artesp-rating__comment-captcha {
+  margin: 0 0 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid var(--cool-gray-lighter, #d1d5db);
+  border-radius: 4px;
+  background: var(--cool-gray-lightest, #f3f4f6);
+}
+
+.artesp-rating__comment-captcha-label,
+.artesp-rating__comment-captcha-warning {
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.artesp-rating__comment-captcha-label {
+  color: var(--gray-darker, #333);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.artesp-rating__comment-captcha-warning {
+  color: var(--primary, #FF161F);
+  font-weight: 600;
+}
+
+.artesp-rating__comment-captcha--error {
+  border-color: var(--primary, #FF161F);
+  box-shadow: 0 0 0 3px rgba(255, 22, 31, 0.12);
+}
+
+.artesp-rating__comment-captcha altcha-widget {
+  display: block;
+}
+
 /* ── Submit ── */
 .artesp-rating__submit {
   width: 100%;

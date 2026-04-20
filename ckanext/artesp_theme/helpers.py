@@ -13,6 +13,11 @@ from ckanext.artesp_theme.logic import dashboard_statistics
 
 log = logging.getLogger(__name__)
 
+RATING_COMMENT_ALTCHA_CONFIG_KEY = "ckanext.artesp.rating.altcha_hmac_secret"
+RATING_COMMENT_ALTCHA_SCRIPT_URL = (
+    "https://cdn.jsdelivr.net/gh/altcha-org/altcha@v2.3.0/dist/altcha.min.js"
+)
+
 def artesp_theme_hello():
     return "Hello, artesp_theme!"
 
@@ -294,6 +299,20 @@ def get_current_user_dataset_rating(package_id: str) -> dict | None:
         return None
 
 
+def rating_comment_captcha_enabled() -> bool:
+    return bool((toolkit.config.get(RATING_COMMENT_ALTCHA_CONFIG_KEY) or "").strip())
+
+
+def get_rating_comment_captcha_challenge_url() -> str | None:
+    if not rating_comment_captcha_enabled():
+        return None
+    return toolkit.url_for("artesp_theme.rating_comment_captcha_challenge")
+
+
+def get_rating_comment_captcha_script_url() -> str:
+    return RATING_COMMENT_ALTCHA_SCRIPT_URL
+
+
 def get_helpers():
     return {
         "artesp_theme_hello": artesp_theme_hello,
@@ -317,4 +336,7 @@ def get_helpers():
         "get_default_dataset_collaborator_capacity": get_default_dataset_collaborator_capacity,
         "get_dataset_rating_summary": get_dataset_rating_summary,
         "get_current_user_dataset_rating": get_current_user_dataset_rating,
+        "rating_comment_captcha_enabled": rating_comment_captcha_enabled,
+        "get_rating_comment_captcha_challenge_url": get_rating_comment_captcha_challenge_url,
+        "get_rating_comment_captcha_script_url": get_rating_comment_captcha_script_url,
     }
