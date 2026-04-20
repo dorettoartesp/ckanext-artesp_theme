@@ -391,10 +391,12 @@ def rating_submit(package_name: str):
         if raw:
             criteria[key] = raw in ("true", "1", "yes")
 
+    action_context = {"user": current_user.name}
+
     try:
-        pkg = toolkit.get_action("package_show")({"ignore_auth": True}, {"id": package_name})
+        pkg = toolkit.get_action("package_show")(action_context, {"id": package_name})
         toolkit.get_action("dataset_rating_upsert")(
-            {"user": current_user.name},
+            action_context,
             {
                 "package_id": pkg["id"],
                 "overall_rating": request.form.get("overall_rating"),
@@ -411,6 +413,10 @@ def rating_submit(package_name: str):
         flash_error(toolkit._("Invalid rating: {errors}").format(errors=errors))
     except toolkit.NotAuthorized:
         flash_error(toolkit._("You are not authorized to rate this dataset."))
+        return redirect_to(toolkit.url_for("dataset.search"))
+    except toolkit.ObjectNotFound:
+        flash_error(toolkit._("Dataset not found or you are not allowed to rate it."))
+        return redirect_to(toolkit.url_for("dataset.search"))
 
     return redirect_to(toolkit.url_for("dataset.read", id=package_name))
 

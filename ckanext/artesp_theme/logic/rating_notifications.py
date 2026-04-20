@@ -56,8 +56,12 @@ def _resolve_recipients(pkg_dict: dict, author_user_id: str) -> list:
     seen_emails: set = set()
     recipients: list = []
 
+    def _is_active(user) -> bool:
+        active = getattr(user, "is_active", False)
+        return active() if callable(active) else bool(active)
+
     def _add(user):
-        if not user or not user.is_active():
+        if not user or not _is_active(user):
             return
         if user.id in seen_ids:
             return

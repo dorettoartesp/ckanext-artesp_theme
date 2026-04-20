@@ -92,6 +92,26 @@ class TestRatingSubmitView:
         u = model.User.get(user["name"])
         assert DatasetRating.get_for(u.id, pkg["id"]) is None
 
+    def test_private_dataset_requires_access_to_submit_rating(self, app, artesp_org):
+        owner = factories.User()
+        outsider = factories.User()
+        private_pkg = factories.Dataset(
+            user=owner,
+            owner_org=artesp_org["id"],
+            private=True,
+        )
+
+        with patch("ckanext.artesp_theme.controllers._check_captcha_fail_closed"):
+            resp = app.post(
+                f"/dataset/{private_pkg['name']}/rate",
+                data={"overall_rating": "4", "g-recaptcha-response": "token"},
+                environ_base={"REMOTE_USER": outsider["name"]},
+            )
+
+        outsider_obj = model.User.get(outsider["name"])
+        assert DatasetRating.get_for(outsider_obj.id, private_pkg["id"]) is None
+        assert "dataset" in resp.request.url or "search" in resp.request.url
+
 
 class TestRatingCaptchaFailClosed:
     def test_missing_privatekey_blocks_even_with_token(self, app_with_user, user, pkg):

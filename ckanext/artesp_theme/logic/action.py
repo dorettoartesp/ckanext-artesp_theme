@@ -240,6 +240,12 @@ def _enqueue_rating_notification(package_id: str, rating_id: str) -> None:
     )
 
 
+def _get_rating_package(package_id: str, context: dict | None):
+    package_context = dict(context or {})
+    package_context.pop("ignore_auth", None)
+    return tk.get_action("package_show")(package_context, {"id": package_id})
+
+
 def dataset_rating_upsert(context, data_dict):
     import logging
     from datetime import datetime, timezone
@@ -264,6 +270,8 @@ def dataset_rating_upsert(context, data_dict):
     package_id = data["package_id"]
     criteria = data.get("criteria") or {}
     comment = data.get("comment") or ""
+
+    _get_rating_package(package_id, context)
 
     existing = DatasetRating.get_for(user_id, package_id)
     prev_comment = (existing.comment or "") if existing else ""
@@ -316,6 +324,8 @@ def dataset_rating_show(context, data_dict):
     if errors:
         raise tk.ValidationError(errors)
 
+    _get_rating_package(data["package_id"], context)
+
     user = context.get("auth_user_obj") or model.User.get(context.get("user", ""))
     if not user:
         return None
@@ -349,6 +359,7 @@ def dataset_rating_summary(context, data_dict):
         raise tk.ValidationError(errors)
 
     package_id = data["package_id"]
+    _get_rating_package(package_id, context)
     ratings = DatasetRating.list_for_package(package_id)
 
     count = len(ratings)
@@ -359,7 +370,9 @@ def dataset_rating_summary(context, data_dict):
     }
     for r in ratings:
         for key in RATING_CRITERIA:
-            if r.criteria and r.criteria.get(key):
+            if not r.criteria or key not in r.criteria:
+                continue
+            if r.criteria.get(key):
                 criteria_agg[key]["yes"] += 1
             else:
                 criteria_agg[key]["no"] += 1

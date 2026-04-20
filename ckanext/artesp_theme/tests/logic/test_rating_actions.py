@@ -2,6 +2,7 @@
 
 import pytest
 import ckan.model as model
+import ckan.plugins.toolkit as tk
 from ckan.tests import factories
 
 from ckanext.artesp_theme.model import DatasetRating, dataset_rating_table
@@ -101,10 +102,16 @@ class TestDatasetRatingUpsert:
         assert enqueued["package_id"] == pkg["id"]
 
     def test_anonymous_raises(self, pkg):
-        import ckan.plugins.toolkit as tk
         with pytest.raises((tk.NotAuthorized, tk.ValidationError)):
             tk.get_action("dataset_rating_upsert")(
                 {}, {"package_id": pkg["id"], "overall_rating": 3}
+            )
+
+    def test_missing_dataset_raises_object_not_found(self, context):
+        with pytest.raises(tk.ObjectNotFound):
+            tk.get_action("dataset_rating_upsert")(
+                context,
+                {"package_id": "missing-dataset-id", "overall_rating": 3},
             )
 
 
@@ -158,7 +165,6 @@ class TestDatasetRatingSummary:
         assert result["overall"]["average"] == pytest.approx(4.0)
 
     def test_criteria_aggregation(self, artesp_org, pkg):
-        import ckan.plugins.toolkit as tk
         for val in (True, False):
             u = factories.User()
             tk.get_action("dataset_rating_upsert")(
@@ -174,8 +180,32 @@ class TestDatasetRatingSummary:
         assert criteria["links_work"]["yes"] == 1
         assert criteria["links_work"]["no"] == 1
 
+    def test_omitted_criteria_do_not_count_as_negative_votes(self, artesp_org, pkg):
+        for _ in range(2):
+            u = factories.User()
+            tk.get_action("dataset_rating_upsert")(
+                {"user": u["name"], "ignore_auth": True},
+                {"package_id": pkg["id"], "overall_rating": 4},
+            )
+
+        result = tk.get_action("dataset_rating_summary")({}, {"package_id": pkg["id"]})
+        criteria = result["overall"]["criteria"]
+        assert criteria["links_work"] == {"yes": 0, "no": 0}
+        assert criteria["up_to_date"] == {"yes": 0, "no": 0}
+        assert criteria["well_structured"] == {"yes": 0, "no": 0}
+
+    def test_private_dataset_summary_requires_visibility(self, artesp_org):
+        owner = factories.User()
+        private_pkg = factories.Dataset(
+            user=owner,
+            owner_org=artesp_org["id"],
+            private=True,
+        )
+
+        with pytest.raises((tk.NotAuthorized, tk.ObjectNotFound)):
+            tk.get_action("dataset_rating_summary")({}, {"package_id": private_pkg["id"]})
+
     def test_summary_does_not_expose_user_data(self, context, user, pkg):
-        import ckan.plugins.toolkit as tk
         tk.get_action("dataset_rating_upsert")(
             context, {"package_id": pkg["id"], "overall_rating": 5}
         )
