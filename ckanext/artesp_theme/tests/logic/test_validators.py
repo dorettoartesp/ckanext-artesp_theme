@@ -96,3 +96,99 @@ def test_artesp_boolean_validator_false_strings():
 def test_artesp_boolean_validator_invalid_string():
     with pytest.raises(tk.Invalid):
         validators.artesp_boolean_validator("invalid", {})
+
+
+class TestRatingOverallValidator:
+    def test_accepts_int_in_range(self):
+        for v in (1, 2, 3, 4, 5):
+            assert validators.rating_overall_validator(v, {}) == v
+
+    def test_accepts_numeric_string(self):
+        assert validators.rating_overall_validator("3", {}) == 3
+
+    def test_rejects_out_of_range(self):
+        with pytest.raises(tk.Invalid):
+            validators.rating_overall_validator(0, {})
+        with pytest.raises(tk.Invalid):
+            validators.rating_overall_validator(6, {})
+
+    def test_rejects_non_integer(self):
+        with pytest.raises(tk.Invalid):
+            validators.rating_overall_validator("abc", {})
+        with pytest.raises(tk.Invalid):
+            validators.rating_overall_validator(3.5, {})
+
+    def test_rejects_missing(self):
+        with pytest.raises(tk.Invalid):
+            validators.rating_overall_validator(None, {})
+        with pytest.raises(tk.Invalid):
+            validators.rating_overall_validator("", {})
+
+
+class TestRatingCriteriaValidator:
+    def test_accepts_full_dict_of_bools(self):
+        criteria = {"links_work": True, "up_to_date": False, "well_structured": True}
+        assert validators.rating_criteria_validator(criteria, {}) == criteria
+
+    def test_accepts_json_string(self):
+        result = validators.rating_criteria_validator(
+            '{"links_work": true, "up_to_date": false, "well_structured": true}', {}
+        )
+        assert result == {
+            "links_work": True,
+            "up_to_date": False,
+            "well_structured": True,
+        }
+
+    def test_accepts_empty_dict(self):
+        assert validators.rating_criteria_validator({}, {}) == {}
+
+    def test_coerces_truthy_strings(self):
+        result = validators.rating_criteria_validator(
+            {"links_work": "true", "up_to_date": "false", "well_structured": 1}, {}
+        )
+        assert result == {
+            "links_work": True,
+            "up_to_date": False,
+            "well_structured": True,
+        }
+
+    def test_rejects_unknown_keys(self):
+        with pytest.raises(tk.Invalid):
+            validators.rating_criteria_validator({"unexpected": True}, {})
+
+    def test_rejects_non_dict(self):
+        with pytest.raises(tk.Invalid):
+            validators.rating_criteria_validator("not a dict", {})
+        with pytest.raises(tk.Invalid):
+            validators.rating_criteria_validator(["links_work"], {})
+
+    def test_rejects_non_boolean_values(self):
+        with pytest.raises(tk.Invalid):
+            validators.rating_criteria_validator({"links_work": "maybe"}, {})
+
+
+class TestRatingCommentValidator:
+    def test_strips_whitespace(self):
+        assert validators.rating_comment_validator("  hello  ", {}) == "hello"
+
+    def test_empty_becomes_none(self):
+        assert validators.rating_comment_validator("", {}) is None
+        assert validators.rating_comment_validator("   ", {}) is None
+        assert validators.rating_comment_validator(None, {}) is None
+
+    def test_internal_whitespace_preserved(self):
+        assert validators.rating_comment_validator("a  b", {}) == "a  b"
+
+    def test_rejects_oversize_comment(self):
+        too_long = "x" * 5001
+        with pytest.raises(tk.Invalid):
+            validators.rating_comment_validator(too_long, {})
+
+    def test_accepts_max_length(self):
+        ok = "x" * 5000
+        assert validators.rating_comment_validator(ok, {}) == ok
+
+    def test_rejects_non_string(self):
+        with pytest.raises(tk.Invalid):
+            validators.rating_comment_validator(123, {})

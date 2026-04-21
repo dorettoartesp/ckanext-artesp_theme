@@ -4,6 +4,7 @@ import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 
 import ckanext.artesp_theme.helpers as helpers
+import ckanext.artesp_theme.model  # noqa: F401 — registers DatasetRating imperative mapping
 from ckanext.artesp_theme.controllers import artesp_theme
 from ckanext.artesp_theme.govbr.blueprint import govbr as govbr_blueprint
 from ckanext.artesp_theme.logic import action as artesp_action
@@ -43,6 +44,8 @@ class ArtespThemePlugin(plugins.SingletonPlugin):
         declaration.declare(key.ckanext.artesp.govbr.scopes).set_default(
             "openid email profile"
         )
+        declaration.annotate("Dataset rating comment captcha")
+        declaration.declare(key.ckanext.artesp.rating.altcha_hmac_secret).set_default("")
 
     def get_auth_functions(self):
         return artesp_auth.get_auth_functions()

@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template, request, g
+from datetime import datetime, timedelta, timezone
+
+from flask import Blueprint, abort, jsonify, render_template, request, g
 from ckan.plugins import toolkit
 from ckan.lib.helpers import flash_error, redirect_to
 from ckan.lib.pagination import Page
@@ -10,6 +12,11 @@ from ckanext.artesp_theme.logic import auth_helpers
 log = logging.getLogger(__name__)
 
 artesp_theme = Blueprint('artesp_theme', __name__)
+
+RATING_COMMENT_ALTCHA_CONFIG_KEY = "ckanext.artesp.rating.altcha_hmac_secret"
+RATING_COMMENT_ALTCHA_ALGORITHM = "PBKDF2/SHA-256"
+RATING_COMMENT_ALTCHA_COST = 1
+RATING_COMMENT_ALTCHA_EXPIRES_MINUTES = 10
 
 
 def about_ckan():
@@ -362,6 +369,151 @@ def resource_search():
 
 
 artesp_theme.add_url_rule('/resources', view_func=resource_search)
+
+
+def _get_rating_comment_altcha_secret() -> str:
+    return (toolkit.config.get(RATING_COMMENT_ALTCHA_CONFIG_KEY) or "").strip()
+
+
+def _validate_rating_comment_captcha():
+    secret = _get_rating_comment_altcha_secret()
+    if not secret:
+        raise toolkit.ValidationError({"captcha": [toolkit._("Captcha not configured")]})
+
+    payload = (request.form.get("altcha") or "").strip()
+    if not payload:
+        raise toolkit.ValidationError(
+            {"captcha": [toolkit._("Captcha verification is required to submit a comment.")]}
+        )
+
+    try:
+        from altcha import verify_solution
+    except ImportError as exc:
+        log.exception("ALTCHA library unavailable for dataset comment verification")
+        raise toolkit.ValidationError(
+            {"captcha": [toolkit._("Captcha validation failed. Please try again.")]}
+        ) from exc
+
+    result = verify_solution(payload, secret)
+    verified = getattr(result, "verified", None)
+    if verified is None and isinstance(result, tuple):
+        verified = bool(result[0])
+    if verified is None:
+        verified = bool(result)
+
+    if verified:
+        return
+
+    log.info(
+        "rating_comment_altcha_failed expired=%s invalid_signature=%s invalid_solution=%s error=%s",
+        getattr(result, "expired", None),
+        getattr(result, "invalid_signature", None),
+        getattr(result, "invalid_solution", None),
+        getattr(result, "error", None),
+    )
+    raise toolkit.ValidationError(
+        {"captcha": [toolkit._("Captcha validation failed. Please try again.")]}
+    )
+
+
+def rating_comment_captcha_challenge():
+    from ckan.common import current_user
+
+    if not getattr(current_user, "is_authenticated", False):
+        abort(403)
+
+    secret = _get_rating_comment_altcha_secret()
+    if not secret:
+        abort(404)
+
+    try:
+        from altcha import create_challenge
+    except ImportError:
+        log.exception("ALTCHA library unavailable for challenge generation")
+        abort(503)
+
+    challenge = create_challenge(
+        algorithm=RATING_COMMENT_ALTCHA_ALGORITHM,
+        cost=RATING_COMMENT_ALTCHA_COST,
+        expires_at=datetime.now(timezone.utc)
+        + timedelta(minutes=RATING_COMMENT_ALTCHA_EXPIRES_MINUTES),
+        hmac_secret=secret,
+    )
+    response = jsonify(challenge.to_dict())
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    return response
+
+
+def rating_submit(package_name: str):
+    from ckan.common import current_user
+    from ckan.lib.helpers import flash_error as _flash_error, flash_success as _flash_success
+    from ckanext.artesp_theme.logic.rating import RATING_CRITERIA
+
+    if not getattr(current_user, "is_authenticated", False):
+        return redirect_to(toolkit.url_for("user.login"))
+
+    comment = request.form.get("comment", "")
+    comment_requires_captcha = bool(comment.strip())
+
+    if comment_requires_captcha:
+        try:
+            _validate_rating_comment_captcha()
+        except toolkit.ValidationError:
+            flash_error(toolkit._("Captcha validation failed. Please try again."))
+            return redirect_to(toolkit.url_for("dataset.read", id=package_name))
+
+    criteria = {}
+    for key in RATING_CRITERIA:
+        raw = (request.form.get(f"criteria_{key}") or "").strip().lower()
+        if raw:
+            criteria[key] = raw in ("true", "1", "yes")
+
+    action_context = {"user": current_user.name}
+
+    try:
+        pkg = toolkit.get_action("package_show")(action_context, {"id": package_name})
+        toolkit.get_action("dataset_rating_upsert")(
+            action_context,
+            {
+                "package_id": pkg["id"],
+                "overall_rating": request.form.get("overall_rating"),
+                "criteria": criteria,
+                "comment": comment,
+            },
+        )
+        _flash_success(toolkit._("Sua avaliação foi enviada com sucesso."))
+        return redirect_to(
+            toolkit.url_for("dataset.read", id=package_name, rating_submitted=1)
+        )
+    except toolkit.ValidationError as exc:
+        errors = "; ".join(
+            v[0] if isinstance(v, list) else str(v)
+            for v in exc.error_dict.values()
+        )
+        flash_error(toolkit._("Invalid rating: {errors}").format(errors=errors))
+    except toolkit.NotAuthorized:
+        flash_error(toolkit._("You are not authorized to rate this dataset."))
+        return redirect_to(toolkit.url_for("dataset.search"))
+    except toolkit.ObjectNotFound:
+        flash_error(toolkit._("Dataset not found or you are not allowed to rate it."))
+        return redirect_to(toolkit.url_for("dataset.search"))
+
+    return redirect_to(toolkit.url_for("dataset.read", id=package_name))
+
+
+artesp_theme.add_url_rule(
+    "/dataset/<package_name>/rate",
+    endpoint="rating_submit",
+    view_func=rating_submit,
+    methods=["POST"],
+)
+
+artesp_theme.add_url_rule(
+    "/dataset-rating/comment-captcha/challenge",
+    endpoint="rating_comment_captcha_challenge",
+    view_func=rating_comment_captcha_challenge,
+    methods=["GET"],
+)
 
 @artesp_theme.before_app_request
 def restrict_stats_page_access():

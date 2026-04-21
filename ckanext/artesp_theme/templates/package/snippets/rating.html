@@ -1,0 +1,135 @@
+{#
+  Dataset rating widget — sidebar module.
+  pkg  - The package dict (must have 'id' and 'name').
+#}
+{% set summary = h.get_dataset_rating_summary(pkg.id) %}
+{% set overall = summary.overall %}
+{% set altcha_challenge_url = h.get_rating_comment_captcha_challenge_url() %}
+{% set just_submitted = request.args.get('rating_submitted') %}
+
+<div class="artesp-rating" id="dataset-rating-{{ pkg.id }}">
+
+  {# ── Aggregate display (always visible) ── #}
+  <div class="artesp-rating__aggregate">
+    <span class="artesp-rating__label">
+      {{ _('Classificação Geral') }}
+      <span class="artesp-rating__info" title="{{ _('Média das avaliações recebidas') }}">ℹ</span>
+    </span>
+    <div class="artesp-rating__stars-row">
+      {% for i in range(1, 6) %}
+        <span class="artesp-rating__star-static{% if overall.average and i <= (overall.average | round(0, 'floor') | int) %} filled{% endif %}">★</span>
+      {% endfor %}
+      <span class="artesp-rating__count">({{ overall.count }})</span>
+    </div>
+  </div>
+
+  {% if current_user.is_authenticated %}
+    {% set user_rating = none if just_submitted else h.get_current_user_dataset_rating(pkg.id) %}
+    {% if h.rating_comment_captcha_enabled() %}
+      <link
+        href="{{ h.get_rating_comment_captcha_stylesheet_url() }}"
+        rel="stylesheet"
+      >
+      <script
+        src="{{ h.get_rating_comment_captcha_script_url() }}"
+      ></script>
+    {% endif %}
+
+    {# ── Input: own rating ── #}
+    <form method="post"
+          action="{{ h.url_for('artesp_theme.rating_submit', package_name=pkg.name) }}"
+          class="artesp-rating__form">
+
+      <div class="artesp-rating__own-label">{{ _('Como você classifica esse conjunto de dados?') }} <span class="artesp-rating__required" aria-hidden="true">*</span></div>
+
+      <div class="artesp-rating__stars-input" role="radiogroup" data-rating="{{ user_rating.overall_rating if user_rating else 0 }}">
+        {% for i in range(1, 6) %}
+          <span class="artesp-rating__star-btn{% if user_rating and user_rating.overall_rating >= i %} filled{% endif %}"
+                data-value="{{ i }}" tabindex="0" role="radio"
+                aria-checked="{{ 'true' if user_rating and user_rating.overall_rating == i else 'false' }}"
+                aria-label="{{ i }} {{ _('estrela') if i == 1 else _('estrelas') }}">★</span>
+        {% endfor %}
+        <input type="hidden" name="overall_rating" id="rating-value-{{ pkg.id }}"
+               value="{{ user_rating.overall_rating if user_rating else '' }}">
+      </div>
+
+      {% if not user_rating %}
+        <div class="artesp-rating__no-rating">{{ _('sem classificação enviada.') }}</div>
+      {% endif %}
+
+      {# ── Criteria collapsible ── #}
+      <details class="artesp-rating__criteria">
+        <summary class="artesp-rating__criteria-toggle">{{ _('Avalie mais pontos') }}</summary>
+
+        {% set criteria_list = [
+          ('links_work',      _('Os links dos dados funcionam?')),
+          ('up_to_date',      _('Os dados estão atualizados?')),
+          ('well_structured', _('Os dados estão bem estruturados?'))
+        ] %}
+
+        {% for key, question in criteria_list %}
+          {% set agg = overall.criteria.get(key, {'yes': 0, 'no': 0}) %}
+          {% set total = (agg.yes + agg.no) %}
+          {% set yes_pct = ((agg.yes / total * 100) | int) if total > 0 else 0 %}
+          {% set user_val = user_rating.criteria.get(key) if user_rating and user_rating.criteria else none %}
+
+          <div class="artesp-rating__criterion">
+            <div class="artesp-rating__criterion-q">
+              {{ question }}
+              <span class="artesp-rating__info" title="{{ question }}">ℹ</span>
+            </div>
+            <div class="artesp-rating__thumbs">
+              <button type="button"
+                      class="artesp-rating__thumb{% if user_val == true %} selected{% endif %}"
+                      data-criterion="{{ key }}" data-value="true"
+                      aria-pressed="{{ 'true' if user_val == true else 'false' }}">👍</button>
+              <button type="button"
+                      class="artesp-rating__thumb{% if user_val == false %} selected{% endif %}"
+                      data-criterion="{{ key }}" data-value="false"
+                      aria-pressed="{{ 'true' if user_val == false else 'false' }}">👎</button>
+              <input type="hidden" name="criteria_{{ key }}"
+                     value="{{ 'true' if user_val == true else ('false' if user_val == false else '') }}">
+            </div>
+            <div class="artesp-rating__bar">
+              <div class="artesp-rating__bar-fill" style="width:{{ yes_pct }}%"></div>
+            </div>
+            <span class="artesp-rating__bar-label">{{ agg.yes }}/{{ total }}</span>
+          </div>
+        {% endfor %}
+      </details>
+
+      {# ── Comment ── #}
+      <div class="artesp-rating__comment">
+        <div class="artesp-rating__comment-label">{{ _('Deixe aqui um comentário sobre esse conjunto de dados:') }}</div>
+        <textarea name="comment" rows="4" maxlength="5000">{{ user_rating.comment if user_rating and user_rating.comment else '' }}</textarea>
+      </div>
+
+      <div class="artesp-rating__comment-captcha">
+        {% if altcha_challenge_url %}
+          <div class="artesp-rating__comment-captcha-label">
+            {{ _('Se quiser enviar um comentário, conclua a verificação anti-spam.') }}
+          </div>
+          <altcha-widget
+            challenge="{{ altcha_challenge_url }}"
+            language="pt"
+          ></altcha-widget>
+        {% else %}
+          <div class="artesp-rating__comment-captcha-warning">
+            {{ _('Comentários estão temporariamente indisponíveis até a verificação anti-spam ser configurada.') }}
+          </div>
+        {% endif %}
+      </div>
+
+      <button type="submit" class="artesp-rating__submit">{{ _('Enviar') }}</button>
+
+    </form>
+
+  {% else %}
+
+    <div class="artesp-rating__login-prompt">
+      <a href="{{ h.url_for('user.login', came_from=h.url_for('dataset.read', id=pkg.name)) }}">{{ _('Cadastre-se ou faça login') }}</a> {{ _('para classificar esse conjunto de dados.') }}
+    </div>
+
+  {% endif %}
+
+</div>

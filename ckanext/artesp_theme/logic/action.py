@@ -231,6 +231,162 @@ def user_update(context, data_dict):
     return core_user_update(context, data_dict)
 
 
+def _enqueue_rating_notification(package_id: str, rating_id: str) -> None:
+    from ckan.lib import jobs
+    from ckanext.artesp_theme.logic import rating_notifications
+    jobs.enqueue(
+        rating_notifications.send_rating_comment_notifications,
+        kwargs={"package_id": package_id, "rating_id": rating_id},
+    )
+
+
+def _get_rating_package(package_id: str, context: dict | None):
+    package_context = dict(context or {})
+    package_context.pop("ignore_auth", None)
+    return tk.get_action("package_show")(package_context, {"id": package_id})
+
+
+def dataset_rating_upsert(context, data_dict):
+    import logging
+    from datetime import datetime, timezone
+
+    import ckan.lib.navl.dictization_functions as dfunc
+    from ckanext.artesp_theme.model import DatasetRating, dataset_rating_table
+    from ckanext.artesp_theme.logic import schema as rating_schema
+
+    log = logging.getLogger(__name__)
+
+    tk.check_access("dataset_rating_upsert", context, data_dict)
+
+    data, errors = dfunc.validate(data_dict, rating_schema.dataset_rating_upsert_schema(), context)
+    if errors:
+        raise tk.ValidationError(errors)
+
+    user = context.get("auth_user_obj") or model.User.get(context.get("user", ""))
+    if not user:
+        raise tk.NotAuthorized(tk._("Must be logged in to rate a dataset."))
+
+    user_id = user.id
+    package_id = data["package_id"]
+    criteria = data.get("criteria") or {}
+    comment = data.get("comment") or ""
+
+    _get_rating_package(package_id, context)
+
+    existing = DatasetRating.get_for(user_id, package_id)
+    prev_comment = (existing.comment or "") if existing else ""
+    created = existing is None
+
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
+    if existing is None:
+        rating = DatasetRating(
+            user_id=user_id,
+            package_id=package_id,
+            overall_rating=data["overall_rating"],
+            criteria=criteria,
+            comment=comment,
+        )
+        model.Session.add(rating)
+    else:
+        existing.overall_rating = data["overall_rating"]
+        existing.criteria = criteria
+        existing.comment = comment
+        existing.updated_at = now
+        rating = existing
+
+    model.Session.commit()
+
+    comment_changed = bool(comment) and comment != prev_comment
+    notification_enqueued = False
+    if comment_changed:
+        try:
+            _enqueue_rating_notification(package_id, rating.id)
+            notification_enqueued = True
+        except Exception:
+            log.warning("Failed to enqueue rating notification for rating=%s", rating.id)
+
+    return {
+        "id": rating.id,
+        "created": created,
+        "comment_notification_enqueued": notification_enqueued,
+    }
+
+
+@tk.side_effect_free
+def dataset_rating_show(context, data_dict):
+    import ckan.lib.navl.dictization_functions as dfunc
+    from ckanext.artesp_theme.model import DatasetRating
+    from ckanext.artesp_theme.logic import schema as rating_schema
+
+    tk.check_access("dataset_rating_show", context, data_dict)
+
+    data, errors = dfunc.validate(data_dict, rating_schema.dataset_rating_show_schema(), context)
+    if errors:
+        raise tk.ValidationError(errors)
+
+    _get_rating_package(data["package_id"], context)
+
+    user = context.get("auth_user_obj") or model.User.get(context.get("user", ""))
+    if not user:
+        return None
+
+    rating = DatasetRating.get_for(user.id, data["package_id"])
+    if rating is None:
+        return None
+
+    return {
+        "id": rating.id,
+        "package_id": rating.package_id,
+        "overall_rating": rating.overall_rating,
+        "criteria": rating.criteria,
+        "comment": rating.comment,
+        "created_at": rating.created_at.isoformat(),
+        "updated_at": rating.updated_at.isoformat(),
+    }
+
+
+@tk.side_effect_free
+def dataset_rating_summary(context, data_dict):
+    import ckan.lib.navl.dictization_functions as dfunc
+    from ckanext.artesp_theme.model import DatasetRating
+    from ckanext.artesp_theme.logic import schema as rating_schema
+    from ckanext.artesp_theme.logic.rating import RATING_CRITERIA
+
+    tk.check_access("dataset_rating_summary", context, data_dict)
+
+    data, errors = dfunc.validate(data_dict, rating_schema.dataset_rating_summary_schema(), context)
+    if errors:
+        raise tk.ValidationError(errors)
+
+    package_id = data["package_id"]
+    _get_rating_package(package_id, context)
+    ratings = DatasetRating.list_for_package(package_id)
+
+    count = len(ratings)
+    average = round(sum(r.overall_rating for r in ratings) / count, 2) if count else None
+
+    criteria_agg = {
+        key: {"yes": 0, "no": 0} for key in RATING_CRITERIA
+    }
+    for r in ratings:
+        for key in RATING_CRITERIA:
+            if not r.criteria or key not in r.criteria:
+                continue
+            if r.criteria.get(key):
+                criteria_agg[key]["yes"] += 1
+            else:
+                criteria_agg[key]["no"] += 1
+
+    return {
+        "package_id": package_id,
+        "overall": {
+            "count": count,
+            "average": average,
+            "criteria": criteria_agg,
+        },
+    }
+
+
 def get_actions():
     return {
         "artesp_theme_dashboard_statistics": artesp_theme_dashboard_statistics,
@@ -239,4 +395,7 @@ def get_actions():
         "package_collaborator_create": package_collaborator_create,
         "artesp_theme_get_sum": artesp_theme_get_sum,
         "user_update": user_update,
+        "dataset_rating_upsert": dataset_rating_upsert,
+        "dataset_rating_show": dataset_rating_show,
+        "dataset_rating_summary": dataset_rating_summary,
     }

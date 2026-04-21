@@ -18,6 +18,9 @@ Example:
             {% block heading %}
               <h1 class="heading">{{ h.dataset_display_name(pkg) }}</h1>
             {% endblock %}
+
+            {% snippet 'package/snippets/rating.html', pkg=pkg %}
+
             {% block nums %}
               {% set num_followers = h.follow_count('dataset', pkg.id) %}
               <div class="nums">

@@ -13,6 +13,14 @@ from ckanext.artesp_theme.logic import dashboard_statistics
 
 log = logging.getLogger(__name__)
 
+RATING_COMMENT_ALTCHA_CONFIG_KEY = "ckanext.artesp.rating.altcha_hmac_secret"
+RATING_COMMENT_ALTCHA_SCRIPT_URL = (
+    "https://cdn.jsdelivr.net/npm/altcha@3.0.4/dist/main/altcha.i18n.min.js"
+)
+RATING_COMMENT_ALTCHA_STYLESHEET_URL = (
+    "https://cdn.jsdelivr.net/npm/altcha@3.0.4/dist/external/altcha.min.css"
+)
+
 def artesp_theme_hello():
     return "Hello, artesp_theme!"
 
@@ -270,6 +278,48 @@ def artesp_is_user_external(user_dict):
     return (plugin_extras or {}).get("artesp", {}).get("user_type") == "external"
 
 
+def get_dataset_rating_summary(package_id: str) -> dict:
+    import ckan.plugins.toolkit as tk
+    try:
+        return tk.get_action("dataset_rating_summary")({}, {"package_id": package_id})
+    except Exception:
+        return {
+            "package_id": package_id,
+            "overall": {"count": 0, "average": None, "criteria": {}},
+        }
+
+
+def get_current_user_dataset_rating(package_id: str) -> dict | None:
+    import ckan.plugins.toolkit as tk
+    from ckan.common import current_user
+    if not getattr(current_user, "is_authenticated", False):
+        return None
+    try:
+        return tk.get_action("dataset_rating_show")(
+            {"user": current_user.name}, {"package_id": package_id}
+        )
+    except Exception:
+        return None
+
+
+def rating_comment_captcha_enabled() -> bool:
+    return bool((toolkit.config.get(RATING_COMMENT_ALTCHA_CONFIG_KEY) or "").strip())
+
+
+def get_rating_comment_captcha_challenge_url() -> str | None:
+    if not rating_comment_captcha_enabled():
+        return None
+    return toolkit.url_for("artesp_theme.rating_comment_captcha_challenge")
+
+
+def get_rating_comment_captcha_script_url() -> str:
+    return RATING_COMMENT_ALTCHA_SCRIPT_URL
+
+
+def get_rating_comment_captcha_stylesheet_url() -> str:
+    return RATING_COMMENT_ALTCHA_STYLESHEET_URL
+
+
 def get_helpers():
     return {
         "artesp_theme_hello": artesp_theme_hello,
@@ -291,4 +341,10 @@ def get_helpers():
         "fix_fontawesome_icon": fix_fontawesome_icon,
         "get_artesp_organization": get_artesp_organization,
         "get_default_dataset_collaborator_capacity": get_default_dataset_collaborator_capacity,
+        "get_dataset_rating_summary": get_dataset_rating_summary,
+        "get_current_user_dataset_rating": get_current_user_dataset_rating,
+        "rating_comment_captcha_enabled": rating_comment_captcha_enabled,
+        "get_rating_comment_captcha_challenge_url": get_rating_comment_captcha_challenge_url,
+        "get_rating_comment_captcha_script_url": get_rating_comment_captcha_script_url,
+        "get_rating_comment_captcha_stylesheet_url": get_rating_comment_captcha_stylesheet_url,
     }
