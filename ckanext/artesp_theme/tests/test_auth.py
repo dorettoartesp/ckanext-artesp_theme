@@ -689,3 +689,325 @@ def test_self_removal_is_blocked_when_it_would_orphan_collaborator_governance():
         id=package["id"],
         user_id=collaborator_admin["id"],
     )
+
+
+# ---------------------------------------------------------------------------
+# Additional coverage for missing branches
+# ---------------------------------------------------------------------------
+
+def test_package_create_sysadmin_is_allowed_directly():
+    """Line 43: sysadmin allow path in package_create."""
+    factories.Organization(name="artesp")
+    sysadmin = factories.Sysadmin()
+
+    result = test_helpers.call_auth(
+        "package_create",
+        context=_auth_context(sysadmin),
+    )
+    assert result  # call_auth returns True or dict with success
+
+
+def test_package_create_denied_when_artesp_org_missing(monkeypatch):
+    """Line 51: deny when ARTESP org does not exist."""
+    from ckanext.artesp_theme.logic import auth as artesp_auth
+    from ckanext.artesp_theme.logic import auth_helpers
+
+    regular_user = factories.User()
+    user_obj = model.User.get(regular_user["name"])
+
+    monkeypatch.setattr(auth_helpers, "get_artesp_org", lambda: None)
+
+    result = artesp_auth.package_create(
+        {"model": model, "auth_user_obj": user_obj},
+        {"owner_org": "artesp"},
+    )
+    assert result["success"] is False
+    assert "ARTESP" in result["msg"] or "organization" in result["msg"].lower()
+
+
+def test_sysadmin_only_management_operation_denies_valid_non_sysadmin():
+    """Line 119: _sysadmin_only_management_operation denies a regular (valid) user."""
+    regular_user = factories.User()
+    _assert_auth_denied(regular_user, "organization_create")
+
+
+def test_dataset_rating_upsert_denies_anonymous():
+    """Line 210: dataset_rating_upsert with no user context."""
+    from ckanext.artesp_theme.logic import auth as artesp_auth
+
+    result = artesp_auth.dataset_rating_upsert({"model": model})
+    assert result["success"] is False
+
+
+def test_authorize_package_operation_sysadmin_allowed():
+    """Line 266: _authorize_package_operation allows sysadmin."""
+    artesp_org = factories.Organization(name="artesp")
+    creator = factories.User()
+    sysadmin = factories.Sysadmin()
+
+    package = _create_dataset_as(creator, artesp_org["id"])
+    result = test_helpers.call_auth(
+        "package_update",
+        context=_auth_context(sysadmin),
+        id=package["id"],
+    )
+    assert result  # sysadmin is allowed
+
+
+def test_authorize_package_operation_denies_no_id():
+    """Line 277: _authorize_package_operation with no data_dict id."""
+    regular_user = factories.User()
+    _assert_auth_denied(regular_user, "package_update")
+
+
+def test_authorize_package_operation_denies_non_artesp_dataset():
+    """Line 284: _authorize_package_operation when package not in artesp org."""
+    factories.Organization(name="artesp")
+    other_org = factories.Organization(name="other-org-x")
+    creator = factories.User()
+
+    # Create dataset at model level to bypass the custom action restriction
+    other_org_obj = model.Group.get(other_org["id"])
+    pkg = model.Package(
+        name=_unique_name("other-ds"),
+        title="Other org dataset",
+        owner_org=other_org_obj.id,
+        state="active",
+    )
+    model.Session.add(pkg)
+    model.Session.commit()
+
+    _assert_auth_denied(creator, "package_update", id=pkg.id)
+
+
+def test_authorize_package_operation_denies_moving_outside_artesp():
+    """Line 291: deny when owner_org is changed to non-artesp org."""
+    artesp_org = factories.Organization(name="artesp")
+    other_org = factories.Organization(name="other-move")
+    creator = factories.User()
+    package = _create_dataset_as(creator, artesp_org["id"])
+
+    # creator tries to move to other org
+    result = artesp_auth.package_update(
+        {"model": model, "auth_user_obj": model.User.get(creator["name"])},
+        {"id": package["id"], "owner_org": other_org["id"]},
+    )
+    assert result["success"] is False
+
+
+def test_authorize_resource_operation_sysadmin_allowed():
+    """Line 315: _authorize_resource_operation allows sysadmin."""
+    artesp_org = factories.Organization(name="artesp")
+    creator = factories.User()
+    sysadmin = factories.Sysadmin()
+
+    package = _create_dataset_as(creator, artesp_org["id"])
+    resource = _create_resource_as(creator, package)
+
+    result = test_helpers.call_auth(
+        "resource_update",
+        context=_auth_context(sysadmin),
+        id=resource["id"],
+    )
+    assert result  # sysadmin is allowed
+
+
+def test_authorize_resource_operation_denies_missing_parent_dataset(monkeypatch):
+    """Line 335: deny when parent dataset cannot be resolved."""
+    from ckanext.artesp_theme.logic import auth as artesp_auth
+    from ckanext.artesp_theme.logic import auth_helpers
+
+    regular_user = factories.User()
+    user_obj = model.User.get(regular_user["name"])
+
+    # resource_create path — package_id that resolves to nothing
+    result = artesp_auth.resource_create(
+        {"model": model, "auth_user_obj": user_obj},
+        {"package_id": "nonexistent-package-id"},
+    )
+    assert result["success"] is False
+
+
+def test_authorize_resource_operation_denies_non_artesp_resource():
+    """Line 338: deny when resource belongs to non-artesp dataset."""
+    factories.Organization(name="artesp")
+    other_org = factories.Organization(name="other-res-org")
+    creator = factories.User()
+
+    # Create package at model level to bypass custom action restriction
+    other_org_obj = model.Group.get(other_org["id"])
+    pkg = model.Package(
+        name=_unique_name("other-res-ds"),
+        title="Other org dataset for resource",
+        owner_org=other_org_obj.id,
+        state="active",
+    )
+    model.Session.add(pkg)
+    model.Session.commit()
+
+    resource = toolkit.get_action("resource_create")(
+        {"ignore_auth": True},
+        {
+            "package_id": pkg.id,
+            "name": _unique_name("resource"),
+            "url": "https://example.com/res.csv",
+        },
+    )
+
+    _assert_auth_denied(creator, "resource_update", id=resource["id"])
+
+
+def test_authorize_collaborator_operation_sysadmin_allowed():
+    """Line 368: _authorize_collaborator_operation allows sysadmin."""
+    artesp_org = factories.Organization(name="artesp")
+    creator = factories.User()
+    sysadmin = factories.Sysadmin()
+
+    package = _create_dataset_as(creator, artesp_org["id"])
+
+    result = test_helpers.call_auth(
+        "package_collaborator_list",
+        context=_auth_context(sysadmin),
+        id=package["id"],
+    )
+    assert result  # sysadmin is allowed
+
+
+def test_authorize_collaborator_operation_denies_no_id():
+    """Line 382: deny when no dataset id."""
+    regular_user = factories.User()
+    _assert_auth_denied(regular_user, "package_collaborator_list")
+
+
+def test_authorize_collaborator_operation_denies_non_artesp_dataset():
+    """Line 389: deny when dataset not in artesp org."""
+    factories.Organization(name="artesp")
+    other_org = factories.Organization(name="other-collab-org")
+    creator = factories.User()
+
+    other_org_obj = model.Group.get(other_org["id"])
+    pkg = model.Package(
+        name=_unique_name("other-collab-ds"),
+        title="Other org for collaborators",
+        owner_org=other_org_obj.id,
+        state="active",
+    )
+    model.Session.add(pkg)
+    model.Session.commit()
+
+    _assert_auth_denied(creator, "package_collaborator_list", id=pkg.id)
+
+
+def test_validate_requested_capacity_sysadmin_no_capacity_is_denied():
+    """Lines 401, 403: sysadmin with no capacity set → deny."""
+    artesp_org = factories.Organization(name="artesp")
+    creator = factories.User()
+    sysadmin = factories.Sysadmin()
+    collaborator = factories.User()
+
+    package = _create_dataset_as(creator, artesp_org["id"])
+
+    # sysadmin trying to add collaborator without capacity
+    with pytest.raises(toolkit.ValidationError):
+        _call_action_as(
+            sysadmin,
+            "package_collaborator_create",
+            id=package["id"],
+            user_id=collaborator["id"],
+            # no capacity
+        )
+
+
+def test_validate_requested_capacity_invalid_capacity_is_denied():
+    """Lines 405-407: invalid capacity string."""
+    artesp_org = factories.Organization(name="artesp")
+    creator = factories.User()
+
+    package = _create_dataset_as(creator, artesp_org["id"])
+    other_user = factories.User()
+
+    with pytest.raises((toolkit.NotAuthorized, toolkit.ValidationError)):
+        _call_action_as(
+            creator,
+            "package_collaborator_create",
+            id=package["id"],
+            user_id=other_user["id"],
+            capacity="superuser",  # invalid capacity
+        )
+
+
+def test_validate_requested_capacity_non_default_role_denied_for_non_sysadmin():
+    """Line 412: non-sysadmin cannot change from default capacity."""
+    artesp_org = factories.Organization(name="artesp")
+    creator = factories.User()
+    collaborator = factories.User()
+
+    package = _create_dataset_as(creator, artesp_org["id"])
+
+    # creator trying to add with non-default "member" capacity (default is "editor")
+    with pytest.raises(toolkit.NotAuthorized):
+        _call_action_as(
+            creator,
+            "package_collaborator_create",
+            id=package["id"],
+            user_id=collaborator["id"],
+            capacity="member",
+        )
+
+
+def test_target_user_not_found_is_denied():
+    """Line 418: target user not found — auth denies when target user doesn't exist."""
+    artesp_org = factories.Organization(name="artesp")
+    creator = factories.User()
+
+    package = _create_dataset_as(creator, artesp_org["id"])
+
+    # Call auth directly (bypasses normalize which tries LDAP)
+    result = artesp_auth.package_collaborator_create(
+        _auth_context(creator),
+        {"id": package["id"], "user_id": "nonexistent-user-id-xyz"},
+    )
+    assert result["success"] is False
+
+
+def test_existing_collaborator_non_sysadmin_cannot_change_role():
+    """Line 427: existing collaborator + non-sysadmin cannot change role."""
+    artesp_org = factories.Organization(name="artesp")
+    creator = factories.User()
+    collaborator = factories.User()
+
+    package = _create_dataset_as(creator, artesp_org["id"])
+    # Add collaborator as default (editor)
+    _call_action_as(
+        creator,
+        "package_collaborator_create",
+        id=package["id"],
+        user_id=collaborator["id"],
+    )
+
+    # Try to re-add (change role) — non-sysadmin cannot change
+    with pytest.raises(toolkit.NotAuthorized):
+        _call_action_as(
+            creator,
+            "package_collaborator_create",
+            id=package["id"],
+            user_id=collaborator["id"],
+        )
+
+
+def test_require_existing_collaborator_not_found_is_denied():
+    """Line 432: require_existing_collaborator but collaborator not found."""
+    artesp_org = factories.Organization(name="artesp")
+    creator = factories.User()
+    non_collaborator = factories.User()
+
+    package = _create_dataset_as(creator, artesp_org["id"])
+
+    # Try to delete a collaborator that doesn't exist
+    with pytest.raises(toolkit.NotAuthorized):
+        _call_action_as(
+            creator,
+            "package_collaborator_delete",
+            id=package["id"],
+            user_id=non_collaborator["id"],
+        )

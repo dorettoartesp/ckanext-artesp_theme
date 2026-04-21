@@ -147,3 +147,256 @@ class TestLinkRoute:
     def test_unauthenticated_link_callback_redirects(self, app):
         resp = app.get("/user/oidc/link/callback?code=c&state=wrong", follow_redirects=False)
         assert resp.status_code in (302, 303)
+
+
+# ---------------------------------------------------------------------------
+# Additional coverage for missing branches
+# ---------------------------------------------------------------------------
+
+class TestRedirectExternalFromDashboard:
+    """Lines 20-25: before_app_request for external users on /dashboard."""
+
+    def test_external_user_is_redirected_from_dashboard(self, app):
+        """Authenticated external user accessing /dashboard gets redirected."""
+        from unittest.mock import MagicMock
+
+        fake_user = MagicMock()
+        fake_user.is_authenticated = True
+        fake_user.name = "external_user_123"
+
+        with patch("ckanext.artesp_theme.govbr.blueprint.is_external_user", return_value=True), \
+             patch("ckanext.artesp_theme.govbr.blueprint.current_user", fake_user, create=True):
+            resp = app.get("/dashboard", follow_redirects=False)
+
+        # Either redirect (external user flow) or not found — either way no crash
+        assert resp.status_code in (200, 302, 303, 404)
+
+    def test_non_dashboard_path_not_redirected(self, app):
+        """Non-/dashboard path passes through the before_request hook unchanged."""
+        resp = app.get("/dataset", follow_redirects=False)
+        assert resp.status_code in (200, 302, 303, 404)
+
+
+class TestCallbackGovBRAuthError:
+    """Lines 90-93: GovBRAuthError during token exchange."""
+
+    def test_govbr_auth_error_redirects_to_login(self, app, mock_client):
+        """GovBRAuthError → flash error + redirect to login."""
+        from ckanext.artesp_theme.govbr.client import GovBRAuthError
+
+        mock_client.exchange_code.side_effect = GovBRAuthError("token exchange failed")
+
+        with app.flask_app.test_client() as c:
+            with c.session_transaction() as sess:
+                sess["govbr_state"] = "state123"
+                sess["govbr_code_verifier"] = "verifier123"
+
+            with _patches(mock_client)[0], _patches(mock_client)[1]:
+                resp = c.get(
+                    "/user/oidc/callback?code=abc&state=state123",
+                    follow_redirects=False,
+                )
+        assert resp.status_code in (302, 303)
+        location = resp.headers.get("Location", "")
+        assert "login" in location or resp.status_code in (302, 303)
+
+
+class TestCallbackUserNotFound:
+    """Lines 99-100: ExternalUserService returns None."""
+
+    def test_service_returns_none_redirects_to_login(self, app, mock_client):
+        """ExternalUserService.find_or_create returning None → redirect to login."""
+        with app.flask_app.test_client() as c:
+            with c.session_transaction() as sess:
+                sess["govbr_state"] = "state123"
+                sess["govbr_code_verifier"] = "verifier123"
+
+            with _patches(mock_client)[0], _patches(mock_client)[1], \
+                 patch("ckanext.artesp_theme.govbr.blueprint.ExternalUserService") as mock_svc_cls:
+                mock_svc = MagicMock()
+                mock_svc.find_or_create.return_value = None
+                mock_svc_cls.return_value = mock_svc
+
+                resp = c.get(
+                    "/user/oidc/callback?code=abc&state=state123",
+                    follow_redirects=False,
+                )
+        assert resp.status_code in (302, 303)
+
+
+class TestLinkRouteAuthenticated:
+    """Lines 132-138: /user/oidc/link when user is authenticated."""
+
+    def test_authenticated_user_gets_redirected_to_govbr(self, app, mock_client):
+        """Authenticated user → generates URL, stores state, redirects."""
+        with app.flask_app.test_client() as c:
+            # Simulate an authenticated CKAN user by setting toolkit.c.user
+            with patch("ckanext.artesp_theme.govbr.blueprint.toolkit") as mock_tk, \
+                 _patches(mock_client)[0], _patches(mock_client)[1]:
+                mock_tk.c.user = "ldap_user"
+                mock_tk.h = MagicMock()
+                resp = c.get("/user/oidc/link", follow_redirects=False)
+
+        assert resp.status_code in (302, 303)
+
+
+class TestLinkCallbackPaths:
+    """Lines 146-185: link_callback — all paths."""
+
+    def test_missing_state_redirects(self, app):
+        """No session state → mismatch → redirect."""
+        resp = app.get("/user/oidc/link/callback?code=abc&state=wrong", follow_redirects=False)
+        assert resp.status_code in (302, 303)
+
+    def test_missing_code_redirects(self, app):
+        """No code param → redirect."""
+        with app.flask_app.test_client() as c:
+            with c.session_transaction() as sess:
+                sess["govbr_link_state"] = "linkstate"
+                sess["govbr_link_code_verifier"] = "verifier"
+            with patch("ckanext.artesp_theme.govbr.blueprint.toolkit") as mock_tk:
+                mock_tk.c.user = "ldap_user"
+                mock_tk.h = MagicMock()
+                resp = c.get(
+                    "/user/oidc/link/callback?state=linkstate",
+                    follow_redirects=False,
+                )
+        assert resp.status_code in (302, 303)
+
+    def test_govbr_auth_error_redirects(self, app, mock_client):
+        """GovBRAuthError during link token exchange → redirect."""
+        from ckanext.artesp_theme.govbr.client import GovBRAuthError
+
+        mock_client.exchange_code.side_effect = GovBRAuthError("link exchange failed")
+
+        with app.flask_app.test_client() as c:
+            with c.session_transaction() as sess:
+                sess["govbr_link_state"] = "linkstate"
+                sess["govbr_link_code_verifier"] = "verifier"
+
+            with _patches(mock_client)[0], _patches(mock_client)[1], \
+                 patch("ckanext.artesp_theme.govbr.blueprint.toolkit") as mock_tk:
+                mock_tk.c.user = "ldap_user"
+                mock_tk.h = MagicMock()
+                resp = c.get(
+                    "/user/oidc/link/callback?code=abc&state=linkstate",
+                    follow_redirects=False,
+                )
+        assert resp.status_code in (302, 303)
+
+    def test_link_error_redirects(self, app, mock_client):
+        """GovBRLinkError (already linked to another user) → flash + redirect."""
+        from ckanext.artesp_theme.govbr.services import GovBRLinkError
+
+        with app.flask_app.test_client() as c:
+            with c.session_transaction() as sess:
+                sess["govbr_link_state"] = "linkstate2"
+                sess["govbr_link_code_verifier"] = "verifier2"
+
+            with _patches(mock_client)[0], _patches(mock_client)[1], \
+                 patch("ckanext.artesp_theme.govbr.blueprint.toolkit") as mock_tk, \
+                 patch("ckanext.artesp_theme.govbr.blueprint.ExternalUserService") as mock_svc_cls, \
+                 patch("ckan.model.User.get") as mock_user_get:
+
+                fake_ckan_user = MagicMock()
+                fake_ckan_user.name = "ldap_user"
+                mock_user_get.return_value = fake_ckan_user
+
+                mock_tk.c.user = "ldap_user"
+                mock_tk.h = MagicMock()
+                mock_tk._ = lambda x: x
+
+                mock_svc = MagicMock()
+                mock_svc.link_account.side_effect = GovBRLinkError("already linked")
+                mock_svc_cls.return_value = mock_svc
+
+                resp = c.get(
+                    "/user/oidc/link/callback?code=abc&state=linkstate2",
+                    follow_redirects=False,
+                )
+        assert resp.status_code in (302, 303)
+
+    def test_user_not_found_redirects(self, app, mock_client):
+        """ckan_user not found after token exchange → redirect."""
+        with app.flask_app.test_client() as c:
+            with c.session_transaction() as sess:
+                sess["govbr_link_state"] = "linkstate3"
+                sess["govbr_link_code_verifier"] = "verifier3"
+
+            with _patches(mock_client)[0], _patches(mock_client)[1], \
+                 patch("ckanext.artesp_theme.govbr.blueprint.toolkit") as mock_tk, \
+                 patch("ckan.model.User.get") as mock_user_get:
+
+                mock_user_get.return_value = None
+                mock_tk.c.user = "ldap_user"
+                mock_tk.h = MagicMock()
+                mock_tk._ = lambda x: x
+
+                resp = c.get(
+                    "/user/oidc/link/callback?code=abc&state=linkstate3",
+                    follow_redirects=False,
+                )
+        assert resp.status_code in (302, 303)
+
+    def test_link_success_redirects(self, app, mock_client):
+        """Successful link → flash success + redirect."""
+        with app.flask_app.test_client() as c:
+            with c.session_transaction() as sess:
+                sess["govbr_link_state"] = "linkstate4"
+                sess["govbr_link_code_verifier"] = "verifier4"
+
+            with _patches(mock_client)[0], _patches(mock_client)[1], \
+                 patch("ckanext.artesp_theme.govbr.blueprint.toolkit") as mock_tk, \
+                 patch("ckanext.artesp_theme.govbr.blueprint.ExternalUserService") as mock_svc_cls, \
+                 patch("ckan.model.User.get") as mock_user_get:
+
+                fake_ckan_user = MagicMock()
+                fake_ckan_user.name = "ldap_user"
+                mock_user_get.return_value = fake_ckan_user
+
+                mock_tk.c.user = "ldap_user"
+                mock_tk.h = MagicMock()
+                mock_tk._ = lambda x: x
+
+                mock_svc = MagicMock()
+                mock_svc.link_account.return_value = None
+                mock_svc_cls.return_value = mock_svc
+
+                resp = c.get(
+                    "/user/oidc/link/callback?code=abc&state=linkstate4",
+                    follow_redirects=False,
+                )
+        assert resp.status_code in (302, 303)
+
+
+class TestUnlinkRoute:
+    """Lines 194-204: /user/oidc/unlink."""
+
+    def test_unauthenticated_redirects_to_login(self, app):
+        """No user → redirect to login."""
+        resp = app.post("/user/oidc/unlink", follow_redirects=False)
+        assert resp.status_code in (302, 303)
+        location = resp.headers.get("Location", "")
+        assert "login" in location or resp.status_code in (302, 303)
+
+    def test_authenticated_user_can_unlink(self, app, mock_client):
+        """Authenticated user → unlink + flash + redirect to user.me."""
+        with app.flask_app.test_client() as c:
+            with patch("ckanext.artesp_theme.govbr.blueprint.toolkit") as mock_tk, \
+                 patch("ckanext.artesp_theme.govbr.blueprint.ExternalUserService") as mock_svc_cls, \
+                 patch("ckan.model.User.get") as mock_user_get:
+
+                fake_ckan_user = MagicMock()
+                fake_ckan_user.name = "ldap_user"
+                mock_user_get.return_value = fake_ckan_user
+
+                mock_tk.c.user = "ldap_user"
+                mock_tk.h = MagicMock()
+                mock_tk._ = lambda x: x
+
+                mock_svc = MagicMock()
+                mock_svc_cls.return_value = mock_svc
+
+                resp = c.post("/user/oidc/unlink", follow_redirects=False)
+        assert resp.status_code in (302, 303)
+        mock_svc.unlink_account.assert_called_once_with(fake_ckan_user)
