@@ -126,39 +126,21 @@ class TestRatingSubmitView:
 
 
 class TestRatingCommentCaptcha:
-    def test_serialize_altcha_challenge_flattens_parameters(self):
-        from ckanext.artesp_theme.controllers import _serialize_altcha_challenge
+    def test_challenge_endpoint_returns_nested_parameters(self):
+        """Challenge JSON must preserve the nested {parameters, signature} structure for PBKDF2."""
+        from datetime import datetime, timezone, timedelta
+        from altcha import create_challenge
 
-        class FakeParameters:
-            def to_dict(self):
-                return {
-                    "algorithm": "PBKDF2/SHA-256",
-                    "cost": 5000,
-                    "keyLength": 32,
-                    "keyPrefix": "00",
-                    "nonce": "nonce-value",
-                    "salt": "salt-value",
-                }
-
-        class FakeChallenge:
-            signature = "signed-payload"
-            parameters = FakeParameters()
-
-            def to_dict(self):
-                return {
-                    "parameters": self.parameters.to_dict(),
-                    "signature": self.signature,
-                }
-
-        assert _serialize_altcha_challenge(FakeChallenge()) == {
-            "algorithm": "PBKDF2/SHA-256",
-            "cost": 5000,
-            "keyLength": 32,
-            "keyPrefix": "00",
-            "nonce": "nonce-value",
-            "salt": "salt-value",
-            "signature": "signed-payload",
-        }
+        challenge = create_challenge(
+            algorithm="PBKDF2/SHA-256",
+            cost=1,
+            expires_at=datetime.now(timezone.utc) + timedelta(minutes=1),
+            hmac_secret="test-secret",
+        )
+        payload = challenge.to_dict()
+        assert "parameters" in payload
+        assert "signature" in payload
+        assert payload["parameters"]["algorithm"] == "PBKDF2/SHA-256"
 
     def test_missing_altcha_config_blocks_comment_submission(self, app_with_user, user, pkg):
         """Commented submissions must fail closed when ALTCHA is not configured."""

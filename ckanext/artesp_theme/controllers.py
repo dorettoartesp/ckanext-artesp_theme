@@ -15,7 +15,7 @@ artesp_theme = Blueprint('artesp_theme', __name__)
 
 RATING_COMMENT_ALTCHA_CONFIG_KEY = "ckanext.artesp.rating.altcha_hmac_secret"
 RATING_COMMENT_ALTCHA_ALGORITHM = "PBKDF2/SHA-256"
-RATING_COMMENT_ALTCHA_COST = 5000
+RATING_COMMENT_ALTCHA_COST = 1
 RATING_COMMENT_ALTCHA_EXPIRES_MINUTES = 10
 
 
@@ -375,67 +375,6 @@ def _get_rating_comment_altcha_secret() -> str:
     return (toolkit.config.get(RATING_COMMENT_ALTCHA_CONFIG_KEY) or "").strip()
 
 
-def _altcha_component_to_dict(component) -> dict:
-    if component is None:
-        return {}
-    if isinstance(component, dict):
-        return dict(component)
-    if hasattr(component, "to_dict"):
-        payload = component.to_dict()
-        if isinstance(payload, dict):
-            return dict(payload)
-    if hasattr(component, "__dict__"):
-        return {
-            key: value
-            for key, value in vars(component).items()
-            if not key.startswith("_") and value is not None
-        }
-    return {}
-
-
-def _serialize_altcha_challenge(challenge) -> dict:
-    raw_challenge = _altcha_component_to_dict(challenge)
-
-    parameters = _altcha_component_to_dict(getattr(challenge, "parameters", None))
-    if not parameters and raw_challenge.get("parameters") is not None:
-        parameters = _altcha_component_to_dict(raw_challenge.get("parameters"))
-    if not parameters and "algorithm" in raw_challenge:
-        parameters = {
-            key: value for key, value in raw_challenge.items() if key != "signature"
-        }
-
-    signature = raw_challenge.get("signature")
-    if signature is None:
-        signature = getattr(challenge, "signature", None)
-
-    if parameters:
-        serialized = dict(parameters)
-        if signature is not None:
-            serialized["signature"] = signature
-        return serialized
-
-    serialized = {}
-    for attr_name, output_name in (
-        ("algorithm", "algorithm"),
-        ("challenge", "challenge"),
-        ("cost", "cost"),
-        ("data", "data"),
-        ("expires", "expires"),
-        ("expires_at", "expiresAt"),
-        ("key_length", "keyLength"),
-        ("key_prefix", "keyPrefix"),
-        ("maxnumber", "maxNumber"),
-        ("max_number", "maxNumber"),
-        ("nonce", "nonce"),
-        ("salt", "salt"),
-        ("signature", "signature"),
-    ):
-        value = getattr(challenge, attr_name, None)
-        if value is not None:
-            serialized[output_name] = value
-    return serialized
-
-
 def _validate_rating_comment_captcha():
     secret = _get_rating_comment_altcha_secret()
     if not secret:
@@ -500,7 +439,7 @@ def rating_comment_captcha_challenge():
         + timedelta(minutes=RATING_COMMENT_ALTCHA_EXPIRES_MINUTES),
         hmac_secret=secret,
     )
-    response = jsonify(_serialize_altcha_challenge(challenge))
+    response = jsonify(challenge.to_dict())
     response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
     return response
 
@@ -542,7 +481,10 @@ def rating_submit(package_name: str):
                 "comment": comment,
             },
         )
-        _flash_success(toolkit._("Your rating was submitted successfully."))
+        _flash_success(toolkit._("Sua avaliação foi enviada com sucesso."))
+        return redirect_to(
+            toolkit.url_for("dataset.read", id=package_name, rating_submitted=1)
+        )
     except toolkit.ValidationError as exc:
         errors = "; ".join(
             v[0] if isinstance(v, list) else str(v)

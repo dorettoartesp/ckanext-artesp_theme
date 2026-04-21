@@ -22,18 +22,25 @@ def send_rating_comment_notifications(package_id: str, rating_id: str) -> None:
         {"ignore_auth": True}, {"id": package_id}
     )
 
+    author = model.User.get(rating.user_id)
+    author_name = (
+        (author.fullname or author.name) if author else tk._("Usuário desconhecido")
+    )
+
     recipients = _resolve_recipients(pkg_dict, rating.user_id)
     if not recipients:
         log.info("rating_notifications job rating=%s recipients=0", rating_id)
         return
 
-    subject = tk._("New rating comment on dataset: {title}").format(
-        title=pkg_dict.get("title") or pkg_dict.get("name")
-    )
+    dataset_title = pkg_dict.get("title") or pkg_dict.get("name")
+    subject = tk._(
+        "Novo comentário de avaliação no conjunto de dados: {title}"
+    ).format(title=dataset_title)
     body = tk._(
-        "A user submitted a rating comment on dataset '{title}':\n\n{comment}"
+        "O usuário {author} enviou um comentário de avaliação no conjunto de dados '{title}':\n\n{comment}"
     ).format(
-        title=pkg_dict.get("title") or pkg_dict.get("name"),
+        author=author_name,
+        title=dataset_title,
         comment=rating.comment,
     )
 

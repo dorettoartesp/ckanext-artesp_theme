@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-artesp_theme 0.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-04-20 11:37+0000\n"
+"POT-Creation-Date: 2026-04-20 22:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,51 +18,64 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.15.0\n"
 
-#: ckanext/artesp_theme/controllers.py:84
+#: ckanext/artesp_theme/controllers.py:91
 msgid ""
 "Conflito de nome de usuário. Por favor, entre em contato com o administrador "
 "do site."
 msgstr ""
 
-#: ckanext/artesp_theme/controllers.py:89 ckanext/artesp_theme/controllers.py:100
-#: ckanext/artesp_theme/controllers.py:104
+#: ckanext/artesp_theme/controllers.py:96 ckanext/artesp_theme/controllers.py:107
+#: ckanext/artesp_theme/controllers.py:111
 msgid "Nome de usuário ou senha incorretos."
 msgstr ""
 
-#: ckanext/artesp_theme/controllers.py:108
+#: ckanext/artesp_theme/controllers.py:115
 msgid "Por favor, insira o nome de usuário e a senha."
 msgstr ""
 
-#: ckanext/artesp_theme/controllers.py:139
+#: ckanext/artesp_theme/controllers.py:146
 msgid "User not found"
 msgstr ""
 
-#: ckanext/artesp_theme/controllers.py:147
+#: ckanext/artesp_theme/controllers.py:154
 msgid "Unable to save collaborator."
 msgstr ""
 
-#: ckanext/artesp_theme/controllers.py:370 ckanext/artesp_theme/views.py:24
+#: ckanext/artesp_theme/controllers.py:381 ckanext/artesp_theme/views.py:24
 msgid "Captcha not configured"
 msgstr ""
 
-#: ckanext/artesp_theme/controllers.py:385 ckanext/artesp_theme/views.py:35
+#: ckanext/artesp_theme/controllers.py:386
+msgid "Captcha verification is required to submit a comment."
+msgstr ""
+
+#: ckanext/artesp_theme/controllers.py:394 ckanext/artesp_theme/controllers.py:415
+#: ckanext/artesp_theme/controllers.py:462 ckanext/artesp_theme/views.py:35
 msgid "Captcha validation failed. Please try again."
 msgstr ""
 
-#: ckanext/artesp_theme/controllers.py:405 ckanext/artesp_theme/views.py:57
-msgid "Your rating was submitted successfully."
+#: ckanext/artesp_theme/controllers.py:484
+msgid "Sua avaliação foi enviada com sucesso."
 msgstr ""
 
-#: ckanext/artesp_theme/controllers.py:411 ckanext/artesp_theme/views.py:63
+#: ckanext/artesp_theme/controllers.py:493 ckanext/artesp_theme/views.py:63
 msgid "Invalid rating: {errors}"
 msgstr ""
 
-#: ckanext/artesp_theme/controllers.py:413 ckanext/artesp_theme/views.py:65
+#: ckanext/artesp_theme/controllers.py:495 ckanext/artesp_theme/views.py:65
 msgid "You are not authorized to rate this dataset."
 msgstr ""
 
-#: ckanext/artesp_theme/controllers.py:432
+#: ckanext/artesp_theme/controllers.py:498
+msgid "Dataset not found or you are not allowed to rate it."
+msgstr ""
+
+#: ckanext/artesp_theme/controllers.py:525
 msgid "You must be logged in to access the statistics page."
+msgstr ""
+
+#: ckanext/artesp_theme/views.py:57
+msgid "Your rating was submitted successfully."
 msgstr ""
 
 #: ckanext/artesp_theme/govbr/blueprint.py:184
@@ -81,7 +94,7 @@ msgstr ""
 msgid "Datasets can only be created in the ARTESP organization."
 msgstr ""
 
-#: ckanext/artesp_theme/logic/action.py:261
+#: ckanext/artesp_theme/logic/action.py:267
 msgid "Must be logged in to rate a dataset."
 msgstr ""
 
@@ -102,13 +115,18 @@ msgstr ""
 msgid "Only sysadmins can change collaborator roles."
 msgstr ""
 
-#: ckanext/artesp_theme/logic/rating_notifications.py:30
-msgid "New rating comment on dataset: {title}"
+#: ckanext/artesp_theme/logic/rating_notifications.py:27
+msgid "Usuário desconhecido"
 msgstr ""
 
-#: ckanext/artesp_theme/logic/rating_notifications.py:33
+#: ckanext/artesp_theme/logic/rating_notifications.py:36
+msgid "Novo comentário de avaliação no conjunto de dados: {title}"
+msgstr ""
+
+#: ckanext/artesp_theme/logic/rating_notifications.py:39
 msgid ""
-"A user submitted a rating comment on dataset '{title}':\n"
+"O usuário {author} enviou um comentário de avaliação no conjunto de dados "
+"'{title}':\n"
 "\n"
 "{comment}"
 msgstr ""
@@ -1935,84 +1953,70 @@ msgstr ""
 msgid "Maintainer Email"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/snippets/rating.html:19
+#: ckanext/artesp_theme/templates/package/snippets/rating.html:15
 msgid "Classificação Geral"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/snippets/rating.html:20
+#: ckanext/artesp_theme/templates/package/snippets/rating.html:16
 msgid "Média das avaliações recebidas"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/snippets/rating.html:37
+#: ckanext/artesp_theme/templates/package/snippets/rating.html:43
 msgid "Como você classifica esse conjunto de dados?"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/snippets/rating.html:38
-msgid "Classificação geral"
-msgstr ""
-
-#: ckanext/artesp_theme/templates/package/snippets/rating.html:44
+#: ckanext/artesp_theme/templates/package/snippets/rating.html:50
 msgid "estrela"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/snippets/rating.html:44
+#: ckanext/artesp_theme/templates/package/snippets/rating.html:50
 msgid "estrelas"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/snippets/rating.html:49
+#: ckanext/artesp_theme/templates/package/snippets/rating.html:57
 msgid "sem classificação enviada."
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/snippets/rating.html:55
+#: ckanext/artesp_theme/templates/package/snippets/rating.html:62
 msgid "Avalie mais pontos"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/snippets/rating.html:58
+#: ckanext/artesp_theme/templates/package/snippets/rating.html:65
 msgid "Os links dos dados funcionam?"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/snippets/rating.html:58
-msgid "Links funcionam"
-msgstr ""
-
-#: ckanext/artesp_theme/templates/package/snippets/rating.html:59
+#: ckanext/artesp_theme/templates/package/snippets/rating.html:66
 msgid "Os dados estão atualizados?"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/snippets/rating.html:59
-msgid "Dados atualizados"
-msgstr ""
-
-#: ckanext/artesp_theme/templates/package/snippets/rating.html:60
+#: ckanext/artesp_theme/templates/package/snippets/rating.html:67
 msgid "Os dados estão bem estruturados?"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/snippets/rating.html:60
-msgid "Bem estruturado"
-msgstr ""
-
-#: ckanext/artesp_theme/templates/package/snippets/rating.html:78
-msgid "Sim"
-msgstr ""
-
-#: ckanext/artesp_theme/templates/package/snippets/rating.html:83
-msgid "Não"
-msgstr ""
-
-#: ckanext/artesp_theme/templates/package/snippets/rating.html:97
+#: ckanext/artesp_theme/templates/package/snippets/rating.html:103
 msgid "Deixe aqui um comentário sobre esse conjunto de dados:"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/snippets/rating.html:105
+#: ckanext/artesp_theme/templates/package/snippets/rating.html:110
+msgid "Se quiser enviar um comentário, conclua a verificação anti-spam."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/rating.html:118
+msgid ""
+"Comentários estão temporariamente indisponíveis até a verificação anti-spam "
+"ser configurada."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/rating.html:123
 msgid "Enviar"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/snippets/rating.html:109
-msgid "Entre"
+#: ckanext/artesp_theme/templates/package/snippets/rating.html:130
+msgid "Cadastre-se ou faça login"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/package/snippets/rating.html:109
-msgid "para avaliar este dataset."
+#: ckanext/artesp_theme/templates/package/snippets/rating.html:130
+msgid "para classificar esse conjunto de dados."
 msgstr ""
 
 #: ckanext/artesp_theme/templates/package/snippets/resource_edit_form.html:12
@@ -4090,7 +4094,7 @@ msgstr ""
 msgid "Username or Email"
 msgstr ""
 
-#: ckanext/artesp_theme/templates/user/snippets/login_form.html:37
+#: ckanext/artesp_theme/templates/user/snippets/login_form.html:33
 msgid "Login"
 msgstr ""
 
