@@ -106,6 +106,40 @@ def test_rating_admin_index_shows_user_role(app, user, pkg):
     assert "Criador" in response.text
 
 
+def test_rating_admin_index_filter_form_renders(app, user, pkg):
+    response = app.get(
+        f"/user/{user['name']}/rating-admin",
+        environ_base={"REMOTE_USER": user["name"]},
+        expect_errors=True,
+    )
+
+    assert response.status_code == 200
+    assert 'name="status"' in response.text
+    assert 'name="rating"' in response.text
+    assert 'name="date_from"' in response.text
+    assert 'name="date_to"' in response.text
+    assert "Limpar filtros" in response.text
+
+
+def test_rating_admin_index_filters_by_rating(app, user, pkg):
+    rater1 = factories.User()
+    rater2 = factories.User()
+    r1 = DatasetRating(user_id=rater1["id"], package_id=pkg["id"], overall_rating=2, comment="baixa")
+    r2 = DatasetRating(user_id=rater2["id"], package_id=pkg["id"], overall_rating=5, comment="alta")
+    model.Session.add_all([r1, r2])
+    model.Session.commit()
+
+    response = app.get(
+        f"/user/{user['name']}/rating-admin?rating=5",
+        environ_base={"REMOTE_USER": user["name"]},
+        expect_errors=True,
+    )
+
+    assert response.status_code == 200
+    assert "alta" in response.text
+    assert "baixa" not in response.text
+
+
 def test_rating_admin_detail_renders_action_history(app, user, pkg):
     rating_author = factories.User()
     rating = DatasetRating(

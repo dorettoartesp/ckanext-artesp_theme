@@ -118,6 +118,78 @@ def test_get_ratings_for_user_includes_dataset_name(monkeypatch):
     assert rows[0]["author_name"] == "Autor Externo"
 
 
+def test_get_ratings_for_user_sorts_by_rating_ascending(monkeypatch):
+    r_low = SimpleNamespace(
+        id="r1", package_id="pkg-1", user_id="u1",
+        overall_rating=2, criteria={}, comment="", status="finalizado",
+        created_at="2026-04-01T10:00:00",
+    )
+    r_high = SimpleNamespace(
+        id="r2", package_id="pkg-1", user_id="u1",
+        overall_rating=5, criteria={}, comment="", status="pendente",
+        created_at="2026-04-02T10:00:00",
+    )
+    package = SimpleNamespace(title="DS", name="ds")
+
+    class FakeQuery:
+        def filter(self, *a, **kw): return self
+        def order_by(self, *a, **kw): return self
+        def all(self): return [r_high, r_low]
+
+    monkeypatch.setattr(rating_admin.model, "Session", SimpleNamespace(query=lambda c: FakeQuery()))
+    monkeypatch.setattr(rating_admin, "_get_editable_package_ids", lambda uid: {"pkg-1"})
+    monkeypatch.setattr(rating_admin, "_get_user_roles_for_packages", lambda uid, pids: {"pkg-1": "Criador"})
+    monkeypatch.setattr(
+        rating_admin.model, "Package",
+        SimpleNamespace(get=lambda pkg_id: package),
+    )
+    monkeypatch.setattr(
+        rating_admin.model, "User",
+        SimpleNamespace(get=lambda uid: SimpleNamespace(fullname="A", name="a")),
+    )
+
+    rows = rating_admin.get_ratings_for_user("manager-1", sort_by="rating", sort_dir="asc")
+
+    assert rows[0]["overall_rating"] == 2
+    assert rows[1]["overall_rating"] == 5
+
+
+def test_get_ratings_for_user_sorts_by_rating_descending(monkeypatch):
+    r_low = SimpleNamespace(
+        id="r1", package_id="pkg-1", user_id="u1",
+        overall_rating=2, criteria={}, comment="", status="finalizado",
+        created_at="2026-04-01T10:00:00",
+    )
+    r_high = SimpleNamespace(
+        id="r2", package_id="pkg-1", user_id="u1",
+        overall_rating=5, criteria={}, comment="", status="pendente",
+        created_at="2026-04-02T10:00:00",
+    )
+    package = SimpleNamespace(title="DS", name="ds")
+
+    class FakeQuery:
+        def filter(self, *a, **kw): return self
+        def order_by(self, *a, **kw): return self
+        def all(self): return [r_low, r_high]
+
+    monkeypatch.setattr(rating_admin.model, "Session", SimpleNamespace(query=lambda c: FakeQuery()))
+    monkeypatch.setattr(rating_admin, "_get_editable_package_ids", lambda uid: {"pkg-1"})
+    monkeypatch.setattr(rating_admin, "_get_user_roles_for_packages", lambda uid, pids: {"pkg-1": "Criador"})
+    monkeypatch.setattr(
+        rating_admin.model, "Package",
+        SimpleNamespace(get=lambda pkg_id: package),
+    )
+    monkeypatch.setattr(
+        rating_admin.model, "User",
+        SimpleNamespace(get=lambda uid: SimpleNamespace(fullname="A", name="a")),
+    )
+
+    rows = rating_admin.get_ratings_for_user("manager-1", sort_by="rating", sort_dir="desc")
+
+    assert rows[0]["overall_rating"] == 5
+    assert rows[1]["overall_rating"] == 2
+
+
 def test_create_action_updates_status(monkeypatch):
     rating = SimpleNamespace(
         id="rating-1",

@@ -503,6 +503,7 @@ def rating_submit(package_name: str):
 
 
 def rating_admin_index(id: str):
+    import urllib.parse
     from ckan.common import current_user
     from ckanext.artesp_theme.logic import rating_admin
     from ckanext.artesp_theme.model import RATING_STATUSES, RATING_STATUS_LABELS
@@ -518,50 +519,73 @@ def rating_admin_index(id: str):
 
     _PER_PAGE = 20
     page = max(1, int((request.args.get("page") or 1)))
-    offset = (page - 1) * _PER_PAGE
 
-    status_filter = (request.args.get("status") or "").strip() or None
+    status_filters = request.args.getlist("status") or None
+    rating_filters_raw = request.args.getlist("rating")
+    rating_filters = [int(r) for r in rating_filters_raw if r.isdigit()] or None
+    date_from = (request.args.get("date_from") or "").strip() or None
+    date_to = (request.args.get("date_to") or "").strip() or None
     dataset_filter = (request.args.get("dataset") or "").strip() or None
+    sort_by = (request.args.get("sort_by") or "").strip() or None
+    sort_dir = request.args.get("sort_dir", "desc")
+    if sort_dir not in ("asc", "desc"):
+        sort_dir = "desc"
 
     all_ratings = rating_admin.get_ratings_for_user(user.id)
     status_counts = {"all": len(all_ratings)}
     for status in RATING_STATUSES:
-        status_counts[status] = sum(
-            1 for rating in all_ratings if rating["status"] == status
-        )
+        status_counts[status] = sum(1 for r in all_ratings if r["status"] == status)
 
-    ratings = rating_admin.get_ratings_for_user(
+    filtered_ratings = rating_admin.get_ratings_for_user(
         user.id,
-        status_filter=status_filter,
+        status_filters=status_filters,
+        rating_filters=rating_filters,
+        date_from=date_from,
+        date_to=date_to,
         dataset_filter=dataset_filter,
-        limit=_PER_PAGE,
-        offset=offset,
+        sort_by=sort_by,
+        sort_dir=sort_dir,
     )
-    total_filtered = len(
-        rating_admin.get_ratings_for_user(
-            user.id,
-            status_filter=status_filter,
-            dataset_filter=dataset_filter,
-        )
-    )
+    total_filtered = len(filtered_ratings)
     total_pages = max(1, (total_filtered + _PER_PAGE - 1) // _PER_PAGE)
+    offset = (page - 1) * _PER_PAGE
+    ratings = filtered_ratings[offset: offset + _PER_PAGE]
 
     editable_packages = rating_admin.get_editable_packages_for_user(user.id)
+
+    filter_params = []
+    for s in (status_filters or []):
+        filter_params.append(("status", s))
+    for r in (rating_filters or []):
+        filter_params.append(("rating", str(r)))
+    if date_from:
+        filter_params.append(("date_from", date_from))
+    if date_to:
+        filter_params.append(("date_to", date_to))
+    if dataset_filter:
+        filter_params.append(("dataset", dataset_filter))
+    if sort_by:
+        filter_params.append(("sort_by", sort_by))
+        filter_params.append(("sort_dir", sort_dir))
+    filter_qs = urllib.parse.urlencode(filter_params)
 
     return render_template(
         "user/rating_admin_index.html",
         user=user,
         ratings=ratings,
-        current_status=status_filter or "all",
+        current_status_filters=status_filters or [],
+        current_rating_filters=[str(r) for r in (rating_filters or [])],
+        current_date_from=date_from or "",
+        current_date_to=date_to or "",
         current_dataset=dataset_filter or "",
+        current_sort_by=sort_by or "",
+        current_sort_dir=sort_dir,
         status_counts=status_counts,
         status_choices=[
-            {"value": "all", "label": toolkit._("Todos")},
-            *[
-                {"value": status, "label": RATING_STATUS_LABELS.get(status, status)}
-                for status in RATING_STATUSES
-            ],
+            {"value": s, "label": RATING_STATUS_LABELS.get(s, s)}
+            for s in RATING_STATUSES
         ],
+        filter_qs=filter_qs,
         page=page,
         total_pages=total_pages,
         editable_packages=editable_packages,

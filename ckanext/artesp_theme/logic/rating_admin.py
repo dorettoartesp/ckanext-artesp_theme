@@ -49,13 +49,28 @@ def get_ratings_for_package(
     ]
 
 
+_SORT_KEYS = {
+    "dataset": lambda r: (r["dataset_name"] or "").lower(),
+    "role": lambda r: (r["user_role"] or "").lower(),
+    "author": lambda r: (r["author_name"] or "").lower(),
+    "rating": lambda r: r["overall_rating"] or 0,
+    "status": lambda r: (r["status"] or "").lower(),
+    "date": lambda r: r["created_at"] or "",
+}
+
+
 def get_ratings_for_user(
     user_id: str,
-    status_filter: str | None = None,
+    status_filters: list[str] | None = None,
+    rating_filters: list[int] | None = None,
+    date_from: str | None = None,
+    date_to: str | None = None,
     dataset_filter: str | None = None,
-    limit: int | None = None,
-    offset: int = 0,
+    sort_by: str | None = None,
+    sort_dir: str = "desc",
 ) -> list[dict]:
+    from datetime import datetime, timedelta
+
     package_ids = _get_editable_package_ids(user_id)
     if not package_ids:
         return []
@@ -72,27 +87,45 @@ def get_ratings_for_user(
     query = model.Session.query(DatasetRating).filter(
         DatasetRating.package_id.in_(package_ids)
     )
-    if status_filter:
-        query = query.filter_by(status=status_filter)
+    if status_filters:
+        query = query.filter(DatasetRating.status.in_(status_filters))
+    if rating_filters:
+        query = query.filter(DatasetRating.overall_rating.in_(rating_filters))
+    if date_from:
+        try:
+            query = query.filter(
+                DatasetRating.created_at >= datetime.strptime(date_from, "%Y-%m-%d")
+            )
+        except ValueError:
+            pass
+    if date_to:
+        try:
+            query = query.filter(
+                DatasetRating.created_at
+                < datetime.strptime(date_to, "%Y-%m-%d") + timedelta(days=1)
+            )
+        except ValueError:
+            pass
 
     query = query.order_by(DatasetRating.created_at.desc())
-    if offset:
-        query = query.offset(offset)
-    if limit is not None:
-        query = query.limit(limit)
-
     ratings = query.all()
+
+    pkg_cache: dict = {}
+
+    def _get_pkg(pkg_id):
+        if pkg_id not in pkg_cache:
+            pkg_cache[pkg_id] = model.Package.get(pkg_id)
+        return pkg_cache[pkg_id]
+
     rows = []
     for rating in ratings:
-        package = model.Package.get(rating.package_id)
+        package = _get_pkg(rating.package_id)
         rows.append(
             {
                 "id": rating.id,
                 "package_id": rating.package_id,
                 "dataset_name": (
-                    (package.title or package.name)
-                    if package
-                    else rating.package_id
+                    (package.title or package.name) if package else rating.package_id
                 ),
                 "dataset_slug": package.name if package else rating.package_id,
                 "user_role": roles.get(rating.package_id, ""),
@@ -113,6 +146,10 @@ def get_ratings_for_user(
                 "created_at": rating.created_at,
             }
         )
+
+    if sort_by and sort_by in _SORT_KEYS:
+        rows.sort(key=_SORT_KEYS[sort_by], reverse=(sort_dir != "asc"))
+
     return rows
 
 
