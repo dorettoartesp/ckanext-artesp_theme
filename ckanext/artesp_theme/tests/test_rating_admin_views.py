@@ -84,6 +84,28 @@ def test_rating_admin_index_renders_for_internal_user(app, user, pkg):
     assert (pkg["title"] or pkg["name"]) in response.text
 
 
+def test_rating_admin_index_shows_user_role(app, user, pkg):
+    rating_author = factories.User()
+    rating = DatasetRating(
+        user_id=rating_author["id"],
+        package_id=pkg["id"],
+        overall_rating=3,
+        comment="Comentário de teste",
+    )
+    model.Session.add(rating)
+    model.Session.commit()
+
+    response = app.get(
+        f"/user/{user['name']}/rating-admin",
+        environ_base={"REMOTE_USER": user["name"]},
+        expect_errors=True,
+    )
+
+    assert response.status_code == 200
+    assert "Papel" in response.text
+    assert "Criador" in response.text
+
+
 def test_rating_admin_detail_renders_action_history(app, user, pkg):
     rating_author = factories.User()
     rating = DatasetRating(

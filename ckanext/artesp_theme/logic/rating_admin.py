@@ -67,6 +67,8 @@ def get_ratings_for_user(
         else:
             return []
 
+    roles = _get_user_roles_for_packages(user_id, package_ids)
+
     query = model.Session.query(DatasetRating).filter(
         DatasetRating.package_id.in_(package_ids)
     )
@@ -93,6 +95,7 @@ def get_ratings_for_user(
                     else rating.package_id
                 ),
                 "dataset_slug": package.name if package else rating.package_id,
+                "user_role": roles.get(rating.package_id, ""),
                 "user_id": rating.user_id,
                 "author_name": _get_user_display_name(rating.user_id),
                 "overall_rating": rating.overall_rating,
@@ -199,6 +202,40 @@ def get_rating_detail(rating_id: str) -> dict:
 
 def _send_action_email(rating, new_status: str, note: str | None) -> bool:
     return False
+
+
+_CAPACITY_LABELS = {
+    "admin": "Administrador",
+    "editor": "Editor",
+}
+
+
+def _get_user_roles_for_packages(user_id: str, package_ids: set[str]) -> dict[str, str]:
+    """Return {package_id: role_label} for the given user and package set."""
+    roles: dict[str, str] = {}
+
+    owned = (
+        model.Session.query(model.Package.id)
+        .filter(model.Package.creator_user_id == user_id)
+        .filter(model.Package.id.in_(package_ids))
+        .all()
+    )
+    for (pkg_id,) in owned:
+        roles[pkg_id] = "Criador"
+
+    if auth_helpers.is_dataset_collaborators_enabled():
+        collaborators = (
+            model.Session.query(model.PackageMember)
+            .filter(model.PackageMember.user_id == user_id)
+            .filter(model.PackageMember.package_id.in_(package_ids))
+            .filter(model.PackageMember.capacity.in_(auth_helpers.EDIT_CAPACITIES))
+            .all()
+        )
+        for collab in collaborators:
+            if collab.package_id not in roles:
+                roles[collab.package_id] = _CAPACITY_LABELS.get(collab.capacity, collab.capacity)
+
+    return roles
 
 
 def _get_editable_package_ids(user_id: str) -> set[str]:

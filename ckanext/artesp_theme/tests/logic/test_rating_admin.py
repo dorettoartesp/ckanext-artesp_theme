@@ -23,6 +23,53 @@ def test_get_ratings_empty(monkeypatch):
     assert rating_admin.get_ratings_for_package("pkg-123") == []
 
 
+def test_get_ratings_for_user_includes_user_role(monkeypatch):
+    rating = SimpleNamespace(
+        id="rating-1",
+        package_id="pkg-123",
+        user_id="author-1",
+        overall_rating=4,
+        criteria={},
+        comment="",
+        status="finalizado",
+        created_at="2026-04-22T10:00:00",
+    )
+    package = SimpleNamespace(title="Dataset de teste", name="dataset-de-teste")
+
+    class FakeQuery:
+        def filter(self, *args, **kwargs):
+            return self
+
+        def filter_by(self, **kwargs):
+            return self
+
+        def order_by(self, *args, **kwargs):
+            return self
+
+        def all(self):
+            return [rating]
+
+    fake_session = SimpleNamespace(query=lambda cls: FakeQuery())
+
+    monkeypatch.setattr(rating_admin.model, "Session", fake_session)
+    monkeypatch.setattr(rating_admin, "_get_editable_package_ids", lambda user_id: {"pkg-123"})
+    monkeypatch.setattr(rating_admin, "_get_user_roles_for_packages", lambda user_id, pkg_ids: {"pkg-123": "Criador"})
+    monkeypatch.setattr(
+        rating_admin.model,
+        "Package",
+        SimpleNamespace(get=lambda package_id: package if package_id == "pkg-123" else None),
+    )
+    monkeypatch.setattr(
+        rating_admin.model,
+        "User",
+        SimpleNamespace(get=lambda user_id: SimpleNamespace(fullname="Autor", name="autor")),
+    )
+
+    rows = rating_admin.get_ratings_for_user("manager-1")
+
+    assert rows[0]["user_role"] == "Criador"
+
+
 def test_get_ratings_for_user_includes_dataset_name(monkeypatch):
     rating = SimpleNamespace(
         id="rating-1",
@@ -53,6 +100,7 @@ def test_get_ratings_for_user_includes_dataset_name(monkeypatch):
 
     monkeypatch.setattr(rating_admin.model, "Session", fake_session)
     monkeypatch.setattr(rating_admin, "_get_editable_package_ids", lambda user_id: {"pkg-123"})
+    monkeypatch.setattr(rating_admin, "_get_user_roles_for_packages", lambda user_id, pkg_ids: {"pkg-123": "Criador"})
     monkeypatch.setattr(
         rating_admin.model,
         "Package",

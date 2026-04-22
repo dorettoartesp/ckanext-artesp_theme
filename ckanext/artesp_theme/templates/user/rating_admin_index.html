@@ -47,6 +47,7 @@
           <thead>
             <tr>
               <th>{{ _("Dataset") }}</th>
+              <th>{{ _("Papel") }}</th>
               <th>{{ _("Autor") }}</th>
               <th>{{ _("Comentário") }}</th>
               <th>{{ _("Nota") }}</th>
@@ -59,6 +60,7 @@
             {% for rating in ratings %}
               <tr>
                 <td>{{ rating.dataset_name }}</td>
+                <td>{{ rating.user_role }}</td>
                 <td>{{ rating.author_name }}</td>
                 <td>{{ rating.comment or '(sem comentário)' }}</td>
                 <td>{{ rating.overall_rating }}</td>
