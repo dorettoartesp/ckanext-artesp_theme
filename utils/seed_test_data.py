@@ -1,7 +1,10 @@
 import argparse
 from dataclasses import dataclass
+import datetime
+import json
 import os
 from typing import Iterable
+import uuid
 
 import ckanapi
 from ckanapi import errors
@@ -24,6 +27,7 @@ class SeedConfig:
     heavy_dataset_resources: int
     heavy_dataset_slug: str
     skip_heavy_dataset: bool
+    rating_users_count: int
 
 
 def parse_args() -> SeedConfig:
@@ -97,6 +101,12 @@ def parse_args() -> SeedConfig:
         action="store_true",
         help="Nao cria o dataset pesado com muitos recursos.",
     )
+    parser.add_argument(
+        "--rating-users-count",
+        type=int,
+        default=3,
+        help="Quantidade de usuarios de teste que avaliam cada dataset. 0 para nao criar ratings.",
+    )
 
     args = parser.parse_args()
 
@@ -155,6 +165,7 @@ def parse_args() -> SeedConfig:
         heavy_dataset_resources=args.heavy_dataset_resources,
         heavy_dataset_slug=slugify(args.heavy_dataset_slug),
         skip_heavy_dataset=args.skip_heavy_dataset,
+        rating_users_count=max(0, args.rating_users_count),
     )
 
 
@@ -410,9 +421,10 @@ def seed_regular_datasets(
     config: SeedConfig,
     organizations: list[str],
     groups: list[str],
-) -> tuple[int, int]:
+) -> tuple[int, int, list[dict]]:
     dataset_count = 0
     resource_count = 0
+    datasets = []
 
     for dataset_index in range(config.dataset_count):
         organization_name = cycle_pick(organizations, dataset_index)
@@ -424,6 +436,7 @@ def seed_regular_datasets(
             group_name=group_name,
         )
         dataset = ensure_dataset(ckan, payload)
+        datasets.append(dataset)
         dataset_count += 1
         resource_count += ensure_resources(
             ckan=ckan,
@@ -432,7 +445,7 @@ def seed_regular_datasets(
             desired_count=config.resources_per_dataset,
         )
 
-    return dataset_count, resource_count
+    return dataset_count, resource_count, datasets
 
 
 def seed_heavy_dataset(
@@ -440,9 +453,9 @@ def seed_heavy_dataset(
     config: SeedConfig,
     organization_name: str,
     group_name: str,
-) -> tuple[int, int]:
+) -> tuple[int, int, list[dict]]:
     if config.skip_heavy_dataset:
-        return 0, 0
+        return 0, 0, []
 
     payload = build_heavy_dataset_payload(
         config=config,
@@ -456,7 +469,126 @@ def seed_heavy_dataset(
         package_name=payload["name"],
         desired_count=config.heavy_dataset_resources,
     )
-    return 1, resource_count
+    return 1, resource_count, [dataset]
+
+
+_RATING_OVERALL = [5, 4, 3, 4, 2, 5, 3, 1, 4, 5]
+_RATING_CRITERIA = [
+    {"links_work": True,  "up_to_date": True,  "well_structured": True},
+    {"links_work": True,  "up_to_date": False, "well_structured": True},
+    {"links_work": False, "up_to_date": True,  "well_structured": False},
+    {"links_work": True,  "up_to_date": True},
+    {},
+]
+_RATING_COMMENTS = [
+    "Dados muito úteis para análise de tráfego.",
+    "Boa organização, mas os links poderiam ser mais estáveis.",
+    "",
+    "Excelente conjunto de dados, bem estruturado.",
+    "",
+    "Informações atualizadas e fáceis de usar.",
+    "",
+]
+
+
+def ensure_rating_user(
+    ckan: ckanapi.RemoteCKAN,
+    username: str,
+    email: str,
+) -> dict:
+    try:
+        user = ckan.action.user_show(id=username)
+        print(f"Usuário de rating existente: {username}")
+        return user
+    except errors.NotFound:
+        pass
+    user = ckan.action.user_create(
+        name=username,
+        email=email,
+        password="SeedPassword123!",
+        fullname=f"Avaliador Seed {username}",
+    )
+    print(f"Usuário de rating criado: {username}")
+    return user
+
+
+def seed_rating_users(
+    ckan: ckanapi.RemoteCKAN,
+    config: SeedConfig,
+) -> list[dict]:
+    users = []
+    for i in range(config.rating_users_count):
+        username = f"{config.prefix}-rater-{i + 1:02d}"
+        email = f"{config.prefix}-rater-{i + 1:02d}@seed.example.com"
+        user = ensure_rating_user(ckan, username, email)
+        users.append({"id": user["id"], "name": username})
+    return users
+
+
+def seed_ratings(
+    datasets: list[dict],
+    rating_users: list[dict],
+) -> int:
+    db_url = os.environ.get("CKAN_SQLALCHEMY_URL", "")
+    if not db_url:
+        print("  AVISO: CKAN_SQLALCHEMY_URL nao definido — ratings nao inseridos.")
+        return 0
+
+    try:
+        from sqlalchemy import create_engine, text
+    except ImportError:
+        print("  AVISO: sqlalchemy nao disponivel — ratings nao inseridos.")
+        return 0
+
+    engine = create_engine(db_url)
+    now = datetime.datetime.utcnow()
+    count = 0
+
+    with engine.begin() as conn:
+        for ds_index, dataset in enumerate(datasets):
+            pkg_id = dataset.get("id")
+            if not pkg_id:
+                continue
+            for user_index, user in enumerate(rating_users):
+                user_id = user["id"]
+                existing = conn.execute(
+                    text(
+                        "SELECT id FROM dataset_rating"
+                        " WHERE user_id = :uid AND package_id = :pid"
+                    ),
+                    {"uid": user_id, "pid": pkg_id},
+                ).first()
+                if existing:
+                    continue
+
+                slot = (ds_index * len(rating_users) + user_index)
+                overall_rating = _RATING_OVERALL[slot % len(_RATING_OVERALL)]
+                criteria = _RATING_CRITERIA[slot % len(_RATING_CRITERIA)]
+                comment = _RATING_COMMENTS[slot % len(_RATING_COMMENTS)]
+
+                conn.execute(
+                    text(
+                        "INSERT INTO dataset_rating"
+                        " (id, user_id, package_id, overall_rating, criteria, comment, created_at, updated_at)"
+                        " VALUES (:id, :uid, :pid, :rating, :criteria, :comment, :now, :now)"
+                    ),
+                    {
+                        "id": str(uuid.uuid4()),
+                        "uid": user_id,
+                        "pid": pkg_id,
+                        "rating": overall_rating,
+                        "criteria": json.dumps(criteria),
+                        "comment": comment,
+                        "now": now,
+                    },
+                )
+                count += 1
+                print(
+                    f"  Rating criado: {dataset.get('name')} <- {user['name']}"
+                    f" (nota {overall_rating})"
+                )
+
+    return count
 
 
 def print_summary(
@@ -466,6 +598,7 @@ def print_summary(
     regular_resources_created: int,
     heavy_dataset_count: int,
     heavy_resources_created: int,
+    ratings_created: int = 0,
 ) -> None:
     print("")
     print("Resumo da carga:")
@@ -475,6 +608,7 @@ def print_summary(
     print(f"  Recursos regulares criados agora: {regular_resources_created}")
     print(f"  Datasets pesados processados: {heavy_dataset_count}")
     print(f"  Recursos do dataset pesado criados agora: {heavy_resources_created}")
+    print(f"  Ratings criados agora: {ratings_created}")
 
 
 def seed_data(config: SeedConfig) -> None:
@@ -508,19 +642,26 @@ def seed_data(config: SeedConfig) -> None:
         else organizations
     )
 
-    regular_dataset_count, regular_resources_created = seed_regular_datasets(
+    regular_dataset_count, regular_resources_created, regular_datasets = seed_regular_datasets(
         ckan=ckan,
         config=config,
         organizations=dataset_organizations,
         groups=groups,
     )
 
-    heavy_dataset_count, heavy_resources_created = seed_heavy_dataset(
+    heavy_dataset_count, heavy_resources_created, heavy_datasets = seed_heavy_dataset(
         ckan=ckan,
         config=config,
         organization_name=cycle_pick(dataset_organizations, 0),
         group_name=cycle_pick(groups, 0),
     )
+
+    ratings_created = 0
+    if config.rating_users_count > 0:
+        print("\nCriando usuários e ratings de teste...")
+        all_datasets = regular_datasets + heavy_datasets
+        rating_users = seed_rating_users(ckan=ckan, config=config)
+        ratings_created = seed_ratings(datasets=all_datasets, rating_users=rating_users)
 
     print_summary(
         organizations=organizations,
@@ -529,6 +670,7 @@ def seed_data(config: SeedConfig) -> None:
         regular_resources_created=regular_resources_created,
         heavy_dataset_count=heavy_dataset_count,
         heavy_resources_created=heavy_resources_created,
+        ratings_created=ratings_created,
     )
 
 

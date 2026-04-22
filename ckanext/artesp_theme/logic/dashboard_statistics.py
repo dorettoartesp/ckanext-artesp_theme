@@ -157,6 +157,95 @@ def _available_theme_options(groups, datasets):
     return options
 
 
+def _get_rating_stats(package_ids, dataset_lookup):
+    from ckanext.artesp_theme.model import DatasetRating
+    from ckanext.artesp_theme.logic.rating import RATING_CRITERIA
+    import ckan.model as ckan_model
+
+    if not package_ids:
+        return _empty_rating_stats()
+
+    try:
+        ratings = (
+            ckan_model.Session.query(DatasetRating)
+            .filter(DatasetRating.package_id.in_(package_ids))
+            .all()
+        )
+    except Exception:
+        ckan_model.Session.rollback()
+        return _empty_rating_stats()
+
+    if not ratings:
+        return _empty_rating_stats()
+
+    total = len(ratings)
+    average = round(float(sum(r.overall_rating for r in ratings)) / float(total), 2)
+
+    criteria_yes = {k: 0 for k in RATING_CRITERIA}
+    criteria_total = {k: 0 for k in RATING_CRITERIA}
+    for r in ratings:
+        for key in RATING_CRITERIA:
+            if r.criteria and key in r.criteria:
+                criteria_total[key] += 1
+                if r.criteria[key]:
+                    criteria_yes[key] += 1
+
+    criteria_pct = {
+        key: round(float(criteria_yes[key]) / float(criteria_total[key]) * 100.0, 1)
+        if criteria_total[key]
+        else None
+        for key in RATING_CRITERIA
+    }
+
+    pkg_scores = {}
+    for r in ratings:
+        pkg_scores.setdefault(r.package_id, []).append(r.overall_rating)
+
+    top_rated = []
+    for pkg_id, scores in pkg_scores.items():
+        ds = dataset_lookup.get(pkg_id)
+        if not ds:
+            continue
+        groups_for_dataset = ds.get("groups", [])
+        sorted_groups = sorted(
+            filter(None, (_group_label(g) for g in groups_for_dataset)),
+            key=lambda v: v.lower(),
+        )
+        theme = sorted_groups[0] if sorted_groups else "Sem grupo"
+        avg = round(float(sum(scores)) / float(len(scores)), 2)
+        top_rated.append({
+            "name": ds.get("name"),
+            "title": ds.get("title") or ds.get("name"),
+            "theme": theme,
+            "average": avg,
+            "average_label": _format_decimal_label(avg),
+            "count": len(scores),
+        })
+
+    top_rated.sort(key=lambda x: (-x["average"], -x["count"], x["title"].lower()))
+
+    return {
+        "total_ratings": total,
+        "rated_dataset_count": len(pkg_scores),
+        "average": average,
+        "average_label": _format_decimal_label(average),
+        "criteria": criteria_pct,
+        "top_rated": top_rated[:5],
+    }
+
+
+def _empty_rating_stats():
+    from ckanext.artesp_theme.logic.rating import RATING_CRITERIA
+    return {
+        "total_ratings": 0,
+        "rated_dataset_count": 0,
+        "average": None,
+        "average_label": "—",
+        "criteria": {k: None for k in RATING_CRITERIA},
+        "top_rated": [],
+    }
+
+
 def _build_dashboard_statistics_payload(datasets, groups, organizations, filters, now):
     filtered_datasets = [
         dataset for dataset in datasets if _dataset_matches_filters(dataset, filters, now)
@@ -276,6 +365,9 @@ def _build_dashboard_statistics_payload(datasets, groups, organizations, filters
         for month_info in _timeline_window(filters["period"], now, filtered_datasets)
     ]
 
+    dataset_lookup = {d["id"]: d for d in filtered_datasets if d.get("id")}
+    rating_stats = _get_rating_stats(list(dataset_lookup.keys()), dataset_lookup)
+
     table_rows.sort(key=lambda row: (-row["resource_count"], row["title"].lower()))
     for index, row in enumerate(table_rows, start=1):
         share_percent = (
@@ -319,7 +411,9 @@ def _build_dashboard_statistics_payload(datasets, groups, organizations, filters
             ),
             "empty_theme_count": empty_theme_count,
             "datasets_without_theme_count": datasets_without_theme,
+            "average_rating_label": rating_stats["average_label"],
         },
+        "rating": rating_stats,
         "topic_labels": topic_labels,
         "insights": _build_insights(dominant_theme, largest_dataset, top_format),
         "charts": {
