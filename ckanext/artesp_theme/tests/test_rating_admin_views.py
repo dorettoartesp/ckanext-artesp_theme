@@ -59,7 +59,7 @@ def test_rating_admin_list_renders_for_dataset_owner(app, user, pkg):
     )
 
     assert response.status_code == 200
-    assert "Avaliações de" in response.text
+    assert "Avaliações" in response.text
 
 
 def test_rating_admin_index_renders_for_internal_user(app, user, pkg):

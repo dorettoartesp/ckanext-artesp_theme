@@ -2,16 +2,39 @@
 
 {% block subtitle %}{{ _("Administrar avaliações") }}{% endblock %}
 
-{% block primary_content %}
+{% block secondary %}{% endblock %}
+
+{% block primary %}
+<div class="primary col-md-12 col-xs-12" role="main">
+  {% block primary_content %}
   <section class="module">
     <div class="module-content">
       <h1>{{ _("Administrar avaliações") }}</h1>
-      <p>{{ _("Total") }}: {{ status_counts["all"] }}</p>
+      <p class="text-muted">{{ _("Total") }}: {{ status_counts["all"] }}</p>
+
+      {% if editable_packages|length > 1 %}
+        <div class="mb-3" style="max-width:420px">
+          <label for="dataset-select" class="form-label">{{ _('Filtrar por dataset') }}</label>
+          <select id="dataset-select" class="form-select"
+                  onchange="window.location=this.value">
+            <option value="{{ h.url_for('artesp_theme.rating_admin_index', id=user.name) }}"
+                    {{ 'selected' if not current_dataset else '' }}>
+              {{ _('Todos os datasets') }}
+            </option>
+            {% for ds in editable_packages %}
+              <option value="{{ h.url_for('artesp_theme.rating_admin_index', id=user.name, dataset=ds.name) }}"
+                      {{ 'selected' if current_dataset == ds.name else '' }}>
+                {{ ds.title }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+      {% endif %}
 
       <nav aria-label="{{ _('Filtrar avaliações por status') }}" class="mb-3">
         {% for choice in status_choices %}
           <a
-            href="{{ h.url_for('artesp_theme.rating_admin_index', id=user.name, status=choice.value if choice.value != 'all' else None) }}"
+            href="{{ h.url_for('artesp_theme.rating_admin_index', id=user.name, status=choice.value if choice.value != 'all' else None, dataset=current_dataset if current_dataset else None) }}"
             class="btn btn-sm {{ 'btn-primary' if current_status == choice.value else 'btn-light' }}"
           >
             {{ choice.label }} ({{ status_counts.get(choice.value, status_counts['all']) }})
@@ -28,6 +51,7 @@
               <th>{{ _("Comentário") }}</th>
               <th>{{ _("Nota") }}</th>
               <th>{{ _("Status") }}</th>
+              <th>{{ _("Data") }}</th>
               <th>{{ _("Ações") }}</th>
             </tr>
           </thead>
@@ -45,6 +69,7 @@
                     {{ rating.status_label }}
                   </span>
                 </td>
+                <td>{{ rating.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
                 <td>
                   <a href="{{ h.url_for('artesp_theme.rating_admin_detail', package_name=rating.dataset_slug, rating_id=rating.id) }}">
                     {{ _("Ver") }}
@@ -54,9 +79,26 @@
             {% endfor %}
           </tbody>
         </table>
+
+        {% if total_pages > 1 %}
+          <nav aria-label="{{ _('Paginação') }}" class="mt-2">
+            {% if page > 1 %}
+              <a href="{{ h.url_for('artesp_theme.rating_admin_index', id=user.name, status=current_status if current_status != 'all' else None, dataset=current_dataset if current_dataset else None, page=page-1) }}"
+                 class="btn btn-sm btn-light">← {{ _('Anterior') }}</a>
+            {% endif %}
+            <span class="px-2">{{ page }} / {{ total_pages }}</span>
+            {% if page < total_pages %}
+              <a href="{{ h.url_for('artesp_theme.rating_admin_index', id=user.name, status=current_status if current_status != 'all' else None, dataset=current_dataset if current_dataset else None, page=page+1) }}"
+                 class="btn btn-sm btn-light">{{ _('Próxima') }} →</a>
+            {% endif %}
+          </nav>
+        {% endif %}
+
       {% else %}
         <p>{{ _("Nenhuma avaliação encontrada para este filtro.") }}</p>
       {% endif %}
     </div>
   </section>
+  {% endblock %}
+</div>
 {% endblock %}

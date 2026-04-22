@@ -516,20 +516,44 @@ def rating_admin_index(id: str):
     if not user or auth_helpers.is_external_user(user):
         abort(403)
 
+    _PER_PAGE = 20
+    page = max(1, int((request.args.get("page") or 1)))
+    offset = (page - 1) * _PER_PAGE
+
     status_filter = (request.args.get("status") or "").strip() or None
+    dataset_filter = (request.args.get("dataset") or "").strip() or None
+
     all_ratings = rating_admin.get_ratings_for_user(user.id)
-    ratings = rating_admin.get_ratings_for_user(user.id, status_filter=status_filter)
     status_counts = {"all": len(all_ratings)}
     for status in RATING_STATUSES:
         status_counts[status] = sum(
             1 for rating in all_ratings if rating["status"] == status
         )
 
+    ratings = rating_admin.get_ratings_for_user(
+        user.id,
+        status_filter=status_filter,
+        dataset_filter=dataset_filter,
+        limit=_PER_PAGE,
+        offset=offset,
+    )
+    total_filtered = len(
+        rating_admin.get_ratings_for_user(
+            user.id,
+            status_filter=status_filter,
+            dataset_filter=dataset_filter,
+        )
+    )
+    total_pages = max(1, (total_filtered + _PER_PAGE - 1) // _PER_PAGE)
+
+    editable_packages = rating_admin.get_editable_packages_for_user(user.id)
+
     return render_template(
         "user/rating_admin_index.html",
         user=user,
         ratings=ratings,
         current_status=status_filter or "all",
+        current_dataset=dataset_filter or "",
         status_counts=status_counts,
         status_choices=[
             {"value": "all", "label": toolkit._("Todos")},
@@ -538,6 +562,9 @@ def rating_admin_index(id: str):
                 for status in RATING_STATUSES
             ],
         ],
+        page=page,
+        total_pages=total_pages,
+        editable_packages=editable_packages,
     )
 
 
@@ -556,15 +583,10 @@ def rating_admin_list(package_name: str):
 
     status_filter = (request.args.get("status") or "").strip() or None
     all_ratings = rating_admin.get_ratings_for_package(package.id)
-    ratings = rating_admin.get_ratings_for_package(
-        package.id,
-        status_filter=status_filter,
-    )
-    status_counts = {
-        "all": len(all_ratings),
-    }
+    ratings = rating_admin.get_ratings_for_package(package.id, status_filter=status_filter)
+    status_counts = {"all": len(all_ratings)}
     for status in RATING_STATUSES:
-        status_counts[status] = sum(1 for rating in all_ratings if rating["status"] == status)
+        status_counts[status] = sum(1 for r in all_ratings if r["status"] == status)
 
     return render_template(
         "package/rating_admin_list.html",

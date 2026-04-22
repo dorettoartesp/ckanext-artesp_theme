@@ -5,8 +5,8 @@
 {% block primary_content %}
   <section class="module">
     <div class="module-content">
-      <h1>Avaliações de {{ pkg.title or pkg.name }}</h1>
-      <p>Total: {{ status_counts["all"] }}</p>
+      <h1>{{ _('Avaliações') }}: {{ pkg.title or pkg.name }}</h1>
+      <p>{{ _('Total') }}: {{ status_counts["all"] }}</p>
 
       <nav aria-label="{{ _('Filtrar avaliações por status') }}" class="mb-3">
         {% for choice in status_choices %}
@@ -53,7 +53,7 @@
           </tbody>
         </table>
       {% else %}
-        <p>Nenhuma avaliação encontrada para este filtro.</p>
+        <p>{{ _('Nenhuma avaliação encontrada para este filtro.') }}</p>
       {% endif %}
     </div>
   </section>

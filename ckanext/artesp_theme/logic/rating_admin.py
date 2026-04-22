@@ -15,12 +15,22 @@ from ckanext.artesp_theme.model import (
 )
 
 
-def get_ratings_for_package(pkg_id: str, status_filter: str | None = None) -> list[dict]:
+def get_ratings_for_package(
+    pkg_id: str,
+    status_filter: str | None = None,
+    limit: int | None = None,
+    offset: int = 0,
+) -> list[dict]:
     query = model.Session.query(DatasetRating).filter_by(package_id=pkg_id)
     if status_filter:
         query = query.filter_by(status=status_filter)
+    query = query.order_by(DatasetRating.created_at.desc())
+    if offset:
+        query = query.offset(offset)
+    if limit is not None:
+        query = query.limit(limit)
 
-    ratings = query.order_by(DatasetRating.created_at.desc()).all()
+    ratings = query.all()
     return [
         {
             "id": rating.id,
@@ -39,10 +49,23 @@ def get_ratings_for_package(pkg_id: str, status_filter: str | None = None) -> li
     ]
 
 
-def get_ratings_for_user(user_id: str, status_filter: str | None = None) -> list[dict]:
+def get_ratings_for_user(
+    user_id: str,
+    status_filter: str | None = None,
+    dataset_filter: str | None = None,
+    limit: int | None = None,
+    offset: int = 0,
+) -> list[dict]:
     package_ids = _get_editable_package_ids(user_id)
     if not package_ids:
         return []
+
+    if dataset_filter:
+        pkg = model.Package.get(dataset_filter)
+        if pkg and pkg.id in package_ids:
+            package_ids = {pkg.id}
+        else:
+            return []
 
     query = model.Session.query(DatasetRating).filter(
         DatasetRating.package_id.in_(package_ids)
@@ -50,7 +73,13 @@ def get_ratings_for_user(user_id: str, status_filter: str | None = None) -> list
     if status_filter:
         query = query.filter_by(status=status_filter)
 
-    ratings = query.order_by(DatasetRating.created_at.desc()).all()
+    query = query.order_by(DatasetRating.created_at.desc())
+    if offset:
+        query = query.offset(offset)
+    if limit is not None:
+        query = query.limit(limit)
+
+    ratings = query.all()
     rows = []
     for rating in ratings:
         package = model.Package.get(rating.package_id)
@@ -82,6 +111,17 @@ def get_ratings_for_user(user_id: str, status_filter: str | None = None) -> list
             }
         )
     return rows
+
+
+def get_editable_packages_for_user(user_id: str) -> list[dict]:
+    """Return [{id, name, title}] for active packages the user can edit, sorted by title."""
+    package_ids = _get_editable_package_ids(user_id)
+    packages = []
+    for pkg_id in package_ids:
+        pkg = model.Package.get(pkg_id)
+        if pkg and pkg.state == "active":
+            packages.append({"id": pkg.id, "name": pkg.name, "title": pkg.title or pkg.name})
+    return sorted(packages, key=lambda p: p["title"].lower())
 
 
 def create_rating_action(
