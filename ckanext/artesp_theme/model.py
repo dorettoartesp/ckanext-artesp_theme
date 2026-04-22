@@ -13,6 +13,37 @@ import ckan.model.domain_object as domain_object
 import ckan.model.meta as meta
 
 
+RATING_STATUSES = (
+    "pendente",
+    "necessita_esclarecimentos",
+    "aprovado",
+    "finalizado",
+    "rejeitado",
+)
+
+RATING_STATUS_LABELS = {
+    "pendente": "Pendente",
+    "necessita_esclarecimentos": "Necessita esclarecimentos",
+    "aprovado": "Aprovado",
+    "finalizado": "Finalizado",
+    "rejeitado": "Rejeitado",
+}
+
+RATING_STATUS_COLORS = {
+    "pendente": "#e67e22",
+    "necessita_esclarecimentos": "#3498db",
+    "aprovado": "#27ae60",
+    "finalizado": "#7f8c8d",
+    "rejeitado": "#c0392b",
+}
+
+
+def _default_rating_status(comment: Optional[str]) -> str:
+    if (comment or "").strip():
+        return "pendente"
+    return "finalizado"
+
+
 dataset_rating_table = sa.Table(
     "dataset_rating",
     meta.metadata,
@@ -32,6 +63,7 @@ dataset_rating_table = sa.Table(
     sa.Column("overall_rating", sa.types.SmallInteger, nullable=False),
     sa.Column("criteria", JSONB, nullable=False, server_default=sa.text("'{}'::jsonb")),
     sa.Column("comment", sa.types.UnicodeText, nullable=True),
+    sa.Column("status", sa.types.String(50), nullable=False),
     sa.Column("created_at", sa.types.DateTime, nullable=False),
     sa.Column("updated_at", sa.types.DateTime, nullable=False),
     sa.CheckConstraint(
@@ -39,6 +71,25 @@ dataset_rating_table = sa.Table(
     ),
     sa.UniqueConstraint("user_id", "package_id", name="uq_dataset_rating_user_pkg"),
     sa.Index("ix_dataset_rating_pkg_updated", "package_id", "updated_at"),
+)
+
+rating_action_table = sa.Table(
+    "rating_action",
+    meta.metadata,
+    sa.Column("id", sa.types.UnicodeText, primary_key=True),
+    sa.Column(
+        "rating_id",
+        sa.types.UnicodeText,
+        sa.ForeignKey("dataset_rating.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    ),
+    sa.Column("actor_id", sa.types.UnicodeText, nullable=False),
+    sa.Column("status_before", sa.types.String(50), nullable=True),
+    sa.Column("status_after", sa.types.String(50), nullable=False),
+    sa.Column("note", sa.types.UnicodeText, nullable=True),
+    sa.Column("email_sent", sa.types.Boolean, nullable=False, default=False),
+    sa.Column("created_at", sa.types.DateTime, nullable=False),
 )
 
 
@@ -51,6 +102,7 @@ class DatasetRating(domain_object.DomainObject):
     overall_rating: int
     criteria: dict
     comment: Optional[str]
+    status: str
     created_at: _dt.datetime
     updated_at: _dt.datetime
 
@@ -69,6 +121,7 @@ class DatasetRating(domain_object.DomainObject):
         self.overall_rating = overall_rating
         self.criteria = criteria or {}
         self.comment = comment
+        self.status = _default_rating_status(comment)
         self.created_at = now
         self.updated_at = now
 
@@ -91,4 +144,36 @@ class DatasetRating(domain_object.DomainObject):
         )
 
 
+class RatingAction(domain_object.DomainObject):
+    """Audit trail entry for a status change in a dataset rating."""
+
+    id: str
+    rating_id: str
+    actor_id: str
+    status_before: Optional[str]
+    status_after: str
+    note: Optional[str]
+    email_sent: bool
+    created_at: _dt.datetime
+
+    def __init__(
+        self,
+        rating_id: str,
+        actor_id: str,
+        status_after: str,
+        status_before: Optional[str] = None,
+        note: Optional[str] = None,
+        email_sent: bool = False,
+    ) -> None:
+        self.id = str(uuid.uuid4())
+        self.rating_id = rating_id
+        self.actor_id = actor_id
+        self.status_before = status_before
+        self.status_after = status_after
+        self.note = note
+        self.email_sent = email_sent
+        self.created_at = _dt.datetime.utcnow()
+
+
 meta.registry.map_imperatively(DatasetRating, dataset_rating_table)
+meta.registry.map_imperatively(RatingAction, rating_action_table)

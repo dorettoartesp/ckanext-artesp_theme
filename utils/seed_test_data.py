@@ -3,7 +3,10 @@ from dataclasses import dataclass
 import datetime
 import json
 import os
+from pathlib import Path
 from typing import Iterable
+import urllib.parse
+import urllib.request
 import uuid
 
 import ckanapi
@@ -12,6 +15,43 @@ from ckanapi import errors
 
 DEFAULT_CKAN_URL = os.environ.get("CKAN_URL", "http://localhost:5000")
 DEFAULT_API_KEY = os.environ.get("CKAN_API_KEY")
+LDAP_TEST_USERS_PATH = (
+    Path(__file__).resolve().parents[3]
+    / "ckan"
+    / "ldap-seed"
+    / "01-test-users.ldif"
+)
+DEFAULT_SEED_PASSWORD = "SeedPassword123!"
+
+
+@dataclass(frozen=True)
+class InternalManagerSpec:
+    username: str
+    fullname: str
+    email: str
+    password: str
+
+
+DEFAULT_INTERNAL_MANAGER_SPECS = (
+    InternalManagerSpec(
+        username="joao.silva",
+        fullname="Joao Silva",
+        email="joao.silva@artesp.sp.gov.br",
+        password="senha123",
+    ),
+    InternalManagerSpec(
+        username="maria.santos",
+        fullname="Maria Santos",
+        email="maria.santos@artesp.sp.gov.br",
+        password="senha123",
+    ),
+    InternalManagerSpec(
+        username="admin.artesp",
+        fullname="Admin ARTESP",
+        email="admin@artesp.sp.gov.br",
+        password="senha123",
+    ),
+)
 
 
 @dataclass(frozen=True)
@@ -28,6 +68,51 @@ class SeedConfig:
     heavy_dataset_slug: str
     skip_heavy_dataset: bool
     rating_users_count: int
+
+
+def load_internal_manager_specs(
+    ldif_path: Path = LDAP_TEST_USERS_PATH,
+) -> list[InternalManagerSpec]:
+    if not ldif_path.exists():
+        return list(DEFAULT_INTERNAL_MANAGER_SPECS)
+
+    specs = []
+    entry: dict[str, str] = {}
+
+    def flush_entry() -> None:
+        if not entry.get("uid"):
+            entry.clear()
+            return
+
+        specs.append(
+            InternalManagerSpec(
+                username=entry["uid"],
+                fullname=entry.get("cn", entry["uid"]),
+                email=entry.get("mail", f"{entry['uid']}@artesp.sp.gov.br"),
+                password=entry.get("userPassword", DEFAULT_SEED_PASSWORD),
+            )
+        )
+        entry.clear()
+
+    for raw_line in ldif_path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line:
+            flush_entry()
+            continue
+
+        if ": " not in line:
+            continue
+
+        key, value = line.split(": ", 1)
+        if key in {"uid", "cn", "mail", "userPassword"}:
+            entry[key] = value.strip()
+
+    flush_entry()
+
+    if not specs:
+        return list(DEFAULT_INTERNAL_MANAGER_SPECS)
+
+    return specs
 
 
 def parse_args() -> SeedConfig:
@@ -312,6 +397,27 @@ def build_heavy_dataset_payload(
     }
 
 
+def build_external_rating_user_payload(
+    config: SeedConfig,
+    user_index: int,
+) -> dict:
+    user_number = user_index + 1
+    username = f"{config.prefix}-govbr-{user_number:02d}"
+    govbr_sub = f"seed-govbr-{config.prefix}-{user_number:02d}"
+    return {
+        "name": username,
+        "email": f"{username}@govbr.invalid",
+        "password": DEFAULT_SEED_PASSWORD,
+        "fullname": f"Usuario GovBR Seed {user_number:02d}",
+        "plugin_extras": {
+            "artesp": {
+                "user_type": "external",
+                "govbr_sub": govbr_sub,
+            }
+        },
+    }
+
+
 def periodicidade_for_index(dataset_index: int) -> str:
     choices = [
         "DIARIA",
@@ -491,23 +597,208 @@ _RATING_COMMENTS = [
 ]
 
 
+def rating_status_for_comment(comment: str | None) -> str:
+    if (comment or "").strip():
+        return "pendente"
+    return "finalizado"
+
+
+def build_rating_insert_payload(
+    package_id: str,
+    user_id: str,
+    slot: int,
+    now: datetime.datetime,
+) -> dict:
+    overall_rating = _RATING_OVERALL[slot % len(_RATING_OVERALL)]
+    criteria = _RATING_CRITERIA[slot % len(_RATING_CRITERIA)]
+    comment = _RATING_COMMENTS[slot % len(_RATING_COMMENTS)]
+
+    return {
+        "id": str(uuid.uuid4()),
+        "uid": user_id,
+        "pid": package_id,
+        "rating": overall_rating,
+        "criteria": json.dumps(criteria),
+        "comment": comment,
+        "status": rating_status_for_comment(comment),
+        "now": now,
+    }
+
+
+def _get_db_engine():
+    db_url = os.environ.get("CKAN_SQLALCHEMY_URL", "")
+    if not db_url:
+        raise SystemExit(
+            "CKAN_SQLALCHEMY_URL nao definido; nao foi possivel acessar o banco "
+            "para localizar os usuarios internos do LDAP."
+        )
+
+    try:
+        from sqlalchemy import create_engine
+    except ImportError as exc:
+        raise SystemExit(
+            "sqlalchemy nao disponivel; nao foi possivel acessar o banco para "
+            "localizar os usuarios internos do LDAP."
+        ) from exc
+
+    return create_engine(db_url)
+
+
+def _trigger_internal_manager_login(
+    spec: InternalManagerSpec,
+    ckan_url: str = DEFAULT_CKAN_URL,
+) -> None:
+    payload = urllib.parse.urlencode(
+        {
+            "login": spec.username,
+            "password": spec.password,
+        }
+    ).encode()
+    request = urllib.request.Request(
+        f"{ckan_url.rstrip('/')}/user/verify",
+        data=payload,
+        method="POST",
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
+    )
+    with urllib.request.urlopen(request, timeout=20):
+        pass
+
+
+def _find_internal_manager_user_by_email(email: str):
+    from sqlalchemy import text
+
+    engine = _get_db_engine()
+    with engine.begin() as conn:
+        row = conn.execute(
+            text(
+                'SELECT id, name, fullname, email FROM "user" '
+                "WHERE email = :email AND state = 'active' "
+                "ORDER BY id ASC"
+            ),
+            {"email": email},
+        ).mappings().first()
+    if not row:
+        return None
+    return row
+
+
+def resolve_internal_manager_user(
+    spec: InternalManagerSpec,
+    ckan_url: str = DEFAULT_CKAN_URL,
+):
+    try:
+        _trigger_internal_manager_login(spec, ckan_url=ckan_url)
+    except Exception as exc:
+        raise SystemExit(
+            "Falha ao materializar no CKAN o usuario interno do LDIF "
+            f"{spec.username} via login LDAP."
+        ) from exc
+
+    user = _find_internal_manager_user_by_email(spec.email)
+    if not user:
+        raise SystemExit(
+            "Usuario interno do LDIF nao encontrado no CKAN local apos login LDAP: "
+            f"{spec.username}"
+        )
+    return user
+
+
+def ensure_internal_manager_user(
+    ckan: ckanapi.RemoteCKAN,
+    spec: InternalManagerSpec,
+) -> dict:
+    del ckan
+
+    user = resolve_internal_manager_user(spec)
+    user_id = user["id"] if isinstance(user, dict) else user.id
+    user_name = user["name"] if isinstance(user, dict) else user.name
+    user_fullname = (
+        user["fullname"] if isinstance(user, dict) else getattr(user, "fullname", None)
+    )
+    user_email = (
+        user["email"] if isinstance(user, dict) else getattr(user, "email", None)
+    )
+
+    print(f"Usuario interno pronto: {spec.username} -> {user_name}")
+    return {
+        "id": user_id,
+        "name": user_name,
+        "fullname": user_fullname or spec.fullname,
+        "email": user_email or spec.email,
+    }
+
+
+def seed_internal_managers(ckan: ckanapi.RemoteCKAN) -> list[dict]:
+    return [
+        ensure_internal_manager_user(ckan, spec)
+        for spec in load_internal_manager_specs()
+    ]
+
+
+def assign_dataset_creators(
+    datasets: list[dict],
+    manager_users: list[dict],
+) -> int:
+    if not datasets or not manager_users:
+        return 0
+
+    try:
+        from sqlalchemy import text
+        engine = _get_db_engine()
+    except SystemExit:
+        print(
+            "  AVISO: nao foi possivel acessar o banco — criadores dos datasets nao "
+            "atualizados."
+        )
+        return 0
+    updated = 0
+
+    with engine.begin() as conn:
+        for dataset_index, dataset in enumerate(datasets):
+            pkg_id = dataset.get("id")
+            if not pkg_id:
+                continue
+
+            manager = cycle_pick(manager_users, dataset_index)
+            creator_id = manager.get("id")
+            if not creator_id:
+                continue
+
+            current_creator_id = conn.execute(
+                text("SELECT creator_user_id FROM package WHERE id = :pid"),
+                {"pid": pkg_id},
+            ).scalar()
+            if current_creator_id == creator_id:
+                continue
+
+            conn.execute(
+                text(
+                    "UPDATE package SET creator_user_id = :creator_id "
+                    "WHERE id = :pid"
+                ),
+                {"creator_id": creator_id, "pid": pkg_id},
+            )
+            updated += 1
+            print(
+                f"  Criador atualizado: {dataset.get('name')} -> "
+                f"{manager.get('name', creator_id)}"
+            )
+
+    return updated
+
+
 def ensure_rating_user(
     ckan: ckanapi.RemoteCKAN,
-    username: str,
-    email: str,
+    payload: dict,
 ) -> dict:
+    username = payload["name"]
     try:
         user = ckan.action.user_show(id=username)
         print(f"Usuário de rating existente: {username}")
         return user
     except errors.NotFound:
         pass
-    user = ckan.action.user_create(
-        name=username,
-        email=email,
-        password="SeedPassword123!",
-        fullname=f"Avaliador Seed {username}",
-    )
+    user = ckan.action.user_create(**payload)
     print(f"Usuário de rating criado: {username}")
     return user
 
@@ -518,10 +809,9 @@ def seed_rating_users(
 ) -> list[dict]:
     users = []
     for i in range(config.rating_users_count):
-        username = f"{config.prefix}-rater-{i + 1:02d}"
-        email = f"{config.prefix}-rater-{i + 1:02d}@seed.example.com"
-        user = ensure_rating_user(ckan, username, email)
-        users.append({"id": user["id"], "name": username})
+        payload = build_external_rating_user_payload(config, i)
+        user = ensure_rating_user(ckan, payload)
+        users.append({"id": user["id"], "name": payload["name"]})
     return users
 
 
@@ -529,18 +819,12 @@ def seed_ratings(
     datasets: list[dict],
     rating_users: list[dict],
 ) -> int:
-    db_url = os.environ.get("CKAN_SQLALCHEMY_URL", "")
-    if not db_url:
+    try:
+        from sqlalchemy import text
+        engine = _get_db_engine()
+    except SystemExit:
         print("  AVISO: CKAN_SQLALCHEMY_URL nao definido — ratings nao inseridos.")
         return 0
-
-    try:
-        from sqlalchemy import create_engine, text
-    except ImportError:
-        print("  AVISO: sqlalchemy nao disponivel — ratings nao inseridos.")
-        return 0
-
-    engine = create_engine(db_url)
     now = datetime.datetime.utcnow()
     count = 0
 
@@ -562,30 +846,25 @@ def seed_ratings(
                     continue
 
                 slot = (ds_index * len(rating_users) + user_index)
-                overall_rating = _RATING_OVERALL[slot % len(_RATING_OVERALL)]
-                criteria = _RATING_CRITERIA[slot % len(_RATING_CRITERIA)]
-                comment = _RATING_COMMENTS[slot % len(_RATING_COMMENTS)]
+                payload = build_rating_insert_payload(
+                    package_id=pkg_id,
+                    user_id=user_id,
+                    slot=slot,
+                    now=now,
+                )
 
                 conn.execute(
                     text(
                         "INSERT INTO dataset_rating"
-                        " (id, user_id, package_id, overall_rating, criteria, comment, created_at, updated_at)"
-                        " VALUES (:id, :uid, :pid, :rating, :criteria, :comment, :now, :now)"
+                        " (id, user_id, package_id, overall_rating, criteria, comment, status, created_at, updated_at)"
+                        " VALUES (:id, :uid, :pid, :rating, :criteria, :comment, :status, :now, :now)"
                     ),
-                    {
-                        "id": str(uuid.uuid4()),
-                        "uid": user_id,
-                        "pid": pkg_id,
-                        "rating": overall_rating,
-                        "criteria": json.dumps(criteria),
-                        "comment": comment,
-                        "now": now,
-                    },
+                    payload,
                 )
                 count += 1
                 print(
                     f"  Rating criado: {dataset.get('name')} <- {user['name']}"
-                    f" (nota {overall_rating})"
+                    f" (nota {payload['rating']})"
                 )
 
     return count
@@ -654,6 +933,13 @@ def seed_data(config: SeedConfig) -> None:
         config=config,
         organization_name=cycle_pick(dataset_organizations, 0),
         group_name=cycle_pick(groups, 0),
+    )
+
+    print("\nPreparando usuarios internos do LDIF como gestores...")
+    internal_managers = seed_internal_managers(ckan)
+    assign_dataset_creators(
+        datasets=regular_datasets + heavy_datasets,
+        manager_users=internal_managers,
     )
 
     ratings_created = 0

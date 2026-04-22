@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, timezone
 
+import ckan.model as model
 from flask import Blueprint, abort, jsonify, render_template, request, g
 from ckan.plugins import toolkit
 from ckan.lib.helpers import flash_error, redirect_to
@@ -499,6 +500,176 @@ def rating_submit(package_name: str):
         return redirect_to(toolkit.url_for("dataset.search"))
 
     return redirect_to(toolkit.url_for("dataset.read", id=package_name))
+
+
+def rating_admin_index(id: str):
+    from ckan.common import current_user
+    from ckanext.artesp_theme.logic import rating_admin
+    from ckanext.artesp_theme.model import RATING_STATUSES, RATING_STATUS_LABELS
+
+    if not getattr(current_user, "is_authenticated", False):
+        return redirect_to(toolkit.url_for("user.login"))
+    if current_user.name != id:
+        abort(403)
+
+    user = model.User.get(current_user.name)
+    if not user or auth_helpers.is_external_user(user):
+        abort(403)
+
+    status_filter = (request.args.get("status") or "").strip() or None
+    all_ratings = rating_admin.get_ratings_for_user(user.id)
+    ratings = rating_admin.get_ratings_for_user(user.id, status_filter=status_filter)
+    status_counts = {"all": len(all_ratings)}
+    for status in RATING_STATUSES:
+        status_counts[status] = sum(
+            1 for rating in all_ratings if rating["status"] == status
+        )
+
+    return render_template(
+        "user/rating_admin_index.html",
+        user=user,
+        ratings=ratings,
+        current_status=status_filter or "all",
+        status_counts=status_counts,
+        status_choices=[
+            {"value": "all", "label": toolkit._("Todos")},
+            *[
+                {"value": status, "label": RATING_STATUS_LABELS.get(status, status)}
+                for status in RATING_STATUSES
+            ],
+        ],
+    )
+
+
+def rating_admin_list(package_name: str):
+    from ckan.common import current_user
+    from ckanext.artesp_theme.logic import rating_admin
+    from ckanext.artesp_theme.model import RATING_STATUSES, RATING_STATUS_LABELS
+
+    package = model.Package.get(package_name)
+    if package is None:
+        abort(404)
+
+    user = model.User.get(current_user.name) if getattr(current_user, "is_authenticated", False) else None
+    if not auth_helpers.user_can_edit_package(package, user):
+        abort(403)
+
+    status_filter = (request.args.get("status") or "").strip() or None
+    all_ratings = rating_admin.get_ratings_for_package(package.id)
+    ratings = rating_admin.get_ratings_for_package(
+        package.id,
+        status_filter=status_filter,
+    )
+    status_counts = {
+        "all": len(all_ratings),
+    }
+    for status in RATING_STATUSES:
+        status_counts[status] = sum(1 for rating in all_ratings if rating["status"] == status)
+
+    return render_template(
+        "package/rating_admin_list.html",
+        pkg=package,
+        ratings=ratings,
+        current_status=status_filter or "all",
+        status_counts=status_counts,
+        status_choices=[
+            {"value": "all", "label": toolkit._("Todos")},
+            *[
+                {"value": status, "label": RATING_STATUS_LABELS.get(status, status)}
+                for status in RATING_STATUSES
+            ],
+        ],
+    )
+
+
+def rating_admin_detail(package_name: str, rating_id: str):
+    from ckan.common import current_user
+    from ckanext.artesp_theme.logic import rating_admin
+    from ckanext.artesp_theme.model import RATING_STATUSES, RATING_STATUS_LABELS
+
+    package = model.Package.get(package_name)
+    if package is None:
+        abort(404)
+
+    user = model.User.get(current_user.name) if getattr(current_user, "is_authenticated", False) else None
+    if not auth_helpers.user_can_edit_package(package, user):
+        abort(403)
+
+    detail = rating_admin.get_rating_detail(rating_id)
+    if detail["rating"]["package_id"] != package.id:
+        abort(404)
+
+    return render_template(
+        "package/rating_admin_detail.html",
+        pkg=package,
+        rating=detail["rating"],
+        actions=detail["actions"],
+        status_choices=[
+            {"value": status, "label": RATING_STATUS_LABELS.get(status, status)}
+            for status in RATING_STATUSES
+        ],
+    )
+
+
+def rating_admin_action(package_name: str, rating_id: str):
+    from ckan.common import current_user
+    from ckanext.artesp_theme.logic import rating_admin
+
+    package = model.Package.get(package_name)
+    if package is None:
+        abort(404)
+
+    user = model.User.get(current_user.name) if getattr(current_user, "is_authenticated", False) else None
+    if not auth_helpers.user_can_edit_package(package, user):
+        abort(403)
+
+    detail = rating_admin.get_rating_detail(rating_id)
+    if detail["rating"]["package_id"] != package.id:
+        abort(404)
+
+    rating_admin.create_rating_action(
+        rating_id=rating_id,
+        actor_id=user.id,
+        new_status=(request.form.get("new_status") or "").strip(),
+        note=(request.form.get("note") or "").strip(),
+        send_email=bool((request.form.get("send_email") or "").strip()),
+    )
+    return redirect_to(
+        toolkit.url_for(
+            "artesp_theme.rating_admin_detail",
+            package_name=package_name,
+            rating_id=rating_id,
+        )
+    )
+
+
+artesp_theme.add_url_rule(
+    "/user/<id>/rating-admin",
+    endpoint="rating_admin_index",
+    view_func=rating_admin_index,
+    methods=["GET"],
+)
+
+artesp_theme.add_url_rule(
+    "/dataset/<package_name>/rating-admin",
+    endpoint="rating_admin_list",
+    view_func=rating_admin_list,
+    methods=["GET"],
+)
+
+artesp_theme.add_url_rule(
+    "/dataset/<package_name>/rating-admin/<rating_id>",
+    endpoint="rating_admin_detail",
+    view_func=rating_admin_detail,
+    methods=["GET"],
+)
+
+artesp_theme.add_url_rule(
+    "/dataset/<package_name>/rating-admin/<rating_id>/action",
+    endpoint="rating_admin_action",
+    view_func=rating_admin_action,
+    methods=["POST"],
+)
 
 
 artesp_theme.add_url_rule(

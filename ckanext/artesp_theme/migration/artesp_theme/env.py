@@ -20,7 +20,7 @@ name = os.path.basename(os.path.dirname(__file__))
 def include_object(object, object_name, type_, reflected, compare_to):
     if type_ == "table":
         # Only touch tables owned by this extension
-        return object_name.startswith("dataset_rating")
+        return object_name.startswith("dataset_rating") or object_name == "rating_action"
     return True
 
 
