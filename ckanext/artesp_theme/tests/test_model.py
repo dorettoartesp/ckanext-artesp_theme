@@ -29,6 +29,32 @@ def org_and_user():
 
 
 class TestDatasetRating:
+    def test_status_defaults_to_finalizado_without_comment(self, org_and_user):
+        org, user = org_and_user
+        pkg = factories.Dataset(user=user, owner_org=org["id"])
+
+        rating = DatasetRating(
+            user_id=user["id"],
+            package_id=pkg["id"],
+            overall_rating=4,
+            comment="",
+        )
+
+        assert rating.status == "finalizado"
+
+    def test_status_defaults_to_pendente_with_comment(self, org_and_user):
+        org, user = org_and_user
+        pkg = factories.Dataset(user=user, owner_org=org["id"])
+
+        rating = DatasetRating(
+            user_id=user["id"],
+            package_id=pkg["id"],
+            overall_rating=4,
+            comment="Precisa atualizar o dicionario de dados",
+        )
+
+        assert rating.status == "pendente"
+
     def test_create_and_persist(self, org_and_user):
         org, user = org_and_user
         pkg = factories.Dataset(user=user, owner_org=org["id"])

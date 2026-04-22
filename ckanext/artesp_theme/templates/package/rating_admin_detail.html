@@ -1,0 +1,74 @@
+{% extends "page.html" %}
+
+{% block subtitle %}{{ _("Detalhe da avaliação") }} - {{ pkg.title or pkg.name }}{% endblock %}
+
+{% block primary_content %}
+  <section class="module">
+    <div class="module-content">
+      <h1>Avaliações de {{ pkg.title or pkg.name }}</h1>
+
+      <div class="row">
+        <div class="col-md-7">
+          <p><strong>{{ _('Autor') }}:</strong> {{ rating.author_name }}</p>
+          <p><strong>{{ _('Nota') }}:</strong> {{ rating.overall_rating }}</p>
+          <p>
+            <strong>{{ _('Status atual') }}:</strong>
+            <span
+              style="background-color: {{ rating.status_color }}; color: #fff; border-radius: 999px; display: inline-block; padding: 0.15rem 0.55rem;"
+            >
+              {{ rating.status_label }}
+            </span>
+          </p>
+          <p><strong>{{ _('Comentário') }}:</strong> {{ rating.comment or '(sem comentário)' }}</p>
+
+          <h2>Histórico de ações</h2>
+          {% if actions %}
+            <ul>
+              {% for action in actions %}
+                <li>
+                  {{ action.actor_name }}: {{ action.status_before or '-' }} → {{ action.status_after }}
+                  {% if action.note %}
+                    <div>{{ action.note }}</div>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p>Nenhuma ação registrada.</p>
+          {% endif %}
+        </div>
+
+        <div class="col-md-5">
+          <h2>{{ _('Registrar ação') }}</h2>
+          <form method="post" action="{{ h.url_for('artesp_theme.rating_admin_action', package_name=pkg.name, rating_id=rating.id) }}">
+            <div class="mb-3">
+              <label for="new-status" class="form-label">{{ _('Novo status') }}</label>
+              <select id="new-status" class="form-control" name="new_status" required>
+                {% for choice in status_choices %}
+                  <option value="{{ choice.value }}" {{ 'selected' if choice.value == rating.status else '' }}>
+                    {{ choice.label }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="action-note" class="form-label">{{ _('Nota interna / corpo do e-mail') }}</label>
+              <textarea id="action-note" class="form-control" name="note" rows="5"></textarea>
+            </div>
+
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" name="send_email" value="1">
+                {{ _('Enviar e-mail ao autor') }}
+              </label>
+            </div>
+            <p class="help-block">BCC automático: dono, colaboradores e sysadmin.</p>
+
+            <button type="submit" class="btn btn-primary">{{ _('Registrar ação') }}</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

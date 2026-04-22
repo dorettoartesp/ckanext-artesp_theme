@@ -1,0 +1,62 @@
+{% extends "page.html" %}
+
+{% block subtitle %}{{ _("Administrar avaliações") }}{% endblock %}
+
+{% block primary_content %}
+  <section class="module">
+    <div class="module-content">
+      <h1>{{ _("Administrar avaliações") }}</h1>
+      <p>{{ _("Total") }}: {{ status_counts["all"] }}</p>
+
+      <nav aria-label="{{ _('Filtrar avaliações por status') }}" class="mb-3">
+        {% for choice in status_choices %}
+          <a
+            href="{{ h.url_for('artesp_theme.rating_admin_index', id=user.name, status=choice.value if choice.value != 'all' else None) }}"
+            class="btn btn-sm {{ 'btn-primary' if current_status == choice.value else 'btn-light' }}"
+          >
+            {{ choice.label }} ({{ status_counts.get(choice.value, status_counts['all']) }})
+          </a>
+        {% endfor %}
+      </nav>
+
+      {% if ratings %}
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>{{ _("Dataset") }}</th>
+              <th>{{ _("Autor") }}</th>
+              <th>{{ _("Comentário") }}</th>
+              <th>{{ _("Nota") }}</th>
+              <th>{{ _("Status") }}</th>
+              <th>{{ _("Ações") }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for rating in ratings %}
+              <tr>
+                <td>{{ rating.dataset_name }}</td>
+                <td>{{ rating.author_name }}</td>
+                <td>{{ rating.comment or '(sem comentário)' }}</td>
+                <td>{{ rating.overall_rating }}</td>
+                <td>
+                  <span
+                    style="background-color: {{ rating.status_color }}; color: #fff; border-radius: 999px; display: inline-block; padding: 0.15rem 0.55rem;"
+                  >
+                    {{ rating.status_label }}
+                  </span>
+                </td>
+                <td>
+                  <a href="{{ h.url_for('artesp_theme.rating_admin_detail', package_name=rating.dataset_slug, rating_id=rating.id) }}">
+                    {{ _("Ver") }}
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p>{{ _("Nenhuma avaliação encontrada para este filtro.") }}</p>
+      {% endif %}
+    </div>
+  </section>
+{% endblock %}

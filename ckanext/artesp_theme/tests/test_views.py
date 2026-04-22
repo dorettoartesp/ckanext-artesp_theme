@@ -192,6 +192,8 @@ def test_header_shows_following_for_internal_users(app, reset_db):
 
     assert 'href="/user/usuario-interno/followed"' in html
     assert "Seguindo" in html
+    assert 'href="/user/usuario-interno/rating-admin"' in html
+    assert "Administrar avaliações" in html
     assert 'href="/dashboard/datasets"' in html
 
 
