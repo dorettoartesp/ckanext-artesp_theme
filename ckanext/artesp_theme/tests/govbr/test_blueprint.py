@@ -3,6 +3,7 @@
 These tests verify that the routes exist and respond correctly.
 Heavy DB operations are avoided — we mock external dependencies.
 """
+from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -96,7 +97,7 @@ class TestRoutesExist:
         assert resp.headers.get("Location") == mock_client.logout_url.return_value
         mock_tk.h.url_for.assert_called_once_with("govbr.logout", qualified=True)
 
-    def test_logout_return_leg_clears_session_and_redirects_home(self, app):
+    def test_logout_return_leg_clears_session_and_redirects_home(self, app, reset_db):
         with app.flask_app.test_client() as c:
             with c.session_transaction() as sess:
                 sess["govbr_logout_pending"] = True
@@ -249,9 +250,10 @@ class TestCallbackSuccess:
 
             with _patches(mock_client)[0], _patches(mock_client)[1], \
                  patch("ckanext.artesp_theme.govbr.blueprint.ExternalUserService") as mock_svc_cls, \
-                 patch("ckanext.artesp_theme.govbr.blueprint._set_repoze_user") as mock_set_user:
+                 patch("ckan.model.User.get", return_value=SimpleNamespace(name="govbr_user")) as mock_user_get, \
+                 patch("ckan.common.login_user") as mock_login_user:
                 mock_svc = MagicMock()
-                mock_svc.find_or_create.return_value = MagicMock(name="govbr_user")
+                mock_svc.find_or_create.return_value = SimpleNamespace(name="govbr_user")
                 mock_svc_cls.return_value = mock_svc
 
                 resp = c.get(
@@ -262,7 +264,8 @@ class TestCallbackSuccess:
         assert resp.status_code in (302, 303)
         with c.session_transaction() as sess:
             assert sess.get("artesp_auth_provider") == "govbr"
-        mock_set_user.assert_called_once()
+        mock_user_get.assert_called_with("govbr_user")
+        mock_login_user.assert_called_once()
 
 
 class TestLinkRouteAuthenticated:
