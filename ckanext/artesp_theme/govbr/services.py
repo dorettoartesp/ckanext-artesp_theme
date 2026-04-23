@@ -28,6 +28,20 @@ class ExternalUserService:
         if user is not None:
             return user
 
+        user = self._find_by_email(userinfo.email) if userinfo.email and userinfo.email_verified else None
+        if user is not None:
+            extras = self._ensure_artesp_extras(user)
+            existing_sub = extras.get("govbr_sub")
+            if existing_sub and existing_sub != userinfo.sub:
+                raise GovBRLinkError(
+                    f"govbr_sub {userinfo.sub!r} is already linked to user {user.name!r}"
+                )
+
+            extras["user_type"] = "internal"
+            extras["govbr_sub"] = userinfo.sub
+            self._save_user(user)
+            return user
+
         username = self.derive_username(userinfo.sub)
         user = self._find_by_name(username)
         if user is None:
@@ -72,6 +86,16 @@ class ExternalUserService:
 
     def _find_by_name(self, name: str):
         return model.User.get(name)
+
+    def _find_by_email(self, email: str):
+        if not email:
+            return None
+        return (
+            model.Session.query(model.User)
+            .filter(model.User.email == email)
+            .filter(model.User.state == "active")
+            .one_or_none()
+        )
 
     def _create_external_user(self, userinfo: UserInfo):
         username = self.derive_username(userinfo.sub)

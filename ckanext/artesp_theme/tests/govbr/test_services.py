@@ -74,6 +74,7 @@ class TestFindOrCreateNewExternalUser:
     def test_creates_new_user_when_not_found(self, service, userinfo):
         with (
             patch.object(service, "_find_by_govbr_sub", return_value=None),
+            patch.object(service, "_find_by_email", return_value=None),
             patch.object(service, "_find_by_name", return_value=None),
             patch.object(service, "_create_external_user") as mock_create,
             patch.object(service, "_save_user"),
@@ -87,6 +88,7 @@ class TestFindOrCreateNewExternalUser:
         created = _make_ckan_user()
         with (
             patch.object(service, "_find_by_govbr_sub", return_value=None),
+            patch.object(service, "_find_by_email", return_value=None),
             patch.object(service, "_find_by_name", return_value=None),
             patch.object(service, "_create_external_user", return_value=created),
             patch.object(service, "_save_user"),
@@ -99,6 +101,7 @@ class TestFindOrCreateNewExternalUser:
         created = _make_ckan_user()
         with (
             patch.object(service, "_find_by_govbr_sub", return_value=None),
+            patch.object(service, "_find_by_email", return_value=None),
             patch.object(service, "_find_by_name", return_value=None),
             patch.object(service, "_create_external_user", return_value=created),
             patch.object(service, "_save_user"),
@@ -158,6 +161,54 @@ class TestFindOrCreateLinkedInternalUser:
         ):
             service.find_or_create(userinfo)
             mock_create.assert_not_called()
+
+
+# ---------------------------------------------------------------------------
+# find_or_create — email reconciliation with existing local account
+# ---------------------------------------------------------------------------
+
+class TestFindOrCreateByEmail:
+    def test_links_existing_user_by_verified_email(self, service, userinfo):
+        existing = _make_ckan_user(
+            name="ldap_joao",
+            email=userinfo.email,
+            plugin_extras={"artesp": {"user_type": "internal"}},
+        )
+        with (
+            patch.object(service, "_find_by_govbr_sub", return_value=None),
+            patch.object(service, "_find_by_email", return_value=existing),
+            patch.object(service, "_save_user") as mock_save,
+            patch.object(service, "_create_external_user") as mock_create,
+        ):
+            result = service.find_or_create(userinfo)
+
+        assert result is existing
+        assert existing.plugin_extras["artesp"]["govbr_sub"] == GOVBR_SUB
+        assert existing.plugin_extras["artesp"]["user_type"] == "internal"
+        mock_save.assert_called_once_with(existing)
+        mock_create.assert_not_called()
+
+    def test_does_not_reconcile_unverified_email(self, service, userinfo):
+        unverified = UserInfo(
+            sub=userinfo.sub,
+            name=userinfo.name,
+            email=userinfo.email,
+            email_verified=False,
+        )
+        existing = _make_ckan_user(
+            name="ldap_joao",
+            email=unverified.email,
+            plugin_extras={"artesp": {"user_type": "internal"}},
+        )
+        with (
+            patch.object(service, "_find_by_govbr_sub", return_value=None),
+            patch.object(service, "_find_by_email", return_value=existing),
+            patch.object(service, "_find_by_name", return_value=None),
+            patch.object(service, "_create_external_user") as mock_create,
+            patch.object(service, "_save_user"),
+        ):
+            service.find_or_create(unverified)
+        mock_create.assert_called_once()
 
 
 # ---------------------------------------------------------------------------
