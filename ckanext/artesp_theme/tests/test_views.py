@@ -40,7 +40,7 @@ def test_login_page_shows_centered_govbr_and_ldap_actions(app, reset_db):
 
     assert resp.status_code == 200
     assert "artesp-login-access" in resp.text
-    assert 'href="/user/oidc/login"' in resp.text
+    assert 'href="/user/oidc/logout"' in resp.text
     assert "artesp-govbr-login" in resp.text
     assert "<span>Entrar com</span><strong>gov.br</strong>" in resp.text
     assert "artesp-login-divider" in resp.text
@@ -70,10 +70,40 @@ def test_login_page_hides_govbr_actions_without_client_id(app, reset_db):
 
     assert resp.status_code == 200
     assert 'action="/user/verify"' in resp.text
-    assert 'href="/user/oidc/login"' not in resp.text
+    assert 'href="/user/oidc/logout"' not in resp.text
     assert "artesp-govbr-login" not in resp.text
     assert "artesp-login-divider" not in resp.text
     assert "artesp-ldap-toggle" not in resp.text
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.ckan_config("ckanext.artesp.govbr.enabled", "true")
+@pytest.mark.ckan_config("ckanext.artesp.govbr.client_id", "govbr-client-id")
+@pytest.mark.usefixtures("with_plugins")
+def test_logout_first_page_uses_govbr_logout(app, reset_db):
+    current_user = SimpleNamespace(name="usuario-ldap")
+
+    with patch.object(tk.h, "artesp_is_external_user", return_value=True):
+        with app.flask_app.test_request_context("/user/login"):
+            html = base.render("user/logout_first.html", extra_vars={"current_user": current_user})
+
+    assert 'href="/user/oidc/logout"' in html
+    assert "Log out now" in html
+    assert "Logout" in html
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.usefixtures("with_plugins")
+def test_logout_first_page_uses_ckan_logout_for_internal_users(app, reset_db):
+    current_user = SimpleNamespace(name="usuario-ldap")
+
+    with patch.object(tk.h, "artesp_is_external_user", return_value=False):
+        with app.flask_app.test_request_context("/user/login"):
+            html = base.render("user/logout_first.html", extra_vars={"current_user": current_user})
+
+    assert 'href="/user/_logout"' in html
+    assert "Log out now" in html
+    assert "Logout" in html
 
 
 @pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
@@ -195,6 +225,7 @@ def test_header_shows_following_for_internal_users(app, reset_db):
     assert 'href="/user/usuario-interno/rating-admin"' in html
     assert "Administrar avaliações" in html
     assert 'href="/dashboard/datasets"' in html
+    assert 'action="/user/_logout"' in html
 
 
 @pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
