@@ -114,6 +114,14 @@ class TestAdditionalHelperWrappers:
             assert helpers.artesp_is_external_user() is True
             mock_user_get.assert_called_once_with("govbr_user")
 
+    def test_artesp_auth_provider_reads_session_marker(self):
+        with patch.object(helpers, "ckan_session", {"artesp_auth_provider": "govbr"}):
+            assert helpers.artesp_auth_provider() == "govbr"
+
+    def test_artesp_auth_provider_returns_none_when_missing(self):
+        with patch.object(helpers, "ckan_session", {}):
+            assert helpers.artesp_auth_provider() is None
+
     def test_rating_comment_captcha_helpers_follow_config(self):
         with patch.object(
             helpers.toolkit,

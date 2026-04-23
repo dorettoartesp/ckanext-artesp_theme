@@ -240,6 +240,31 @@ class TestCallbackUserNotFound:
         assert resp.status_code in (302, 303)
 
 
+class TestCallbackSuccess:
+    def test_callback_marks_session_as_govbr(self, app, mock_client):
+        with app.flask_app.test_client() as c:
+            with c.session_transaction() as sess:
+                sess["govbr_state"] = "state123"
+                sess["govbr_code_verifier"] = "verifier123"
+
+            with _patches(mock_client)[0], _patches(mock_client)[1], \
+                 patch("ckanext.artesp_theme.govbr.blueprint.ExternalUserService") as mock_svc_cls, \
+                 patch("ckanext.artesp_theme.govbr.blueprint._set_repoze_user") as mock_set_user:
+                mock_svc = MagicMock()
+                mock_svc.find_or_create.return_value = MagicMock(name="govbr_user")
+                mock_svc_cls.return_value = mock_svc
+
+                resp = c.get(
+                    "/user/oidc/callback?code=abc&state=state123",
+                    follow_redirects=False,
+                )
+
+        assert resp.status_code in (302, 303)
+        with c.session_transaction() as sess:
+            assert sess.get("artesp_auth_provider") == "govbr"
+        mock_set_user.assert_called_once()
+
+
 class TestLinkRouteAuthenticated:
     """Lines 132-138: /user/oidc/link when user is authenticated."""
 

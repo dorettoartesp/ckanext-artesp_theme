@@ -83,7 +83,9 @@ def test_login_page_hides_govbr_actions_without_client_id(app, reset_db):
 def test_logout_first_page_uses_govbr_logout(app, reset_db):
     current_user = SimpleNamespace(name="usuario-ldap")
 
-    with patch.object(tk.h, "artesp_is_external_user", return_value=True):
+    with patch.object(tk.h, "artesp_auth_provider", return_value="govbr"), patch.object(
+        tk.h, "artesp_is_external_user", return_value=False
+    ):
         with app.flask_app.test_request_context(
             "/user/login",
             environ_base={"CKAN_CURRENT_URL": "/user/login"},
@@ -230,6 +232,32 @@ def test_header_shows_following_for_internal_users(app, reset_db):
     assert "Administrar avaliações" in html
     assert 'href="/dashboard/datasets"' in html
     assert 'action="/user/_logout"' in html
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.usefixtures("with_plugins")
+def test_header_uses_govbr_logout_for_govbr_sessions(app, reset_db):
+    user = SimpleNamespace(
+        id="usuario-interno-id",
+        name="usuario-interno",
+        display_name="Usuario Interno",
+        sysadmin=False,
+    )
+
+    with patch.object(tk.h, "artesp_auth_provider", return_value="govbr"), patch.object(
+        tk.h, "artesp_is_external_user", return_value=False
+    ), patch.object(tk.h, "user_image", return_value=""), patch.object(
+        tk.h, "csrf_input", return_value=""
+    ):
+        with app.flask_app.test_request_context(
+            "/dataset/exemplo",
+            environ_overrides={"CKAN_LANG": "pt_BR"},
+        ):
+            tk.c.user = user.name
+            tk.c.userobj = user
+            html = base.render("header.html")
+
+    assert 'action="/user/oidc/logout"' in html
 
 
 @pytest.mark.ckan_config("ckan.plugins", "artesp_theme")

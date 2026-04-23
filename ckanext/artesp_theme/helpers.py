@@ -3,6 +3,7 @@ import logging
 from markupsafe import Markup
 
 from sqlalchemy import desc
+from ckan.common import session as ckan_session
 from ckan.plugins import toolkit
 from ckan.model.resource import Resource
 from ckan.model.package import Package
@@ -274,6 +275,11 @@ def artesp_is_external_user():
     return auth_helpers.is_external_user(user)
 
 
+def artesp_auth_provider():
+    """Return the auth provider for the current session, if any."""
+    return ckan_session.get("artesp_auth_provider")
+
+
 def artesp_is_user_external(user_dict):
     """Verifica se um usuário (dict) é do tipo externo (GovBR).
 
@@ -340,6 +346,7 @@ def get_helpers():
         "artesp_ldap_enabled": artesp_ldap_enabled,
         "artesp_govbr_login_enabled": artesp_govbr_login_enabled,
         "artesp_is_external_user": artesp_is_external_user,
+        "artesp_auth_provider": artesp_auth_provider,
         "artesp_is_user_external": artesp_is_user_external,
         "get_package_count": get_package_count,
         "get_resource_count": get_resource_count,

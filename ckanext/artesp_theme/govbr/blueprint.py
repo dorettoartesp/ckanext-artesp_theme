@@ -30,6 +30,7 @@ _SESSION_VERIFIER = "govbr_code_verifier"
 _SESSION_LINK_STATE = "govbr_link_state"
 _SESSION_LINK_VERIFIER = "govbr_link_code_verifier"
 _SESSION_LOGOUT_PENDING = "govbr_logout_pending"
+_SESSION_AUTH_PROVIDER = "artesp_auth_provider"
 
 
 # ---------------------------------------------------------------------------
@@ -102,6 +103,8 @@ def callback():
         return redirect(url_for("user.login"))
 
     _set_repoze_user(ckan_user.name)
+    session[_SESSION_AUTH_PROVIDER] = "govbr"
+    session.modified = True
     return redirect(url_for("home.index"))
 
 
@@ -113,10 +116,12 @@ def callback():
 def logout():
     if session.pop(_SESSION_LOGOUT_PENDING, False):
         logout_user()
+        session.pop(_SESSION_AUTH_PROVIDER, None)
         session.modified = True
         return redirect(url_for("home.index"))
 
-    if toolkit.c.user and is_external_user(toolkit.c.user):
+    auth_provider = session.get(_SESSION_AUTH_PROVIDER)
+    if toolkit.c.user and (auth_provider == "govbr" or is_external_user(toolkit.c.user)):
         client = _get_client()
         post_logout_uri = toolkit.h.url_for("govbr.logout", qualified=True)
         govbr_logout = client.logout_url(post_logout_uri)
