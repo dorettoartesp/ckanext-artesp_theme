@@ -1,6 +1,7 @@
 import logging
 
 from flask import Blueprint, redirect, request, session, url_for
+from ckan.common import logout_user
 from ckan.plugins import toolkit
 
 from .client import GovBRAuthError, GovBRClient
@@ -28,6 +29,7 @@ _SESSION_STATE = "govbr_state"
 _SESSION_VERIFIER = "govbr_code_verifier"
 _SESSION_LINK_STATE = "govbr_link_state"
 _SESSION_LINK_VERIFIER = "govbr_link_code_verifier"
+_SESSION_LOGOUT_PENDING = "govbr_logout_pending"
 
 
 # ---------------------------------------------------------------------------
@@ -109,14 +111,22 @@ def callback():
 
 @govbr.route("/user/oidc/logout", methods=["GET", "POST"])
 def logout():
-    client = _get_client()
-    post_logout_uri = toolkit.h.url_for("home.index", qualified=True)
-    govbr_logout = client.logout_url(post_logout_uri)
+    if session.pop(_SESSION_LOGOUT_PENDING, False):
+        logout_user()
+        session.modified = True
+        return redirect(url_for("home.index"))
 
-    # Clear CKAN auth state before sending the browser to Gov.br logout.
-    toolkit.logout_user()
+    if toolkit.c.user and is_external_user(toolkit.c.user):
+        client = _get_client()
+        post_logout_uri = toolkit.h.url_for("govbr.logout", qualified=True)
+        govbr_logout = client.logout_url(post_logout_uri)
 
-    return redirect(govbr_logout)
+        session[_SESSION_LOGOUT_PENDING] = True
+        session.modified = True
+        return redirect(govbr_logout)
+
+    logout_user()
+    return redirect(url_for("home.index"))
 
 
 # ---------------------------------------------------------------------------

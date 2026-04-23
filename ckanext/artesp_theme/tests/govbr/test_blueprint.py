@@ -43,7 +43,7 @@ def mock_client():
     )
     c.exchange_code.return_value = "access_token_xyz"
     c.get_userinfo.return_value = _userinfo()
-    c.logout_url.return_value = "https://sso.staging.acesso.gov.br/logout?post_logout_redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fuser%2Foidc%2Flogin"
+    c.logout_url.return_value = "https://sso.staging.acesso.gov.br/logout?post_logout_redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fuser%2Foidc%2Flogout"
     return c
 
 
@@ -87,14 +87,26 @@ class TestRoutesExist:
             _patches(mock_client)[0],
             _patches(mock_client)[1],
             patch("ckanext.artesp_theme.govbr.blueprint.toolkit") as mock_tk,
+            patch("ckanext.artesp_theme.govbr.blueprint.is_external_user", return_value=True),
         ):
-            mock_tk.h.url_for.return_value = "http://localhost:5000/"
-            mock_tk.logout_user.return_value = None
+            mock_tk.c.user = "govbr_user"
+            mock_tk.h.url_for.return_value = "http://localhost:5000/user/oidc/logout"
             resp = app.get("/user/oidc/logout", follow_redirects=False)
         assert resp.status_code in (302, 303)
         assert resp.headers.get("Location") == mock_client.logout_url.return_value
-        mock_tk.h.url_for.assert_called_once_with("home.index", qualified=True)
-        mock_tk.logout_user.assert_called_once()
+        mock_tk.h.url_for.assert_called_once_with("govbr.logout", qualified=True)
+
+    def test_logout_return_leg_clears_session_and_redirects_home(self, app):
+        with app.flask_app.test_client() as c:
+            with c.session_transaction() as sess:
+                sess["govbr_logout_pending"] = True
+
+            with patch("ckanext.artesp_theme.govbr.blueprint.logout_user") as mock_logout_user:
+                resp = c.get("/user/oidc/logout", follow_redirects=False)
+
+        assert resp.status_code in (302, 303)
+        assert resp.headers.get("Location") == "/"
+        mock_logout_user.assert_called_once()
 
     def test_link_route_exists(self, app):
         resp = app.get("/user/oidc/link", follow_redirects=False)
