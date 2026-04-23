@@ -306,7 +306,7 @@ class TestLinkCallbackPaths:
 
                 mock_tk.c.user = "ldap_user"
                 mock_tk.h = MagicMock()
-                mock_tk._ = lambda x: x
+                mock_tk._ = MagicMock(side_effect=lambda x: x)
 
                 mock_svc = MagicMock()
                 mock_svc.link_account.side_effect = GovBRLinkError("already linked")
@@ -317,6 +317,7 @@ class TestLinkCallbackPaths:
                     follow_redirects=False,
                 )
         assert resp.status_code in (302, 303)
+        mock_tk._.assert_any_call("This Gov.br account is already linked to another user.")
 
     def test_user_not_found_redirects(self, app, mock_client):
         """ckan_user not found after token exchange → redirect."""

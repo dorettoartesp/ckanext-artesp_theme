@@ -4596,6 +4596,10 @@ msgstr ""
 msgid "Vincular conta Gov.br"
 msgstr ""
 
+#: ckanext/artesp_theme/govbr/blueprint.py:181
+msgid "This Gov.br account is already linked to another user."
+msgstr "Esta conta Gov.br já está vinculada a outro usuário."
+
 #: ckanext/artesp_theme/templates/user/snippets/info.html:29
 msgid "You have not provided a biography."
 msgstr "Você não forneceu uma biografia."
@@ -5477,4 +5481,3 @@ msgstr "Buscar Usuários"
 # | msgid "Update Dataset"
 #~ msgid "para avaliar este dataset."
 #~ msgstr "Atualizar Conjunto de Dados"
-

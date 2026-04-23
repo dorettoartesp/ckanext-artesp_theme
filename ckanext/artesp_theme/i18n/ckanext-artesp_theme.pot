@@ -4066,6 +4066,10 @@ msgstr ""
 msgid "Vincular conta Gov.br"
 msgstr ""
 
+#: ckanext/artesp_theme/govbr/blueprint.py:181
+msgid "This Gov.br account is already linked to another user."
+msgstr ""
+
 #: ckanext/artesp_theme/templates/user/snippets/info.html:29
 msgid "You have not provided a biography."
 msgstr ""
@@ -4101,4 +4105,3 @@ msgstr ""
 #: ckanext/artesp_theme/templates/user/snippets/user_search.html:5
 msgid "Search Users"
 msgstr ""
-
