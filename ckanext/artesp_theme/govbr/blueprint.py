@@ -113,9 +113,8 @@ def logout():
     post_logout_uri = toolkit.h.url_for("home.index", qualified=True)
     govbr_logout = client.logout_url(post_logout_uri)
 
-    # Clear CKAN session
-    session.pop("ckan.user", None)
-    session.modified = True
+    # Clear CKAN auth state before sending the browser to Gov.br logout.
+    toolkit.logout_user()
 
     return redirect(govbr_logout)
 

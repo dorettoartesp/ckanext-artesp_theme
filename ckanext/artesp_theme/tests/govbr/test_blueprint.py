@@ -89,10 +89,12 @@ class TestRoutesExist:
             patch("ckanext.artesp_theme.govbr.blueprint.toolkit") as mock_tk,
         ):
             mock_tk.h.url_for.return_value = "http://localhost:5000/"
+            mock_tk.logout_user.return_value = None
             resp = app.get("/user/oidc/logout", follow_redirects=False)
         assert resp.status_code in (302, 303)
         assert resp.headers.get("Location") == mock_client.logout_url.return_value
         mock_tk.h.url_for.assert_called_once_with("home.index", qualified=True)
+        mock_tk.logout_user.assert_called_once()
 
     def test_link_route_exists(self, app):
         resp = app.get("/user/oidc/link", follow_redirects=False)
