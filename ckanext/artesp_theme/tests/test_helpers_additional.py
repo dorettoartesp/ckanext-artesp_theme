@@ -101,6 +101,19 @@ class TestAdditionalHelperWrappers:
         with patch.object(helpers.toolkit, "c", SimpleNamespace(userobj=SimpleNamespace())):
             assert helpers.artesp_is_external_user() is True
 
+    def test_artesp_is_external_user_falls_back_to_db_user(self, monkeypatch):
+        monkeypatch.setattr(helpers.auth_helpers, "is_external_user", lambda user: user and getattr(user, "plugin_extras", {}).get("artesp", {}).get("user_type") == "external")
+
+        db_user = SimpleNamespace(name="govbr_user", plugin_extras={"artesp": {"user_type": "external"}})
+
+        with patch.object(
+            helpers.toolkit,
+            "c",
+            SimpleNamespace(user="govbr_user", userobj=SimpleNamespace(name="govbr_user")),
+        ), patch("ckan.model.User.get", return_value=db_user) as mock_user_get:
+            assert helpers.artesp_is_external_user() is True
+            mock_user_get.assert_called_once_with("govbr_user")
+
     def test_rating_comment_captcha_helpers_follow_config(self):
         with patch.object(
             helpers.toolkit,

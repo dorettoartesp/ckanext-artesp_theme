@@ -257,7 +257,21 @@ def get_default_dataset_collaborator_capacity():
 
 
 def artesp_is_external_user():
-    return auth_helpers.is_external_user(toolkit.c.userobj)
+    user = getattr(toolkit.c, "userobj", None)
+    if user is None:
+        username = getattr(toolkit.c, "user", None)
+        if username:
+            import ckan.model as model
+            user = model.User.get(username)
+    elif not getattr(user, "plugin_extras", None):
+        username = getattr(user, "name", None) or getattr(toolkit.c, "user", None)
+        if username:
+            import ckan.model as model
+            db_user = model.User.get(username)
+            if db_user is not None:
+                user = db_user
+
+    return auth_helpers.is_external_user(user)
 
 
 def artesp_is_user_external(user_dict):
