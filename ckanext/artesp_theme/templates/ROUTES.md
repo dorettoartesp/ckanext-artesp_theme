@@ -22,6 +22,7 @@ This document provides a comprehensive overview of all URL routes used in the AR
 | `/terms` | `static/terms.html` | Terms of use for the portal | `artesp_theme.terms` |
 | `/privacy` | `static/privacy.html` | Privacy policy for the portal | `artesp_theme.privacy` |
 | `/contact` | `static/contact.html` | Contact information page | `artesp_theme.contact` |
+| `/user/oidc/logout` | `user/govbr_logout.html` | Interstitial Gov.br logout page before the provider redirect | `govbr.logout` |
 
 ## Dataset Routes
 

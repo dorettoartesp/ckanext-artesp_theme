@@ -1,0 +1,19 @@
+{% extends "static/base.html" %}
+
+{% set page_title = _("Saindo do Portal de Dados Abertos da ARTESP") %}
+
+{% block page_content %}
+  <p>{{ _("Você será redirecionado para o Gov.br para concluir o logout.") }}</p>
+  <p>{{ _("Se o redirecionamento não acontecer automaticamente, use o botão abaixo.") }}</p>
+  <p class="action">
+    <a class="btn btn-primary" href="{{ govbr_logout_url }}">{{ _("Continuar para o Gov.br") }}</a>
+  </p>
+  <noscript>
+    <p>{{ _("JavaScript está desativado neste navegador.") }}</p>
+  </noscript>
+  <script>
+    window.setTimeout(function () {
+      window.location.href = {{ govbr_logout_url | tojson }};
+    }, 1000);
+  </script>
+{% endblock %}

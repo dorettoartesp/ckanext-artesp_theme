@@ -2,6 +2,7 @@ import logging
 
 from flask import Blueprint, redirect, request, session, url_for
 from ckan.common import logout_user
+from ckan.lib.base import render
 from ckan.plugins import toolkit
 
 from .client import GovBRAuthError, GovBRClient
@@ -128,7 +129,13 @@ def logout():
 
         session[_SESSION_LOGOUT_PENDING] = True
         session.modified = True
-        return redirect(govbr_logout)
+        return render(
+            "user/govbr_logout.html",
+            extra_vars={
+                "govbr_logout_url": govbr_logout,
+                "post_logout_redirect_uri": post_logout_uri,
+            },
+        )
 
     logout_user()
     return redirect(url_for("home.index"))

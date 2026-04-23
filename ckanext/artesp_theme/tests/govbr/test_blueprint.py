@@ -93,8 +93,9 @@ class TestRoutesExist:
             mock_tk.c.user = "govbr_user"
             mock_tk.h.url_for.return_value = "http://localhost:5000/user/oidc/logout"
             resp = app.get("/user/oidc/logout", follow_redirects=False)
-        assert resp.status_code in (302, 303)
-        assert resp.headers.get("Location") == mock_client.logout_url.return_value
+        assert resp.status_code == 200
+        assert "Saindo do Portal de Dados Abertos da ARTESP" in resp.text
+        assert mock_client.logout_url.return_value in resp.text
         mock_tk.h.url_for.assert_called_once_with("govbr.logout", qualified=True)
 
     def test_logout_return_leg_clears_session_and_redirects_home(self, app, reset_db):
