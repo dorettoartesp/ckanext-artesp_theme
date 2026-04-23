@@ -110,7 +110,7 @@ def callback():
 @govbr.route("/user/oidc/logout", methods=["GET", "POST"])
 def logout():
     client = _get_client()
-    post_logout_uri = toolkit.h.url_for("govbr.login", qualified=True)
+    post_logout_uri = toolkit.h.url_for("home.index", qualified=True)
     govbr_logout = client.logout_url(post_logout_uri)
 
     # Clear CKAN session

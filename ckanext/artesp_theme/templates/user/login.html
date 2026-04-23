@@ -9,7 +9,7 @@
       {% set ldap_open = error_summary and h.artesp_ldap_enabled() %}
 
       <div class="artesp-login-access">
-        <a href="{{ h.url_for('govbr.logout') }}" class="btn artesp-govbr-login">
+        <a href="{{ h.url_for('govbr.login') }}" class="btn artesp-govbr-login">
           <span>{{ _('Entrar com') }}</span><strong>gov.br</strong>
         </a>
 
