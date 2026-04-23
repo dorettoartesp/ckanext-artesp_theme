@@ -88,7 +88,10 @@ class GovBRClient:
         params = urllib.parse.urlencode(
             {"post_logout_redirect_uri": post_logout_redirect_uri}
         )
-        return f"{self._config.base_url}/logout?{params}"
+        return (
+            f"{self._config.effective_authorize_base_url}/"
+            f"{self._config.logout_path}?{params}"
+        )
 
     @staticmethod
     def _s256(verifier: str) -> str:

@@ -21,6 +21,7 @@ def config():
         scopes=["openid", "email", "profile"],
         redirect_uri="http://localhost:5000/user/oidc/callback",
         link_redirect_uri="http://localhost:5000/user/oidc/link/callback",
+        logout_path="logout",
     )
 
 
@@ -77,6 +78,7 @@ class TestPKCE:
             scopes=["openid"],
             redirect_uri="http://localhost/cb",
             link_redirect_uri="http://localhost/link/cb",
+            logout_path="endsession",
         )
         client = GovBRClient(cfg)
         url, _, _ = client.get_authorization_url("http://localhost/cb")
@@ -92,6 +94,7 @@ class TestPKCE:
             scopes=["openid"],
             redirect_uri="http://localhost/cb",
             link_redirect_uri="http://localhost/link/cb",
+            logout_path="logout",
         )
         client = GovBRClient(cfg)
         url, _, _ = client.get_authorization_url("http://localhost/cb")
@@ -221,9 +224,36 @@ class TestGetUserinfo:
 
 
 class TestLogoutUrl:
-    def test_logout_url_contains_govbr_endpoint(self, client):
+    def test_logout_url_uses_authorize_base_url_when_set(self):
+        cfg = GovBRConfig(
+            client_id="cid",
+            client_secret="cs",
+            base_url="http://mock-oauth2-server:8888/oidc",
+            authorize_base_url="http://127.0.0.1:8888/oidc",
+            scopes=["openid"],
+            redirect_uri="http://localhost:5000/user/oidc/callback",
+            link_redirect_uri="http://localhost:5000/user/oidc/link/callback",
+            logout_path="endsession",
+        )
+        client = GovBRClient(cfg)
         url = client.logout_url("http://localhost:5000/")
-        assert "sso.staging.acesso.gov.br/logout" in url
+        assert url.startswith("http://127.0.0.1:8888/oidc/endsession")
+        assert "mock-oauth2-server" not in url
+
+    def test_logout_url_falls_back_to_base_url_when_authorize_base_url_not_set(self):
+        cfg = GovBRConfig(
+            client_id="cid",
+            client_secret="cs",
+            base_url="https://sso.staging.acesso.gov.br",
+            authorize_base_url=None,
+            scopes=["openid"],
+            redirect_uri="http://localhost:5000/user/oidc/callback",
+            link_redirect_uri="http://localhost:5000/user/oidc/link/callback",
+            logout_path="logout",
+        )
+        client = GovBRClient(cfg)
+        url = client.logout_url("http://localhost:5000/")
+        assert url.startswith("https://sso.staging.acesso.gov.br/logout")
 
     def test_logout_url_contains_redirect(self, client):
         url = client.logout_url("http://localhost:5000/")

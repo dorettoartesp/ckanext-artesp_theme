@@ -11,6 +11,7 @@ class GovBRConfig:
     scopes: list
     redirect_uri: str
     link_redirect_uri: str
+    logout_path: str = "logout"
     authorize_base_url: str = None
 
     @property
@@ -30,6 +31,9 @@ class GovBRConfig:
         authorize_base_url = toolkit.config.get(
             "ckanext.artesp.govbr.authorize_base_url", ""
         ).rstrip("/") or None
+        logout_path = toolkit.config.get(
+            "ckanext.artesp.govbr.logout_path", "logout"
+        ).strip("/") or "logout"
         return cls(
             client_id=client_id,
             client_secret=toolkit.config.get(
@@ -47,4 +51,5 @@ class GovBRConfig:
             link_redirect_uri=toolkit.config.get(
                 "ckanext.artesp.govbr.link_redirect_uri", ""
             ),
+            logout_path=logout_path,
         )
