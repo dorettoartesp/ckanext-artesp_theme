@@ -1,4 +1,5 @@
-{% set govbr_sub = user.get('plugin_extras', {}).get('artesp', {}).get('govbr_sub') %}
+{% set user_data = user or {} %}
+{% set govbr_sub = user_data.get('plugin_extras', {}).get('artesp', {}).get('govbr_sub') %}
 
 <div class="module module-narrow module-shallow govbr-link-module" style="margin-top:1em;">
   <h2 class="module-heading">

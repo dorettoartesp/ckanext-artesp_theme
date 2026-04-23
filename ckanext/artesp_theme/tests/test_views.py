@@ -113,6 +113,19 @@ def test_logout_first_page_uses_ckan_logout_for_internal_users(app, reset_db):
 
 
 @pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.usefixtures("with_plugins")
+def test_govbr_link_snippet_handles_missing_user(app, reset_db):
+    with app.flask_app.test_request_context(
+        "/user/teste",
+        environ_overrides={"CKAN_LANG": "pt_BR"},
+    ):
+        html = base.render_snippet("user/snippets/govbr_link.html", user=None)
+
+    assert "Nenhuma conta Gov.br vinculada." in html
+    assert 'href="/user/oidc/link"' in html
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
 @pytest.mark.ckan_config("ckanext.ldap.uri", "ldap://ldap:389")
 @pytest.mark.usefixtures("with_plugins")
 def test_request_reset_route_is_forbidden_when_ldap_enabled(app, reset_db):
