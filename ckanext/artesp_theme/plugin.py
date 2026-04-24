@@ -9,6 +9,7 @@ import ckanext.artesp_theme.model  # noqa: F401 — registers DatasetRating impe
 from ckanext.artesp_theme.controllers import artesp_theme
 from ckanext.artesp_theme.govbr.blueprint import govbr as govbr_blueprint
 from ckanext.artesp_theme.logic import action as artesp_action
+from ckanext.artesp_theme.logic import audit_capture
 from ckanext.artesp_theme.logic import auth as artesp_auth
 from ckanext.artesp_theme.logic import validators
 from ckanext.artesp_theme.middleware import make_middleware
@@ -25,6 +26,7 @@ class ArtespThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IAuthFunctions)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IResourceController, inherit=True)
+    plugins.implements(plugins.ISignal)
 
     def update_config(self, config_):
         toolkit.add_template_directory(config_, "templates")
@@ -53,6 +55,11 @@ class ArtespThemePlugin(plugins.SingletonPlugin):
 
     def get_actions(self):
         return artesp_action.get_actions()
+
+    def get_signal_subscriptions(self):
+        return {
+            toolkit.signals.action_succeeded: [audit_capture.handle_action_succeeded],
+        }
 
     def after_resource_create(self, context, resource):
         artesp_action.sync_unfold_resource_view(context, resource)

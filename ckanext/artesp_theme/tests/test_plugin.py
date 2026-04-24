@@ -2,6 +2,7 @@ import ckan.plugins as plugins
 import pytest
 
 import ckanext.artesp_theme.plugin as plugin
+import ckan.plugins.toolkit as toolkit
 
 
 @pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
@@ -17,6 +18,10 @@ def test_plugin_loads_and_registers_expected_interfaces():
     assert "package_update" in auth_functions
     assert "package_collaborator_create" in auth_functions
     assert "artesp_theme_get_sum" in actions
+
+    subscriptions = plugin_instance.get_signal_subscriptions()
+
+    assert toolkit.signals.action_succeeded in subscriptions
 
 
 def test_plugin_delegates_resource_hooks_to_unfold_sync(monkeypatch):
