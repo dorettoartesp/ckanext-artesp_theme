@@ -139,3 +139,136 @@ def test_seo_meta_description_forwards_custom_length(monkeypatch):
     helpers.seo_meta_description(pkg_dict=pkg, length=50)
 
     assert captured['extract_length'] == 50
+
+
+def _make_pkg():
+    return {
+        'name': 'tarifas-pedagio-2024',
+        'title': 'Tarifas de Pedágio 2024',
+        'title_translated': {},
+        'notes': 'Dados sobre tarifas de pedágio.',
+        'notes_translated': {},
+        'tags': [{'name': 'pedágio'}, {'name': 'transporte'}],
+        'license_url': 'https://creativecommons.org/licenses/by/4.0/',
+        'license_title': 'CC BY 4.0',
+        'organization': {'name': 'artesp', 'title': 'ARTESP'},
+        'metadata_created': '2024-01-15T10:00:00',
+        'metadata_modified': '2024-06-01T12:00:00',
+        'resources': [
+            {
+                'id': 'res-1',
+                'name': 'Tabela CSV',
+                'url': 'https://dados.artesp.sp.gov.br/dataset/tarifas/resource/res-1',
+                'mimetype': 'text/csv',
+                'format': 'CSV',
+            }
+        ],
+    }
+
+
+def test_seo_jsonld_dataset_has_required_schema_fields(monkeypatch):
+    monkeypatch.setattr(
+        'ckanext.artesp_theme.helpers.toolkit.config.get',
+        lambda key, default='': 'https://dados.artesp.sp.gov.br' if key == 'ckan.site_url' else default,
+    )
+    monkeypatch.setattr(
+        'ckanext.artesp_theme.helpers.toolkit.url_for',
+        lambda route, **kw: f"/dataset/{kw.get('id', '')}",
+    )
+    monkeypatch.setattr(
+        'ckanext.artesp_theme.helpers.toolkit.h.get_translated',
+        lambda d, f: d.get(f, ''),
+    )
+    monkeypatch.setattr(
+        'ckanext.artesp_theme.helpers.toolkit.h.markdown_extract',
+        lambda text, extract_length=500: text,
+    )
+
+    result = helpers.seo_jsonld_dataset(_make_pkg())
+
+    assert result['@context'] == 'https://schema.org'
+    assert result['@type'] == 'Dataset'
+    assert result['name'] == 'Tarifas de Pedágio 2024'
+    assert result['description'] == 'Dados sobre tarifas de pedágio.'
+    assert result['url'] == 'https://dados.artesp.sp.gov.br/dataset/tarifas-pedagio-2024'
+    assert 'pedágio' in result['keywords']
+    assert 'transporte' in result['keywords']
+    assert result['license'] == 'https://creativecommons.org/licenses/by/4.0/'
+    assert result['datePublished'] == '2024-01-15'
+    assert result['dateModified'] == '2024-06-01'
+
+
+def test_seo_jsonld_dataset_has_creator_from_organization(monkeypatch):
+    monkeypatch.setattr(
+        'ckanext.artesp_theme.helpers.toolkit.config.get',
+        lambda key, default='': 'https://dados.artesp.sp.gov.br' if key == 'ckan.site_url' else default,
+    )
+    monkeypatch.setattr(
+        'ckanext.artesp_theme.helpers.toolkit.url_for',
+        lambda route, **kw: f"/dataset/{kw.get('id', '')}",
+    )
+    monkeypatch.setattr(
+        'ckanext.artesp_theme.helpers.toolkit.h.get_translated',
+        lambda d, f: d.get(f, ''),
+    )
+    monkeypatch.setattr(
+        'ckanext.artesp_theme.helpers.toolkit.h.markdown_extract',
+        lambda text, extract_length=500: text,
+    )
+
+    result = helpers.seo_jsonld_dataset(_make_pkg())
+
+    assert result['creator']['@type'] == 'Organization'
+    assert result['creator']['name'] == 'ARTESP'
+
+
+def test_seo_jsonld_dataset_has_distribution(monkeypatch):
+    monkeypatch.setattr(
+        'ckanext.artesp_theme.helpers.toolkit.config.get',
+        lambda key, default='': 'https://dados.artesp.sp.gov.br' if key == 'ckan.site_url' else default,
+    )
+    monkeypatch.setattr(
+        'ckanext.artesp_theme.helpers.toolkit.url_for',
+        lambda route, **kw: f"/dataset/{kw.get('id', '')}",
+    )
+    monkeypatch.setattr(
+        'ckanext.artesp_theme.helpers.toolkit.h.get_translated',
+        lambda d, f: d.get(f, ''),
+    )
+    monkeypatch.setattr(
+        'ckanext.artesp_theme.helpers.toolkit.h.markdown_extract',
+        lambda text, extract_length=500: text,
+    )
+
+    result = helpers.seo_jsonld_dataset(_make_pkg())
+
+    assert len(result['distribution']) == 1
+    dist = result['distribution'][0]
+    assert dist['@type'] == 'DataDownload'
+    assert dist['encodingFormat'] == 'text/csv'
+    assert 'res-1' in dist['contentUrl']
+
+
+def test_seo_jsonld_dataset_uses_license_title_as_fallback(monkeypatch):
+    pkg = _make_pkg()
+    pkg['license_url'] = ''
+    monkeypatch.setattr(
+        'ckanext.artesp_theme.helpers.toolkit.config.get',
+        lambda key, default='': 'https://dados.artesp.sp.gov.br' if key == 'ckan.site_url' else default,
+    )
+    monkeypatch.setattr(
+        'ckanext.artesp_theme.helpers.toolkit.url_for',
+        lambda route, **kw: f"/dataset/{kw.get('id', '')}",
+    )
+    monkeypatch.setattr(
+        'ckanext.artesp_theme.helpers.toolkit.h.get_translated',
+        lambda d, f: d.get(f, ''),
+    )
+    monkeypatch.setattr(
+        'ckanext.artesp_theme.helpers.toolkit.h.markdown_extract',
+        lambda text, extract_length=500: text,
+    )
+
+    result = helpers.seo_jsonld_dataset(pkg)
+
+    assert result['license'] == 'CC BY 4.0'

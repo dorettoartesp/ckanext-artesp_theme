@@ -363,6 +363,55 @@ def seo_meta_description(pkg_dict=None, org_dict=None, group_dict=None, length=1
     return toolkit.h.markdown_extract(raw, extract_length=length)
 
 
+def seo_jsonld_dataset(pkg_dict):
+    """Returns a Schema.org Dataset dict for use in a JSON-LD script tag."""
+    site_url = toolkit.config.get('ckan.site_url', '').rstrip('/')
+    pkg_url = site_url + toolkit.url_for('dataset.read', id=pkg_dict.get('name', ''))
+
+    description = toolkit.h.markdown_extract(
+        toolkit.h.get_translated(pkg_dict, 'notes') or '', extract_length=500
+    )
+
+    keywords = [tag['name'] for tag in pkg_dict.get('tags', [])]
+
+    distribution = []
+    for res in pkg_dict.get('resources', []):
+        distribution.append({
+            '@type': 'DataDownload',
+            'name': res.get('name') or res.get('id', ''),
+            'contentUrl': res.get('url', ''),
+            'encodingFormat': res.get('mimetype') or res.get('format', ''),
+        })
+
+    jsonld = {
+        '@context': 'https://schema.org',
+        '@type': 'Dataset',
+        'name': toolkit.h.get_translated(pkg_dict, 'title') or pkg_dict.get('name', ''),
+        'description': description,
+        'url': pkg_url,
+        'keywords': keywords,
+        'datePublished': (pkg_dict.get('metadata_created') or '')[:10],
+        'dateModified': (pkg_dict.get('metadata_modified') or '')[:10],
+    }
+
+    if pkg_dict.get('license_url'):
+        jsonld['license'] = pkg_dict['license_url']
+    elif pkg_dict.get('license_title'):
+        jsonld['license'] = pkg_dict['license_title']
+
+    if pkg_dict.get('organization'):
+        org = pkg_dict['organization']
+        jsonld['creator'] = {
+            '@type': 'Organization',
+            'name': org.get('title') or org.get('name', ''),
+        }
+
+    if distribution:
+        jsonld['distribution'] = distribution
+
+    return jsonld
+
+
 def get_helpers():
     return {
         "artesp_theme_hello": artesp_theme_hello,
