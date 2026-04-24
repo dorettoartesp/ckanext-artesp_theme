@@ -340,6 +340,16 @@ def get_rating_comment_captcha_stylesheet_url() -> str:
     return RATING_COMMENT_ALTCHA_STYLESHEET_URL
 
 
+# ── SEO helpers ─────────────────────────────────────────────────────────────
+
+from flask import request as flask_request
+
+
+def seo_canonical_url():
+    """Returns the canonical URL of the current page without query parameters."""
+    return flask_request.base_url
+
+
 def get_helpers():
     return {
         "artesp_theme_hello": artesp_theme_hello,
