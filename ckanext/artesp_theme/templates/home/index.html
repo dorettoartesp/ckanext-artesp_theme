@@ -2,6 +2,15 @@
 
 {% block subtitle %}{{ _("Welcome") }}{% endblock %}
 
+{% block head_extras %}
+  {{ super() }}
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ h.seo_canonical_url() }}">
+  <meta property="og:title" content="{{ g.site_title }}">
+  <meta property="og:description" content="{{ h.seo_meta_description()|e }}">
+  <script type="application/ld+json">{{ h.seo_jsonld_site()|tojson(indent=2) }}</script>
+{% endblock %}
+
 {% block maintag %}{% endblock %}
 {% block toolbar %}{% endblock %}
 

@@ -340,6 +340,115 @@ def get_rating_comment_captcha_stylesheet_url() -> str:
     return RATING_COMMENT_ALTCHA_STYLESHEET_URL
 
 
+# ── SEO helpers ─────────────────────────────────────────────────────────────
+
+from flask import request as flask_request
+
+
+def seo_canonical_url():
+    """Returns the canonical URL of the current page without query parameters."""
+    return flask_request.base_url
+
+
+def seo_meta_description(pkg_dict=None, org_dict=None, group_dict=None, length=155):
+    """Returns a truncated plain-text description for <meta name="description">."""
+    if pkg_dict:
+        raw = toolkit.h.get_translated(pkg_dict, 'notes') or ''
+    elif org_dict:
+        raw = toolkit.h.get_translated(org_dict, 'description') or ''
+    elif group_dict:
+        raw = toolkit.h.get_translated(group_dict, 'description') or ''
+    else:
+        raw = toolkit.config.get('ckan.site_description', '')
+    return toolkit.h.markdown_extract(raw, extract_length=length)
+
+
+def seo_jsonld_dataset(pkg_dict):
+    """Returns a Schema.org Dataset dict for use in a JSON-LD script tag."""
+    site_url = toolkit.config.get('ckan.site_url', '').rstrip('/')
+    pkg_url = site_url + toolkit.url_for('dataset.read', id=pkg_dict.get('name', ''))
+
+    description = toolkit.h.markdown_extract(
+        toolkit.h.get_translated(pkg_dict, 'notes') or '', extract_length=500
+    )
+
+    keywords = [tag['name'] for tag in pkg_dict.get('tags', [])]
+
+    distribution = []
+    for res in pkg_dict.get('resources', []):
+        distribution.append({
+            '@type': 'DataDownload',
+            'name': res.get('name') or res.get('id', ''),
+            'contentUrl': res.get('url', ''),
+            'encodingFormat': res.get('mimetype') or res.get('format', ''),
+        })
+
+    jsonld = {
+        '@context': 'https://schema.org',
+        '@type': 'Dataset',
+        'name': toolkit.h.get_translated(pkg_dict, 'title') or pkg_dict.get('name', ''),
+        'description': description,
+        'url': pkg_url,
+        'keywords': keywords,
+        'datePublished': (pkg_dict.get('metadata_created') or '')[:10],
+        'dateModified': (pkg_dict.get('metadata_modified') or '')[:10],
+    }
+
+    if pkg_dict.get('license_url'):
+        jsonld['license'] = pkg_dict['license_url']
+    elif pkg_dict.get('license_title'):
+        jsonld['license'] = pkg_dict['license_title']
+
+    if pkg_dict.get('organization'):
+        org = pkg_dict['organization']
+        jsonld['creator'] = {
+            '@type': 'Organization',
+            'name': org.get('title') or org.get('name', ''),
+        }
+
+    if distribution:
+        jsonld['distribution'] = distribution
+
+    return jsonld
+
+
+def seo_jsonld_organization(org_dict):
+    """Returns a Schema.org GovernmentOrganization dict for an organization page."""
+    site_url = toolkit.config.get('ckan.site_url', '').rstrip('/')
+    org_url = site_url + toolkit.url_for('organization.read', id=org_dict.get('name', ''))
+
+    description = toolkit.h.markdown_extract(
+        toolkit.h.get_translated(org_dict, 'description') or '', extract_length=300
+    )
+
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'GovernmentOrganization',
+        'name': org_dict.get('display_name') or org_dict.get('title') or org_dict.get('name', ''),
+        'description': description,
+        'url': org_url,
+    }
+
+
+def seo_jsonld_site():
+    """Returns a Schema.org GovernmentOrganization dict for the ARTESP site homepage."""
+    site_url = toolkit.config.get('ckan.site_url', '').rstrip('/')
+    site_title = toolkit.config.get('ckan.site_title', 'ARTESP Dados Abertos')
+    site_description = toolkit.config.get('ckan.site_description', '')
+
+    jsonld = {
+        '@context': 'https://schema.org',
+        '@type': 'GovernmentOrganization',
+        'name': site_title,
+        'url': site_url,
+    }
+
+    if site_description:
+        jsonld['description'] = site_description
+
+    return jsonld
+
+
 def get_helpers():
     return {
         "artesp_theme_hello": artesp_theme_hello,
@@ -368,4 +477,9 @@ def get_helpers():
         "get_rating_comment_captcha_challenge_url": get_rating_comment_captcha_challenge_url,
         "get_rating_comment_captcha_script_url": get_rating_comment_captcha_script_url,
         "get_rating_comment_captcha_stylesheet_url": get_rating_comment_captcha_stylesheet_url,
+        "seo_canonical_url": seo_canonical_url,
+        "seo_meta_description": seo_meta_description,
+        "seo_jsonld_dataset": seo_jsonld_dataset,
+        "seo_jsonld_organization": seo_jsonld_organization,
+        "seo_jsonld_site": seo_jsonld_site,
     }
