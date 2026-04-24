@@ -5,6 +5,7 @@ from ckan.common import logout_user
 from ckan.lib.base import render
 from ckan.plugins import toolkit
 
+from ckanext.artesp_theme.logic import audit_capture
 from .client import GovBRAuthError, GovBRClient
 from .config import GovBRConfig
 from .services import ExternalUserService, GovBRLinkError
@@ -93,6 +94,15 @@ def callback():
         userinfo = client.get_userinfo(access_token)
     except GovBRAuthError as exc:
         log.warning("GovBR auth error: %s", exc)
+        audit_capture.record_auth_event(
+            event_action="login_failure",
+            success=False,
+            auth_provider="govbr",
+            actor_name=None,
+            actor_identifier=None,
+            request_path="/user/oidc/callback",
+            details={"reason": "GovBRAuthError"},
+        )
         _flash_error("Login via Gov.br failed. Please try again.")
         return redirect(url_for("user.login"))
 
@@ -100,12 +110,21 @@ def callback():
     ckan_user = service.find_or_create(userinfo)
 
     if not ckan_user:
+        audit_capture.record_auth_event(
+            event_action="login_failure",
+            success=False,
+            auth_provider="govbr",
+            actor_name=None,
+            actor_identifier=None,
+            request_path="/user/oidc/callback",
+            details={"reason": "user_not_found"},
+        )
         _flash_error("Unable to create or retrieve your account.")
         return redirect(url_for("user.login"))
 
-    _set_repoze_user(ckan_user.name)
     session[_SESSION_AUTH_PROVIDER] = "govbr"
     session.modified = True
+    _set_repoze_user(ckan_user.name)
     return redirect(url_for("home.index"))
 
 

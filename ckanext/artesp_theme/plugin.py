@@ -59,6 +59,9 @@ class ArtespThemePlugin(plugins.SingletonPlugin):
     def get_signal_subscriptions(self):
         return {
             toolkit.signals.action_succeeded: [audit_capture.handle_action_succeeded],
+            toolkit.signals.user_logged_in: [audit_capture.handle_user_logged_in],
+            toolkit.signals.user_logged_out: [audit_capture.handle_user_logged_out],
+            toolkit.signals.failed_login: [audit_capture.handle_failed_login],
         }
 
     def after_resource_create(self, context, resource):

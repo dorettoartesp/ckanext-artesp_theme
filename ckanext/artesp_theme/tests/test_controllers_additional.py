@@ -402,6 +402,50 @@ class TestUserVerifyAdditionalBranches:
         assert result == "login-success"
         mock_helpers.login_success.assert_called_once_with("alice", came_from=None)
 
+    def test_records_ldap_success_when_login_succeeds(self):
+        class MultipleMatchError(Exception):
+            pass
+
+        class UserConflictError(Exception):
+            pass
+
+        mock_helpers = MagicMock()
+        mock_helpers.check_ldap_password.return_value = True
+        mock_helpers.get_or_create_ldap_user.return_value = "alice"
+        mock_helpers.login_success.return_value = "login-success"
+        fake_search = types.SimpleNamespace(
+            find_ldap_user=MagicMock(return_value={"cn": "cn=Alice"})
+        )
+        fake_exceptions = types.SimpleNamespace(
+            MultipleMatchError=MultipleMatchError,
+            UserConflictError=UserConflictError,
+        )
+        fake_routes = types.SimpleNamespace(_helpers=mock_helpers)
+
+        with patch.dict(
+            sys.modules,
+            {
+                "ckanext.ldap.lib.exceptions": fake_exceptions,
+                "ckanext.ldap.lib.search": fake_search,
+                "ckanext.ldap.routes": fake_routes,
+            },
+        ), patch.object(controllers, "toolkit") as mock_toolkit, patch.object(
+            controllers, "audit_capture"
+        ) as mock_audit_capture:
+            mock_toolkit.request.values = {"login": "alice", "password": "secret"}
+            mock_toolkit.config = {"ckanext.ldap.ckan_fallback": False}
+            result = controllers._user_verify()
+
+        assert result == "login-success"
+        mock_audit_capture.record_auth_event.assert_called_once_with(
+            event_action="login_success",
+            success=True,
+            auth_provider="ldap",
+            actor_name="alice",
+            actor_identifier="alice",
+            request_path="/user/verify",
+        )
+
     def test_returns_login_failed_when_password_payload_is_missing(self):
         class MultipleMatchError(Exception):
             pass

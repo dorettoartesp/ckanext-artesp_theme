@@ -8,7 +8,7 @@ from ckan.lib.pagination import Page
 import logging
 
 import ckanext.artesp_theme.helpers as artesp_helpers
-from ckanext.artesp_theme.logic import auth_helpers
+from ckanext.artesp_theme.logic import audit_capture, auth_helpers
 
 log = logging.getLogger(__name__)
 
@@ -118,17 +118,52 @@ def _user_verify():
                     auth_helpers.ensure_user_membership_in_artesp(user_name)
                     auth_helpers.ensure_user_memberships_in_all_groups(user_name)
                 except UserConflictError as e:
+                    audit_capture.record_auth_event(
+                        event_action="login_failure",
+                        success=False,
+                        auth_provider="ldap",
+                        actor_name=login,
+                        actor_identifier=login,
+                        request_path="/user/verify",
+                        details={"reason": "UserConflictError"},
+                    )
                     return _helpers.login_failed(error=str(e))
+                audit_capture.record_auth_event(
+                    event_action="login_success",
+                    success=True,
+                    auth_provider="ldap",
+                    actor_name=user_name,
+                    actor_identifier=user_name,
+                    request_path="/user/verify",
+                )
                 return _helpers.login_success(user_name, came_from=came_from)
             elif ldap_user_dict:
                 if toolkit.config['ckanext.ldap.ckan_fallback']:
                     exists = _helpers.ckan_user_exists(login)
                     if exists['exists'] and not exists['is_ldap']:
+                        audit_capture.record_auth_event(
+                            event_action="login_failure",
+                            success=False,
+                            auth_provider="ldap",
+                            actor_name=login,
+                            actor_identifier=login,
+                            request_path="/user/verify",
+                            details={"reason": "username_conflict"},
+                        )
                         return _helpers.login_failed(
                             error=toolkit._(
                                 'Conflito de nome de usuário. Por favor, entre em contato com o administrador do site.'
                             )
                         )
+                audit_capture.record_auth_event(
+                    event_action="login_failure",
+                    success=False,
+                    auth_provider="ldap",
+                    actor_name=login,
+                    actor_identifier=login,
+                    request_path="/user/verify",
+                    details={"reason": "invalid_password"},
+                )
                 return _helpers.login_failed(
                     error=toolkit._('Nome de usuário ou senha incorretos.') + ' [LDAP1]'
                 )
@@ -139,15 +174,50 @@ def _user_verify():
                 except toolkit.ObjectNotFound:
                     user = None
                 if user and user.validate_password(password):
+                    audit_capture.record_auth_event(
+                        event_action="login_success",
+                        success=True,
+                        auth_provider="local",
+                        actor_name=user.name,
+                        actor_identifier=user.name,
+                        request_path="/user/verify",
+                    )
                     return _helpers.login_success(user.name, came_from=came_from)
+                audit_capture.record_auth_event(
+                    event_action="login_failure",
+                    success=False,
+                    auth_provider="local",
+                    actor_name=login,
+                    actor_identifier=login,
+                    request_path="/user/verify",
+                    details={"reason": "fallback_invalid_credentials"},
+                )
                 return _helpers.login_failed(
                     error=toolkit._('Nome de usuário ou senha incorretos.') + ' [LDAP2]'
                 )
             else:
+                audit_capture.record_auth_event(
+                    event_action="login_failure",
+                    success=False,
+                    auth_provider="ldap",
+                    actor_name=login,
+                    actor_identifier=login,
+                    request_path="/user/verify",
+                    details={"reason": "user_not_found"},
+                )
                 return _helpers.login_failed(
                     error=toolkit._('Nome de usuário ou senha incorretos.') + ' [LDAP3]'
                 )
 
+        audit_capture.record_auth_event(
+            event_action="login_failure",
+            success=False,
+            auth_provider="ldap",
+            actor_name=params.get("login"),
+            actor_identifier=params.get("login"),
+            request_path="/user/verify",
+            details={"reason": "missing_credentials"},
+        )
         return _helpers.login_failed(
             error=toolkit._('Por favor, insira o nome de usuário e a senha.')
         )

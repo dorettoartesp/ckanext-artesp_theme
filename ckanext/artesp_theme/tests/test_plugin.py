@@ -22,6 +22,9 @@ def test_plugin_loads_and_registers_expected_interfaces():
     subscriptions = plugin_instance.get_signal_subscriptions()
 
     assert toolkit.signals.action_succeeded in subscriptions
+    assert toolkit.signals.user_logged_in in subscriptions
+    assert toolkit.signals.user_logged_out in subscriptions
+    assert toolkit.signals.failed_login in subscriptions
 
 
 def test_plugin_delegates_resource_hooks_to_unfold_sync(monkeypatch):

@@ -108,3 +108,81 @@ def test_handle_action_succeeded_persists_resource_delete_as_api(monkeypatch):
     assert event.package_name == "dataset-9"
     assert event.resource_id == "res-1"
     assert event.resource_name == "arquivo.csv"
+
+
+def test_handle_user_logged_in_persists_auth_event(monkeypatch):
+    user = factories.User()
+
+    monkeypatch.setattr(
+        audit_capture,
+        "request",
+        SimpleNamespace(
+            path="/user/login",
+            headers={},
+            environ={"REMOTE_ADDR": "127.0.0.1"},
+            user_agent=SimpleNamespace(string="pytest-browser"),
+        ),
+    )
+    monkeypatch.setattr(audit_capture, "session", {"artesp_auth_provider": "local"})
+
+    audit_capture.handle_user_logged_in("app", user=SimpleNamespace(
+        id=user["id"],
+        name=user["name"],
+        display_name=user["fullname"],
+        sysadmin=False,
+        plugin_extras={},
+    ))
+
+    event = model.Session.query(AuditEvent).one()
+    assert event.event_family == "authentication"
+    assert event.event_action == "login_success"
+    assert event.auth_provider == "local"
+    assert event.channel == "web"
+
+
+def test_handle_user_logged_in_skips_user_verify_requests(monkeypatch):
+    user = factories.User()
+
+    monkeypatch.setattr(
+        audit_capture,
+        "request",
+        SimpleNamespace(
+            path="/user/verify",
+            headers={},
+            environ={"REMOTE_ADDR": "127.0.0.1"},
+            user_agent=SimpleNamespace(string="pytest-browser"),
+        ),
+    )
+
+    audit_capture.handle_user_logged_in("app", user=SimpleNamespace(
+        id=user["id"],
+        name=user["name"],
+        display_name=user["fullname"],
+        sysadmin=False,
+        plugin_extras={},
+    ))
+
+    assert model.Session.query(AuditEvent).count() == 0
+
+
+def test_handle_failed_login_persists_failure(monkeypatch):
+    monkeypatch.setattr(
+        audit_capture,
+        "request",
+        SimpleNamespace(
+            path="/user/login",
+            headers={},
+            environ={"REMOTE_ADDR": "198.51.100.7"},
+            user_agent=SimpleNamespace(string="pytest-browser"),
+        ),
+    )
+
+    audit_capture.handle_failed_login("alice")
+
+    event = model.Session.query(AuditEvent).one()
+    assert event.event_family == "authentication"
+    assert event.event_action == "login_failure"
+    assert event.success is False
+    assert event.actor_name == "alice"
+    assert event.auth_provider == "local"
+    assert event.ip_address == "198.51.100.7"

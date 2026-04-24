@@ -4,7 +4,7 @@ from __future__ import annotations
 from typing import Any, Optional
 
 import ckan.model as model
-from flask import has_request_context, request
+from flask import has_request_context, request, session
 
 from ckanext.artesp_theme.audit_model import AuditEvent
 from ckanext.artesp_theme.logic import auth_helpers
@@ -52,6 +52,73 @@ def handle_action_succeeded(sender, **kwargs):
     model.Session.commit()
 
 
+def handle_user_logged_in(sender, **kwargs):
+    if _request_path() == "/user/verify":
+        return
+
+    user = kwargs.get("user")
+    record_auth_event(
+        event_action="login_success",
+        success=True,
+        auth_provider=_auth_provider(),
+        actor_name=getattr(user, "name", None),
+        actor_identifier=getattr(user, "id", None),
+        actor=user,
+    )
+
+
+def handle_user_logged_out(sender, **kwargs):
+    user = kwargs.get("user")
+    record_auth_event(
+        event_action="logout",
+        success=True,
+        auth_provider=_auth_provider(),
+        actor_name=getattr(user, "name", None),
+        actor_identifier=getattr(user, "id", None),
+        actor=user,
+    )
+
+
+def handle_failed_login(sender, **kwargs):
+    record_auth_event(
+        event_action="login_failure",
+        success=False,
+        auth_provider="local",
+        actor_name=sender,
+        actor_identifier=None,
+    )
+
+
+def record_auth_event(
+    *,
+    event_action: str,
+    success: bool,
+    auth_provider: Optional[str],
+    actor_name: Optional[str],
+    actor_identifier: Optional[str],
+    actor=None,
+    request_path: Optional[str] = None,
+    details: Optional[dict[str, Any]] = None,
+):
+    event = AuditEvent(
+        event_family="authentication",
+        event_action=event_action,
+        success=success,
+        actor_id=getattr(actor, "id", None) or actor_identifier,
+        actor_name=actor_name,
+        actor_display_name=getattr(actor, "display_name", None),
+        actor_type=_actor_type(actor),
+        auth_provider=auth_provider,
+        channel=_channel(),
+        request_path=request_path or _request_path(),
+        ip_address=_ip_address(),
+        user_agent=_user_agent(),
+        details=details or {},
+    )
+    model.Session.add(event)
+    model.Session.commit()
+
+
 def _actor_type(actor) -> str:
     if not actor:
         return "anonymous"
@@ -72,22 +139,42 @@ def _channel() -> str:
 def _request_path() -> str:
     if has_request_context():
         return request.path or ""
-    path = getattr(request, "path", "")
+    try:
+        path = getattr(request, "path", "")
+    except RuntimeError:
+        return ""
     return path or ""
 
 
+def _auth_provider() -> str:
+    try:
+        provider = session.get("artesp_auth_provider")
+    except RuntimeError:
+        return "local"
+    return provider or "local"
+
+
 def _ip_address() -> Optional[str]:
-    headers = getattr(request, "headers", {}) or {}
+    try:
+        headers = getattr(request, "headers", {}) or {}
+    except RuntimeError:
+        return None
     forwarded_for = headers.get("X-Forwarded-For") if hasattr(headers, "get") else None
     if forwarded_for:
         return forwarded_for.split(",")[0].strip()
 
-    environ = getattr(request, "environ", {}) or {}
+    try:
+        environ = getattr(request, "environ", {}) or {}
+    except RuntimeError:
+        return None
     return environ.get("REMOTE_ADDR")
 
 
 def _user_agent() -> Optional[str]:
-    user_agent = getattr(request, "user_agent", None)
+    try:
+        user_agent = getattr(request, "user_agent", None)
+    except RuntimeError:
+        return None
     return getattr(user_agent, "string", None)
 
 

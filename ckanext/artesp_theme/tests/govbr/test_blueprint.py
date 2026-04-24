@@ -218,6 +218,33 @@ class TestCallbackGovBRAuthError:
         location = resp.headers.get("Location", "")
         assert "login" in location or resp.status_code in (302, 303)
 
+    def test_govbr_auth_error_records_audit_failure(self, app, mock_client):
+        from ckanext.artesp_theme.govbr.client import GovBRAuthError
+
+        mock_client.exchange_code.side_effect = GovBRAuthError("token exchange failed")
+
+        with app.flask_app.test_client() as c:
+            with c.session_transaction() as sess:
+                sess["govbr_state"] = "state123"
+                sess["govbr_code_verifier"] = "verifier123"
+
+            with _patches(mock_client)[0], _patches(mock_client)[1], \
+                 patch("ckanext.artesp_theme.govbr.blueprint.audit_capture") as mock_audit_capture:
+                c.get(
+                    "/user/oidc/callback?code=abc&state=state123",
+                    follow_redirects=False,
+                )
+
+        mock_audit_capture.record_auth_event.assert_called_once_with(
+            event_action="login_failure",
+            success=False,
+            auth_provider="govbr",
+            actor_name=None,
+            actor_identifier=None,
+            request_path="/user/oidc/callback",
+            details={"reason": "GovBRAuthError"},
+        )
+
 
 class TestCallbackUserNotFound:
     """Lines 99-100: ExternalUserService returns None."""
@@ -267,6 +294,32 @@ class TestCallbackSuccess:
             assert sess.get("artesp_auth_provider") == "govbr"
         mock_user_get.assert_called_with("govbr_user")
         mock_login_user.assert_called_once()
+
+    def test_callback_sets_auth_provider_before_login(self, app, mock_client):
+        def assert_provider_before_login(user_obj):
+            from flask import session as flask_session
+
+            assert flask_session.get("artesp_auth_provider") == "govbr"
+
+        with app.flask_app.test_client() as c:
+            with c.session_transaction() as sess:
+                sess["govbr_state"] = "state123"
+                sess["govbr_code_verifier"] = "verifier123"
+
+            with _patches(mock_client)[0], _patches(mock_client)[1], \
+                 patch("ckanext.artesp_theme.govbr.blueprint.ExternalUserService") as mock_svc_cls, \
+                 patch("ckan.model.User.get", return_value=SimpleNamespace(name="govbr_user")), \
+                 patch("ckan.common.login_user", side_effect=assert_provider_before_login):
+                mock_svc = MagicMock()
+                mock_svc.find_or_create.return_value = SimpleNamespace(name="govbr_user")
+                mock_svc_cls.return_value = mock_svc
+
+                resp = c.get(
+                    "/user/oidc/callback?code=abc&state=state123",
+                    follow_redirects=False,
+                )
+
+        assert resp.status_code in (302, 303)
 
 
 class TestLinkRouteAuthenticated:
