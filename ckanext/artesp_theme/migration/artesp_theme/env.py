@@ -8,6 +8,9 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config, pool
 
 from ckan.model.meta import metadata
+from ckanext.artesp_theme.migration.artesp_theme.table_filter import (
+    include_extension_table,
+)
 
 config = context.config
 fileConfig(config.config_file_name)
@@ -18,10 +21,7 @@ name = os.path.basename(os.path.dirname(__file__))
 
 
 def include_object(object, object_name, type_, reflected, compare_to):
-    if type_ == "table":
-        # Only touch tables owned by this extension
-        return object_name.startswith("dataset_rating") or object_name == "rating_action"
-    return True
+    return include_extension_table(object_name, type_)
 
 
 def run_migrations_offline():

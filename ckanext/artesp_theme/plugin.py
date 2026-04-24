@@ -3,6 +3,7 @@ import os.path
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 
+import ckanext.artesp_theme.audit_model  # noqa: F401 — registers AuditEvent mapping
 import ckanext.artesp_theme.helpers as helpers
 import ckanext.artesp_theme.model  # noqa: F401 — registers DatasetRating imperative mapping
 from ckanext.artesp_theme.controllers import artesp_theme
