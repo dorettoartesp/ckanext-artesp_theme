@@ -106,3 +106,36 @@ def test_seo_meta_description_returns_empty_when_no_data(monkeypatch):
     result = helpers.seo_meta_description()
 
     assert result == ''
+
+
+def test_seo_meta_description_guards_against_none_from_get_translated(monkeypatch):
+    pkg = {'notes': None, 'notes_translated': {}}
+    monkeypatch.setattr(
+        'ckanext.artesp_theme.helpers.toolkit.h.get_translated',
+        lambda d, f: None,
+    )
+    monkeypatch.setattr(
+        'ckanext.artesp_theme.helpers.toolkit.h.markdown_extract',
+        lambda text, extract_length=155: text,
+    )
+
+    result = helpers.seo_meta_description(pkg_dict=pkg)
+
+    assert result == ''
+
+
+def test_seo_meta_description_forwards_custom_length(monkeypatch):
+    captured = {}
+    pkg = {'notes': 'texto longo', 'notes_translated': {}}
+    monkeypatch.setattr(
+        'ckanext.artesp_theme.helpers.toolkit.h.get_translated',
+        lambda d, f: d.get(f, ''),
+    )
+    monkeypatch.setattr(
+        'ckanext.artesp_theme.helpers.toolkit.h.markdown_extract',
+        lambda text, extract_length=155: captured.update({'extract_length': extract_length}) or text,
+    )
+
+    helpers.seo_meta_description(pkg_dict=pkg, length=50)
+
+    assert captured['extract_length'] == 50
