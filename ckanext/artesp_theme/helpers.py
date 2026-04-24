@@ -477,4 +477,9 @@ def get_helpers():
         "get_rating_comment_captcha_challenge_url": get_rating_comment_captcha_challenge_url,
         "get_rating_comment_captcha_script_url": get_rating_comment_captcha_script_url,
         "get_rating_comment_captcha_stylesheet_url": get_rating_comment_captcha_stylesheet_url,
+        "seo_canonical_url": seo_canonical_url,
+        "seo_meta_description": seo_meta_description,
+        "seo_jsonld_dataset": seo_jsonld_dataset,
+        "seo_jsonld_organization": seo_jsonld_organization,
+        "seo_jsonld_site": seo_jsonld_site,
     }
