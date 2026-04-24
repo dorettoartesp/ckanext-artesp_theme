@@ -6,10 +6,15 @@
 
 {% block head_extras -%}
   {{ super() }}
-  {% set description = h.markdown_extract(
-    h.get_translated(pkg, 'notes'), extract_length=200) %}
+  <meta property="og:type" content="dataset">
+  <meta property="og:url" content="{{ h.seo_canonical_url() }}">
   <meta property="og:title" content="{{ h.dataset_display_name(pkg) }} - {{ g.site_title }}">
-  <meta property="og:description" content="{{ description|forceescape|trim }}">
+  <meta property="og:description" content="{{ h.seo_meta_description(pkg_dict=pkg)|e }}">
+  <meta property="og:image" content="{{ h.url_for_static('/logo-artesp-opt.png', qualified=true) }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ h.dataset_display_name(pkg) }}">
+  <meta name="twitter:description" content="{{ h.seo_meta_description(pkg_dict=pkg)|e }}">
+  <script type="application/ld+json">{{ h.seo_jsonld_dataset(pkg)|tojson(indent=2) }}</script>
 {% endblock -%}
 
 {% block content_action %}
