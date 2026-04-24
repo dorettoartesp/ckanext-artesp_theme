@@ -5,6 +5,7 @@ Disallow: /revision/
 Disallow: /dataset/*/history
 Disallow: /api/
 Crawl-Delay: 10
+Sitemap: {{ h.url_for('artesp_theme.sitemap', qualified=True) }}
 {%- endblock %}
 
 {% block additional_user_agents -%}
