@@ -8,6 +8,7 @@ from unittest.mock import MagicMock, patch
 import ckan.plugins.toolkit as tk
 import pytest
 from flask import g
+from ckan.tests import factories
 
 import ckanext.artesp_theme.controllers as controllers
 
@@ -259,6 +260,45 @@ class TestStatsRestriction:
         with app.flask_app.test_request_context("/stats"):
             g.user = "alice"
             assert controllers.restrict_stats_page_access() is None
+
+
+def test_audit_admin_forwards_filters_to_query_service(app, monkeypatch):
+    captured = {}
+    expected_payload = {"events": [], "item_count": 0, "page": 1}
+    sysadmin = factories.Sysadmin()
+
+    monkeypatch.setattr(
+        controllers,
+        "render_template",
+        lambda template, **kwargs: {"template": template, **kwargs},
+    )
+    monkeypatch.setattr(
+        controllers.audit_query,
+        "search_audit_events",
+        lambda filters: captured.update(filters) or expected_payload,
+    )
+
+    with app.flask_app.test_request_context(
+        "/admin/audit?scope=dataset&provider=govbr&channel=api&user=alice&ip=203.0.113.10&object=rodovia&page=2"
+    ):
+        g.user = sysadmin["name"]
+        response = controllers.audit_admin()
+
+    assert response["template"] == "admin/audit.html"
+    assert response["events"] == []
+    assert response["item_count"] == 0
+    assert captured == {
+        "scope": "dataset",
+        "provider": "govbr",
+        "channel": "api",
+        "user": "alice",
+        "ip": "203.0.113.10",
+        "object": "rodovia",
+        "page": "2",
+        "date_from": "",
+        "date_to": "",
+        "action": "",
+    }
 
 
 class TestUserVerifyAdditionalBranches:

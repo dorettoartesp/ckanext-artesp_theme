@@ -1,0 +1,136 @@
+{% extends "admin/base.html" %}
+
+{% block subtitle %}{{ _('Auditoria') }}{% endblock %}
+
+{% block primary_content %}
+  <section class="module">
+    <div class="module-content">
+      <h1>{{ _('Auditoria') }}</h1>
+
+      <form method="get" action="{{ h.url_for('artesp_theme.audit_admin') }}" class="form-inline">
+        <div class="row">
+          <div class="col-md-2">
+            <label for="field-date-from">{{ _('Data inicial') }}</label>
+            <input id="field-date-from" class="form-control" type="date" name="date_from" value="{{ filters.date_from }}">
+          </div>
+          <div class="col-md-2">
+            <label for="field-date-to">{{ _('Data final') }}</label>
+            <input id="field-date-to" class="form-control" type="date" name="date_to" value="{{ filters.date_to }}">
+          </div>
+          <div class="col-md-2">
+            <label for="field-scope">{{ _('Escopo') }}</label>
+            <select id="field-scope" class="form-control" name="scope">
+              {% for value, label in scope_choices %}
+                <option value="{{ value }}" {% if filters.scope == value %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label for="field-action">{{ _('Ação') }}</label>
+            <select id="field-action" class="form-control" name="action">
+              {% for value, label in action_choices %}
+                <option value="{{ value }}" {% if filters.action == value %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label for="field-provider">{{ _('Provedor') }}</label>
+            <select id="field-provider" class="form-control" name="provider">
+              {% for value, label in provider_choices %}
+                <option value="{{ value }}" {% if filters.provider == value %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label for="field-channel">{{ _('Canal') }}</label>
+            <select id="field-channel" class="form-control" name="channel">
+              {% for value, label in channel_choices %}
+                <option value="{{ value }}" {% if filters.channel == value %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="row m-t-sm">
+          <div class="col-md-3">
+            <label for="field-user">{{ _('Usuário') }}</label>
+            <input id="field-user" class="form-control" type="text" name="user" value="{{ filters.user }}">
+          </div>
+          <div class="col-md-3">
+            <label for="field-ip">{{ _('IP') }}</label>
+            <input id="field-ip" class="form-control" type="text" name="ip" value="{{ filters.ip }}">
+          </div>
+          <div class="col-md-4">
+            <label for="field-object">{{ _('Objeto') }}</label>
+            <input id="field-object" class="form-control" type="text" name="object" value="{{ filters.object }}">
+          </div>
+          <div class="col-md-2">
+            <label>&nbsp;</label>
+            <div>
+              <button class="btn btn-primary" type="submit">{{ _('Filtrar') }}</button>
+              <a class="btn btn-default" href="{{ h.url_for('artesp_theme.audit_admin') }}">{{ _('Limpar') }}</a>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <p class="m-t-md">{{ _('Total de eventos') }}: {{ item_count }}</p>
+
+      <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+          <thead>
+            <tr>
+              <th>{{ _('Data/hora') }}</th>
+              <th>{{ _('Escopo') }}</th>
+              <th>{{ _('Ação') }}</th>
+              <th>{{ _('Usuário') }}</th>
+              <th>{{ _('Tipo de usuário') }}</th>
+              <th>{{ _('Provedor') }}</th>
+              <th>{{ _('Canal') }}</th>
+              <th>{{ _('IP') }}</th>
+              <th>{{ _('Dataset') }}</th>
+              <th>{{ _('Resource') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for event in events %}
+              <tr>
+                <td>{{ event.occurred_at.strftime('%Y-%m-%d %H:%M:%S') if event.occurred_at else '' }}</td>
+                <td>{{ event.event_family }}</td>
+                <td>{{ event.event_action }}</td>
+                <td>{{ event.actor_name or '' }}</td>
+                <td>{{ event.actor_type }}</td>
+                <td>{{ event.auth_provider or '' }}</td>
+                <td>{{ event.channel }}</td>
+                <td>{{ event.ip_address or '' }}</td>
+                <td>{{ event.package_name or '' }}</td>
+                <td>{{ event.resource_name or '' }}</td>
+              </tr>
+            {% else %}
+              <tr>
+                <td colspan="10">{{ _('Nenhum evento encontrado.') }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      {% if has_prev or has_next %}
+        <nav aria-label="{{ _('Paginação da auditoria') }}">
+          <ul class="pager">
+            {% if has_prev %}
+              <li class="previous">
+                <a href="{{ h.url_for('artesp_theme.audit_admin', date_from=filters.date_from, date_to=filters.date_to, scope=filters.scope, action=filters.action, provider=filters.provider, channel=filters.channel, user=filters.user, ip=filters.ip, object=filters.object, page=page - 1) }}">&larr; {{ _('Anterior') }}</a>
+              </li>
+            {% endif %}
+            {% if has_next %}
+              <li class="next">
+                <a href="{{ h.url_for('artesp_theme.audit_admin', date_from=filters.date_from, date_to=filters.date_to, scope=filters.scope, action=filters.action, provider=filters.provider, channel=filters.channel, user=filters.user, ip=filters.ip, object=filters.object, page=page + 1) }}">{{ _('Próxima') }} &rarr;</a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+      {% endif %}
+    </div>
+  </section>
+{% endblock %}

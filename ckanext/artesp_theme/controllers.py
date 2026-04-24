@@ -8,7 +8,7 @@ from ckan.lib.pagination import Page
 import logging
 
 import ckanext.artesp_theme.helpers as artesp_helpers
-from ckanext.artesp_theme.logic import audit_capture, auth_helpers
+from ckanext.artesp_theme.logic import audit_capture, audit_query, auth_helpers
 
 log = logging.getLogger(__name__)
 
@@ -228,6 +228,42 @@ def _user_verify():
 
 artesp_theme.add_url_rule(
     '/user/verify', view_func=_user_verify, methods=['POST']
+)
+
+
+def audit_admin():
+    user = model.User.get(g.user) if g.user else None
+    if not user or not getattr(user, "sysadmin", False):
+        abort(403)
+
+    filters = {
+        "date_from": request.args.get("date_from", ""),
+        "date_to": request.args.get("date_to", ""),
+        "scope": request.args.get("scope", "all"),
+        "action": request.args.get("action", ""),
+        "provider": request.args.get("provider", "all"),
+        "channel": request.args.get("channel", "all"),
+        "user": request.args.get("user", ""),
+        "ip": request.args.get("ip", ""),
+        "object": request.args.get("object", ""),
+        "page": request.args.get("page", "1"),
+    }
+    result = audit_query.search_audit_events(filters)
+    return render_template(
+        "admin/audit.html",
+        **result,
+        scope_choices=audit_query.SCOPE_CHOICES,
+        action_choices=audit_query.ACTION_CHOICES,
+        provider_choices=audit_query.PROVIDER_CHOICES,
+        channel_choices=audit_query.CHANNEL_CHOICES,
+    )
+
+
+artesp_theme.add_url_rule(
+    "/admin/audit",
+    endpoint="audit_admin",
+    view_func=audit_admin,
+    methods=["GET"],
 )
 
 
