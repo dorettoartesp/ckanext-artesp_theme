@@ -412,6 +412,43 @@ def seo_jsonld_dataset(pkg_dict):
     return jsonld
 
 
+def seo_jsonld_organization(org_dict):
+    """Returns a Schema.org GovernmentOrganization dict for an organization page."""
+    site_url = toolkit.config.get('ckan.site_url', '').rstrip('/')
+    org_url = site_url + toolkit.url_for('organization.read', id=org_dict.get('name', ''))
+
+    description = toolkit.h.markdown_extract(
+        toolkit.h.get_translated(org_dict, 'description') or '', extract_length=300
+    )
+
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'GovernmentOrganization',
+        'name': org_dict.get('display_name') or org_dict.get('title') or org_dict.get('name', ''),
+        'description': description,
+        'url': org_url,
+    }
+
+
+def seo_jsonld_site():
+    """Returns a Schema.org GovernmentOrganization dict for the ARTESP site homepage."""
+    site_url = toolkit.config.get('ckan.site_url', '').rstrip('/')
+    site_title = toolkit.config.get('ckan.site_title', 'ARTESP Dados Abertos')
+    site_description = toolkit.config.get('ckan.site_description', '')
+
+    jsonld = {
+        '@context': 'https://schema.org',
+        '@type': 'GovernmentOrganization',
+        'name': site_title,
+        'url': site_url,
+    }
+
+    if site_description:
+        jsonld['description'] = site_description
+
+    return jsonld
+
+
 def get_helpers():
     return {
         "artesp_theme_hello": artesp_theme_hello,

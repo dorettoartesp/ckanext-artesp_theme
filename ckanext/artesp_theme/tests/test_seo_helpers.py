@@ -272,3 +272,77 @@ def test_seo_jsonld_dataset_uses_license_title_as_fallback(monkeypatch):
     result = helpers.seo_jsonld_dataset(pkg)
 
     assert result['license'] == 'CC BY 4.0'
+
+
+def test_seo_jsonld_organization_has_required_fields(monkeypatch):
+    org = {
+        'name': 'artesp',
+        'title': 'ARTESP',
+        'display_name': 'ARTESP',
+        'description': 'Agência de Transporte do Estado de São Paulo.',
+        'description_translated': {},
+    }
+    monkeypatch.setattr(
+        'ckanext.artesp_theme.helpers.toolkit.config.get',
+        lambda key, default='': 'https://dados.artesp.sp.gov.br' if key == 'ckan.site_url' else default,
+    )
+    monkeypatch.setattr(
+        'ckanext.artesp_theme.helpers.toolkit.url_for',
+        lambda route, **kw: f"/organization/{kw.get('id', '')}",
+    )
+    monkeypatch.setattr(
+        'ckanext.artesp_theme.helpers.toolkit.h.get_translated',
+        lambda d, f: d.get(f, ''),
+    )
+    monkeypatch.setattr(
+        'ckanext.artesp_theme.helpers.toolkit.h.markdown_extract',
+        lambda text, extract_length=300: text,
+    )
+
+    result = helpers.seo_jsonld_organization(org)
+
+    assert result['@context'] == 'https://schema.org'
+    assert result['@type'] == 'GovernmentOrganization'
+    assert result['name'] == 'ARTESP'
+    assert result['description'] == 'Agência de Transporte do Estado de São Paulo.'
+    assert result['url'] == 'https://dados.artesp.sp.gov.br/organization/artesp'
+
+
+def test_seo_jsonld_site_has_required_fields(monkeypatch):
+    def fake_config_get(key, default=''):
+        return {
+            'ckan.site_url': 'https://dados.artesp.sp.gov.br',
+            'ckan.site_title': 'Dados Abertos ARTESP',
+            'ckan.site_description': 'Portal de dados da ARTESP.',
+        }.get(key, default)
+
+    monkeypatch.setattr(
+        'ckanext.artesp_theme.helpers.toolkit.config.get',
+        fake_config_get,
+    )
+
+    result = helpers.seo_jsonld_site()
+
+    assert result['@context'] == 'https://schema.org'
+    assert result['@type'] == 'GovernmentOrganization'
+    assert result['name'] == 'Dados Abertos ARTESP'
+    assert result['url'] == 'https://dados.artesp.sp.gov.br'
+    assert result['description'] == 'Portal de dados da ARTESP.'
+
+
+def test_seo_jsonld_site_omits_description_when_empty(monkeypatch):
+    def fake_config_get(key, default=''):
+        return {
+            'ckan.site_url': 'https://dados.artesp.sp.gov.br',
+            'ckan.site_title': 'Dados Abertos ARTESP',
+            'ckan.site_description': '',
+        }.get(key, default)
+
+    monkeypatch.setattr(
+        'ckanext.artesp_theme.helpers.toolkit.config.get',
+        fake_config_get,
+    )
+
+    result = helpers.seo_jsonld_site()
+
+    assert 'description' not in result
