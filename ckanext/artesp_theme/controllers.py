@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 
 import ckan.model as model
-from flask import Blueprint, abort, jsonify, render_template, request, g
+from flask import Blueprint, Response, abort, jsonify, render_template, request, g
 from ckan.plugins import toolkit
 from ckan.lib.helpers import flash_error, redirect_to
 from ckan.lib.pagination import Page
@@ -46,11 +46,47 @@ def statistics():
     return render_template("statistics/index.html", dashboard=dashboard)
 
 
+def sitemap():
+    from ckan.common import config
+    site_url = config.get('ckan.site_url', '').rstrip('/')
+    urls = [{'loc': site_url + '/', 'lastmod': '', 'changefreq': 'daily', 'priority': '1.0'}]
+
+    try:
+        result = toolkit.get_action('package_search')(
+            {}, {'q': '*:*', 'rows': 1000, 'include_private': False}
+        )
+        for pkg in result.get('results', []):
+            urls.append({
+                'loc': site_url + toolkit.url_for('dataset.read', id=pkg['name']),
+                'lastmod': (pkg.get('metadata_modified') or '')[:10],
+                'changefreq': 'weekly',
+                'priority': '0.8',
+            })
+    except Exception:
+        log.exception('sitemap: package_search failed')
+
+    try:
+        org_names = toolkit.get_action('organization_list')({}, {'all_fields': False})
+        for name in org_names:
+            urls.append({
+                'loc': site_url + toolkit.url_for('organization.read', id=name),
+                'lastmod': '',
+                'changefreq': 'monthly',
+                'priority': '0.6',
+            })
+    except Exception:
+        log.exception('sitemap: organization_list failed')
+
+    xml = render_template('home/sitemap.xml', urls=urls)
+    return Response(xml, mimetype='application/xml')
+
+
 artesp_theme.add_url_rule('/about-ckan', view_func=about_ckan)
 artesp_theme.add_url_rule('/terms', view_func=terms)
 artesp_theme.add_url_rule('/privacy', view_func=privacy)
 artesp_theme.add_url_rule('/harvesting', view_func=harvesting)
 artesp_theme.add_url_rule('/estatisticas', view_func=statistics)
+artesp_theme.add_url_rule('/sitemap.xml', view_func=sitemap)
 
 
 def _user_verify():
