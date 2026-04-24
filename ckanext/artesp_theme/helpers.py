@@ -350,6 +350,19 @@ def seo_canonical_url():
     return flask_request.base_url
 
 
+def seo_meta_description(pkg_dict=None, org_dict=None, group_dict=None, length=155):
+    """Returns a truncated plain-text description for <meta name="description">."""
+    if pkg_dict:
+        raw = toolkit.h.get_translated(pkg_dict, 'notes') or ''
+    elif org_dict:
+        raw = toolkit.h.get_translated(org_dict, 'description') or ''
+    elif group_dict:
+        raw = toolkit.h.get_translated(group_dict, 'description') or ''
+    else:
+        raw = toolkit.config.get('ckan.site_description', '')
+    return toolkit.h.markdown_extract(raw, extract_length=length)
+
+
 def get_helpers():
     return {
         "artesp_theme_hello": artesp_theme_hello,
