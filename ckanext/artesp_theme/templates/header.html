@@ -24,6 +24,7 @@
                       <li><a href="{{ h.url_for('home.index') }}"><i class="fa fa-home"></i> {{ _('Home') }}</a></li>
                       {% if c.userobj.sysadmin %}
                       <li><a href="{{ h.url_for('admin.index') }}"><i class="fa fa-gavel"></i> {{ _('Admin') }}</a></li>
+                      <li><a href="{{ h.url_for('artesp_theme.audit_admin') }}"><i class="fa fa-history"></i> {{ _('Auditoria') }}</a></li>
                       {% endif %}
                       <li><a href="{{ h.url_for('artesp_theme.statistics') }}"><i class="fa fa-bar-chart"></i> {{ _('Estatísticas') }}</a></li>
                       <li><a href="{{ h.url_for('govbr.followed', id=c.userobj.name) }}"><i class="fa fa-bookmark"></i> {{ _('Following') }}</a></li>

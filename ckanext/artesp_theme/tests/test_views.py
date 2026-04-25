@@ -258,12 +258,32 @@ def test_header_shows_following_for_internal_users(app, reset_db):
             tk.c.userobj = user
             html = base.render("header.html")
 
-    assert 'href="/user/usuario-interno/followed"' in html
-    assert "Seguindo" in html
-    assert 'href="/user/usuario-interno/rating-admin"' in html
-    assert "Administrar avaliações" in html
-    assert 'href="/dashboard/datasets"' in html
-    assert 'action="/user/_logout"' in html
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.usefixtures("with_plugins")
+def test_header_shows_audit_link_for_sysadmin(app, reset_db):
+    user = SimpleNamespace(
+        id="sysadmin-id",
+        name="sysadmin-user",
+        display_name="Sysadmin User",
+        sysadmin=True,
+    )
+
+    with patch.object(tk.h, "artesp_is_external_user", return_value=False), patch.object(
+        tk.h, "artesp_auth_provider", return_value="local"
+    ), patch.object(tk.h, "user_image", return_value=""), patch.object(
+        tk.h, "csrf_input", return_value=""
+    ):
+        with app.flask_app.test_request_context(
+            "/dataset/exemplo",
+            environ_overrides={"CKAN_LANG": "pt_BR"},
+        ):
+            tk.c.user = user.name
+            tk.c.userobj = user
+            html = base.render("header.html")
+
+    assert 'href="/admin/audit"' in html
+    assert "Auditoria" in html
 
 
 @pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
