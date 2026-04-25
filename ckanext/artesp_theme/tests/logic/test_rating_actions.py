@@ -13,6 +13,7 @@ pytestmark = [
     pytest.mark.integration,
     pytest.mark.ckan_config("ckan.plugins", "artesp_theme"),
     pytest.mark.usefixtures("with_plugins"),
+    pytest.mark.xdist_group("rating_actions"),
 ]
 
 
@@ -26,7 +27,7 @@ def _ensure_rating_table():
     model.Session.rollback()
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def artesp_org():
     org = auth_helpers.get_artesp_org()
     if org:
@@ -34,12 +35,12 @@ def artesp_org():
     return factories.Organization(name="artesp")
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def user(artesp_org):
     return factories.User()
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def pkg(user, artesp_org):
     return factories.Dataset(user=user, owner_org=artesp_org["id"])
 
@@ -49,10 +50,23 @@ def context(user):
     return {"user": user["name"], "ignore_auth": True}
 
 
+@pytest.fixture(scope="module")
+def extra_user_a():
+    return factories.User()
+
+
+@pytest.fixture(scope="module")
+def extra_user_b():
+    return factories.User()
+
+
+@pytest.fixture(scope="module")
+def private_pkg(extra_user_a, artesp_org):
+    return factories.Dataset(user=extra_user_a, owner_org=artesp_org["id"], private=True)
+
+
 class TestDatasetRatingUpsert:
     def test_creates_rating(self, context, pkg):
-        result = model.Session.execute.__class__  # ensure import works
-        import ckan.plugins.toolkit as tk
         result = tk.get_action("dataset_rating_upsert")(
             context,
             {
@@ -66,25 +80,22 @@ class TestDatasetRatingUpsert:
         assert result["comment_notification_enqueued"] is False
 
     def test_updates_existing_rating(self, context, pkg):
-        import ckan.plugins.toolkit as tk
         action = tk.get_action("dataset_rating_upsert")
         first = action(context, {"package_id": pkg["id"], "overall_rating": 3})
         second = action(context, {"package_id": pkg["id"], "overall_rating": 5})
         assert second["created"] is False
         assert second["id"] == first["id"]
 
-        loaded = DatasetRating.get_for(context["user"] and model.User.get(context["user"]).id, pkg["id"])
+        loaded = DatasetRating.get_for(model.User.get(context["user"]).id, pkg["id"])
         assert loaded.overall_rating == 5
 
     def test_invalid_overall_rating_raises(self, context, pkg):
-        import ckan.plugins.toolkit as tk
         with pytest.raises(tk.ValidationError):
             tk.get_action("dataset_rating_upsert")(
                 context, {"package_id": pkg["id"], "overall_rating": 6}
             )
 
     def test_invalid_criteria_key_raises(self, context, pkg):
-        import ckan.plugins.toolkit as tk
         with pytest.raises(tk.ValidationError):
             tk.get_action("dataset_rating_upsert")(
                 context,
@@ -92,7 +103,6 @@ class TestDatasetRatingUpsert:
             )
 
     def test_comment_notification_enqueued_when_comment_given(self, context, pkg, monkeypatch):
-        import ckan.plugins.toolkit as tk
         import ckanext.artesp_theme.logic.action as action_mod
 
         enqueued = {}
@@ -125,8 +135,7 @@ class TestDatasetRatingUpsert:
 
 
 class TestDatasetRatingShow:
-    def test_returns_own_rating(self, context, user, pkg):
-        import ckan.plugins.toolkit as tk
+    def test_returns_own_rating(self, context, pkg):
         tk.get_action("dataset_rating_upsert")(
             context,
             {"package_id": pkg["id"], "overall_rating": 4, "comment": "nice"},
@@ -136,35 +145,28 @@ class TestDatasetRatingShow:
         assert result["comment"] == "nice"
 
     def test_returns_none_when_no_rating(self, context, pkg):
-        import ckan.plugins.toolkit as tk
         result = tk.get_action("dataset_rating_show")(context, {"package_id": pkg["id"]})
         assert result is None
 
-    def test_does_not_expose_other_user_rating(self, artesp_org, pkg):
-        import ckan.plugins.toolkit as tk
-        user_b = factories.User()
-        ctx_b = {"user": user_b["name"], "ignore_auth": True}
+    def test_does_not_expose_other_user_rating(self, pkg, extra_user_a, extra_user_b):
+        ctx_b = {"user": extra_user_b["name"], "ignore_auth": True}
         tk.get_action("dataset_rating_upsert")(
             ctx_b, {"package_id": pkg["id"], "overall_rating": 2}
         )
-        user_a = factories.User()
-        ctx_a = {"user": user_a["name"], "ignore_auth": True}
+        ctx_a = {"user": extra_user_a["name"], "ignore_auth": True}
         result = tk.get_action("dataset_rating_show")(ctx_a, {"package_id": pkg["id"]})
         assert result is None
 
 
 class TestDatasetRatingSummary:
     def test_empty_summary(self, context, pkg):
-        import ckan.plugins.toolkit as tk
         result = tk.get_action("dataset_rating_summary")(context, {"package_id": pkg["id"]})
         assert result["package_id"] == pkg["id"]
         assert result["overall"]["count"] == 0
         assert result["overall"]["average"] is None
 
-    def test_aggregates_ratings(self, artesp_org, pkg):
-        import ckan.plugins.toolkit as tk
-        for rating in (3, 5):
-            u = factories.User()
+    def test_aggregates_ratings(self, pkg, extra_user_a, extra_user_b):
+        for u, rating in [(extra_user_a, 3), (extra_user_b, 5)]:
             tk.get_action("dataset_rating_upsert")(
                 {"user": u["name"], "ignore_auth": True},
                 {"package_id": pkg["id"], "overall_rating": rating},
@@ -173,9 +175,8 @@ class TestDatasetRatingSummary:
         assert result["overall"]["count"] == 2
         assert result["overall"]["average"] == pytest.approx(4.0)
 
-    def test_criteria_aggregation(self, artesp_org, pkg):
-        for val in (True, False):
-            u = factories.User()
+    def test_criteria_aggregation(self, pkg, extra_user_a, extra_user_b):
+        for u, val in [(extra_user_a, True), (extra_user_b, False)]:
             tk.get_action("dataset_rating_upsert")(
                 {"user": u["name"], "ignore_auth": True},
                 {
@@ -189,9 +190,8 @@ class TestDatasetRatingSummary:
         assert criteria["links_work"]["yes"] == 1
         assert criteria["links_work"]["no"] == 1
 
-    def test_omitted_criteria_do_not_count_as_negative_votes(self, artesp_org, pkg):
-        for _ in range(2):
-            u = factories.User()
+    def test_omitted_criteria_do_not_count_as_negative_votes(self, pkg, extra_user_a, extra_user_b):
+        for u in (extra_user_a, extra_user_b):
             tk.get_action("dataset_rating_upsert")(
                 {"user": u["name"], "ignore_auth": True},
                 {"package_id": pkg["id"], "overall_rating": 4},
@@ -203,14 +203,7 @@ class TestDatasetRatingSummary:
         assert criteria["up_to_date"] == {"yes": 0, "no": 0}
         assert criteria["well_structured"] == {"yes": 0, "no": 0}
 
-    def test_private_dataset_summary_requires_visibility(self, artesp_org):
-        owner = factories.User()
-        private_pkg = factories.Dataset(
-            user=owner,
-            owner_org=artesp_org["id"],
-            private=True,
-        )
-
+    def test_private_dataset_summary_requires_visibility(self, private_pkg):
         with pytest.raises((tk.NotAuthorized, tk.ObjectNotFound)):
             tk.get_action("dataset_rating_summary")({}, {"package_id": private_pkg["id"]})
 
