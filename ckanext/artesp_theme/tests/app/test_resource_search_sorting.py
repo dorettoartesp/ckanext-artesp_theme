@@ -24,7 +24,18 @@ def _patch_resource_actions(monkeypatch, resources):
 @pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
 @pytest.mark.usefixtures("with_plugins")
 class TestResourceSearchSorting:
-    
+    def test_resource_search_no_results_renders_empty_state(self, app, monkeypatch):
+        """
+        Test that the /resources route renders the empty state without Solr data.
+        """
+        _patch_resource_actions(monkeypatch, [])
+
+        url = toolkit.url_for("artesp_theme.resource_search", q="missing-resource")
+        resp = app.get(url)
+
+        assert resp.status_code == 200
+        assert "No resources found" in resp.body
+
     def test_resource_search_default_sort_is_metadata_modified_desc(self, app, monkeypatch):
         """
         Test that the default sort order is by metadata_modified (last update) descending.
