@@ -89,6 +89,13 @@
 
     .audit-table {
       table-layout: fixed;
+      min-width: 1040px;
+    }
+
+    .audit-table th,
+    .audit-table td {
+      overflow-wrap: anywhere;
+      vertical-align: top;
     }
 
     .audit-table__truncate {
@@ -98,6 +105,22 @@
       text-overflow: ellipsis;
       white-space: nowrap;
       vertical-align: bottom;
+    }
+
+    .audit-table th:nth-child(1),
+    .audit-table td:nth-child(1) {
+      width: 12%;
+    }
+
+    .audit-table th:nth-child(2),
+    .audit-table td:nth-child(2),
+    .audit-table th:nth-child(3),
+    .audit-table td:nth-child(3),
+    .audit-table th:nth-child(4),
+    .audit-table td:nth-child(4),
+    .audit-table th:nth-child(5),
+    .audit-table td:nth-child(5) {
+      width: 11%;
     }
 
     .audit-table th:nth-child(9),
