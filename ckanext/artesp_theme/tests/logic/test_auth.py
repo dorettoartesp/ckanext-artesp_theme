@@ -1,10 +1,13 @@
 """Tests for auth.py."""
 
+from types import SimpleNamespace
+
 import ckan.model as model
 import pytest
 from ckan.tests import factories, helpers as test_helpers
 
 from ckanext.artesp_theme.logic import auth as artesp_auth
+from ckanext.artesp_theme.logic import auth_helpers
 
 
 pytestmark = [
@@ -12,8 +15,19 @@ pytestmark = [
     pytest.mark.ckan_config(
         "ckanext.artesp_theme.default_dataset_collaborator_capacity", "editor"
     ),
-    pytest.mark.usefixtures("with_plugins", "clean_db"),
+    pytest.mark.usefixtures("with_plugins"),
 ]
+
+
+def _artesp_org():
+    org = auth_helpers.get_artesp_org()
+    if org:
+        return {"id": org.id, "name": org.name}
+    return factories.Organization(name="artesp")
+
+
+def _auth_user(sysadmin=False):
+    return SimpleNamespace(id="auth-user-{}".format(sysadmin), sysadmin=sysadmin)
 
 
 def test_artesp_theme_get_sum():
@@ -52,15 +66,15 @@ def test_get_auth_functions_export_group_and_organization_management():
     ],
 )
 def test_organization_management_is_reserved_for_sysadmins(action_name):
-    regular_user = factories.User()
-    sysadmin = factories.Sysadmin()
+    regular_user = _auth_user(sysadmin=False)
+    sysadmin = _auth_user(sysadmin=True)
 
     denied = getattr(artesp_auth, action_name)(
-        {"model": model, "user": regular_user["name"]},
+        {"model": model, "auth_user_obj": regular_user},
         {},
     )
     allowed = getattr(artesp_auth, action_name)(
-        {"model": model, "user": sysadmin["name"]},
+        {"model": model, "auth_user_obj": sysadmin},
         {},
     )
 
@@ -77,15 +91,15 @@ def test_organization_management_is_reserved_for_sysadmins(action_name):
     ],
 )
 def test_group_management_is_reserved_for_sysadmins(action_name):
-    regular_user = factories.User()
-    sysadmin = factories.Sysadmin()
+    regular_user = _auth_user(sysadmin=False)
+    sysadmin = _auth_user(sysadmin=True)
 
     denied = getattr(artesp_auth, action_name)(
-        {"model": model, "user": regular_user["name"]},
+        {"model": model, "auth_user_obj": regular_user},
         {},
     )
     allowed = getattr(artesp_auth, action_name)(
-        {"model": model, "user": sysadmin["name"]},
+        {"model": model, "auth_user_obj": sysadmin},
         {},
     )
 
@@ -110,13 +124,13 @@ def test_password_reset_is_allowed_when_ldap_is_disabled(action_name):
 
 
 def test_package_collaborator_create_blocks_non_sysadmin_role_override():
-    artesp_org = factories.Organization(name="artesp")
+    artesp_org = _artesp_org()
     creator = factories.User()
     collaborator = factories.User()
     package = test_helpers.call_action(
         "package_create",
         context={"user": creator["name"]},
-        name="dataset-auth-role-override",
+        name="dataset-auth-role-override-{}".format(creator["id"][:8]),
         title="Dataset auth role override",
         owner_org=artesp_org["id"],
     )

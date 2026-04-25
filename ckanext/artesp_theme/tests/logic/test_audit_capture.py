@@ -8,6 +8,7 @@ from ckan.tests import factories
 
 from ckanext.artesp_theme.audit_model import AuditEvent, audit_event_table
 from ckanext.artesp_theme.logic import audit_capture
+from ckanext.artesp_theme.logic import auth_helpers
 
 
 pytestmark = [
@@ -17,10 +18,21 @@ pytestmark = [
 
 
 @pytest.fixture(autouse=True)
-def _ensure_audit_event_table(clean_db):
+def _ensure_audit_event_table():
     bind = model.Session.get_bind()
     audit_event_table.create(bind=bind, checkfirst=True)
+    model.Session.execute(audit_event_table.delete())
+    model.Session.commit()
     yield
+    model.Session.rollback()
+    audit_event_table.create(bind=bind, checkfirst=True)
+
+
+def _artesp_org():
+    org = auth_helpers.get_artesp_org()
+    if org:
+        return {"id": org.id, "name": org.name}
+    return factories.Organization(name="artesp")
 
 
 def test_handle_action_succeeded_ignores_untracked_actions():
@@ -193,7 +205,7 @@ def test_package_create_still_succeeds_when_audit_table_is_missing():
     audit_event_table.drop(bind=bind, checkfirst=True)
 
     user = factories.User()
-    org = factories.Organization(name="artesp")
+    org = _artesp_org()
 
     dataset = factories.Dataset(user=user, owner_org=org["id"])
 

@@ -10,6 +10,7 @@ from ckanext.artesp_theme.model import (
     dataset_rating_table,
     rating_action_table,
 )
+from ckanext.artesp_theme.logic import auth_helpers
 
 
 pytestmark = [
@@ -19,15 +20,22 @@ pytestmark = [
 
 
 @pytest.fixture(autouse=True)
-def _ensure_rating_admin_tables(clean_db):
+def _ensure_rating_admin_tables():
     bind = model.Session.get_bind()
     dataset_rating_table.create(bind=bind, checkfirst=True)
     rating_action_table.create(bind=bind, checkfirst=True)
+    model.Session.execute(rating_action_table.delete())
+    model.Session.execute(dataset_rating_table.delete())
+    model.Session.commit()
     yield
+    model.Session.rollback()
 
 
 @pytest.fixture
 def artesp_org():
+    org = auth_helpers.get_artesp_org()
+    if org:
+        return {"id": org.id, "name": org.name}
     return factories.Organization(name="artesp")
 
 

@@ -1,7 +1,9 @@
 """Additional focused tests for helpers.py coverage gaps."""
 
+from datetime import datetime, timedelta
 from types import SimpleNamespace
 from unittest.mock import patch
+import uuid
 
 import pytest
 import ckan.model as model
@@ -17,55 +19,82 @@ pytestmark = [
 
 
 class TestGetLatestResources:
-    def test_returns_latest_resources_with_dataset_context(self):
-        org = factories.Organization(name="artesp")
-        dataset = factories.Dataset(owner_org=org["id"])
-        resource = factories.Resource(package_id=dataset["id"], name="latest-resource")
+    def _package(self, title="Dataset", owner_org="artesp"):
+        package = model.Package(
+            name="dataset-{}".format(uuid.uuid4().hex[:8]),
+            title=title,
+            owner_org=owner_org,
+            state="active",
+        )
+        model.Session.add(package)
+        model.Session.commit()
+        return package
+
+    def _resource(self, package, name, seconds=0):
+        resource = model.Resource(
+            package_id=package.id,
+            name=name,
+            url="https://example.com/{}.csv".format(uuid.uuid4().hex[:8]),
+            metadata_modified=datetime.utcnow() + timedelta(seconds=seconds),
+        )
+        resource.state = "active"
+        model.Session.add(resource)
+        model.Session.commit()
+        return resource
+
+    def _patch_package_show(self, monkeypatch, *packages):
+        package_dicts = {
+            package.id: {"id": package.id, "title": package.title, "name": package.name}
+            for package in packages
+        }
+
+        def fake_get_action(name):
+            assert name == "package_show"
+            return lambda context, data_dict: package_dicts[data_dict["id"]]
+
+        monkeypatch.setattr(helpers.toolkit, "get_action", fake_get_action)
+
+    def test_returns_latest_resources_with_dataset_context(self, monkeypatch):
+        dataset = self._package(title="Dataset title")
+        resource = self._resource(dataset, "latest-resource")
+        self._patch_package_show(monkeypatch, dataset)
 
         results = helpers.get_latest_resources(limit=1)
 
         assert len(results) == 1
-        assert results[0]["resource"].id == resource["id"]
-        assert results[0]["dataset"]["id"] == dataset["id"]
-        assert results[0]["parent_dataset_title"] == dataset["title"]
+        assert results[0]["resource"].id == resource.id
+        assert results[0]["dataset"]["id"] == dataset.id
+        assert results[0]["parent_dataset_title"] == dataset.title
 
-    def test_filters_latest_resources_by_dataset_id(self):
-        org = factories.Organization(name="artesp")
-        dataset = factories.Dataset(owner_org=org["id"])
-        other_dataset = factories.Dataset(owner_org=org["id"])
-        factories.Resource(package_id=dataset["id"], name="dataset-resource")
-        factories.Resource(package_id=other_dataset["id"], name="other-resource")
+    def test_filters_latest_resources_by_dataset_id(self, monkeypatch):
+        dataset = self._package()
+        other_dataset = self._package()
+        self._resource(dataset, "dataset-resource")
+        self._resource(other_dataset, "other-resource", seconds=1)
+        self._patch_package_show(monkeypatch, dataset, other_dataset)
 
-        results = helpers.get_latest_resources(limit=10, dataset_id=dataset["id"])
-
-        assert results
-        assert all(item["resource"].package_id == dataset["id"] for item in results)
-
-    def test_filters_latest_resources_by_org_id(self):
-        artesp_org = factories.Organization(name="artesp")
-        other_org = factories.Organization(name="other-org")
-        dataset = factories.Dataset(owner_org=artesp_org["id"])
-        other_package = model.Package(
-            name="other-org-dataset",
-            title="Other org dataset",
-            owner_org=other_org["id"],
-            state="active",
-        )
-        model.Session.add(other_package)
-        model.Session.commit()
-
-        factories.Resource(package_id=dataset["id"], name="artesp-resource")
-        factories.Resource(package_id=other_package.id, name="other-resource")
-
-        results = helpers.get_latest_resources(limit=10, org_id=artesp_org["id"])
+        results = helpers.get_latest_resources(limit=10, dataset_id=dataset.id)
 
         assert results
-        assert all(item["resource"].package_id == dataset["id"] for item in results)
+        assert all(item["resource"].package_id == dataset.id for item in results)
+
+    def test_filters_latest_resources_by_org_id(self, monkeypatch):
+        artesp_org_id = "artesp-org"
+        dataset = self._package(owner_org=artesp_org_id)
+        other_package = self._package(title="Other org dataset", owner_org="other-org")
+
+        self._resource(dataset, "artesp-resource")
+        self._resource(other_package, "other-resource", seconds=1)
+        self._patch_package_show(monkeypatch, dataset, other_package)
+
+        results = helpers.get_latest_resources(limit=10, org_id=artesp_org_id)
+
+        assert results
+        assert all(item["resource"].package_id == dataset.id for item in results)
 
     def test_skips_resource_when_package_lookup_fails(self, monkeypatch):
-        org = factories.Organization(name="artesp")
-        dataset = factories.Dataset(owner_org=org["id"])
-        factories.Resource(package_id=dataset["id"], name="broken-package-resource")
+        dataset = self._package()
+        self._resource(dataset, "broken-package-resource")
 
         monkeypatch.setattr(
             helpers.toolkit,

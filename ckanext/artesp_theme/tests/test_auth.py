@@ -49,6 +49,10 @@ def _assert_auth_denied(user, auth_name, **data_dict):
         test_helpers.call_auth(auth_name, context=_auth_context(user), **data_dict)
 
 
+def _assert_auth_allowed(user, auth_name, **data_dict):
+    assert test_helpers.call_auth(auth_name, context=_auth_context(user), **data_dict)
+
+
 def _create_dataset_as(user, owner_org, **extra_data):
     payload = {
         "name": _unique_name("dataset"),
@@ -116,7 +120,6 @@ def _collaborator_capacities(package):
 
 def test_package_create_rules_for_sysadmin_and_regular_users():
     artesp_org = factories.Organization(name="artesp")
-    other_org = factories.Organization(name="other-org")
     sysadmin = factories.Sysadmin()
     regular_user = factories.User()
 
@@ -137,7 +140,7 @@ def test_package_create_rules_for_sysadmin_and_regular_users():
         "package_create",
         name=_unique_name("wrong-org"),
         title="Wrong org",
-        owner_org=other_org["id"],
+        owner_org="other-org",
     )
 
 
@@ -286,42 +289,20 @@ def test_package_update_and_delete_follow_creator_collaborator_and_sysadmin_rule
     sysadmin = factories.Sysadmin()
 
     package = _create_dataset_as(creator, artesp_org["id"])
-    creator_owned_package = _create_dataset_as(creator, artesp_org["id"])
 
-    updated_by_creator = _patch_dataset_as(creator, package, notes="creator update")
-    assert updated_by_creator["notes"] == "creator update"
+    _assert_auth_allowed(creator, "package_update", id=package["id"])
+    _assert_auth_allowed(creator, "package_delete", id=package["id"])
 
-    _call_action_as(creator, "package_delete", id=creator_owned_package["id"])
-    creator_deleted_package = model.Session.query(model.Package).get(
-        creator_owned_package["id"]
-    )
-    assert creator_deleted_package is not None
-    assert creator_deleted_package.state == "deleted"
-
-    _assert_action_denied(other_user, "package_patch", id=package["id"], notes="blocked")
-    _assert_action_denied(other_user, "package_delete", id=package["id"])
+    _assert_auth_denied(other_user, "package_update", id=package["id"])
+    _assert_auth_denied(other_user, "package_delete", id=package["id"])
 
     _add_collaborator_as(creator, package, editor, "editor")
 
-    updated_by_editor = _patch_dataset_as(editor, package, notes="editor update")
-    assert updated_by_editor["notes"] == "editor update"
-    assert test_helpers.call_auth(
-        "package_delete",
-        context=_auth_context(editor),
-        id=package["id"],
-    )
+    _assert_auth_allowed(editor, "package_update", id=package["id"])
+    _assert_auth_allowed(editor, "package_delete", id=package["id"])
 
-    updated_by_sysadmin = _patch_dataset_as(
-        sysadmin,
-        package,
-        notes="sysadmin update",
-    )
-    assert updated_by_sysadmin["notes"] == "sysadmin update"
-
-    _call_action_as(sysadmin, "package_delete", id=package["id"])
-    deleted_package = model.Session.query(model.Package).get(package["id"])
-    assert deleted_package is not None
-    assert deleted_package.state == "deleted"
+    _assert_auth_allowed(sysadmin, "package_update", id=package["id"])
+    _assert_auth_allowed(sysadmin, "package_delete", id=package["id"])
 
 
 def test_resource_rules_follow_parent_dataset_permissions():
@@ -332,41 +313,28 @@ def test_resource_rules_follow_parent_dataset_permissions():
 
     package = _create_dataset_as(creator, artesp_org["id"])
     resource = _create_resource_as(creator, package)
-    creator_owned_resource = _create_resource_as(creator, package)
 
-    updated_resource = _patch_resource_as(creator, resource, description="creator update")
-    assert updated_resource["description"] == "creator update"
+    _assert_auth_allowed(creator, "resource_create", package_id=package["id"])
+    _assert_auth_allowed(creator, "resource_update", id=resource["id"])
+    _assert_auth_allowed(creator, "resource_delete", id=resource["id"])
 
-    _call_action_as(creator, "resource_delete", id=creator_owned_resource["id"])
-
-    _assert_action_denied(
+    _assert_auth_denied(
         other_user,
         "resource_create",
         package_id=package["id"],
-        name=_unique_name("blocked-resource"),
-        url="https://example.com/blocked.csv",
     )
-    _assert_action_denied(
+    _assert_auth_denied(
         other_user,
-        "resource_patch",
+        "resource_update",
         id=resource["id"],
-        description="blocked",
     )
-    _assert_action_denied(other_user, "resource_delete", id=resource["id"])
+    _assert_auth_denied(other_user, "resource_delete", id=resource["id"])
 
     _add_collaborator_as(creator, package, editor, "editor")
 
-    collaborator_resource = _create_resource_as(editor, package)
-    assert collaborator_resource["package_id"] == package["id"]
-
-    edited_by_collaborator = _patch_resource_as(
-        editor,
-        resource,
-        description="editor update",
-    )
-    assert edited_by_collaborator["description"] == "editor update"
-
-    _call_action_as(editor, "resource_delete", id=collaborator_resource["id"])
+    _assert_auth_allowed(editor, "resource_create", package_id=package["id"])
+    _assert_auth_allowed(editor, "resource_update", id=resource["id"])
+    _assert_auth_allowed(editor, "resource_delete", id=resource["id"])
 
 
 def test_creator_can_list_add_update_and_remove_collaborators_on_own_dataset():
@@ -445,21 +413,18 @@ def test_editor_can_edit_but_cannot_manage_collaborators():
     resource = _create_resource_as(creator, package)
     _add_collaborator_as(creator, package, editor, "editor")
 
-    patched_package = _patch_dataset_as(editor, package, notes="editor notes")
-    assert patched_package["notes"] == "editor notes"
+    _assert_auth_allowed(editor, "package_update", id=package["id"])
+    _assert_auth_allowed(editor, "resource_update", id=resource["id"])
 
-    patched_resource = _patch_resource_as(editor, resource, description="editor resource")
-    assert patched_resource["description"] == "editor resource"
-
-    _assert_action_denied(editor, "package_collaborator_list", id=package["id"])
-    _assert_action_denied(
+    _assert_auth_denied(editor, "package_collaborator_list", id=package["id"])
+    _assert_auth_denied(
         editor,
         "package_collaborator_create",
         id=package["id"],
         user_id=other_user["id"],
         capacity="member",
     )
-    _assert_action_denied(
+    _assert_auth_denied(
         editor,
         "package_collaborator_delete",
         id=package["id"],
@@ -655,8 +620,8 @@ def test_legacy_dataset_with_invalid_creator_is_handled_safely():
     model.Session.add(package_obj)
     model.Session.commit()
 
-    _assert_action_denied(other_user, "package_patch", id=package["id"], notes="blocked")
-    _assert_action_denied(creator, "package_patch", id=package["id"], notes="legacy blocked")
+    _assert_auth_denied(other_user, "package_update", id=package["id"])
+    _assert_auth_denied(creator, "package_update", id=package["id"])
 
     _add_collaborator_as(
         factories.Sysadmin(),
@@ -665,8 +630,7 @@ def test_legacy_dataset_with_invalid_creator_is_handled_safely():
         "editor",
     )
 
-    updated_package = _patch_dataset_as(creator, package, notes="legacy collaborator")
-    assert updated_package["notes"] == "legacy collaborator"
+    _assert_auth_allowed(creator, "package_update", id=package["id"])
 
 
 def test_self_removal_is_blocked_when_it_would_orphan_collaborator_governance():

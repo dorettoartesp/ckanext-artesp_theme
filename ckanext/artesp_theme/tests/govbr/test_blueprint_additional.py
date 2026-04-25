@@ -9,7 +9,7 @@ from ckanext.artesp_theme.govbr import blueprint
 
 pytestmark = [
     pytest.mark.ckan_config("ckan.plugins", "artesp_theme"),
-    pytest.mark.usefixtures("with_plugins", "clean_db"),
+    pytest.mark.usefixtures("with_plugins"),
 ]
 
 

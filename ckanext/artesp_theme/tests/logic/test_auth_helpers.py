@@ -97,10 +97,9 @@ class TestIsExternalUserDB:
 # ---------------------------------------------------------------------------
 
 class TestGetArtespOrg:
-    @pytest.mark.usefixtures("clean_db")
     def test_returns_none_when_org_not_found(self):
-        # No artesp org created → should return None
-        result = auth_helpers.get_artesp_org()
+        with patch.object(model.Group, "get", return_value=None):
+            result = auth_helpers.get_artesp_org()
         assert result is None
 
     @pytest.mark.usefixtures("clean_db")
@@ -531,9 +530,9 @@ class TestIsArtespOwnerOrg:
         assert auth_helpers.is_artesp_owner_org(None) is False
         assert auth_helpers.is_artesp_owner_org("") is False
 
-    @pytest.mark.usefixtures("clean_db")
     def test_returns_false_when_org_not_found(self):
-        assert auth_helpers.is_artesp_owner_org("artesp") is False
+        with patch.object(model.Group, "get", return_value=None):
+            assert auth_helpers.is_artesp_owner_org("artesp") is False
 
     @pytest.mark.usefixtures("clean_db")
     def test_returns_true_for_artesp_org_id(self):

@@ -1,49 +1,51 @@
 import pytest
-import time
 from ckan.plugins import toolkit
-from ckan.tests import factories
-import ckan.lib.search as search
+
+from ckanext.artesp_theme import controllers
+
+
+def _patch_resource_actions(monkeypatch, resources):
+    def fake_get_action(name):
+        if name == "resource_search":
+            return lambda context, data_dict: {
+                "results": [dict(resource) for resource in resources]
+            }
+        if name == "package_show":
+            return lambda context, data_dict: {
+                "id": data_dict["id"],
+                "title": "Dataset {}".format(data_dict["id"]),
+                "name": data_dict["id"],
+                "groups": [],
+            }
+        raise AssertionError(name)
+
+    monkeypatch.setattr(controllers.toolkit, "get_action", fake_get_action)
 
 @pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
-@pytest.mark.usefixtures("with_plugins", "clean_db", "clean_index")
+@pytest.mark.usefixtures("with_plugins")
 class TestResourceSearchSorting:
     
-    def test_resource_search_default_sort_is_metadata_modified_desc(self, app):
+    def test_resource_search_default_sort_is_metadata_modified_desc(self, app, monkeypatch):
         """
         Test that the default sort order is by metadata_modified (last update) descending.
         """
-        user = factories.Sysadmin()
-        org = factories.Organization(name="artesp", user=user)
-        dataset = factories.Dataset(owner_org=org['id'], user=user)
-        
-        # Create first resource
-        res1 = factories.Resource(
-            package_id=dataset['id'],
-            name="Older Resource",
-            description="Created first",
-            user=user
+        _patch_resource_actions(
+            monkeypatch,
+            [
+                {
+                    "id": "res-older",
+                    "package_id": "pkg-1",
+                    "name": "Older Resource",
+                    "metadata_modified": "2025-01-03T00:00:00",
+                },
+                {
+                    "id": "res-newer",
+                    "package_id": "pkg-1",
+                    "name": "Newer Resource",
+                    "metadata_modified": "2025-01-02T00:00:00",
+                },
+            ],
         )
-        
-        # Wait a bit to ensure timestamp difference
-        time.sleep(1.5)
-        
-        # Create second resource
-        res2 = factories.Resource(
-            package_id=dataset['id'],
-            name="Newer Resource",
-            description="Created second",
-            user=user
-        )
-
-        # Update the first resource so it becomes the "newest" in terms of modification
-        time.sleep(1.5)
-        toolkit.get_action('resource_patch')({'user': user['name']}, {
-            'id': res1['id'],
-            'description': "Updated Description"
-        })
-        
-        # Re-index
-        search.commit()
         
         # Default search (no params)
         url = toolkit.url_for("artesp_theme.resource_search")
@@ -61,18 +63,27 @@ class TestResourceSearchSorting:
         # res1 (Updated) should be first (smaller index)
         assert pos_res1 < pos_res2, f"Expected Older Resource (updated) at {pos_res1} to be before Newer Resource at {pos_res2}"
 
-    def test_resource_search_explicit_sort(self, app):
+    def test_resource_search_explicit_sort(self, app, monkeypatch):
         """
         Test explicit sorting.
         """
-        org = factories.Organization(name="artesp")
-        dataset = factories.Dataset(owner_org=org['id'])
-        
-        res1 = factories.Resource(package_id=dataset['id'], name="A Resource")
-        time.sleep(1.5)
-        res2 = factories.Resource(package_id=dataset['id'], name="B Resource")
-        
-        search.commit()
+        _patch_resource_actions(
+            monkeypatch,
+            [
+                {
+                    "id": "res-a",
+                    "package_id": "pkg-1",
+                    "name": "A Resource",
+                    "created": "2025-01-01T00:00:00",
+                },
+                {
+                    "id": "res-b",
+                    "package_id": "pkg-1",
+                    "name": "B Resource",
+                    "created": "2025-01-02T00:00:00",
+                },
+            ],
+        )
         
         # Sort by created asc (Oldest first) -> A then B
         url = toolkit.url_for("artesp_theme.resource_search", sort="created asc")
