@@ -17,8 +17,15 @@ pytestmark = [
     pytest.mark.ckan_config("ckan.plugins", "artesp_theme"),
     pytest.mark.ckan_config("ckan.auth.allow_dataset_collaborators", True),
     pytest.mark.ckan_config("ckan.auth.allow_admin_collaborators", True),
-    pytest.mark.usefixtures("with_plugins", "clean_db"),
+    pytest.mark.usefixtures("with_plugins", "non_clean_db"),
 ]
+
+
+def _artesp_org():
+    org = auth_helpers.get_artesp_org()
+    if org:
+        return {"id": org.id, "name": org.name}
+    return factories.Organization(name="artesp")
 
 
 class TestAuthenticatedUserHelpers:
@@ -56,6 +63,7 @@ class TestAuthenticatedUserHelpers:
 
         assert auth_helpers.is_external_user(user["name"]) is True
 
+    @pytest.mark.usefixtures("clean_db")
     def test_is_external_user_returns_false_for_missing_user(self):
         assert auth_helpers.is_external_user("missing-user") is False
 
@@ -88,6 +96,7 @@ class TestArtespConfigurationHelpers:
 
 
 class TestMembershipAndOrganizationHelpers:
+    @pytest.mark.usefixtures("clean_db")
     def test_get_active_groups_excludes_organizations(self):
         factories.Organization(name="artesp")
         group = factories.Group(name="grupo-ativo")
@@ -129,7 +138,7 @@ class TestMembershipAndOrganizationHelpers:
     def test_ensure_user_membership_returns_true_when_capacity_already_matches(
         self, monkeypatch
     ):
-        org = factories.Organization(name="artesp")
+        org = _artesp_org()
         user = factories.User()
         user_obj = model.User.get(user["name"])
         group_obj = model.Group.get(org["id"])
@@ -267,7 +276,7 @@ class TestMembershipAndOrganizationHelpers:
 
 class TestCollaboratorResolutionHelpers:
     def test_package_has_valid_creator_returns_true_for_existing_creator(self):
-        org = factories.Organization(name="artesp")
+        org = _artesp_org()
         creator = factories.User()
         package = factories.Dataset(user=creator, owner_org=org["id"])
         package_obj = model.Package.get(package["id"])
@@ -471,7 +480,7 @@ class TestPermissionHelpers:
         assert auth_helpers.requested_capacity_is_allowed("editor") is True
 
     def test_user_has_edit_collaborator_capacity_returns_true_for_editor(self):
-        org = factories.Organization(name="artesp")
+        org = _artesp_org()
         creator = factories.User()
         editor = factories.User()
         package = factories.Dataset(user=creator, owner_org=org["id"])
@@ -487,7 +496,7 @@ class TestPermissionHelpers:
 
     @pytest.mark.ckan_config("ckan.auth.allow_dataset_collaborators", False)
     def test_user_has_edit_collaborator_capacity_returns_false_when_disabled(self):
-        org = factories.Organization(name="artesp")
+        org = _artesp_org()
         creator = factories.User()
         other_user = factories.User()
         package = factories.Dataset(user=creator, owner_org=org["id"])
@@ -497,7 +506,7 @@ class TestPermissionHelpers:
         assert auth_helpers.user_has_edit_collaborator_capacity(package_obj, other_user_obj) is False
 
     def test_user_can_edit_package_allows_editor_collaborator(self):
-        org = factories.Organization(name="artesp")
+        org = _artesp_org()
         creator = factories.User()
         editor = factories.User()
         package = factories.Dataset(user=creator, owner_org=org["id"])
@@ -512,7 +521,7 @@ class TestPermissionHelpers:
         assert auth_helpers.user_can_edit_package(package_obj, editor_obj) is True
 
     def test_user_can_manage_collaborators_allows_owner_and_admin(self):
-        org = factories.Organization(name="artesp")
+        org = _artesp_org()
         creator = factories.User()
         dataset_admin = factories.User()
         sysadmin = factories.Sysadmin()
@@ -533,7 +542,7 @@ class TestPermissionHelpers:
     def test_user_can_manage_collaborators_returns_false_when_admin_feature_disabled(
         self,
     ):
-        org = factories.Organization(name="artesp")
+        org = _artesp_org()
         creator = factories.User()
         collaborator = factories.User()
         package = factories.Dataset(user=creator, owner_org=org["id"])
