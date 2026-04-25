@@ -20,9 +20,35 @@ class TestGetLatestResources:
         pytest.mark.xdist_group("helpers_latest_resources"),
     ]
 
+    @pytest.fixture(autouse=True)
+    def _cleanup_latest_resources_rows(self):
+        (
+            model.Session.query(model.Resource)
+            .filter(model.Resource.url.like("https://example.com/latestres-%"))
+            .delete(synchronize_session=False)
+        )
+        (
+            model.Session.query(model.Package)
+            .filter(model.Package.name.like("latestres-dataset-%"))
+            .delete(synchronize_session=False)
+        )
+        model.Session.commit()
+        yield
+        (
+            model.Session.query(model.Resource)
+            .filter(model.Resource.url.like("https://example.com/latestres-%"))
+            .delete(synchronize_session=False)
+        )
+        (
+            model.Session.query(model.Package)
+            .filter(model.Package.name.like("latestres-dataset-%"))
+            .delete(synchronize_session=False)
+        )
+        model.Session.commit()
+
     def _package(self, title="Dataset", owner_org="artesp"):
         package = model.Package(
-            name="dataset-{}".format(uuid.uuid4().hex[:8]),
+            name="latestres-dataset-{}".format(uuid.uuid4().hex[:8]),
             title=title,
             owner_org=owner_org,
             state="active",
@@ -35,7 +61,7 @@ class TestGetLatestResources:
         resource = model.Resource(
             package_id=package.id,
             name=name,
-            url="https://example.com/{}.csv".format(uuid.uuid4().hex[:8]),
+            url="https://example.com/latestres-{}.csv".format(uuid.uuid4().hex[:8]),
             metadata_modified=datetime.utcnow() + timedelta(seconds=seconds),
         )
         resource.state = "active"

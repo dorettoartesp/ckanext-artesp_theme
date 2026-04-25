@@ -5,6 +5,10 @@ import pytest
 _INTEGRATION_FIXTURES = {"clean_db", "clean_index", "non_clean_db"}
 _APP_FIXTURES = {"app", "ckan_config", "with_plugins"}
 
+_XDIST_INI_DIR = os.environ.get(
+    "CKAN_XDIST_INI_DIR", "/srv/app/src_extensions/ckanext-artesp_theme/.pytest-xdist"
+)
+
 
 @pytest.hookimpl(tryfirst=True)
 def pytest_configure(config):
@@ -12,7 +16,7 @@ def pytest_configure(config):
     worker_id = os.environ.get("PYTEST_XDIST_WORKER")
     if not worker_id:
         return
-    worker_ini = f"/tmp/ckan_test_{worker_id}.ini"
+    worker_ini = os.path.join(_XDIST_INI_DIR, f"ckan_test_{worker_id}.ini")
     if os.path.exists(worker_ini):
         try:
             config.option.ckan_ini = worker_ini

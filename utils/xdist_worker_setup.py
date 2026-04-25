@@ -15,9 +15,14 @@ raw_n = sys.argv[1] if len(sys.argv) > 1 else "auto"
 n = os.cpu_count() or 1 if raw_n == "auto" else int(raw_n)
 
 BASE_INI = "/srv/app/src_extensions/ckanext-artesp_theme/test.ini"
+INI_DIR = os.environ.get(
+    "CKAN_XDIST_INI_DIR", "/srv/app/src_extensions/ckanext-artesp_theme/.pytest-xdist"
+)
 DB_HOST = "db"
 DB_USER = "ckandbuser"
 DB_PASS = "ckandbpassword"
+
+os.makedirs(INI_DIR, exist_ok=True)
 
 try:
     import psycopg2
@@ -62,14 +67,14 @@ for i in range(n):
     worker_id = f"gw{i}"
     cp = configparser.RawConfigParser()
     cp.read(BASE_INI)
-    # Use absolute path: worker ini lives in /tmp, so the relative ../../src/... would break.
+    # Use absolute path because worker ini lives outside the test.ini directory.
     cp.set("app:main", "use", "config:/srv/app/src/ckan/test-core.ini")
     cp.set(
         "app:main",
         "sqlalchemy.url",
         f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}/ckan_test_{worker_id}",
     )
-    dest = f"/tmp/ckan_test_{worker_id}.ini"
+    dest = os.path.join(INI_DIR, f"ckan_test_{worker_id}.ini")
     with open(dest, "w") as f:
         cp.write(f)
     print(f"Created worker ini: {dest}")

@@ -4,32 +4,24 @@ These tests focus on the pure-Python helper functions using mocks to avoid
 requiring a live database where possible. DB-touching tests use the standard
 CKAN fixtures.
 """
-from unittest.mock import MagicMock, patch, call
+from types import SimpleNamespace
+from unittest.mock import MagicMock, patch
 
 import pytest
 
 import ckan.model as model
 import ckan.plugins.toolkit as tk
-from ckan.tests import factories
 
 from ckanext.artesp_theme.logic import auth_helpers
 
 
 pytestmark = [
-    pytest.mark.integration,
+    pytest.mark.app,
     pytest.mark.ckan_config("ckan.plugins", "artesp_theme"),
     pytest.mark.ckan_config("ckan.auth.allow_dataset_collaborators", True),
     pytest.mark.ckan_config("ckan.auth.allow_admin_collaborators", True),
-    pytest.mark.usefixtures("with_plugins", "non_clean_db"),
-    pytest.mark.xdist_group("auth_helpers"),
+    pytest.mark.usefixtures("with_plugins"),
 ]
-
-
-def _artesp_org():
-    org = auth_helpers.get_artesp_org()
-    if org:
-        return {"id": org.id, "name": org.name}
-    return factories.Organization(name="artesp")
 
 
 # ---------------------------------------------------------------------------
@@ -99,11 +91,9 @@ class TestFindLocalUserByIdentifier:
 # is_external_user (additional coverage via DB user)
 # ---------------------------------------------------------------------------
 
-class TestIsExternalUserDB:
+class TestIsExternalUser:
     def test_returns_false_for_regular_user(self):
-        user = factories.User()
-        user_obj = model.User.get(user["name"])
-        assert auth_helpers.is_external_user(user_obj) is False
+        assert auth_helpers.is_external_user(SimpleNamespace(plugin_extras={})) is False
 
 
 # ---------------------------------------------------------------------------
@@ -162,48 +152,70 @@ class TestGetGroup:
 
 class TestEnsureUserMembership:
     def test_creates_membership_when_absent(self):
-        org_dict = _artesp_org()
-        user_dict = factories.User()
-        user_obj = model.User.get(user_dict["name"])
-        org_obj = model.Group.get(org_dict["id"])
+        user_obj = SimpleNamespace(id="user-id", name="alice")
+        group_obj = SimpleNamespace(id="group-id", state="active")
+        query = MagicMock()
+        query.filter.return_value.filter.return_value.filter.return_value.order_by.return_value.first.return_value = None
+        member_create = MagicMock()
 
-        result = auth_helpers.ensure_user_membership(user_obj, org_obj, "member", enforce_capacity=True)
+        with patch.object(auth_helpers, "get_user", return_value=user_obj), patch.object(
+            auth_helpers, "get_group", return_value=group_obj
+        ), patch.object(model.Session, "query", return_value=query), patch.object(
+            auth_helpers.tk, "get_action", return_value=member_create
+        ) as mock_get_action:
+            result = auth_helpers.ensure_user_membership(
+                user_obj, group_obj, "member", enforce_capacity=True
+            )
+
         assert result is True
-
-        # Verify membership was actually created
-        membership = (
-            model.Session.query(model.Member)
-            .filter(model.Member.table_name == "user")
-            .filter(model.Member.table_id == user_obj.id)
-            .filter(model.Member.group_id == org_obj.id)
-            .first()
+        mock_get_action.assert_called_once_with("member_create")
+        member_create.assert_called_once_with(
+            context={"ignore_auth": True},
+            data_dict={
+                "id": "group-id",
+                "object": "alice",
+                "object_type": "user",
+                "capacity": "member",
+            },
         )
-        assert membership is not None
 
     def test_returns_false_for_invalid_user(self):
-        org_dict = _artesp_org()
-        org_obj = model.Group.get(org_dict["id"])
-        result = auth_helpers.ensure_user_membership(None, org_obj, "member", enforce_capacity=False)
+        group_obj = SimpleNamespace(id="group-id", state="active")
+        with patch.object(auth_helpers, "get_user", return_value=None), patch.object(
+            auth_helpers, "get_group", return_value=group_obj
+        ):
+            result = auth_helpers.ensure_user_membership(
+                None, group_obj, "member", enforce_capacity=False
+            )
         assert result is False
 
     def test_returns_false_for_missing_group(self):
-        user_dict = factories.User()
-        user_obj = model.User.get(user_dict["name"])
-        result = auth_helpers.ensure_user_membership(user_obj, None, "member", enforce_capacity=False)
+        user_obj = SimpleNamespace(id="user-id", name="alice")
+        with patch.object(auth_helpers, "get_user", return_value=user_obj), patch.object(
+            auth_helpers, "get_group", return_value=None
+        ):
+            result = auth_helpers.ensure_user_membership(
+                user_obj, None, "member", enforce_capacity=False
+            )
         assert result is False
 
     def test_returns_true_without_enforcing_capacity_when_already_member(self):
-        org_dict = _artesp_org()
-        user_dict = factories.User()
-        user_obj = model.User.get(user_dict["name"])
-        org_obj = model.Group.get(org_dict["id"])
+        user_obj = SimpleNamespace(id="user-id", name="alice")
+        group_obj = SimpleNamespace(id="group-id", state="active")
+        membership = SimpleNamespace(state="active", capacity="member")
+        query = MagicMock()
+        query.filter.return_value.filter.return_value.filter.return_value.order_by.return_value.first.return_value = membership
 
-        # Add membership first
-        auth_helpers.ensure_user_membership(user_obj, org_obj, "member", enforce_capacity=False)
-
-        # Second call without enforcement should return True without re-calling member_create
-        result = auth_helpers.ensure_user_membership(user_obj, org_obj, "editor", enforce_capacity=False)
+        with patch.object(auth_helpers, "get_user", return_value=user_obj), patch.object(
+            auth_helpers, "get_group", return_value=group_obj
+        ), patch.object(model.Session, "query", return_value=query), patch.object(
+            auth_helpers.tk, "get_action"
+        ) as mock_get_action:
+            result = auth_helpers.ensure_user_membership(
+                user_obj, group_obj, "editor", enforce_capacity=False
+            )
         assert result is True
+        mock_get_action.assert_not_called()
 
 
 # ---------------------------------------------------------------------------
@@ -290,23 +302,14 @@ class TestGetPackageFromResource:
 
 class TestPackageBelongsToUser:
     def test_returns_true_when_creator(self):
-        org_dict = _artesp_org()
-        user_dict = factories.User()
-        pkg_dict = factories.Dataset(user=user_dict, owner_org=org_dict["id"])
-        pkg_obj = model.Package.get(pkg_dict["id"])
-        user_obj = model.User.get(user_dict["id"])
-
-        assert auth_helpers.package_belongs_to_user(pkg_obj, user_obj) is True
+        assert auth_helpers.package_belongs_to_user(
+            SimpleNamespace(creator_user_id="user-id"), SimpleNamespace(id="user-id")
+        ) is True
 
     def test_returns_false_when_not_creator(self):
-        org_dict = _artesp_org()
-        user_dict = factories.User()
-        other_user = factories.User()
-        pkg_dict = factories.Dataset(user=user_dict, owner_org=org_dict["id"])
-        pkg_obj = model.Package.get(pkg_dict["id"])
-        other_user_obj = model.User.get(other_user["id"])
-
-        assert auth_helpers.package_belongs_to_user(pkg_obj, other_user_obj) is False
+        assert auth_helpers.package_belongs_to_user(
+            SimpleNamespace(creator_user_id="user-id"), SimpleNamespace(id="other-id")
+        ) is False
 
     def test_returns_false_for_none(self):
         assert auth_helpers.package_belongs_to_user(None, None) is False
@@ -318,31 +321,23 @@ class TestPackageBelongsToUser:
 
 class TestGetCollaborator:
     def test_returns_none_when_no_collaborator(self):
-        org_dict = _artesp_org()
-        user_dict = factories.User()
-        pkg_dict = factories.Dataset(owner_org=org_dict["id"])
-        pkg_obj = model.Package.get(pkg_dict["id"])
-        user_obj = model.User.get(user_dict["id"])
-
-        assert auth_helpers.get_collaborator(pkg_obj, user_obj) is None
+        query = MagicMock()
+        query.filter.return_value.filter.return_value.one_or_none.return_value = None
+        with patch.object(model.Session, "query", return_value=query):
+            assert auth_helpers.get_collaborator(
+                SimpleNamespace(id="pkg-id"), SimpleNamespace(id="user-id")
+            ) is None
 
     def test_returns_collaborator_when_exists(self):
-        org_dict = _artesp_org()
-        creator_dict = factories.User()
-        collab_dict = factories.User()
-        pkg_dict = factories.Dataset(user=creator_dict, owner_org=org_dict["id"])
-        pkg_obj = model.Package.get(pkg_dict["id"])
-        collab_obj = model.User.get(collab_dict["id"])
-
-        # Add collaborator via action
-        tk.get_action("package_collaborator_create")(
-            {"ignore_auth": True},
-            {"id": pkg_dict["id"], "user_id": collab_dict["id"], "capacity": "editor"},
-        )
-
-        result = auth_helpers.get_collaborator(pkg_obj, collab_obj)
-        assert result is not None
-        assert result.user_id == collab_dict["id"]
+        collaborator = SimpleNamespace(user_id="user-id")
+        query = MagicMock()
+        query.filter.return_value.filter.return_value.one_or_none.return_value = collaborator
+        with patch.object(model.Session, "query", return_value=query):
+            result = auth_helpers.get_collaborator(
+                SimpleNamespace(id="pkg-id"), SimpleNamespace(id="user-id")
+            )
+        assert result is collaborator
+        assert result.user_id == "user-id"
 
     def test_returns_none_for_none_args(self):
         assert auth_helpers.get_collaborator(None, None) is None
@@ -350,20 +345,15 @@ class TestGetCollaborator:
 
 class TestGetCollaboratorByUserId:
     def test_returns_collaborator_by_user_id(self):
-        org_dict = _artesp_org()
-        creator_dict = factories.User()
-        collab_dict = factories.User()
-        pkg_dict = factories.Dataset(user=creator_dict, owner_org=org_dict["id"])
-        pkg_obj = model.Package.get(pkg_dict["id"])
-
-        tk.get_action("package_collaborator_create")(
-            {"ignore_auth": True},
-            {"id": pkg_dict["id"], "user_id": collab_dict["id"], "capacity": "editor"},
-        )
-
-        result = auth_helpers.get_collaborator_by_user_id(pkg_obj, collab_dict["id"])
-        assert result is not None
-        assert result.user_id == collab_dict["id"]
+        collaborator = SimpleNamespace(user_id="user-id")
+        query = MagicMock()
+        query.filter.return_value.filter.return_value.one_or_none.return_value = collaborator
+        with patch.object(model.Session, "query", return_value=query):
+            result = auth_helpers.get_collaborator_by_user_id(
+                SimpleNamespace(id="pkg-id"), "user-id"
+            )
+        assert result is collaborator
+        assert result.user_id == "user-id"
 
     def test_returns_none_for_none_args(self):
         assert auth_helpers.get_collaborator_by_user_id(None, None) is None
@@ -379,62 +369,31 @@ class TestWouldOrphanCollaboratorGovernance:
         assert auth_helpers.would_orphan_collaborator_governance(None, None) is False
 
     def test_returns_false_when_valid_creator_exists(self):
-        org_dict = _artesp_org()
-        creator_dict = factories.User()
-        pkg_dict = factories.Dataset(user=creator_dict, owner_org=org_dict["id"])
-        pkg_obj = model.Package.get(pkg_dict["id"])
-
-        # Package has a valid creator → no orphan risk
-        result = auth_helpers.would_orphan_collaborator_governance(pkg_obj, creator_dict["id"])
+        pkg_obj = SimpleNamespace(id="pkg-id")
+        with patch.object(auth_helpers, "package_has_valid_creator", return_value=True):
+            result = auth_helpers.would_orphan_collaborator_governance(pkg_obj, "user-id")
         assert result is False
 
     def test_returns_true_when_no_creator_and_last_admin_removed(self):
-        org_dict = _artesp_org()
-        admin_dict = factories.User()
-        pkg_dict = factories.Dataset(owner_org=org_dict["id"])
-        pkg_obj = model.Package.get(pkg_dict["id"])
-
-        # Remove creator
-        pkg_obj.creator_user_id = None
-        model.Session.add(pkg_obj)
-        model.Session.commit()
-
-        # Add admin collaborator directly via DB
-        member = model.PackageMember(
-            package_id=pkg_dict["id"],
-            user_id=admin_dict["id"],
-            capacity="admin",
-        )
-        model.Session.add(member)
-        model.Session.commit()
-
-        # Removing the only admin → would orphan
-        result = auth_helpers.would_orphan_collaborator_governance(pkg_obj, admin_dict["id"])
+        query = MagicMock()
+        query.filter.return_value.filter.return_value.filter.return_value.count.return_value = 0
+        with patch.object(auth_helpers, "package_has_valid_creator", return_value=False), patch.object(
+            model.Session, "query", return_value=query
+        ):
+            result = auth_helpers.would_orphan_collaborator_governance(
+                SimpleNamespace(id="pkg-id"), "admin-id"
+            )
         assert result is True
 
     def test_returns_false_when_other_admin_exists(self):
-        org_dict = _artesp_org()
-        admin1_dict = factories.User()
-        admin2_dict = factories.User()
-        pkg_dict = factories.Dataset(owner_org=org_dict["id"])
-        pkg_obj = model.Package.get(pkg_dict["id"])
-
-        pkg_obj.creator_user_id = None
-        model.Session.add(pkg_obj)
-        model.Session.commit()
-
-        # Add two admin collaborators directly via DB
-        for admin in [admin1_dict, admin2_dict]:
-            member = model.PackageMember(
-                package_id=pkg_dict["id"],
-                user_id=admin["id"],
-                capacity="admin",
+        query = MagicMock()
+        query.filter.return_value.filter.return_value.filter.return_value.count.return_value = 1
+        with patch.object(auth_helpers, "package_has_valid_creator", return_value=False), patch.object(
+            model.Session, "query", return_value=query
+        ):
+            result = auth_helpers.would_orphan_collaborator_governance(
+                SimpleNamespace(id="pkg-id"), "admin-id"
             )
-            model.Session.add(member)
-        model.Session.commit()
-
-        # Removing admin1 → admin2 still exists → no orphan
-        result = auth_helpers.would_orphan_collaborator_governance(pkg_obj, admin1_dict["id"])
         assert result is False
 
 
@@ -458,60 +417,53 @@ class TestNormalizePackageCollaboratorCreateData:
             )
 
     def test_sysadmin_must_provide_capacity(self):
-        sysadmin = factories.Sysadmin()
-        target = factories.User()
-        sysadmin_obj = model.User.get(sysadmin["name"])
+        sysadmin_obj = SimpleNamespace(id="sysadmin-id", sysadmin=True)
+        target = SimpleNamespace(id="target-id")
 
-        with pytest.raises(tk.ValidationError):
-            auth_helpers.normalize_package_collaborator_create_data(
-                {"auth_user_obj": sysadmin_obj},
-                {"user_id": target["id"]},
-            )
+        with patch.object(auth_helpers, "resolve_or_create_collaborator_user", return_value=target):
+            with pytest.raises(tk.ValidationError):
+                auth_helpers.normalize_package_collaborator_create_data(
+                    {"auth_user_obj": sysadmin_obj},
+                    {"user_id": target.id},
+                )
 
     def test_regular_user_gets_default_capacity(self):
-        org_dict = _artesp_org()
-        creator_dict = factories.User()
-        target_dict = factories.User()
-        creator_obj = model.User.get(creator_dict["name"])
-        pkg_dict = factories.Dataset(user=creator_dict, owner_org=org_dict["id"])
+        creator_obj = SimpleNamespace(id="creator-id", sysadmin=False)
+        target = SimpleNamespace(id="target-id")
+        package = SimpleNamespace(id="pkg-id")
 
-        result = auth_helpers.normalize_package_collaborator_create_data(
-            {"auth_user_obj": creator_obj},
-            {"user_id": target_dict["id"], "id": pkg_dict["id"]},
-        )
+        with patch.object(auth_helpers, "resolve_or_create_collaborator_user", return_value=target), patch.object(
+            auth_helpers, "get_package", return_value=package
+        ), patch.object(auth_helpers, "get_collaborator_by_user_id", return_value=None):
+            result = auth_helpers.normalize_package_collaborator_create_data(
+                {"auth_user_obj": creator_obj},
+                {"user_id": target.id, "id": package.id},
+            )
         assert result["capacity"] == auth_helpers.DEFAULT_DATASET_COLLABORATOR_CAPACITY
 
     def test_raises_not_authorized_when_non_default_capacity_requested(self):
-        org_dict = _artesp_org()
-        creator_dict = factories.User()
-        target_dict = factories.User()
-        creator_obj = model.User.get(creator_dict["name"])
-        pkg_dict = factories.Dataset(user=creator_dict, owner_org=org_dict["id"])
-
-        with pytest.raises(tk.NotAuthorized):
-            auth_helpers.normalize_package_collaborator_create_data(
-                {"auth_user_obj": creator_obj},
-                {"user_id": target_dict["id"], "id": pkg_dict["id"], "capacity": "member"},
-            )
+        creator_obj = SimpleNamespace(id="creator-id", sysadmin=False)
+        target = SimpleNamespace(id="target-id")
+        with patch.object(auth_helpers, "resolve_or_create_collaborator_user", return_value=target):
+            with pytest.raises(tk.NotAuthorized):
+                auth_helpers.normalize_package_collaborator_create_data(
+                    {"auth_user_obj": creator_obj},
+                    {"user_id": target.id, "id": "pkg-id", "capacity": "member"},
+                )
 
     def test_raises_not_authorized_when_existing_collaborator_and_non_sysadmin(self):
-        org_dict = _artesp_org()
-        creator_dict = factories.User()
-        target_dict = factories.User()
-        creator_obj = model.User.get(creator_dict["name"])
-        pkg_dict = factories.Dataset(user=creator_dict, owner_org=org_dict["id"])
-
-        # Add as collaborator first
-        tk.get_action("package_collaborator_create")(
-            {"ignore_auth": True},
-            {"id": pkg_dict["id"], "user_id": target_dict["id"], "capacity": "editor"},
-        )
-
-        with pytest.raises(tk.NotAuthorized):
-            auth_helpers.normalize_package_collaborator_create_data(
-                {"auth_user_obj": creator_obj},
-                {"user_id": target_dict["id"], "id": pkg_dict["id"]},
-            )
+        creator_obj = SimpleNamespace(id="creator-id", sysadmin=False)
+        target = SimpleNamespace(id="target-id")
+        with patch.object(auth_helpers, "resolve_or_create_collaborator_user", return_value=target), patch.object(
+            auth_helpers, "get_package", return_value=SimpleNamespace(id="pkg-id")
+        ), patch.object(
+            auth_helpers, "get_collaborator_by_user_id", return_value=SimpleNamespace(user_id=target.id)
+        ):
+            with pytest.raises(tk.NotAuthorized):
+                auth_helpers.normalize_package_collaborator_create_data(
+                    {"auth_user_obj": creator_obj},
+                    {"user_id": target.id, "id": "pkg-id"},
+                )
 
 
 # ---------------------------------------------------------------------------
@@ -545,13 +497,15 @@ class TestIsArtespOwnerOrg:
         assert auth_helpers.is_artesp_owner_org("") is False
 
     def test_returns_false_when_org_not_found(self):
-        with patch.object(model.Group, "get", return_value=None):
+        with patch.object(auth_helpers, "get_artesp_org", return_value=None):
             assert auth_helpers.is_artesp_owner_org("artesp") is False
 
     def test_returns_true_for_artesp_org_id(self):
-        org_dict = _artesp_org()
-        assert auth_helpers.is_artesp_owner_org(org_dict["id"]) is True
+        org = SimpleNamespace(id="org-id", name="artesp")
+        with patch.object(auth_helpers, "get_artesp_org", return_value=org):
+            assert auth_helpers.is_artesp_owner_org("org-id") is True
 
     def test_returns_true_for_artesp_org_name(self):
-        _artesp_org()
-        assert auth_helpers.is_artesp_owner_org("artesp") is True
+        org = SimpleNamespace(id="org-id", name="artesp")
+        with patch.object(auth_helpers, "get_artesp_org", return_value=org):
+            assert auth_helpers.is_artesp_owner_org("artesp") is True

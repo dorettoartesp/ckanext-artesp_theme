@@ -12,7 +12,7 @@ from ckanext.artesp_theme.logic import auth_helpers
 
 
 pytestmark = [
-    pytest.mark.integration,
+    pytest.mark.app,
     pytest.mark.ckan_config("ckan.plugins", "artesp_theme"),
     pytest.mark.usefixtures("with_plugins"),
 ]
@@ -48,7 +48,13 @@ def test_handle_action_succeeded_ignores_untracked_actions():
 
 
 def test_handle_action_succeeded_persists_package_create_as_web(monkeypatch):
-    user = factories.User()
+    user = SimpleNamespace(
+        id="user-id",
+        name="alice",
+        display_name="Alice",
+        sysadmin=False,
+        plugin_extras={},
+    )
 
     monkeypatch.setattr(
         audit_capture,
@@ -60,10 +66,11 @@ def test_handle_action_succeeded_persists_package_create_as_web(monkeypatch):
             user_agent=SimpleNamespace(string="pytest-browser"),
         ),
     )
+    monkeypatch.setattr(audit_capture.auth_helpers, "get_authenticated_user", lambda context: user)
 
     audit_capture.handle_action_succeeded(
         "package_create",
-        context={"user": user["name"]},
+        context={"user": user.name},
         data_dict={"owner_org": "artesp"},
         result={"id": "pkg-1", "name": "meu-dataset", "title": "Meu Dataset"},
     )
@@ -72,7 +79,7 @@ def test_handle_action_succeeded_persists_package_create_as_web(monkeypatch):
     assert event.event_family == "dataset"
     assert event.event_action == "package_create"
     assert event.success is True
-    assert event.actor_id == user["id"]
+    assert event.actor_id == user.id
     assert event.actor_type == "internal"
     assert event.channel == "web"
     assert event.ip_address == "10.0.0.5"
@@ -124,7 +131,14 @@ def test_handle_action_succeeded_persists_resource_delete_as_api(monkeypatch):
 
 
 def test_handle_user_logged_in_persists_auth_event(monkeypatch):
-    user = factories.User()
+    user = SimpleNamespace(
+        id="user-id",
+        name="alice",
+        display_name="Alice Example",
+        fullname="Alice Example",
+        sysadmin=False,
+        plugin_extras={},
+    )
 
     monkeypatch.setattr(
         audit_capture,
@@ -138,13 +152,7 @@ def test_handle_user_logged_in_persists_auth_event(monkeypatch):
     )
     monkeypatch.setattr(audit_capture, "session", {"artesp_auth_provider": "local"})
 
-    audit_capture.handle_user_logged_in("app", user=SimpleNamespace(
-        id=user["id"],
-        name=user["name"],
-        display_name=user["fullname"],
-        sysadmin=False,
-        plugin_extras={},
-    ))
+    audit_capture.handle_user_logged_in("app", user=user)
 
     event = model.Session.query(AuditEvent).one()
     assert event.event_family == "authentication"
@@ -154,7 +162,14 @@ def test_handle_user_logged_in_persists_auth_event(monkeypatch):
 
 
 def test_handle_user_logged_in_skips_user_verify_requests(monkeypatch):
-    user = factories.User()
+    user = SimpleNamespace(
+        id="user-id",
+        name="alice",
+        display_name="Alice Example",
+        fullname="Alice Example",
+        sysadmin=False,
+        plugin_extras={},
+    )
 
     monkeypatch.setattr(
         audit_capture,
@@ -167,13 +182,7 @@ def test_handle_user_logged_in_skips_user_verify_requests(monkeypatch):
         ),
     )
 
-    audit_capture.handle_user_logged_in("app", user=SimpleNamespace(
-        id=user["id"],
-        name=user["name"],
-        display_name=user["fullname"],
-        sysadmin=False,
-        plugin_extras={},
-    ))
+    audit_capture.handle_user_logged_in("app", user=user)
 
     assert model.Session.query(AuditEvent).count() == 0
 

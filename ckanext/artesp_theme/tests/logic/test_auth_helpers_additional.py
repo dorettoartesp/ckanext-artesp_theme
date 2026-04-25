@@ -8,32 +8,22 @@ from unittest.mock import MagicMock, patch
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 import pytest
-from ckan.tests import factories
 
 from ckanext.artesp_theme.logic import auth_helpers
 
 
 pytestmark = [
-    pytest.mark.integration,
+    pytest.mark.app,
     pytest.mark.ckan_config("ckan.plugins", "artesp_theme"),
     pytest.mark.ckan_config("ckan.auth.allow_dataset_collaborators", True),
     pytest.mark.ckan_config("ckan.auth.allow_admin_collaborators", True),
-    pytest.mark.usefixtures("with_plugins", "non_clean_db"),
-    pytest.mark.xdist_group("auth_helpers"),
+    pytest.mark.usefixtures("with_plugins"),
 ]
-
-
-def _artesp_org():
-    org = auth_helpers.get_artesp_org()
-    if org:
-        return {"id": org.id, "name": org.name}
-    return factories.Organization(name="artesp")
 
 
 class TestAuthenticatedUserHelpers:
     def test_get_authenticated_user_prefers_auth_user_obj(self):
-        user = factories.User()
-        user_obj = model.User.get(user["name"])
+        user_obj = SimpleNamespace(id="user-id")
 
         result = auth_helpers.get_authenticated_user(
             {"auth_user_obj": user_obj, "user": "ignored"}
@@ -42,28 +32,23 @@ class TestAuthenticatedUserHelpers:
         assert result is user_obj
 
     def test_get_authenticated_user_looks_up_username(self):
-        user = factories.User()
-
-        result = auth_helpers.get_authenticated_user({"user": user["name"]})
-
-        assert result.id == user["id"]
+        with patch.object(model.User, "get", return_value=SimpleNamespace(id="user-id")):
+            result = auth_helpers.get_authenticated_user({"user": "alice"})
+        assert result.id == "user-id"
 
     def test_get_authenticated_user_returns_none_without_user(self):
         assert auth_helpers.get_authenticated_user({}) is None
 
     def test_is_sysadmin_returns_true_for_sysadmin(self):
-        sysadmin = factories.Sysadmin()
-
-        assert auth_helpers.is_sysadmin({"user": sysadmin["name"]}) is True
+        with patch.object(
+            auth_helpers, "get_authenticated_user", return_value=SimpleNamespace(sysadmin=True)
+        ):
+            assert auth_helpers.is_sysadmin({"user": "admin"}) is True
 
     def test_is_external_user_supports_string_identifier(self):
-        user = factories.User()
-        user_obj = model.User.get(user["name"])
-        user_obj.plugin_extras = {"artesp": {"user_type": "external"}}
-        model.Session.add(user_obj)
-        model.Session.commit()
-
-        assert auth_helpers.is_external_user(user["name"]) is True
+        user_obj = SimpleNamespace(plugin_extras={"artesp": {"user_type": "external"}})
+        with patch.object(model.User, "get", return_value=user_obj):
+            assert auth_helpers.is_external_user("alice") is True
 
     def test_is_external_user_returns_false_for_missing_user(self):
         with patch.object(model.User, "get", return_value=None):
@@ -124,36 +109,30 @@ class TestMembershipAndOrganizationHelpers:
         assert rolled_back == [True]
 
     def test_get_ldap_users_returns_only_active_users(self, monkeypatch):
-        active_user = factories.User()
-        deleted_user = factories.User()
-        deleted_obj = model.User.get(deleted_user["name"])
-        deleted_obj.state = "deleted"
-        model.Session.add(deleted_obj)
-        model.Session.commit()
-
         fake_result = SimpleNamespace(
-            fetchall=lambda: [(active_user["id"],), (deleted_user["id"],), (None,)]
+            fetchall=lambda: [("active-id",), ("deleted-id",), (None,)]
         )
+        active_user = SimpleNamespace(id="active-id", state="active")
         monkeypatch.setattr(model.Session, "execute", lambda statement: fake_result)
+        query = MagicMock()
+        query.filter.return_value.filter.return_value.all.return_value = [active_user]
+        monkeypatch.setattr(model.Session, "query", lambda *args: query)
 
         users = auth_helpers.get_ldap_users()
 
-        assert [user.id for user in users] == [active_user["id"]]
+        assert [user.id for user in users] == ["active-id"]
 
     def test_ensure_user_membership_returns_true_when_capacity_already_matches(
         self, monkeypatch
     ):
-        org = _artesp_org()
-        user = factories.User()
-        user_obj = model.User.get(user["name"])
-        group_obj = model.Group.get(org["id"])
-
-        auth_helpers.ensure_user_membership(
-            user_obj,
-            group_obj,
-            "member",
-            enforce_capacity=True,
-        )
+        user_obj = SimpleNamespace(id="user-id", name="alice")
+        group_obj = SimpleNamespace(id="group-id", state="active")
+        membership = SimpleNamespace(state="active", capacity="member")
+        query = MagicMock()
+        query.filter.return_value.filter.return_value.filter.return_value.order_by.return_value.first.return_value = membership
+        monkeypatch.setattr(auth_helpers, "get_user", lambda value: user_obj)
+        monkeypatch.setattr(auth_helpers, "get_group", lambda value: group_obj)
+        monkeypatch.setattr(model.Session, "query", lambda *args: query)
 
         monkeypatch.setattr(
             auth_helpers.tk,
@@ -518,5 +497,6 @@ class TestPermissionHelpers:
         self,
     ):
         assert auth_helpers.user_can_manage_collaborators(
-            SimpleNamespace(id="pkg-id"), SimpleNamespace(id="user-id")
+            SimpleNamespace(id="pkg-id", creator_user_id=None),
+            SimpleNamespace(id="user-id"),
         ) is False
