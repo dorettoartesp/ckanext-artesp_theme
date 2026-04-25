@@ -16,6 +16,7 @@ from ckanext.artesp_theme.logic import auth_helpers
 
 
 pytestmark = [
+    pytest.mark.integration,
     pytest.mark.ckan_config("ckan.plugins", "artesp_theme"),
     pytest.mark.ckan_config("ckan.auth.allow_dataset_collaborators", True),
     pytest.mark.ckan_config("ckan.auth.allow_admin_collaborators", True),

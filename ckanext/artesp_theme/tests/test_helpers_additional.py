@@ -13,6 +13,7 @@ import ckanext.artesp_theme.helpers as helpers
 
 
 pytestmark = [
+    pytest.mark.integration,
     pytest.mark.ckan_config("ckan.plugins", "artesp_theme"),
     pytest.mark.usefixtures("with_plugins"),
 ]

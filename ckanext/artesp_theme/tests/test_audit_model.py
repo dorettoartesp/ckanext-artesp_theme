@@ -11,6 +11,7 @@ from ckanext.artesp_theme.migration.artesp_theme.table_filter import (
 
 
 pytestmark = [
+    pytest.mark.integration,
     pytest.mark.ckan_config("ckan.plugins", "artesp_theme"),
     pytest.mark.usefixtures("with_plugins"),
 ]

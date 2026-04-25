@@ -10,6 +10,7 @@ from ckanext.artesp_theme.audit_model import AuditEvent, audit_event_table
 
 
 pytestmark = [
+    pytest.mark.integration,
     pytest.mark.ckan_config("ckan.plugins", "artesp_theme"),
     pytest.mark.usefixtures("with_plugins"),
 ]

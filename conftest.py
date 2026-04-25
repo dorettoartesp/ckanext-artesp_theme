@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-_INTEGRATION_FIXTURES = {"clean_db", "clean_index"}
+_INTEGRATION_FIXTURES = {"clean_db", "clean_index", "non_clean_db"}
 _APP_FIXTURES = {"app", "ckan_config", "with_plugins"}
 
 

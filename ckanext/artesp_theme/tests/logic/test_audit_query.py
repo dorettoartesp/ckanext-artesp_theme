@@ -9,6 +9,7 @@ from ckanext.artesp_theme.logic import audit_query
 
 
 pytestmark = [
+    pytest.mark.integration,
     pytest.mark.ckan_config("ckan.plugins", "artesp_theme"),
     pytest.mark.usefixtures("with_plugins"),
 ]

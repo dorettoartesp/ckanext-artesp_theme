@@ -15,6 +15,7 @@ from ckanext.artesp_theme.logic import auth as artesp_auth
 from ckanext.artesp_theme.logic import auth_helpers
 
 pytestmark = [
+    pytest.mark.integration,
     pytest.mark.ckan_config("ckan.plugins", "artesp_theme"),
     pytest.mark.usefixtures("with_plugins"),
 ]

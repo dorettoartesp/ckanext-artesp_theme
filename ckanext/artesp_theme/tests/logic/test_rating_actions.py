@@ -10,6 +10,7 @@ from ckanext.artesp_theme.model import DatasetRating, dataset_rating_table
 
 
 pytestmark = [
+    pytest.mark.integration,
     pytest.mark.ckan_config("ckan.plugins", "artesp_theme"),
     pytest.mark.usefixtures("with_plugins"),
 ]
