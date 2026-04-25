@@ -52,7 +52,7 @@ class TestGetLatestResources:
             state="active",
         )
         model.Session.add(package)
-        model.Session.commit()
+        model.Session.flush()
         return package
 
     def _resource(self, package, name, seconds=0):
@@ -64,7 +64,7 @@ class TestGetLatestResources:
         )
         resource.state = "active"
         model.Session.add(resource)
-        model.Session.commit()
+        model.Session.flush()
         return resource
 
     def _patch_package_show(self, monkeypatch, *packages):
