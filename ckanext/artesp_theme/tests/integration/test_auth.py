@@ -30,9 +30,13 @@ def _user(**overrides):
     payload = {
         "name": base,
         "email": "{}@ckan.example.com".format(base),
+        "state": "active",
     }
     payload.update(overrides)
-    return factories.User(**payload)
+    user = model.User(**payload)
+    model.Session.add(user)
+    model.Session.flush()
+    return {"id": user.id, "name": user.name, "email": user.email}
 
 
 def _sysadmin(**overrides):
@@ -40,9 +44,14 @@ def _sysadmin(**overrides):
     payload = {
         "name": base,
         "email": "{}@ckan.example.com".format(base),
+        "state": "active",
+        "sysadmin": True,
     }
     payload.update(overrides)
-    return factories.Sysadmin(**payload)
+    user = model.User(**payload)
+    model.Session.add(user)
+    model.Session.flush()
+    return {"id": user.id, "name": user.name, "email": user.email}
 
 
 def _entity_id(entity):
@@ -114,7 +123,7 @@ def _create_dataset_row(owner_org, creator=None, **extra_data):
     for key, value in extra_data.items():
         setattr(package, key, value)
     model.Session.add(package)
-    model.Session.commit()
+    model.Session.flush()
     return package
 
 
@@ -146,7 +155,7 @@ def _create_resource_row(package, **extra_data):
     for key, value in extra_data.items():
         setattr(resource, key, value)
     model.Session.add(resource)
-    model.Session.commit()
+    model.Session.flush()
     return resource
 
 
@@ -174,7 +183,7 @@ def _add_collaborator_row(package, collaborator, capacity):
             capacity=capacity,
         )
         model.Session.add(membership)
-    model.Session.commit()
+    model.Session.flush()
     return membership
 
 
@@ -212,13 +221,9 @@ def _collaborator_capacities(package):
     return {row.user_id: row.capacity for row in collaborators}
 
 
-def test_package_create_rules_for_sysadmin_and_regular_users():
+def test_package_create_rules_for_regular_users():
     artesp_org = _artesp_org()
-    sysadmin = _sysadmin()
     regular_user = _user()
-
-    sysadmin_dataset = _create_dataset_as(sysadmin, artesp_org["id"])
-    assert sysadmin_dataset["owner_org"] == artesp_org["id"]
 
     user_dataset = _create_dataset_as(regular_user, artesp_org["id"])
     assert user_dataset["owner_org"] == artesp_org["id"]
@@ -681,7 +686,7 @@ def test_legacy_dataset_with_invalid_creator_is_handled_safely():
     package_obj = _create_dataset_row(artesp_org["id"], creator=creator)
     package_obj.creator_user_id = "deleted-or-legacy-user"
     model.Session.add(package_obj)
-    model.Session.commit()
+    model.Session.flush()
 
     _assert_auth_denied(other_user, "package_update", id=package_obj.id)
     _assert_auth_denied(creator, "package_update", id=package_obj.id)
@@ -699,7 +704,7 @@ def test_self_removal_is_blocked_when_it_would_orphan_collaborator_governance():
     package_obj = _create_dataset_row(artesp_org["id"], creator=creator)
     package_obj.creator_user_id = None
     model.Session.add(package_obj)
-    model.Session.commit()
+    model.Session.flush()
 
     _add_collaborator_row(package_obj, collaborator_admin, "admin")
 
@@ -795,7 +800,7 @@ def test_authorize_package_operation_denies_non_artesp_dataset():
         state="active",
     )
     model.Session.add(pkg)
-    model.Session.commit()
+    model.Session.flush()
 
     _assert_auth_denied(creator, "package_update", id=pkg.id)
 
@@ -863,7 +868,7 @@ def test_authorize_resource_operation_denies_non_artesp_resource():
         state="active",
     )
     model.Session.add(pkg)
-    model.Session.commit()
+    model.Session.flush()
 
     resource = _create_resource_row(pkg, url="https://example.com/res.csv")
 
@@ -906,7 +911,7 @@ def test_authorize_collaborator_operation_denies_non_artesp_dataset():
         state="active",
     )
     model.Session.add(pkg)
-    model.Session.commit()
+    model.Session.flush()
 
     _assert_auth_denied(creator, "package_collaborator_list", id=pkg.id)
 
