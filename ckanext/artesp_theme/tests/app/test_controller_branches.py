@@ -1,4 +1,4 @@
-"""Additional focused tests for controllers.py coverage gaps."""
+"""App-layer tests for controller branches."""
 
 import sys
 import types
@@ -304,7 +304,7 @@ def test_audit_admin_forwards_filters_to_query_service(app, monkeypatch):
     }
 
 
-class TestUserVerifyAdditionalBranches:
+class TestUserVerifyBranches:
     def test_returns_login_failed_on_multiple_match(self):
         class MultipleMatchError(Exception):
             pass
@@ -524,7 +524,7 @@ class TestUserVerifyAdditionalBranches:
         )
 
 
-class TestResourceSearchAdditionalBranches:
+class TestResourceSearchBranches:
     def test_resource_search_handles_advanced_query_error(self, app, monkeypatch):
         monkeypatch.setattr(
             controllers.toolkit,

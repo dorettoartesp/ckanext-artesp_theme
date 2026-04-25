@@ -3,7 +3,7 @@ from pathlib import Path
 
 
 LOCALE_DIR = (
-    Path(__file__).resolve().parents[1] / "i18n"
+    Path(__file__).resolve().parents[2] / "i18n"
 )
 
 

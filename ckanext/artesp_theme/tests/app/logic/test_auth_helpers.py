@@ -88,7 +88,7 @@ class TestFindLocalUserByIdentifier:
 
 
 # ---------------------------------------------------------------------------
-# is_external_user (additional coverage via DB user)
+# is_external_user coverage via DB user
 # ---------------------------------------------------------------------------
 
 class TestIsExternalUser:

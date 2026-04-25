@@ -712,7 +712,7 @@ def test_self_removal_is_blocked_when_it_would_orphan_collaborator_governance():
 
 
 # ---------------------------------------------------------------------------
-# Additional coverage for missing branches
+# Branch coverage for auth edge cases
 # ---------------------------------------------------------------------------
 
 def test_package_create_sysadmin_is_allowed_directly():

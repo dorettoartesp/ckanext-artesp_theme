@@ -168,7 +168,7 @@ class TestLinkRoute:
 
 
 # ---------------------------------------------------------------------------
-# Additional coverage for missing branches
+# Branch coverage for GovBR routes
 # ---------------------------------------------------------------------------
 
 class TestRedirectExternalFromDashboard:

@@ -51,10 +51,26 @@ def _package(user=None, owner_org="artesp"):
     return {"id": package.id, "name": package.name, "title": package.title}
 
 
+def _user(prefix="rating-user"):
+    suffix = uuid.uuid4().hex
+    return factories.User(
+        name="{}-{}".format(prefix, suffix[:10]),
+        email="{}-{}@ckan.example.com".format(prefix, suffix),
+    )
+
+
+def _sysadmin(prefix="rating-sysadmin"):
+    suffix = uuid.uuid4().hex
+    return factories.Sysadmin(
+        name="{}-{}".format(prefix, suffix[:10]),
+        email="{}-{}@ckan.example.com".format(prefix, suffix),
+    )
+
+
 def test_worker_sends_notifications_to_active_recipients(monkeypatch, artesp_org):
-    author = factories.User()
-    creator = factories.User()
-    sysadmin = factories.Sysadmin()
+    author = _user("rating-author")
+    creator = _user("rating-creator")
+    sysadmin = _sysadmin()
     pkg = _package(user=creator, owner_org=artesp_org["id"])
 
     rating = DatasetRating(
@@ -94,7 +110,7 @@ def test_worker_sends_notifications_to_active_recipients(monkeypatch, artesp_org
 
 
 # ---------------------------------------------------------------------------
-# Additional coverage for missing branches
+# Branch coverage for notification paths
 # ---------------------------------------------------------------------------
 
 def test_worker_returns_early_when_rating_not_found(monkeypatch, artesp_org):
@@ -113,7 +129,7 @@ def test_worker_returns_early_when_rating_not_found(monkeypatch, artesp_org):
 def test_worker_returns_early_when_rating_has_no_comment(monkeypatch, artesp_org):
     """Line 19: rating exists but has no comment → early return."""
     pkg = _package(owner_org=artesp_org["id"])
-    author = factories.User()
+    author = _user("rating-author")
 
     rating = DatasetRating(
         user_id=author["id"],
@@ -137,9 +153,9 @@ def test_worker_returns_early_when_rating_has_no_comment(monkeypatch, artesp_org
 
 def test_worker_logs_and_returns_when_no_recipients(monkeypatch, artesp_org):
     """Lines 32-33: no recipients → log and return without sending mail."""
-    creator = factories.User()
+    creator = _user("rating-creator")
     pkg = _package(user=creator, owner_org=artesp_org["id"])
-    author = factories.User()
+    author = _user("rating-author")
 
     rating = DatasetRating(
         user_id=author["id"],
@@ -176,10 +192,10 @@ def test_worker_continues_after_mailer_exception(monkeypatch, artesp_org):
     """Lines 52-53: MailerException per recipient → log warning, continue."""
     from ckan.lib import mailer
 
-    creator = factories.User()
-    sysadmin = factories.Sysadmin()
+    creator = _user("rating-creator")
+    sysadmin = _sysadmin()
     pkg = _package(user=creator, owner_org=artesp_org["id"])
-    author = factories.User()
+    author = _user("rating-author")
 
     rating = DatasetRating(
         user_id=author["id"],
@@ -221,10 +237,10 @@ def test_worker_continues_after_mailer_exception(monkeypatch, artesp_org):
 
 def test_resolve_recipients_skips_inactive_user(monkeypatch, artesp_org):
     """Line 72: inactive user is skipped."""
-    creator = factories.User()
+    creator = _user("rating-creator")
 
     # Make a deactivated user
-    deactivated_user = factories.User()
+    deactivated_user = _user("rating-deactivated")
     deactivated_obj = model.User.get(deactivated_user["id"])
     deactivated_obj.state = "deleted"
     model.Session.add(deactivated_obj)
@@ -251,7 +267,7 @@ def test_resolve_recipients_skips_inactive_user(monkeypatch, artesp_org):
 
 def test_resolve_recipients_skips_duplicate_user_id(monkeypatch, artesp_org):
     """Line 74: duplicate by user.id is deduplicated."""
-    creator = factories.User()
+    creator = _user("rating-creator")
 
     # Same user as both creator and collaborator
     pkg_dict = {
@@ -276,7 +292,7 @@ def test_resolve_recipients_skips_duplicate_user_id(monkeypatch, artesp_org):
 
 def test_resolve_recipients_skips_author(monkeypatch, artesp_org):
     """Line 79: the author is not added to recipients."""
-    creator = factories.User()
+    creator = _user("rating-creator")
 
     pkg_dict = {
         "id": "pkg-id",
@@ -298,9 +314,9 @@ def test_resolve_recipients_skips_author(monkeypatch, artesp_org):
 
 def test_resolve_recipients_includes_collaborators(monkeypatch, artesp_org):
     """Line 95: collaborators from package_collaborator_list are included."""
-    creator = factories.User()
-    collaborator = factories.User()
-    author = factories.User()
+    creator = _user("rating-creator")
+    collaborator = _user("rating-collaborator")
+    author = _user("rating-author")
 
     pkg_dict = {
         "id": "pkg-id",
@@ -322,7 +338,7 @@ def test_resolve_recipients_includes_collaborators(monkeypatch, artesp_org):
 
 def test_resolve_recipients_handles_collaborator_list_validation_error(monkeypatch, artesp_org):
     """Lines 96-97: ValidationError from package_collaborator_list → treat as empty list."""
-    creator = factories.User()
+    creator = _user("rating-creator")
 
     pkg_dict = {
         "id": "pkg-id",

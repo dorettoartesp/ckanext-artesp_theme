@@ -1,4 +1,4 @@
-"""Additional focused tests for govbr.blueprint coverage gaps."""
+"""App-layer tests for GovBR blueprint helper branches."""
 
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch

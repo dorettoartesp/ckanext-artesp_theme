@@ -2,6 +2,7 @@
 
 import sys
 import types
+import uuid
 
 import pytest
 from unittest.mock import MagicMock, patch
@@ -39,9 +40,17 @@ def artesp_org():
     return factories.Organization(name="artesp")
 
 
+def _user(prefix):
+    suffix = uuid.uuid4().hex
+    return factories.User(
+        name="{}-{}".format(prefix, suffix[:10]),
+        email="{}-{}@ckan.example.com".format(prefix, suffix),
+    )
+
+
 @pytest.fixture
 def user(artesp_org):
-    return factories.User()
+    return _user("rating-view-user")
 
 
 @pytest.fixture
@@ -118,8 +127,8 @@ class TestRatingSubmitView:
         assert DatasetRating.get_for(u.id, pkg["id"]) is None
 
     def test_private_dataset_requires_access_to_submit_rating(self, app, artesp_org):
-        owner = factories.User()
-        outsider = factories.User()
+        owner = _user("rating-view-owner")
+        outsider = _user("rating-view-outsider")
         private_pkg = factories.Dataset(
             user=owner,
             owner_org=artesp_org["id"],

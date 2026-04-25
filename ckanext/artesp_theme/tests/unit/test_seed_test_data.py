@@ -4,8 +4,10 @@ from pathlib import Path
 from types import SimpleNamespace
 
 
-MODULE_PATH = (
-    Path(__file__).resolve().parents[3] / "utils" / "seed_test_data.py"
+MODULE_PATH = next(
+    parent / "utils" / "seed_test_data.py"
+    for parent in Path(__file__).resolve().parents
+    if (parent / "utils" / "seed_test_data.py").exists()
 )
 SPEC = importlib.util.spec_from_file_location("seed_test_data_module", MODULE_PATH)
 seed_test_data = importlib.util.module_from_spec(SPEC)

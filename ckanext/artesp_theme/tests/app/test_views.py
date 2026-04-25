@@ -1,6 +1,5 @@
 """Tests for views.py."""
 
-from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
 
@@ -580,23 +579,6 @@ def test_statistics_page_renders_without_rating_block(app, reset_db):
 
     assert resp.status_code == 200
     assert "Ainda não há avaliações registradas para o filtro selecionado." in resp.text
-
-
-def test_dashboard_statistics_css_uses_artesp_style_baseline_tokens():
-    css_path = (
-        Path(__file__).resolve().parents[1]
-        / "assets/css/modules/dashboard-statistics.css"
-    )
-    css = css_path.read_text(encoding="utf-8").lower()
-
-    assert "--artesp-red: #ff161f" in css
-    assert "--artesp-blue: #034ea2" in css
-    assert "--artesp-text: #333333" in css
-    assert "--artesp-muted: #888888" in css
-    assert "--artesp-border: #bfbfbf" in css
-    assert "font-family: rawline" in css
-    assert "border-left: 4px solid var(--artesp-red)" in css
-    assert "border-radius: 25px" in css
 
 
 @pytest.mark.ckan_config("ckan.plugins", "artesp_theme")

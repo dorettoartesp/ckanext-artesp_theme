@@ -1,5 +1,7 @@
 """Tests for dataset_rating_upsert / show / summary actions."""
 
+import uuid
+
 import pytest
 import ckan.model as model
 import ckan.plugins.toolkit as tk
@@ -24,9 +26,14 @@ pytestmark = [
 @pytest.fixture(scope="module", autouse=True)
 def _ensure_rating_table():
     bind = model.Session.get_bind()
+    model.Session.rollback()
     dataset_rating_table.create(bind=bind, checkfirst=True)
+    rating_action_table.create(bind=bind, checkfirst=True)
     model.Session.commit()
     yield
+    model.Session.rollback()
+    rating_action_table.create(bind=bind, checkfirst=True)
+    dataset_rating_table.create(bind=bind, checkfirst=True)
     model.Session.execute(rating_action_table.delete())
     model.Session.execute(dataset_rating_table.delete())
     model.Session.commit()
@@ -37,6 +44,10 @@ def _ensure_rating_table():
 
 @pytest.fixture(autouse=True)
 def _clear_rating_rows():
+    bind = model.Session.get_bind()
+    model.Session.rollback()
+    dataset_rating_table.create(bind=bind, checkfirst=True)
+    rating_action_table.create(bind=bind, checkfirst=True)
     model.Session.execute(rating_action_table.delete())
     model.Session.execute(dataset_rating_table.delete())
     model.Session.commit()
@@ -52,9 +63,17 @@ def artesp_org():
     return factories.Organization(name="artesp")
 
 
+def _user(prefix):
+    suffix = uuid.uuid4().hex
+    return factories.User(
+        name="{}-{}".format(prefix, suffix[:10]),
+        email="{}-{}@ckan.example.com".format(prefix, suffix),
+    )
+
+
 @pytest.fixture(scope="module")
 def user(artesp_org):
-    return factories.User()
+    return _user("rating-actions-user")
 
 
 @pytest.fixture(scope="module")
@@ -69,12 +88,12 @@ def context(user):
 
 @pytest.fixture(scope="module")
 def extra_user_a():
-    return factories.User()
+    return _user("rating-actions-extra-a")
 
 
 @pytest.fixture(scope="module")
 def extra_user_b():
-    return factories.User()
+    return _user("rating-actions-extra-b")
 
 
 @pytest.fixture(scope="module")

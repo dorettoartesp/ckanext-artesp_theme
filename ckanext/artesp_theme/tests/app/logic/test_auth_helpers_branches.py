@@ -1,4 +1,4 @@
-"""Additional focused tests for auth_helpers.py coverage gaps."""
+"""App-layer tests for auth helper branches."""
 
 import sys
 import types
