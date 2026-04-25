@@ -209,15 +209,6 @@ def dataset_rating_upsert(context, data_dict=None):
     if not user or not user.is_active:
         return auth_helpers.deny("Must be a logged-in user to submit a rating.")
 
-    data_dict = data_dict or {}
-    package_id = data_dict.get("package_id")
-    if package_id:
-        package = _model.Package.get(package_id)
-        if package and auth_helpers.user_can_edit_package(package, user):
-            return auth_helpers.deny(
-                "Owners and collaborators cannot rate their own datasets."
-            )
-
     return auth_helpers.allow()
 
 

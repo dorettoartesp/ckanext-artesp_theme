@@ -535,6 +535,53 @@ def test_statistics_page_is_public_and_renders_dashboard(app, reset_db):
     assert "Acidentes" in resp.text
 
 
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.usefixtures("with_plugins")
+def test_statistics_page_renders_without_rating_block(app, reset_db):
+    dashboard = {
+        "generated_at_label": "09/04/2026 10:30",
+        "has_data": True,
+        "filters": {
+            "theme": "all",
+            "theme_label": "Todos os temas",
+            "period": "6m",
+            "period_label": "Últimos 6 meses",
+            "available_themes": [{"value": "all", "label": "Todos os temas"}],
+            "available_periods": [{"value": "6m", "label": "Últimos 6 meses"}],
+        },
+        "kpis": {
+            "dataset_count": 1,
+            "resource_count": 1,
+            "theme_count": 1,
+            "format_count": 1,
+            "organization_count": 1,
+            "average_resources_per_dataset_label": "1,0",
+            "empty_theme_count": 0,
+            "datasets_without_theme_count": 0,
+        },
+        "topic_labels": ["Sem grupo"],
+        "insights": [{"title": "Sem avaliações", "description": "Renderiza sem bloco rating."}],
+        "charts": {
+            "resources_by_theme": [],
+            "datasets_by_theme": [],
+            "timeline": [],
+            "top_datasets": [],
+            "formats": [],
+        },
+        "table_rows": [],
+        "table_total_count": 0,
+    }
+
+    with patch(
+        "ckanext.artesp_theme.controllers.artesp_helpers.get_dashboard_statistics",
+        return_value=dashboard,
+    ):
+        resp = app.get(tk.h.url_for("artesp_theme.statistics"))
+
+    assert resp.status_code == 200
+    assert "Ainda não há avaliações registradas para o filtro selecionado." in resp.text
+
+
 def test_dashboard_statistics_css_uses_artesp_style_baseline_tokens():
     css_path = (
         Path(__file__).resolve().parents[1]

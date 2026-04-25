@@ -186,3 +186,17 @@ def test_handle_failed_login_persists_failure(monkeypatch):
     assert event.actor_name == "alice"
     assert event.auth_provider == "local"
     assert event.ip_address == "198.51.100.7"
+
+
+def test_package_create_still_succeeds_when_audit_table_is_missing():
+    bind = model.Session.get_bind()
+    audit_event_table.drop(bind=bind, checkfirst=True)
+
+    user = factories.User()
+    org = factories.Organization(name="artesp")
+
+    dataset = factories.Dataset(user=user, owner_org=org["id"])
+
+    loaded = model.Package.get(dataset["name"])
+    assert loaded is not None
+    assert loaded.name == dataset["name"]

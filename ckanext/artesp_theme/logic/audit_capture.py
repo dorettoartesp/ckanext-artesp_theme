@@ -1,13 +1,17 @@
 """Capture CKAN runtime events into AuditEvent rows."""
 from __future__ import annotations
 
+import logging
 from typing import Any, Optional
 
 import ckan.model as model
 from flask import has_request_context, request, session
+from sqlalchemy.exc import ProgrammingError
 
-from ckanext.artesp_theme.audit_model import AuditEvent
+from ckanext.artesp_theme.audit_model import AuditEvent, audit_event_table
 from ckanext.artesp_theme.logic import auth_helpers
+
+log = logging.getLogger(__name__)
 
 
 _TRACKED_ACTIONS = {
@@ -48,8 +52,7 @@ def handle_action_succeeded(sender, **kwargs):
         resource_id=_resource_id(action_name, data_dict, result),
         resource_name=_resource_name(action_name, data_dict, result),
     )
-    model.Session.add(event)
-    model.Session.commit()
+    _persist_event(event)
 
 
 def handle_user_logged_in(sender, **kwargs):
@@ -115,8 +118,45 @@ def record_auth_event(
         user_agent=_user_agent(),
         details=details or {},
     )
-    model.Session.add(event)
-    model.Session.commit()
+    _persist_event(event)
+
+
+def _persist_event(event: AuditEvent) -> None:
+    bind = model.Session.get_bind()
+    values = {
+        "id": event.id,
+        "occurred_at": event.occurred_at,
+        "event_family": event.event_family,
+        "event_action": event.event_action,
+        "success": event.success,
+        "actor_id": event.actor_id,
+        "actor_name": event.actor_name,
+        "actor_display_name": event.actor_display_name,
+        "actor_type": event.actor_type,
+        "auth_provider": event.auth_provider,
+        "channel": event.channel,
+        "request_path": event.request_path,
+        "ip_address": event.ip_address,
+        "user_agent": event.user_agent,
+        "package_id": event.package_id,
+        "package_name": event.package_name,
+        "resource_id": event.resource_id,
+        "resource_name": event.resource_name,
+        "details": event.details,
+    }
+
+    try:
+        with bind.begin() as connection:
+            connection.execute(audit_event_table.insert().values(**values))
+    except ProgrammingError:
+        log.warning(
+            "Skipping audit event because audit_event table is unavailable",
+            extra={
+                "event_family": event.event_family,
+                "event_action": event.event_action,
+            },
+            exc_info=True,
+        )
 
 
 def _actor_type(actor) -> str:

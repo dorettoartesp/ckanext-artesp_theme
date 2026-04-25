@@ -36,3 +36,7 @@ filterwarnings = [
         "ignore::DeprecationWarning",
 ]
 addopts = "--ckan-ini test.ini"
+markers = [
+    "unit: runs without CKAN app or database (local venv, no Docker)",
+    "integration: requires CKAN app, PostgreSQL, and Solr (Docker)",
+]

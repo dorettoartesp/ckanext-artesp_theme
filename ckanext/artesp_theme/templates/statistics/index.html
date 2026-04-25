@@ -285,7 +285,12 @@
             </div>
             <p>Consolidação das avaliações enviadas por usuários, com base nos conjuntos do filtro selecionado.</p>
           </div>
-          {% if dashboard.rating.total_ratings > 0 %}
+          {% set rating = dashboard.get('rating') or {
+            'total_ratings': 0,
+            'criteria': {},
+            'top_rated': []
+          } %}
+          {% if rating.total_ratings > 0 %}
             <div class="dashboard-statistics__grid dashboard-statistics__grid--two">
               <article class="dashboard-statistics__panel">
                 <div class="dashboard-statistics__panel-head">
@@ -300,7 +305,7 @@
                       ('well_structured', 'Bem estruturados')
                     ] %}
                     {% for key, label in criteria_labels %}
-                      {% set pct = dashboard.rating.criteria.get(key) %}
+                      {% set pct = rating.criteria.get(key) %}
                       <li class="dashboard-statistics__bar-item">
                         <div class="dashboard-statistics__bar-label">
                           <span>{{ label }}</span>
@@ -320,9 +325,9 @@
                   <p>Ranking pela nota média recebida, entre os conjuntos com ao menos uma avaliação.</p>
                 </div>
                 <div class="dashboard-statistics__panel-body">
-                  {% if dashboard.rating.top_rated %}
+                  {% if rating.top_rated %}
                     <ol class="dashboard-statistics__bar-list" aria-label="Conjuntos mais bem avaliados">
-                      {% for item in dashboard.rating.top_rated %}
+                      {% for item in rating.top_rated %}
                         {% set pct = ((item.average / 5) * 100) | round(1) %}
                         <li class="dashboard-statistics__bar-item">
                           <div class="dashboard-statistics__bar-label">
