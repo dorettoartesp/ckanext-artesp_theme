@@ -19,8 +19,15 @@ pytestmark = [
     pytest.mark.ckan_config("ckan.plugins", "artesp_theme"),
     pytest.mark.ckan_config("ckan.auth.allow_dataset_collaborators", True),
     pytest.mark.ckan_config("ckan.auth.allow_admin_collaborators", True),
-    pytest.mark.usefixtures("with_plugins", "clean_db"),
+    pytest.mark.usefixtures("with_plugins", "non_clean_db"),
 ]
+
+
+def _artesp_org():
+    org = auth_helpers.get_artesp_org()
+    if org:
+        return {"id": org.id, "name": org.name}
+    return factories.Organization(name="artesp")
 
 
 # ---------------------------------------------------------------------------
@@ -68,6 +75,7 @@ class TestFindLocalUserByIdentifier:
         assert result is not None
         assert result.id == user["id"]
 
+    @pytest.mark.usefixtures("clean_db")
     def test_returns_none_for_unknown_identifier(self):
         result = auth_helpers.find_local_user_by_identifier("totally-unknown-identifier")
         assert result is None
@@ -89,19 +97,22 @@ class TestIsExternalUserDB:
 # ---------------------------------------------------------------------------
 
 class TestGetArtespOrg:
+    @pytest.mark.usefixtures("clean_db")
     def test_returns_none_when_org_not_found(self):
         # No artesp org created → should return None
         result = auth_helpers.get_artesp_org()
         assert result is None
 
+    @pytest.mark.usefixtures("clean_db")
     def test_returns_org_when_exists(self):
         factories.Organization(name="artesp")
         org = auth_helpers.get_artesp_org()
         assert org is not None
         assert org.name == "artesp"
 
+    @pytest.mark.usefixtures("clean_db")
     def test_returns_none_for_inactive_org(self):
-        org_dict = factories.Organization(name="artesp")
+        org_dict = _artesp_org()
         # Deactivate the org
         org_obj = model.Group.get(org_dict["id"])
         org_obj.state = "deleted"
@@ -131,6 +142,7 @@ class TestGetGroup:
         assert result is not None
         assert result.id == group_dict["id"]
 
+    @pytest.mark.usefixtures("clean_db")
     def test_returns_none_for_missing_group(self):
         result = auth_helpers.get_group("nonexistent-group-abcdef")
         assert result is None
@@ -142,7 +154,7 @@ class TestGetGroup:
 
 class TestEnsureUserMembership:
     def test_creates_membership_when_absent(self):
-        org_dict = factories.Organization(name="artesp")
+        org_dict = _artesp_org()
         user_dict = factories.User()
         user_obj = model.User.get(user_dict["name"])
         org_obj = model.Group.get(org_dict["id"])
@@ -161,7 +173,7 @@ class TestEnsureUserMembership:
         assert membership is not None
 
     def test_returns_false_for_invalid_user(self):
-        org_dict = factories.Organization(name="artesp")
+        org_dict = _artesp_org()
         org_obj = model.Group.get(org_dict["id"])
         result = auth_helpers.ensure_user_membership(None, org_obj, "member", enforce_capacity=False)
         assert result is False
@@ -173,7 +185,7 @@ class TestEnsureUserMembership:
         assert result is False
 
     def test_returns_true_without_enforcing_capacity_when_already_member(self):
-        org_dict = factories.Organization(name="artesp")
+        org_dict = _artesp_org()
         user_dict = factories.User()
         user_obj = model.User.get(user_dict["name"])
         org_obj = model.Group.get(org_dict["id"])
@@ -196,20 +208,20 @@ class TestGetPackage:
         assert auth_helpers.get_package(None) is None
 
     def test_returns_package_by_id(self):
-        org_dict = factories.Organization(name="artesp")
+        org_dict = _artesp_org()
         pkg_dict = factories.Dataset(owner_org=org_dict["id"])
         result = auth_helpers.get_package({"id": pkg_dict["id"]})
         assert result is not None
         assert result.id == pkg_dict["id"]
 
     def test_returns_package_by_name(self):
-        org_dict = factories.Organization(name="artesp")
+        org_dict = _artesp_org()
         pkg_dict = factories.Dataset(owner_org=org_dict["id"])
         result = auth_helpers.get_package({"name": pkg_dict["name"]})
         assert result is not None
 
     def test_returns_package_by_package_id(self):
-        org_dict = factories.Organization(name="artesp")
+        org_dict = _artesp_org()
         pkg_dict = factories.Dataset(owner_org=org_dict["id"])
         result = auth_helpers.get_package({"package_id": pkg_dict["id"]})
         assert result is not None
@@ -220,7 +232,7 @@ class TestGetResource:
         assert auth_helpers.get_resource({}) is None
 
     def test_returns_resource_by_id(self):
-        org_dict = factories.Organization(name="artesp")
+        org_dict = _artesp_org()
         pkg_dict = factories.Dataset(owner_org=org_dict["id"])
         resource_dict = factories.Resource(package_id=pkg_dict["id"])
         result = auth_helpers.get_resource({"id": resource_dict["id"]})
@@ -228,7 +240,7 @@ class TestGetResource:
         assert result.id == resource_dict["id"]
 
     def test_returns_resource_by_resource_id(self):
-        org_dict = factories.Organization(name="artesp")
+        org_dict = _artesp_org()
         pkg_dict = factories.Dataset(owner_org=org_dict["id"])
         resource_dict = factories.Resource(package_id=pkg_dict["id"])
         result = auth_helpers.get_resource({"resource_id": resource_dict["id"]})
@@ -240,7 +252,7 @@ class TestGetPackageFromResource:
         assert auth_helpers.get_package_from_resource({}) is None
 
     def test_returns_package_via_resource_id(self):
-        org_dict = factories.Organization(name="artesp")
+        org_dict = _artesp_org()
         pkg_dict = factories.Dataset(owner_org=org_dict["id"])
         resource_dict = factories.Resource(package_id=pkg_dict["id"])
         result = auth_helpers.get_package_from_resource({"id": resource_dict["id"]})
@@ -248,7 +260,7 @@ class TestGetPackageFromResource:
         assert result.id == pkg_dict["id"]
 
     def test_returns_package_via_package_id_when_no_resource(self):
-        org_dict = factories.Organization(name="artesp")
+        org_dict = _artesp_org()
         pkg_dict = factories.Dataset(owner_org=org_dict["id"])
         result = auth_helpers.get_package_from_resource({"package_id": pkg_dict["id"]})
         assert result is not None
@@ -264,7 +276,7 @@ class TestGetPackageFromResource:
 
 class TestPackageBelongsToUser:
     def test_returns_true_when_creator(self):
-        org_dict = factories.Organization(name="artesp")
+        org_dict = _artesp_org()
         user_dict = factories.User()
         pkg_dict = factories.Dataset(user=user_dict, owner_org=org_dict["id"])
         pkg_obj = model.Package.get(pkg_dict["id"])
@@ -273,7 +285,7 @@ class TestPackageBelongsToUser:
         assert auth_helpers.package_belongs_to_user(pkg_obj, user_obj) is True
 
     def test_returns_false_when_not_creator(self):
-        org_dict = factories.Organization(name="artesp")
+        org_dict = _artesp_org()
         user_dict = factories.User()
         other_user = factories.User()
         pkg_dict = factories.Dataset(user=user_dict, owner_org=org_dict["id"])
@@ -291,8 +303,9 @@ class TestPackageBelongsToUser:
 # ---------------------------------------------------------------------------
 
 class TestGetCollaborator:
+    @pytest.mark.usefixtures("clean_db")
     def test_returns_none_when_no_collaborator(self):
-        org_dict = factories.Organization(name="artesp")
+        org_dict = _artesp_org()
         user_dict = factories.User()
         pkg_dict = factories.Dataset(owner_org=org_dict["id"])
         pkg_obj = model.Package.get(pkg_dict["id"])
@@ -301,7 +314,7 @@ class TestGetCollaborator:
         assert auth_helpers.get_collaborator(pkg_obj, user_obj) is None
 
     def test_returns_collaborator_when_exists(self):
-        org_dict = factories.Organization(name="artesp")
+        org_dict = _artesp_org()
         creator_dict = factories.User()
         collab_dict = factories.User()
         pkg_dict = factories.Dataset(user=creator_dict, owner_org=org_dict["id"])
@@ -324,7 +337,7 @@ class TestGetCollaborator:
 
 class TestGetCollaboratorByUserId:
     def test_returns_collaborator_by_user_id(self):
-        org_dict = factories.Organization(name="artesp")
+        org_dict = _artesp_org()
         creator_dict = factories.User()
         collab_dict = factories.User()
         pkg_dict = factories.Dataset(user=creator_dict, owner_org=org_dict["id"])
@@ -353,7 +366,7 @@ class TestWouldOrphanCollaboratorGovernance:
         assert auth_helpers.would_orphan_collaborator_governance(None, None) is False
 
     def test_returns_false_when_valid_creator_exists(self):
-        org_dict = factories.Organization(name="artesp")
+        org_dict = _artesp_org()
         creator_dict = factories.User()
         pkg_dict = factories.Dataset(user=creator_dict, owner_org=org_dict["id"])
         pkg_obj = model.Package.get(pkg_dict["id"])
@@ -363,7 +376,7 @@ class TestWouldOrphanCollaboratorGovernance:
         assert result is False
 
     def test_returns_true_when_no_creator_and_last_admin_removed(self):
-        org_dict = factories.Organization(name="artesp")
+        org_dict = _artesp_org()
         admin_dict = factories.User()
         pkg_dict = factories.Dataset(owner_org=org_dict["id"])
         pkg_obj = model.Package.get(pkg_dict["id"])
@@ -387,7 +400,7 @@ class TestWouldOrphanCollaboratorGovernance:
         assert result is True
 
     def test_returns_false_when_other_admin_exists(self):
-        org_dict = factories.Organization(name="artesp")
+        org_dict = _artesp_org()
         admin1_dict = factories.User()
         admin2_dict = factories.User()
         pkg_dict = factories.Dataset(owner_org=org_dict["id"])
@@ -443,7 +456,7 @@ class TestNormalizePackageCollaboratorCreateData:
             )
 
     def test_regular_user_gets_default_capacity(self):
-        org_dict = factories.Organization(name="artesp")
+        org_dict = _artesp_org()
         creator_dict = factories.User()
         target_dict = factories.User()
         creator_obj = model.User.get(creator_dict["name"])
@@ -456,7 +469,7 @@ class TestNormalizePackageCollaboratorCreateData:
         assert result["capacity"] == auth_helpers.DEFAULT_DATASET_COLLABORATOR_CAPACITY
 
     def test_raises_not_authorized_when_non_default_capacity_requested(self):
-        org_dict = factories.Organization(name="artesp")
+        org_dict = _artesp_org()
         creator_dict = factories.User()
         target_dict = factories.User()
         creator_obj = model.User.get(creator_dict["name"])
@@ -469,7 +482,7 @@ class TestNormalizePackageCollaboratorCreateData:
             )
 
     def test_raises_not_authorized_when_existing_collaborator_and_non_sysadmin(self):
-        org_dict = factories.Organization(name="artesp")
+        org_dict = _artesp_org()
         creator_dict = factories.User()
         target_dict = factories.User()
         creator_obj = model.User.get(creator_dict["name"])
@@ -518,13 +531,16 @@ class TestIsArtespOwnerOrg:
         assert auth_helpers.is_artesp_owner_org(None) is False
         assert auth_helpers.is_artesp_owner_org("") is False
 
+    @pytest.mark.usefixtures("clean_db")
     def test_returns_false_when_org_not_found(self):
         assert auth_helpers.is_artesp_owner_org("artesp") is False
 
+    @pytest.mark.usefixtures("clean_db")
     def test_returns_true_for_artesp_org_id(self):
         org_dict = factories.Organization(name="artesp")
         assert auth_helpers.is_artesp_owner_org(org_dict["id"]) is True
 
+    @pytest.mark.usefixtures("clean_db")
     def test_returns_true_for_artesp_org_name(self):
         factories.Organization(name="artesp")
         assert auth_helpers.is_artesp_owner_org("artesp") is True
