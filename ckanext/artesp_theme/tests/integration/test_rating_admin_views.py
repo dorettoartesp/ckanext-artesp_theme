@@ -1,5 +1,7 @@
 """Tests for rating administration views."""
 
+import uuid
+
 import ckan.model as model
 import pytest
 from ckan.tests import factories
@@ -55,16 +57,43 @@ def artesp_org():
 
 @pytest.fixture(scope="module")
 def user(artesp_org):
-    return factories.User()
+    return _user("rating-admin-user")
 
 
 @pytest.fixture(scope="module")
 def pkg(user, artesp_org):
-    return factories.Dataset(user=user, owner_org=artesp_org["id"])
+    return _dataset(artesp_org["id"], user=user)
+
+
+def _user(prefix):
+    suffix = uuid.uuid4().hex
+    user = model.User(
+        name="{}-{}".format(prefix, suffix[:10]),
+        email="{}-{}@ckan.example.com".format(prefix, suffix),
+        state="active",
+    )
+    model.Session.add(user)
+    model.Session.flush()
+    return {"id": user.id, "name": user.name, "email": user.email}
+
+
+def _dataset(owner_org, user=None):
+    suffix = uuid.uuid4().hex[:10]
+    package = model.Package(
+        name="rating-admin-dataset-{}".format(suffix),
+        title="Rating admin dataset {}".format(suffix),
+        owner_org=owner_org,
+        state="active",
+    )
+    if user:
+        package.creator_user_id = user["id"]
+    model.Session.add(package)
+    model.Session.flush()
+    return {"id": package.id, "name": package.name, "title": package.title}
 
 
 def test_rating_admin_list_renders_for_dataset_owner(app, user, pkg):
-    rating_author = factories.User()
+    rating_author = _user("rating-admin-author")
     rating = DatasetRating(
         user_id=rating_author["id"],
         package_id=pkg["id"],
@@ -72,7 +101,7 @@ def test_rating_admin_list_renders_for_dataset_owner(app, user, pkg):
         comment="",
     )
     model.Session.add(rating)
-    model.Session.commit()
+    model.Session.flush()
 
     response = app.get(
         f"/dataset/{pkg['name']}/rating-admin",
@@ -85,7 +114,7 @@ def test_rating_admin_list_renders_for_dataset_owner(app, user, pkg):
 
 
 def test_rating_admin_index_renders_for_internal_user(app, user, pkg):
-    rating_author = factories.User()
+    rating_author = _user("rating-admin-author")
     rating = DatasetRating(
         user_id=rating_author["id"],
         package_id=pkg["id"],
@@ -93,7 +122,7 @@ def test_rating_admin_index_renders_for_internal_user(app, user, pkg):
         comment="Comentario de teste",
     )
     model.Session.add(rating)
-    model.Session.commit()
+    model.Session.flush()
 
     response = app.get(
         f"/user/{user['name']}/rating-admin",
@@ -107,7 +136,7 @@ def test_rating_admin_index_renders_for_internal_user(app, user, pkg):
 
 
 def test_rating_admin_index_shows_user_role(app, user, pkg):
-    rating_author = factories.User()
+    rating_author = _user("rating-admin-author")
     rating = DatasetRating(
         user_id=rating_author["id"],
         package_id=pkg["id"],
@@ -115,7 +144,7 @@ def test_rating_admin_index_shows_user_role(app, user, pkg):
         comment="Comentário de teste",
     )
     model.Session.add(rating)
-    model.Session.commit()
+    model.Session.flush()
 
     response = app.get(
         f"/user/{user['name']}/rating-admin",
@@ -144,12 +173,12 @@ def test_rating_admin_index_filter_form_renders(app, user, pkg):
 
 
 def test_rating_admin_index_filters_by_rating(app, user, pkg):
-    rater1 = factories.User()
-    rater2 = factories.User()
+    rater1 = _user("rating-admin-rater")
+    rater2 = _user("rating-admin-rater")
     r1 = DatasetRating(user_id=rater1["id"], package_id=pkg["id"], overall_rating=2, comment="baixa")
     r2 = DatasetRating(user_id=rater2["id"], package_id=pkg["id"], overall_rating=5, comment="alta")
     model.Session.add_all([r1, r2])
-    model.Session.commit()
+    model.Session.flush()
 
     response = app.get(
         f"/user/{user['name']}/rating-admin?rating=5",
@@ -163,7 +192,7 @@ def test_rating_admin_index_filters_by_rating(app, user, pkg):
 
 
 def test_rating_admin_detail_renders_action_history(app, user, pkg):
-    rating_author = factories.User()
+    rating_author = _user("rating-admin-author")
     rating = DatasetRating(
         user_id=rating_author["id"],
         package_id=pkg["id"],
@@ -171,7 +200,7 @@ def test_rating_admin_detail_renders_action_history(app, user, pkg):
         comment="Precisa revisar a qualidade",
     )
     model.Session.add(rating)
-    model.Session.commit()
+    model.Session.flush()
 
     action = RatingAction(
         rating_id=rating.id,
@@ -181,7 +210,7 @@ def test_rating_admin_detail_renders_action_history(app, user, pkg):
         note="Revisado",
     )
     model.Session.add(action)
-    model.Session.commit()
+    model.Session.flush()
 
     response = app.get(
         f"/dataset/{pkg['name']}/rating-admin/{rating.id}",
@@ -194,7 +223,7 @@ def test_rating_admin_detail_renders_action_history(app, user, pkg):
 
 
 def test_rating_admin_action_updates_status(app, user, pkg):
-    rating_author = factories.User()
+    rating_author = _user("rating-admin-author")
     rating = DatasetRating(
         user_id=rating_author["id"],
         package_id=pkg["id"],
@@ -202,7 +231,7 @@ def test_rating_admin_action_updates_status(app, user, pkg):
         comment="Precisa de contexto adicional",
     )
     model.Session.add(rating)
-    model.Session.commit()
+    model.Session.flush()
 
     response = app.post(
         f"/dataset/{pkg['name']}/rating-admin/{rating.id}/action",

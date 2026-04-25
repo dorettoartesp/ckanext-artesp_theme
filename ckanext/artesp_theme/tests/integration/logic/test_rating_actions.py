@@ -65,10 +65,32 @@ def artesp_org():
 
 def _user(prefix):
     suffix = uuid.uuid4().hex
-    return factories.User(
+    user = model.User(
         name="{}-{}".format(prefix, suffix[:10]),
         email="{}-{}@ckan.example.com".format(prefix, suffix),
+        state="active",
     )
+    model.Session.add(user)
+    model.Session.flush()
+    model.Session.commit()
+    return {"id": user.id, "name": user.name, "email": user.email}
+
+
+def _dataset(owner_org, user=None, private=False):
+    suffix = uuid.uuid4().hex[:10]
+    package = model.Package(
+        name="rating-actions-dataset-{}".format(suffix),
+        title="Rating actions dataset {}".format(suffix),
+        owner_org=owner_org,
+        private=private,
+        state="active",
+    )
+    if user:
+        package.creator_user_id = user["id"]
+    model.Session.add(package)
+    model.Session.flush()
+    model.Session.commit()
+    return {"id": package.id, "name": package.name}
 
 
 @pytest.fixture(scope="module")
@@ -78,7 +100,7 @@ def user(artesp_org):
 
 @pytest.fixture(scope="module")
 def pkg(user, artesp_org):
-    return factories.Dataset(user=user, owner_org=artesp_org["id"])
+    return _dataset(artesp_org["id"], user=user)
 
 
 @pytest.fixture
@@ -98,7 +120,7 @@ def extra_user_b():
 
 @pytest.fixture(scope="module")
 def private_pkg(extra_user_a, artesp_org):
-    return factories.Dataset(user=extra_user_a, owner_org=artesp_org["id"], private=True)
+    return _dataset(artesp_org["id"], user=extra_user_a, private=True)
 
 
 class TestDatasetRatingUpsert:
