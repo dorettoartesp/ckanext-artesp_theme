@@ -246,6 +246,8 @@ def audit_admin():
         "user": request.args.get("user", ""),
         "ip": request.args.get("ip", ""),
         "object": request.args.get("object", ""),
+        "sort_by": request.args.get("sort_by", "occurred_at"),
+        "sort_dir": request.args.get("sort_dir", "desc"),
         "page": request.args.get("page", "1"),
     }
     result = audit_query.search_audit_events(filters)

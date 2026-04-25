@@ -111,3 +111,35 @@ def test_search_audit_events_applies_provider_ip_and_page_filters():
     assert len(result["events"]) == 2
     assert all(event.auth_provider == "govbr" for event in result["events"])
     assert all(event.ip_address == "203.0.113.10" for event in result["events"])
+
+
+def test_search_audit_events_applies_requested_sorting():
+    _add_event(
+        event_family="dataset",
+        event_action="package_update",
+        actor_name="alice",
+        package_name="zeta-dataset",
+        occurred_at=datetime.utcnow() - timedelta(hours=2),
+    )
+    _add_event(
+        event_family="dataset",
+        event_action="package_update",
+        actor_name="alice",
+        package_name="alpha-dataset",
+        occurred_at=datetime.utcnow() - timedelta(hours=1),
+    )
+
+    result = audit_query.search_audit_events(
+        {
+            "scope": "dataset",
+            "sort_by": "package_name",
+            "sort_dir": "asc",
+        }
+    )
+
+    assert [event.package_name for event in result["events"]] == [
+        "alpha-dataset",
+        "zeta-dataset",
+    ]
+    assert result["filters"]["sort_by"] == "package_name"
+    assert result["filters"]["sort_dir"] == "asc"

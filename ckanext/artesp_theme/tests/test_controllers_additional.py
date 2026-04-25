@@ -279,7 +279,7 @@ def test_audit_admin_forwards_filters_to_query_service(app, monkeypatch):
     )
 
     with app.flask_app.test_request_context(
-        "/admin/audit?scope=dataset&provider=govbr&channel=api&user=alice&ip=203.0.113.10&object=rodovia&page=2"
+        "/admin/audit?scope=dataset&provider=govbr&channel=api&user=alice&ip=203.0.113.10&object=rodovia&page=2&sort_by=package_name&sort_dir=asc"
     ):
         g.user = sysadmin["name"]
         response = controllers.audit_admin()
@@ -298,6 +298,8 @@ def test_audit_admin_forwards_filters_to_query_service(app, monkeypatch):
         "date_from": "",
         "date_to": "",
         "action": "",
+        "sort_by": "package_name",
+        "sort_dir": "asc",
     }
 
 

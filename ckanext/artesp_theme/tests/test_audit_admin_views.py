@@ -50,7 +50,8 @@ def test_audit_admin_route_renders_filters_table_and_nav(app):
         actor_name=sysadmin["name"],
         actor_type="sysadmin",
         channel="web",
-        package_name="malha-rodoviaria",
+        package_name="conjunto-de-dados-com-nome-bem-longo-para-truncar",
+        resource_name="recurso-com-nome-bem-longo-para-truncar.csv",
     )
     event.occurred_at = datetime.utcnow()
     model.Session.add(event)
@@ -64,6 +65,15 @@ def test_audit_admin_route_renders_filters_table_and_nav(app):
 
     assert response.status_code == 200
     assert "Auditoria" in response.text
+    assert "<aside" not in response.text
+    assert 'class="primary col-md-12 col-xs-12"' in response.text
+    assert 'class="audit-toolbar"' in response.text
+    assert "Período e classificação" in response.text
+    assert "Origem e alvo" in response.text
+    assert "Cj de dados" in response.text
+    assert "Recurso" in response.text
+    assert "sort_by=package_name" in response.text
+    assert "sort_by=resource_name" in response.text
     assert 'name="date_from"' in response.text
     assert 'name="date_to"' in response.text
     assert 'name="scope"' in response.text
@@ -74,7 +84,7 @@ def test_audit_admin_route_renders_filters_table_and_nav(app):
     assert 'name="object"' in response.text
     assert "Data/hora" in response.text
     assert "Tipo de usuário" in response.text
-    assert "Dataset" in response.text
-    assert "Resource" in response.text
-    assert "malha-rodoviaria" in response.text
+    assert 'class="audit-table__truncate"' in response.text
+    assert 'title="conjunto-de-dados-com-nome-bem-longo-para-truncar"' in response.text
+    assert 'title="recurso-com-nome-bem-longo-para-truncar.csv"' in response.text
     assert 'href="/admin/audit"' in response.text
