@@ -22,6 +22,12 @@ def pytest_configure(config):
 
 def pytest_collection_modifyitems(items):
     for item in items:
+        if any(
+            item.get_closest_marker(marker)
+            for marker in ("integration", "app", "unit")
+        ):
+            continue
+
         fixtures = set(item.fixturenames)
         if _INTEGRATION_FIXTURES & fixtures:
             item.add_marker(pytest.mark.integration)

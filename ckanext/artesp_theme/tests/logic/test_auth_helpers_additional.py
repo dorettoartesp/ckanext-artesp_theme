@@ -63,9 +63,9 @@ class TestAuthenticatedUserHelpers:
 
         assert auth_helpers.is_external_user(user["name"]) is True
 
-    @pytest.mark.usefixtures("clean_db")
     def test_is_external_user_returns_false_for_missing_user(self):
-        assert auth_helpers.is_external_user("missing-user") is False
+        with patch.object(model.User, "get", return_value=None):
+            assert auth_helpers.is_external_user("missing-user") is False
 
 
 class TestArtespConfigurationHelpers:
@@ -96,14 +96,17 @@ class TestArtespConfigurationHelpers:
 
 
 class TestMembershipAndOrganizationHelpers:
-    @pytest.mark.usefixtures("clean_db")
-    def test_get_active_groups_excludes_organizations(self):
-        factories.Organization(name="artesp")
-        group = factories.Group(name="grupo-ativo")
+    def test_get_active_groups_excludes_organizations(self, monkeypatch):
+        org = SimpleNamespace(name="artesp", is_organization=True)
+        group = SimpleNamespace(name="grupo-ativo", is_organization=False)
+
+        query = MagicMock()
+        query.filter.return_value.all.return_value = [org, group]
+        monkeypatch.setattr(model.Session, "query", lambda *args: query)
 
         groups = auth_helpers.get_active_groups()
 
-        assert [item.name for item in groups] == [group["name"]]
+        assert [item.name for item in groups] == [group.name]
 
     def test_get_ldap_users_rolls_back_on_query_error(self, monkeypatch):
         rolled_back = []

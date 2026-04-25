@@ -6,16 +6,18 @@ import pytest
 from ckan.tests import factories, helpers as test_helpers
 
 from ckanext.artesp_theme.logic import auth as artesp_auth
+from ckanext.artesp_theme.logic import auth_helpers
 
 
 pytestmark = [
+    pytest.mark.integration,
     pytest.mark.ckan_config("ckan.plugins", "artesp_theme"),
     pytest.mark.ckan_config("ckan.auth.allow_dataset_collaborators", True),
     pytest.mark.ckan_config("ckan.auth.allow_admin_collaborators", True),
     pytest.mark.ckan_config(
         "ckanext.artesp_theme.default_dataset_collaborator_capacity", "editor"
     ),
-    pytest.mark.usefixtures("with_plugins", "clean_db"),
+    pytest.mark.usefixtures("with_plugins"),
 ]
 
 
@@ -33,6 +35,17 @@ def _auth_context(user=None):
     context = _action_context(user)
     context["model"] = model
     return context
+
+
+def _artesp_org():
+    org = auth_helpers.get_artesp_org()
+    if org:
+        return {
+            "id": org.id,
+            "name": org.name,
+            "title": org.title,
+        }
+    return factories.Organization(name="artesp")
 
 
 def _call_action_as(user, action_name, **data_dict):
@@ -119,7 +132,7 @@ def _collaborator_capacities(package):
 
 
 def test_package_create_rules_for_sysadmin_and_regular_users():
-    artesp_org = factories.Organization(name="artesp")
+    artesp_org = _artesp_org()
     sysadmin = factories.Sysadmin()
     regular_user = factories.User()
 
@@ -145,7 +158,7 @@ def test_package_create_rules_for_sysadmin_and_regular_users():
 
 
 def test_package_create_auth_allows_ui_preflight_for_authenticated_users():
-    factories.Organization(name="artesp")
+    _artesp_org()
     regular_user = factories.User()
 
     assert test_helpers.call_auth(
@@ -282,7 +295,7 @@ def test_only_sysadmin_can_update_and_delete_groups():
 
 
 def test_package_update_and_delete_follow_creator_collaborator_and_sysadmin_rules():
-    artesp_org = factories.Organization(name="artesp")
+    artesp_org = _artesp_org()
     creator = factories.User()
     other_user = factories.User()
     editor = factories.User()
@@ -306,7 +319,7 @@ def test_package_update_and_delete_follow_creator_collaborator_and_sysadmin_rule
 
 
 def test_resource_rules_follow_parent_dataset_permissions():
-    artesp_org = factories.Organization(name="artesp")
+    artesp_org = _artesp_org()
     creator = factories.User()
     other_user = factories.User()
     editor = factories.User()
@@ -338,7 +351,7 @@ def test_resource_rules_follow_parent_dataset_permissions():
 
 
 def test_creator_can_list_add_update_and_remove_collaborators_on_own_dataset():
-    artesp_org = factories.Organization(name="artesp")
+    artesp_org = _artesp_org()
     creator = factories.User()
     random_user = factories.User()
     member_user = factories.User()
@@ -404,7 +417,7 @@ def test_creator_can_list_add_update_and_remove_collaborators_on_own_dataset():
 
 
 def test_editor_can_edit_but_cannot_manage_collaborators():
-    artesp_org = factories.Organization(name="artesp")
+    artesp_org = _artesp_org()
     creator = factories.User()
     editor = factories.User()
     other_user = factories.User()
@@ -433,7 +446,7 @@ def test_editor_can_edit_but_cannot_manage_collaborators():
 
 
 def test_admin_collaborator_can_manage_only_their_dataset():
-    artesp_org = factories.Organization(name="artesp")
+    artesp_org = _artesp_org()
     creator = factories.User()
     dataset_admin = factories.User()
     target_user = factories.User()
@@ -464,7 +477,7 @@ def test_admin_collaborator_can_manage_only_their_dataset():
 
 
 def test_sysadmin_can_manage_collaborators_on_any_dataset():
-    artesp_org = factories.Organization(name="artesp")
+    artesp_org = _artesp_org()
     creator = factories.User()
     sysadmin = factories.Sysadmin()
     collaborator = factories.User()
@@ -483,7 +496,7 @@ def test_sysadmin_can_manage_collaborators_on_any_dataset():
 
 
 def test_sysadmin_can_define_and_update_collaborator_roles():
-    artesp_org = factories.Organization(name="artesp")
+    artesp_org = _artesp_org()
     creator = factories.User()
     sysadmin = factories.Sysadmin()
     collaborator = factories.User()
@@ -500,7 +513,7 @@ def test_sysadmin_can_define_and_update_collaborator_roles():
 
 
 def test_admin_collaborator_assignment_requires_config_flag():
-    artesp_org = factories.Organization(name="artesp")
+    artesp_org = _artesp_org()
     creator = factories.User()
     sysadmin = factories.Sysadmin()
     collaborator = factories.User()
@@ -523,7 +536,7 @@ def test_admin_collaborator_assignment_requires_config_flag():
 
 
 def test_anonymous_requests_are_denied_for_relevant_operations():
-    artesp_org = factories.Organization(name="artesp")
+    artesp_org = _artesp_org()
     creator = factories.User()
 
     package = _create_dataset_as(creator, artesp_org["id"])
@@ -549,7 +562,7 @@ def test_anonymous_requests_are_denied_for_relevant_operations():
 
 
 def test_direct_auth_functions_handle_missing_context_and_payload_safely():
-    artesp_org = factories.Organization(name="artesp")
+    artesp_org = _artesp_org()
     package = test_helpers.call_action(
         "package_create",
         name=_unique_name("safe-direct-package"),
@@ -610,7 +623,7 @@ def test_nonexistent_dataset_resource_and_incomplete_payloads_are_denied_safely(
 
 
 def test_legacy_dataset_with_invalid_creator_is_handled_safely():
-    artesp_org = factories.Organization(name="artesp")
+    artesp_org = _artesp_org()
     creator = factories.User()
     other_user = factories.User()
 
@@ -634,7 +647,7 @@ def test_legacy_dataset_with_invalid_creator_is_handled_safely():
 
 
 def test_self_removal_is_blocked_when_it_would_orphan_collaborator_governance():
-    artesp_org = factories.Organization(name="artesp")
+    artesp_org = _artesp_org()
     creator = factories.User()
     collaborator_admin = factories.User()
     sysadmin = factories.Sysadmin()
@@ -661,7 +674,7 @@ def test_self_removal_is_blocked_when_it_would_orphan_collaborator_governance():
 
 def test_package_create_sysadmin_is_allowed_directly():
     """Line 43: sysadmin allow path in package_create."""
-    factories.Organization(name="artesp")
+    _artesp_org()
     sysadmin = factories.Sysadmin()
 
     result = test_helpers.call_auth(
@@ -705,7 +718,7 @@ def test_dataset_rating_upsert_denies_anonymous():
 
 def test_authorize_package_operation_sysadmin_allowed():
     """Line 266: _authorize_package_operation allows sysadmin."""
-    artesp_org = factories.Organization(name="artesp")
+    artesp_org = _artesp_org()
     creator = factories.User()
     sysadmin = factories.Sysadmin()
 
@@ -726,8 +739,8 @@ def test_authorize_package_operation_denies_no_id():
 
 def test_authorize_package_operation_denies_non_artesp_dataset():
     """Line 284: _authorize_package_operation when package not in artesp org."""
-    factories.Organization(name="artesp")
-    other_org = factories.Organization(name="other-org-x")
+    _artesp_org()
+    other_org = factories.Organization(name=_unique_name("other-org-x"))
     creator = factories.User()
 
     # Create dataset at model level to bypass the custom action restriction
@@ -746,8 +759,8 @@ def test_authorize_package_operation_denies_non_artesp_dataset():
 
 def test_authorize_package_operation_denies_moving_outside_artesp():
     """Line 291: deny when owner_org is changed to non-artesp org."""
-    artesp_org = factories.Organization(name="artesp")
-    other_org = factories.Organization(name="other-move")
+    artesp_org = _artesp_org()
+    other_org = factories.Organization(name=_unique_name("other-move"))
     creator = factories.User()
     package = _create_dataset_as(creator, artesp_org["id"])
 
@@ -761,7 +774,7 @@ def test_authorize_package_operation_denies_moving_outside_artesp():
 
 def test_authorize_resource_operation_sysadmin_allowed():
     """Line 315: _authorize_resource_operation allows sysadmin."""
-    artesp_org = factories.Organization(name="artesp")
+    artesp_org = _artesp_org()
     creator = factories.User()
     sysadmin = factories.Sysadmin()
 
@@ -794,8 +807,8 @@ def test_authorize_resource_operation_denies_missing_parent_dataset(monkeypatch)
 
 def test_authorize_resource_operation_denies_non_artesp_resource():
     """Line 338: deny when resource belongs to non-artesp dataset."""
-    factories.Organization(name="artesp")
-    other_org = factories.Organization(name="other-res-org")
+    _artesp_org()
+    other_org = factories.Organization(name=_unique_name("other-res-org"))
     creator = factories.User()
 
     # Create package at model level to bypass custom action restriction
@@ -823,7 +836,7 @@ def test_authorize_resource_operation_denies_non_artesp_resource():
 
 def test_authorize_collaborator_operation_sysadmin_allowed():
     """Line 368: _authorize_collaborator_operation allows sysadmin."""
-    artesp_org = factories.Organization(name="artesp")
+    artesp_org = _artesp_org()
     creator = factories.User()
     sysadmin = factories.Sysadmin()
 
@@ -845,8 +858,8 @@ def test_authorize_collaborator_operation_denies_no_id():
 
 def test_authorize_collaborator_operation_denies_non_artesp_dataset():
     """Line 389: deny when dataset not in artesp org."""
-    factories.Organization(name="artesp")
-    other_org = factories.Organization(name="other-collab-org")
+    _artesp_org()
+    other_org = factories.Organization(name=_unique_name("other-collab-org"))
     creator = factories.User()
 
     other_org_obj = model.Group.get(other_org["id"])
@@ -864,7 +877,7 @@ def test_authorize_collaborator_operation_denies_non_artesp_dataset():
 
 def test_validate_requested_capacity_sysadmin_no_capacity_is_denied():
     """Lines 401, 403: sysadmin with no capacity set → deny."""
-    artesp_org = factories.Organization(name="artesp")
+    artesp_org = _artesp_org()
     creator = factories.User()
     sysadmin = factories.Sysadmin()
     collaborator = factories.User()
@@ -884,7 +897,7 @@ def test_validate_requested_capacity_sysadmin_no_capacity_is_denied():
 
 def test_validate_requested_capacity_invalid_capacity_is_denied():
     """Lines 405-407: invalid capacity string."""
-    artesp_org = factories.Organization(name="artesp")
+    artesp_org = _artesp_org()
     creator = factories.User()
 
     package = _create_dataset_as(creator, artesp_org["id"])
@@ -902,7 +915,7 @@ def test_validate_requested_capacity_invalid_capacity_is_denied():
 
 def test_validate_requested_capacity_non_default_role_denied_for_non_sysadmin():
     """Line 412: non-sysadmin cannot change from default capacity."""
-    artesp_org = factories.Organization(name="artesp")
+    artesp_org = _artesp_org()
     creator = factories.User()
     collaborator = factories.User()
 
@@ -921,7 +934,7 @@ def test_validate_requested_capacity_non_default_role_denied_for_non_sysadmin():
 
 def test_target_user_not_found_is_denied():
     """Line 418: target user not found — auth denies when target user doesn't exist."""
-    artesp_org = factories.Organization(name="artesp")
+    artesp_org = _artesp_org()
     creator = factories.User()
 
     package = _create_dataset_as(creator, artesp_org["id"])
@@ -936,7 +949,7 @@ def test_target_user_not_found_is_denied():
 
 def test_existing_collaborator_non_sysadmin_cannot_change_role():
     """Line 427: existing collaborator + non-sysadmin cannot change role."""
-    artesp_org = factories.Organization(name="artesp")
+    artesp_org = _artesp_org()
     creator = factories.User()
     collaborator = factories.User()
 
@@ -961,7 +974,7 @@ def test_existing_collaborator_non_sysadmin_cannot_change_role():
 
 def test_require_existing_collaborator_not_found_is_denied():
     """Line 432: require_existing_collaborator but collaborator not found."""
-    artesp_org = factories.Organization(name="artesp")
+    artesp_org = _artesp_org()
     creator = factories.User()
     non_collaborator = factories.User()
 

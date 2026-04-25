@@ -16,10 +16,13 @@ pytestmark = [
 
 
 @pytest.fixture(autouse=True)
-def _ensure_audit_table(clean_db):
+def _ensure_audit_table():
     bind = model.Session.get_bind()
     audit_event_table.create(bind=bind, checkfirst=True)
+    model.Session.execute(audit_event_table.delete())
+    model.Session.commit()
     yield
+    model.Session.rollback()
 
 
 def test_audit_admin_route_returns_403_for_anonymous(app):

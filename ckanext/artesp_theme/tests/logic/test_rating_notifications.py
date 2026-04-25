@@ -1,10 +1,13 @@
 """Tests for dataset rating notification worker."""
 
+import uuid
+
 import pytest
 
 import ckan.model as model
 from ckan.tests import factories
 
+from ckanext.artesp_theme.logic import auth_helpers
 from ckanext.artesp_theme.logic import rating_notifications
 from ckanext.artesp_theme.model import DatasetRating, dataset_rating_table
 
@@ -16,21 +19,41 @@ pytestmark = [
 
 
 @pytest.fixture(autouse=True)
-def _ensure_rating_table(clean_db):
-    dataset_rating_table.create(bind=model.Session.get_bind(), checkfirst=True)
+def _ensure_rating_table():
+    bind = model.Session.get_bind()
+    dataset_rating_table.create(bind=bind, checkfirst=True)
+    model.Session.execute(dataset_rating_table.delete())
+    model.Session.commit()
     yield
+    model.Session.rollback()
 
 
 @pytest.fixture
 def artesp_org():
+    org = auth_helpers.get_artesp_org()
+    if org:
+        return {"id": org.id, "name": org.name}
     return factories.Organization(name="artesp")
+
+
+def _package(user=None, owner_org="artesp"):
+    package = model.Package(
+        name="rating-pkg-{}".format(uuid.uuid4().hex[:8]),
+        title="Rating package",
+        owner_org=owner_org,
+        creator_user_id=user["id"] if isinstance(user, dict) else getattr(user, "id", None),
+        state="active",
+    )
+    model.Session.add(package)
+    model.Session.commit()
+    return {"id": package.id, "name": package.name, "title": package.title}
 
 
 def test_worker_sends_notifications_to_active_recipients(monkeypatch, artesp_org):
     author = factories.User()
     creator = factories.User()
     sysadmin = factories.Sysadmin()
-    pkg = factories.Dataset(user=creator, owner_org=artesp_org["id"])
+    pkg = _package(user=creator, owner_org=artesp_org["id"])
 
     rating = DatasetRating(
         user_id=author["id"],
@@ -63,7 +86,9 @@ def test_worker_sends_notifications_to_active_recipients(monkeypatch, artesp_org
 
     rating_notifications.send_rating_comment_notifications(pkg["id"], rating.id)
 
-    assert sorted(sent_to) == sorted([sysadmin["id"], creator["id"]])
+    assert sysadmin["id"] in sent_to
+    assert creator["id"] in sent_to
+    assert author["id"] not in sent_to
 
 
 # ---------------------------------------------------------------------------
@@ -85,7 +110,7 @@ def test_worker_returns_early_when_rating_not_found(monkeypatch, artesp_org):
 
 def test_worker_returns_early_when_rating_has_no_comment(monkeypatch, artesp_org):
     """Line 19: rating exists but has no comment → early return."""
-    pkg = factories.Dataset(owner_org=artesp_org["id"])
+    pkg = _package(owner_org=artesp_org["id"])
     author = factories.User()
 
     rating = DatasetRating(
@@ -111,7 +136,7 @@ def test_worker_returns_early_when_rating_has_no_comment(monkeypatch, artesp_org
 def test_worker_logs_and_returns_when_no_recipients(monkeypatch, artesp_org):
     """Lines 32-33: no recipients → log and return without sending mail."""
     creator = factories.User()
-    pkg = factories.Dataset(user=creator, owner_org=artesp_org["id"])
+    pkg = _package(user=creator, owner_org=artesp_org["id"])
     author = factories.User()
 
     rating = DatasetRating(
@@ -151,7 +176,7 @@ def test_worker_continues_after_mailer_exception(monkeypatch, artesp_org):
 
     creator = factories.User()
     sysadmin = factories.Sysadmin()
-    pkg = factories.Dataset(user=creator, owner_org=artesp_org["id"])
+    pkg = _package(user=creator, owner_org=artesp_org["id"])
     author = factories.User()
 
     rating = DatasetRating(
@@ -195,7 +220,6 @@ def test_worker_continues_after_mailer_exception(monkeypatch, artesp_org):
 def test_resolve_recipients_skips_inactive_user(monkeypatch, artesp_org):
     """Line 72: inactive user is skipped."""
     creator = factories.User()
-    pkg = factories.Dataset(user=creator, owner_org=artesp_org["id"])
 
     # Make a deactivated user
     deactivated_user = factories.User()
@@ -205,8 +229,8 @@ def test_resolve_recipients_skips_inactive_user(monkeypatch, artesp_org):
     model.Session.commit()
 
     pkg_dict = {
-        "id": pkg["id"],
-        "name": pkg["name"],
+        "id": "pkg-id",
+        "name": "pkg-name",
         "creator_user_id": deactivated_user["id"],
     }
 
@@ -226,12 +250,11 @@ def test_resolve_recipients_skips_inactive_user(monkeypatch, artesp_org):
 def test_resolve_recipients_skips_duplicate_user_id(monkeypatch, artesp_org):
     """Line 74: duplicate by user.id is deduplicated."""
     creator = factories.User()
-    pkg = factories.Dataset(user=creator, owner_org=artesp_org["id"])
 
     # Same user as both creator and collaborator
     pkg_dict = {
-        "id": pkg["id"],
-        "name": pkg["name"],
+        "id": "pkg-id",
+        "name": "pkg-name",
         "creator_user_id": creator["id"],
     }
 
@@ -252,11 +275,10 @@ def test_resolve_recipients_skips_duplicate_user_id(monkeypatch, artesp_org):
 def test_resolve_recipients_skips_author(monkeypatch, artesp_org):
     """Line 79: the author is not added to recipients."""
     creator = factories.User()
-    pkg = factories.Dataset(user=creator, owner_org=artesp_org["id"])
 
     pkg_dict = {
-        "id": pkg["id"],
-        "name": pkg["name"],
+        "id": "pkg-id",
+        "name": "pkg-name",
         "creator_user_id": creator["id"],
     }
 
@@ -277,11 +299,10 @@ def test_resolve_recipients_includes_collaborators(monkeypatch, artesp_org):
     creator = factories.User()
     collaborator = factories.User()
     author = factories.User()
-    pkg = factories.Dataset(user=creator, owner_org=artesp_org["id"])
 
     pkg_dict = {
-        "id": pkg["id"],
-        "name": pkg["name"],
+        "id": "pkg-id",
+        "name": "pkg-name",
         "creator_user_id": None,  # No creator, just collaborator
     }
 
@@ -300,11 +321,10 @@ def test_resolve_recipients_includes_collaborators(monkeypatch, artesp_org):
 def test_resolve_recipients_handles_collaborator_list_validation_error(monkeypatch, artesp_org):
     """Lines 96-97: ValidationError from package_collaborator_list → treat as empty list."""
     creator = factories.User()
-    pkg = factories.Dataset(user=creator, owner_org=artesp_org["id"])
 
     pkg_dict = {
-        "id": pkg["id"],
-        "name": pkg["name"],
+        "id": "pkg-id",
+        "name": "pkg-name",
         "creator_user_id": creator["id"],
     }
 

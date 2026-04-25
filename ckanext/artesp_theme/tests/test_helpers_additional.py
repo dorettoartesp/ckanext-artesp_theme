@@ -14,7 +14,7 @@ import ckanext.artesp_theme.helpers as helpers
 
 pytestmark = [
     pytest.mark.ckan_config("ckan.plugins", "artesp_theme"),
-    pytest.mark.usefixtures("with_plugins", "clean_db"),
+    pytest.mark.usefixtures("with_plugins"),
 ]
 
 
@@ -56,7 +56,7 @@ class TestGetLatestResources:
 
     def test_returns_latest_resources_with_dataset_context(self, monkeypatch):
         dataset = self._package(title="Dataset title")
-        resource = self._resource(dataset, "latest-resource")
+        resource = self._resource(dataset, "latest-resource", seconds=86400)
         self._patch_package_show(monkeypatch, dataset)
 
         results = helpers.get_latest_resources(limit=1)

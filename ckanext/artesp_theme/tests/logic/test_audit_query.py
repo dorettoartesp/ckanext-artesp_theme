@@ -1,10 +1,8 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta
-
 import ckan.model as model
 import pytest
-from ckan.tests import factories
 
 from ckanext.artesp_theme.audit_model import AuditEvent, audit_event_table
 from ckanext.artesp_theme.logic import audit_query
@@ -17,10 +15,13 @@ pytestmark = [
 
 
 @pytest.fixture(autouse=True)
-def _ensure_audit_table(clean_db):
+def _ensure_audit_table():
     bind = model.Session.get_bind()
     audit_event_table.create(bind=bind, checkfirst=True)
+    model.Session.execute(audit_event_table.delete())
+    model.Session.commit()
     yield
+    model.Session.rollback()
 
 
 def _add_event(**overrides):
@@ -85,7 +86,7 @@ def test_search_audit_events_filters_and_orders_descending():
 
 
 def test_search_audit_events_applies_provider_ip_and_page_filters():
-    sysadmin = factories.Sysadmin()
+    sysadmin = {"id": "sysadmin-id", "name": "sysadmin"}
     for index in range(55):
         _add_event(
             event_family="authentication",

@@ -17,10 +17,13 @@ pytestmark = [
 
 
 @pytest.fixture(autouse=True)
-def _ensure_audit_event_table(clean_db):
+def _ensure_audit_event_table():
     bind = model.Session.get_bind()
     audit_event_table.create(bind=bind, checkfirst=True)
+    model.Session.execute(audit_event_table.delete())
+    model.Session.commit()
     yield
+    model.Session.rollback()
 
 
 @pytest.fixture

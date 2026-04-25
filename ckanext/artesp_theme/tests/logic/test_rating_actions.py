@@ -5,6 +5,7 @@ import ckan.model as model
 import ckan.plugins.toolkit as tk
 from ckan.tests import factories
 
+from ckanext.artesp_theme.logic import auth_helpers
 from ckanext.artesp_theme.model import DatasetRating, dataset_rating_table
 
 
@@ -15,13 +16,20 @@ pytestmark = [
 
 
 @pytest.fixture(autouse=True)
-def _ensure_rating_table(clean_db):
-    dataset_rating_table.create(bind=model.Session.get_bind(), checkfirst=True)
+def _ensure_rating_table():
+    bind = model.Session.get_bind()
+    dataset_rating_table.create(bind=bind, checkfirst=True)
+    model.Session.execute(dataset_rating_table.delete())
+    model.Session.commit()
     yield
+    model.Session.rollback()
 
 
 @pytest.fixture
 def artesp_org():
+    org = auth_helpers.get_artesp_org()
+    if org:
+        return {"id": org.id, "name": org.name}
     return factories.Organization(name="artesp")
 
 

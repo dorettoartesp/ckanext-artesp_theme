@@ -39,5 +39,5 @@ addopts = "--ckan-ini test.ini"
 markers = [
     "unit: runs without CKAN app, PostgreSQL, or Solr",
     "app: requires CKAN app/config/plugin loading but not per-test DB/Solr reset",
-    "integration: requires per-test DB/Solr reset via clean_db or clean_index",
+    "integration: exercises DB/Solr-heavy flows selected by the integration tier",
 ]

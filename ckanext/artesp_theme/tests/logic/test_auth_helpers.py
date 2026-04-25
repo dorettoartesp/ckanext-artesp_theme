@@ -75,9 +75,14 @@ class TestFindLocalUserByIdentifier:
         assert result is not None
         assert result.id == user["id"]
 
-    @pytest.mark.usefixtures("clean_db")
     def test_returns_none_for_unknown_identifier(self):
-        result = auth_helpers.find_local_user_by_identifier("totally-unknown-identifier")
+        with patch.object(auth_helpers, "get_user", return_value=None), patch.object(
+            model.Session, "query"
+        ) as mock_query:
+            mock_query.return_value.filter.return_value.filter.return_value.one_or_none.return_value = None
+            result = auth_helpers.find_local_user_by_identifier(
+                "totally-unknown-identifier"
+            )
         assert result is None
 
 
@@ -102,22 +107,16 @@ class TestGetArtespOrg:
             result = auth_helpers.get_artesp_org()
         assert result is None
 
-    @pytest.mark.usefixtures("clean_db")
     def test_returns_org_when_exists(self):
-        factories.Organization(name="artesp")
+        _artesp_org()
         org = auth_helpers.get_artesp_org()
         assert org is not None
         assert org.name == "artesp"
 
-    @pytest.mark.usefixtures("clean_db")
     def test_returns_none_for_inactive_org(self):
-        org_dict = _artesp_org()
-        # Deactivate the org
-        org_obj = model.Group.get(org_dict["id"])
-        org_obj.state = "deleted"
-        model.Session.add(org_obj)
-        model.Session.commit()
-        result = auth_helpers.get_artesp_org()
+        inactive_org = MagicMock(is_organization=True, state="deleted")
+        with patch.object(model.Group, "get", return_value=inactive_org):
+            result = auth_helpers.get_artesp_org()
         assert result is None
 
 
@@ -141,9 +140,9 @@ class TestGetGroup:
         assert result is not None
         assert result.id == group_dict["id"]
 
-    @pytest.mark.usefixtures("clean_db")
     def test_returns_none_for_missing_group(self):
-        result = auth_helpers.get_group("nonexistent-group-abcdef")
+        with patch.object(model.Group, "get", return_value=None):
+            result = auth_helpers.get_group("nonexistent-group-abcdef")
         assert result is None
 
 
@@ -302,7 +301,6 @@ class TestPackageBelongsToUser:
 # ---------------------------------------------------------------------------
 
 class TestGetCollaborator:
-    @pytest.mark.usefixtures("clean_db")
     def test_returns_none_when_no_collaborator(self):
         org_dict = _artesp_org()
         user_dict = factories.User()
@@ -534,12 +532,10 @@ class TestIsArtespOwnerOrg:
         with patch.object(model.Group, "get", return_value=None):
             assert auth_helpers.is_artesp_owner_org("artesp") is False
 
-    @pytest.mark.usefixtures("clean_db")
     def test_returns_true_for_artesp_org_id(self):
-        org_dict = factories.Organization(name="artesp")
+        org_dict = _artesp_org()
         assert auth_helpers.is_artesp_owner_org(org_dict["id"]) is True
 
-    @pytest.mark.usefixtures("clean_db")
     def test_returns_true_for_artesp_org_name(self):
-        factories.Organization(name="artesp")
+        _artesp_org()
         assert auth_helpers.is_artesp_owner_org("artesp") is True
