@@ -16,6 +16,7 @@ pytestmark = [
     pytest.mark.integration,
     pytest.mark.ckan_config("ckan.plugins", "artesp_theme"),
     pytest.mark.usefixtures("with_plugins"),
+    pytest.mark.xdist_group("rating_notifications"),
 ]
 
 
@@ -29,7 +30,7 @@ def _ensure_rating_table():
     model.Session.rollback()
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def artesp_org():
     org = auth_helpers.get_artesp_org()
     if org:
