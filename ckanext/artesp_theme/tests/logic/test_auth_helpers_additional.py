@@ -19,6 +19,7 @@ pytestmark = [
     pytest.mark.ckan_config("ckan.auth.allow_dataset_collaborators", True),
     pytest.mark.ckan_config("ckan.auth.allow_admin_collaborators", True),
     pytest.mark.usefixtures("with_plugins", "non_clean_db"),
+    pytest.mark.xdist_group("auth_helpers"),
 ]
 
 

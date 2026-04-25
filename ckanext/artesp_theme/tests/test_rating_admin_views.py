@@ -17,14 +17,27 @@ pytestmark = [
     pytest.mark.integration,
     pytest.mark.ckan_config("ckan.plugins", "artesp_theme"),
     pytest.mark.usefixtures("with_plugins"),
+    pytest.mark.xdist_group("rating_admin_views"),
 ]
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture(scope="module", autouse=True)
 def _ensure_rating_admin_tables():
     bind = model.Session.get_bind()
     dataset_rating_table.create(bind=bind, checkfirst=True)
     rating_action_table.create(bind=bind, checkfirst=True)
+    model.Session.commit()
+    yield
+    model.Session.execute(rating_action_table.delete())
+    model.Session.execute(dataset_rating_table.delete())
+    model.Session.commit()
+    rating_action_table.drop(bind=bind, checkfirst=True)
+    dataset_rating_table.drop(bind=bind, checkfirst=True)
+    model.Session.commit()
+
+
+@pytest.fixture(autouse=True)
+def _clear_rating_admin_rows():
     model.Session.execute(rating_action_table.delete())
     model.Session.execute(dataset_rating_table.delete())
     model.Session.commit()
@@ -32,7 +45,7 @@ def _ensure_rating_admin_tables():
     model.Session.rollback()
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def artesp_org():
     org = auth_helpers.get_artesp_org()
     if org:
@@ -40,12 +53,12 @@ def artesp_org():
     return factories.Organization(name="artesp")
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def user(artesp_org):
     return factories.User()
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def pkg(user, artesp_org):
     return factories.Dataset(user=user, owner_org=artesp_org["id"])
 

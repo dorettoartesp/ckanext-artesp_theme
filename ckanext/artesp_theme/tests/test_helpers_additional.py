@@ -12,14 +12,14 @@ from ckan.tests import factories
 import ckanext.artesp_theme.helpers as helpers
 
 
-pytestmark = [
-    pytest.mark.integration,
-    pytest.mark.ckan_config("ckan.plugins", "artesp_theme"),
-    pytest.mark.usefixtures("with_plugins"),
-]
-
-
 class TestGetLatestResources:
+    pytestmark = [
+        pytest.mark.integration,
+        pytest.mark.ckan_config("ckan.plugins", "artesp_theme"),
+        pytest.mark.usefixtures("with_plugins"),
+        pytest.mark.xdist_group("helpers_latest_resources"),
+    ]
+
     def _package(self, title="Dataset", owner_org="artesp"):
         package = model.Package(
             name="dataset-{}".format(uuid.uuid4().hex[:8]),
