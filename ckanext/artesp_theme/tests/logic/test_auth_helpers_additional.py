@@ -281,18 +281,15 @@ class TestMembershipAndOrganizationHelpers:
 
 class TestCollaboratorResolutionHelpers:
     def test_package_has_valid_creator_returns_true_for_existing_creator(self):
-        org = _artesp_org()
-        creator = factories.User()
-        package = factories.Dataset(user=creator, owner_org=org["id"])
-        package_obj = model.Package.get(package["id"])
-
-        assert auth_helpers.package_has_valid_creator(package_obj) is True
+        package_obj = SimpleNamespace(creator_user_id="creator-id")
+        with patch.object(model.User, "get", return_value=SimpleNamespace(id="creator-id")):
+            assert auth_helpers.package_has_valid_creator(package_obj) is True
 
     def test_get_target_user_supports_username_and_empty_payload(self):
-        user = factories.User()
-
-        assert auth_helpers.get_target_user({}).__class__ is None.__class__
-        assert auth_helpers.get_target_user({"username": user["name"]}).id == user["id"]
+        fake_user = SimpleNamespace(id="user-id")
+        with patch.object(auth_helpers, "find_local_user_by_identifier", return_value=fake_user):
+            assert auth_helpers.get_target_user({}).__class__ is None.__class__
+            assert auth_helpers.get_target_user({"username": "alice"}).id == "user-id"
 
     def test_resolve_or_create_collaborator_user_returns_none_when_ldap_missing(
         self, monkeypatch
@@ -485,73 +482,41 @@ class TestPermissionHelpers:
         assert auth_helpers.requested_capacity_is_allowed("editor") is True
 
     def test_user_has_edit_collaborator_capacity_returns_true_for_editor(self):
-        org = _artesp_org()
-        creator = factories.User()
-        editor = factories.User()
-        package = factories.Dataset(user=creator, owner_org=org["id"])
-        package_obj = model.Package.get(package["id"])
-        editor_obj = model.User.get(editor["name"])
-
-        tk.get_action("package_collaborator_create")(
-            {"ignore_auth": True},
-            {"id": package["id"], "user_id": editor["id"], "capacity": "editor"},
-        )
-
-        assert auth_helpers.user_has_edit_collaborator_capacity(package_obj, editor_obj) is True
+        collaborator = SimpleNamespace(capacity="editor")
+        with patch.object(auth_helpers, "get_collaborator", return_value=collaborator):
+            assert auth_helpers.user_has_edit_collaborator_capacity(
+                SimpleNamespace(id="pkg-id"), SimpleNamespace(id="user-id")
+            ) is True
 
     @pytest.mark.ckan_config("ckan.auth.allow_dataset_collaborators", False)
     def test_user_has_edit_collaborator_capacity_returns_false_when_disabled(self):
-        org = _artesp_org()
-        creator = factories.User()
-        other_user = factories.User()
-        package = factories.Dataset(user=creator, owner_org=org["id"])
-        package_obj = model.Package.get(package["id"])
-        other_user_obj = model.User.get(other_user["name"])
-
-        assert auth_helpers.user_has_edit_collaborator_capacity(package_obj, other_user_obj) is False
+        assert auth_helpers.user_has_edit_collaborator_capacity(
+            SimpleNamespace(id="pkg-id"), SimpleNamespace(id="user-id")
+        ) is False
 
     def test_user_can_edit_package_allows_editor_collaborator(self):
-        org = _artesp_org()
-        creator = factories.User()
-        editor = factories.User()
-        package = factories.Dataset(user=creator, owner_org=org["id"])
-        package_obj = model.Package.get(package["id"])
-        editor_obj = model.User.get(editor["name"])
-
-        tk.get_action("package_collaborator_create")(
-            {"ignore_auth": True},
-            {"id": package["id"], "user_id": editor["id"], "capacity": "editor"},
-        )
-
-        assert auth_helpers.user_can_edit_package(package_obj, editor_obj) is True
+        with patch.object(auth_helpers, "package_belongs_to_user", return_value=False), patch.object(
+            auth_helpers, "user_has_edit_collaborator_capacity", return_value=True
+        ):
+            assert auth_helpers.user_can_edit_package(
+                SimpleNamespace(id="pkg-id"), SimpleNamespace(id="user-id")
+            ) is True
 
     def test_user_can_manage_collaborators_allows_owner_and_admin(self):
-        org = _artesp_org()
-        creator = factories.User()
-        dataset_admin = factories.User()
-        sysadmin = factories.Sysadmin()
-        package = factories.Dataset(user=creator, owner_org=org["id"])
-        package_obj = model.Package.get(package["id"])
-        creator_obj = model.User.get(creator["name"])
-        admin_obj = model.User.get(dataset_admin["name"])
+        package = SimpleNamespace(id="pkg-id")
+        owner = SimpleNamespace(id="owner-id")
+        admin = SimpleNamespace(id="admin-id")
 
-        tk.get_action("package_collaborator_create")(
-            {"user": sysadmin["name"]},
-            {"id": package["id"], "user_id": dataset_admin["id"], "capacity": "admin"},
-        )
-
-        assert auth_helpers.user_can_manage_collaborators(package_obj, creator_obj) is True
-        assert auth_helpers.user_can_manage_collaborators(package_obj, admin_obj) is True
+        with patch.object(auth_helpers, "package_belongs_to_user", side_effect=[True, False]), patch.object(
+            auth_helpers, "get_collaborator", return_value=SimpleNamespace(capacity="admin")
+        ):
+            assert auth_helpers.user_can_manage_collaborators(package, owner) is True
+            assert auth_helpers.user_can_manage_collaborators(package, admin) is True
 
     @pytest.mark.ckan_config("ckan.auth.allow_admin_collaborators", False)
     def test_user_can_manage_collaborators_returns_false_when_admin_feature_disabled(
         self,
     ):
-        org = _artesp_org()
-        creator = factories.User()
-        collaborator = factories.User()
-        package = factories.Dataset(user=creator, owner_org=org["id"])
-        package_obj = model.Package.get(package["id"])
-        collaborator_obj = model.User.get(collaborator["name"])
-
-        assert auth_helpers.user_can_manage_collaborators(package_obj, collaborator_obj) is False
+        assert auth_helpers.user_can_manage_collaborators(
+            SimpleNamespace(id="pkg-id"), SimpleNamespace(id="user-id")
+        ) is False

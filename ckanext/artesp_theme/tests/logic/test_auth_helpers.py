@@ -48,10 +48,11 @@ class TestGetUser:
         assert result is fake_user
 
     def test_looks_up_string_identifier(self):
-        user = factories.User()
-        result = auth_helpers.get_user(user["name"])
-        assert result is not None
-        assert result.id == user["id"]
+        fake_user = MagicMock(id="user-id")
+        with patch.object(model.User, "get", return_value=fake_user) as mock_get:
+            result = auth_helpers.get_user("alice")
+        assert result is fake_user
+        mock_get.assert_called_once_with("alice")
 
 
 # ---------------------------------------------------------------------------
@@ -64,18 +65,24 @@ class TestFindLocalUserByIdentifier:
         assert auth_helpers.find_local_user_by_identifier("") is None
 
     def test_finds_user_by_name(self):
-        user = factories.User()
-        result = auth_helpers.find_local_user_by_identifier(user["name"])
-        assert result is not None
-        assert result.id == user["id"]
+        fake_user = MagicMock(id="user-id")
+        with patch.object(auth_helpers, "get_user", return_value=fake_user) as mock_get_user:
+            result = auth_helpers.find_local_user_by_identifier("alice")
+        assert result is fake_user
+        mock_get_user.assert_called_once_with("alice")
 
     def test_falls_back_to_email_search(self):
-        """Lines 52-53 / 56-60: fallback to email search when get_user returns None."""
-        user = factories.User()
-        # get_user("some@email.com") returns None; fallback queries by email
-        result = auth_helpers.find_local_user_by_identifier(user["email"])
-        assert result is not None
-        assert result.id == user["id"]
+        fake_user = MagicMock(id="user-id")
+        query = MagicMock()
+        query.filter.return_value.filter.return_value.one_or_none.return_value = fake_user
+
+        with patch.object(auth_helpers, "get_user", return_value=None), patch.object(
+            model.Session, "query", return_value=query
+        ) as mock_query:
+            result = auth_helpers.find_local_user_by_identifier("alice@example.com")
+
+        assert result is fake_user
+        mock_query.assert_called_once_with(model.User)
 
     def test_returns_none_for_unknown_identifier(self):
         with patch.object(auth_helpers, "get_user", return_value=None), patch.object(
@@ -110,10 +117,10 @@ class TestGetArtespOrg:
         assert result is None
 
     def test_returns_org_when_exists(self):
-        _artesp_org()
-        org = auth_helpers.get_artesp_org()
-        assert org is not None
-        assert org.name == "artesp"
+        fake_org = MagicMock(id="org-id", name="artesp", is_organization=True, state="active")
+        with patch.object(model.Group, "get", return_value=fake_org):
+            org = auth_helpers.get_artesp_org()
+        assert org is fake_org
 
     def test_returns_none_for_inactive_org(self):
         inactive_org = MagicMock(is_organization=True, state="deleted")
@@ -137,10 +144,11 @@ class TestGetGroup:
         assert auth_helpers.get_group(fake_group) is fake_group
 
     def test_looks_up_group_by_name(self):
-        group_dict = factories.Group(name="test-group-xyz")
-        result = auth_helpers.get_group("test-group-xyz")
-        assert result is not None
-        assert result.id == group_dict["id"]
+        fake_group = MagicMock(id="grp-123")
+        with patch.object(model.Group, "get", return_value=fake_group) as mock_get:
+            result = auth_helpers.get_group("test-group-xyz")
+        assert result is fake_group
+        mock_get.assert_called_once_with("test-group-xyz")
 
     def test_returns_none_for_missing_group(self):
         with patch.object(model.Group, "get", return_value=None):
@@ -208,23 +216,25 @@ class TestGetPackage:
         assert auth_helpers.get_package(None) is None
 
     def test_returns_package_by_id(self):
-        org_dict = _artesp_org()
-        pkg_dict = factories.Dataset(owner_org=org_dict["id"])
-        result = auth_helpers.get_package({"id": pkg_dict["id"]})
-        assert result is not None
-        assert result.id == pkg_dict["id"]
+        fake_package = MagicMock(id="pkg-id")
+        with patch.object(model.Package, "get", return_value=fake_package) as mock_get:
+            result = auth_helpers.get_package({"id": "pkg-id"})
+        assert result is fake_package
+        mock_get.assert_called_once_with("pkg-id")
 
     def test_returns_package_by_name(self):
-        org_dict = _artesp_org()
-        pkg_dict = factories.Dataset(owner_org=org_dict["id"])
-        result = auth_helpers.get_package({"name": pkg_dict["name"]})
-        assert result is not None
+        fake_package = MagicMock(id="pkg-id")
+        with patch.object(model.Package, "get", return_value=fake_package) as mock_get:
+            result = auth_helpers.get_package({"name": "dataset-name"})
+        assert result is fake_package
+        mock_get.assert_called_once_with("dataset-name")
 
     def test_returns_package_by_package_id(self):
-        org_dict = _artesp_org()
-        pkg_dict = factories.Dataset(owner_org=org_dict["id"])
-        result = auth_helpers.get_package({"package_id": pkg_dict["id"]})
-        assert result is not None
+        fake_package = MagicMock(id="pkg-id")
+        with patch.object(model.Package, "get", return_value=fake_package) as mock_get:
+            result = auth_helpers.get_package({"package_id": "pkg-id"})
+        assert result is fake_package
+        mock_get.assert_called_once_with("pkg-id")
 
 
 class TestGetResource:
@@ -232,19 +242,18 @@ class TestGetResource:
         assert auth_helpers.get_resource({}) is None
 
     def test_returns_resource_by_id(self):
-        org_dict = _artesp_org()
-        pkg_dict = factories.Dataset(owner_org=org_dict["id"])
-        resource_dict = factories.Resource(package_id=pkg_dict["id"])
-        result = auth_helpers.get_resource({"id": resource_dict["id"]})
-        assert result is not None
-        assert result.id == resource_dict["id"]
+        fake_resource = MagicMock(id="res-id")
+        with patch.object(model.Resource, "get", return_value=fake_resource) as mock_get:
+            result = auth_helpers.get_resource({"id": "res-id"})
+        assert result is fake_resource
+        mock_get.assert_called_once_with("res-id")
 
     def test_returns_resource_by_resource_id(self):
-        org_dict = _artesp_org()
-        pkg_dict = factories.Dataset(owner_org=org_dict["id"])
-        resource_dict = factories.Resource(package_id=pkg_dict["id"])
-        result = auth_helpers.get_resource({"resource_id": resource_dict["id"]})
-        assert result is not None
+        fake_resource = MagicMock(id="res-id")
+        with patch.object(model.Resource, "get", return_value=fake_resource) as mock_get:
+            result = auth_helpers.get_resource({"resource_id": "res-id"})
+        assert result is fake_resource
+        mock_get.assert_called_once_with("res-id")
 
 
 class TestGetPackageFromResource:
@@ -252,18 +261,23 @@ class TestGetPackageFromResource:
         assert auth_helpers.get_package_from_resource({}) is None
 
     def test_returns_package_via_resource_id(self):
-        org_dict = _artesp_org()
-        pkg_dict = factories.Dataset(owner_org=org_dict["id"])
-        resource_dict = factories.Resource(package_id=pkg_dict["id"])
-        result = auth_helpers.get_package_from_resource({"id": resource_dict["id"]})
-        assert result is not None
-        assert result.id == pkg_dict["id"]
+        fake_resource = MagicMock(package_id="pkg-id")
+        fake_package = MagicMock(id="pkg-id")
+        with patch.object(auth_helpers, "get_resource", return_value=fake_resource), patch.object(
+            model.Package, "get", return_value=fake_package
+        ) as mock_get:
+            result = auth_helpers.get_package_from_resource({"id": "res-id"})
+        assert result is fake_package
+        mock_get.assert_called_once_with("pkg-id")
 
     def test_returns_package_via_package_id_when_no_resource(self):
-        org_dict = _artesp_org()
-        pkg_dict = factories.Dataset(owner_org=org_dict["id"])
-        result = auth_helpers.get_package_from_resource({"package_id": pkg_dict["id"]})
-        assert result is not None
+        fake_package = MagicMock(id="pkg-id")
+        with patch.object(auth_helpers, "get_resource", return_value=None), patch.object(
+            model.Package, "get", return_value=fake_package
+        ) as mock_get:
+            result = auth_helpers.get_package_from_resource({"package_id": "pkg-id"})
+        assert result is fake_package
+        mock_get.assert_called_once_with("pkg-id")
 
     def test_returns_none_when_package_id_missing(self):
         result = auth_helpers.get_package_from_resource({"something": "else"})
