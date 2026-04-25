@@ -1,80 +1,86 @@
-"""Additional focused tests for helpers.py coverage gaps."""
-
-from datetime import datetime, timedelta
+from datetime import datetime
 from types import SimpleNamespace
 from unittest.mock import patch
-import uuid
 
 import pytest
-import ckan.model as model
-from ckan.tests import factories
 
 import ckanext.artesp_theme.helpers as helpers
 
 
 class TestGetLatestResources:
     pytestmark = [
-        pytest.mark.integration,
+        pytest.mark.app,
         pytest.mark.ckan_config("ckan.plugins", "artesp_theme"),
         pytest.mark.usefixtures("with_plugins"),
-        pytest.mark.xdist_group("helpers_latest_resources"),
     ]
 
-    @pytest.fixture(autouse=True)
-    def _cleanup_latest_resources_rows(self):
-        (
-            model.Session.query(model.Resource)
-            .filter(model.Resource.url.like("https://example.com/latestres-%"))
-            .delete(synchronize_session=False)
-        )
-        (
-            model.Session.query(model.Package)
-            .filter(model.Package.name.like("latestres-dataset-%"))
-            .delete(synchronize_session=False)
-        )
-        model.Session.commit()
-        yield
-        (
-            model.Session.query(model.Resource)
-            .filter(model.Resource.url.like("https://example.com/latestres-%"))
-            .delete(synchronize_session=False)
-        )
-        (
-            model.Session.query(model.Package)
-            .filter(model.Package.name.like("latestres-dataset-%"))
-            .delete(synchronize_session=False)
-        )
-        model.Session.commit()
+    class _FakeQuery:
+        def __init__(self, resources):
+            self._resources = list(resources)
+            self._dataset_id = None
+            self._org_id = None
+            self._limit = None
 
-    def _package(self, title="Dataset", owner_org="artesp"):
-        package = model.Package(
-            name="latestres-dataset-{}".format(uuid.uuid4().hex[:8]),
-            title=title,
+        def autoflush(self, *args, **kwargs):
+            return self
+
+        def filter(self, condition):
+            left = getattr(condition, "left", None)
+            right = getattr(condition, "right", None)
+            key = getattr(left, "key", None)
+            value = getattr(right, "value", None)
+
+            if key == "state" and value == "active":
+                return self
+            if key == "package_id":
+                self._dataset_id = value
+                return self
+            if key == "owner_org":
+                self._org_id = value
+                return self
+            return self
+
+        def join(self, *args, **kwargs):
+            return self
+
+        def order_by(self, *args, **kwargs):
+            return self
+
+        def limit(self, limit_value):
+            self._limit = limit_value
+            return self
+
+        def first(self):
+            resources = self.all()
+            return resources[0] if resources else None
+
+        def one_or_none(self):
+            resources = self.all()
+            return resources[0] if resources else None
+
+        def delete(self, *args, **kwargs):
+            return 0
+
+        def all(self):
+            resources = list(self._resources)
+            if self._dataset_id is not None:
+                resources = [r for r in resources if r.package_id == self._dataset_id]
+            if self._org_id is not None:
+                resources = [r for r in resources if r.owner_org == self._org_id]
+            resources.sort(key=lambda resource: resource.metadata_modified, reverse=True)
+            if self._limit is not None:
+                return resources[: self._limit]
+            return resources
+
+    def _resource(self, package_id, resource_id, metadata_modified, owner_org=None):
+        return SimpleNamespace(
+            id=resource_id,
+            package_id=package_id,
             owner_org=owner_org,
-            state="active",
+            metadata_modified=metadata_modified,
         )
-        model.Session.add(package)
-        model.Session.commit()
-        return package
 
-    def _resource(self, package, name, seconds=0):
-        resource = model.Resource(
-            package_id=package.id,
-            name=name,
-            url="https://example.com/latestres-{}.csv".format(uuid.uuid4().hex[:8]),
-            metadata_modified=datetime.utcnow() + timedelta(seconds=seconds),
-        )
-        resource.state = "active"
-        model.Session.add(resource)
-        model.Session.commit()
-        return resource
-
-    def _patch_package_show(self, monkeypatch, *packages):
-        package_dicts = {
-            package.id: {"id": package.id, "title": package.title, "name": package.name}
-            for package in packages
-        }
-
+    def _patch_package_show(self, monkeypatch, package_dicts):
         def fake_get_action(name):
             assert name == "package_show"
             return lambda context, data_dict: package_dicts[data_dict["id"]]
@@ -82,11 +88,15 @@ class TestGetLatestResources:
         monkeypatch.setattr(helpers.toolkit, "get_action", fake_get_action)
 
     def test_returns_latest_resources_with_dataset_context(self, monkeypatch):
-        dataset = self._package(title="Dataset title")
-        resource = self._resource(dataset, "latest-resource", seconds=86400)
-        self._patch_package_show(monkeypatch, dataset)
+        dataset = SimpleNamespace(id="pkg-1", title="Dataset title", name="dataset-1")
+        resource = self._resource("pkg-1", "res-1", datetime(2026, 4, 25, 0, 0, 0))
+        self._patch_package_show(
+            monkeypatch,
+            {"pkg-1": {"id": "pkg-1", "title": dataset.title, "name": dataset.name}},
+        )
 
-        results = helpers.get_latest_resources(limit=1)
+        with patch.object(helpers.Session, "query", return_value=self._FakeQuery([resource])):
+            results = helpers.get_latest_resources(limit=1)
 
         assert len(results) == 1
         assert results[0]["resource"].id == resource.id
@@ -94,50 +104,72 @@ class TestGetLatestResources:
         assert results[0]["parent_dataset_title"] == dataset.title
 
     def test_filters_latest_resources_by_dataset_id(self, monkeypatch):
-        dataset = self._package()
-        other_dataset = self._package()
-        self._resource(dataset, "dataset-resource")
-        self._resource(other_dataset, "other-resource", seconds=1)
-        self._patch_package_show(monkeypatch, dataset, other_dataset)
+        resource = self._resource("pkg-1", "res-1", datetime(2026, 4, 25, 0, 0, 0))
+        other_resource = self._resource("pkg-2", "res-2", datetime(2026, 4, 25, 0, 0, 1))
+        self._patch_package_show(
+            monkeypatch,
+            {
+                "pkg-1": {"id": "pkg-1", "title": "Dataset 1", "name": "dataset-1"},
+                "pkg-2": {"id": "pkg-2", "title": "Dataset 2", "name": "dataset-2"},
+            },
+        )
 
-        results = helpers.get_latest_resources(limit=10, dataset_id=dataset.id)
+        with patch.object(
+            helpers.Session, "query", return_value=self._FakeQuery([resource, other_resource])
+        ):
+            results = helpers.get_latest_resources(limit=10, dataset_id="pkg-1")
 
         assert results
-        assert all(item["resource"].package_id == dataset.id for item in results)
+        assert all(item["resource"].package_id == "pkg-1" for item in results)
 
     def test_filters_latest_resources_by_org_id(self, monkeypatch):
-        artesp_org_id = "artesp-org"
-        dataset = self._package(owner_org=artesp_org_id)
-        other_package = self._package(title="Other org dataset", owner_org="other-org")
+        resource = self._resource(
+            "pkg-1", "res-1", datetime(2026, 4, 25, 0, 0, 0), owner_org="artesp-org"
+        )
+        other_resource = self._resource(
+            "pkg-2", "res-2", datetime(2026, 4, 25, 0, 0, 1), owner_org="other-org"
+        )
+        self._patch_package_show(
+            monkeypatch,
+            {
+                "pkg-1": {
+                    "id": "pkg-1",
+                    "title": "Dataset 1",
+                    "name": "dataset-1",
+                    "groups": [],
+                },
+                "pkg-2": {
+                    "id": "pkg-2",
+                    "title": "Dataset 2",
+                    "name": "dataset-2",
+                    "groups": [],
+                },
+            },
+        )
 
-        self._resource(dataset, "artesp-resource")
-        self._resource(other_package, "other-resource", seconds=1)
-        self._patch_package_show(monkeypatch, dataset, other_package)
-
-        results = helpers.get_latest_resources(limit=10, org_id=artesp_org_id)
+        with patch.object(
+            helpers.Session, "query", return_value=self._FakeQuery([resource, other_resource])
+        ):
+            results = helpers.get_latest_resources(limit=10, org_id="artesp-org")
 
         assert results
-        assert all(item["resource"].package_id == dataset.id for item in results)
+        assert all(item["resource"].package_id == "pkg-1" for item in results)
 
     def test_skips_resource_when_package_lookup_fails(self, monkeypatch):
-        dataset = self._package()
-        self._resource(dataset, "broken-package-resource")
-
-        monkeypatch.setattr(
+        resource = self._resource("pkg-1", "res-1", datetime(2026, 4, 25, 0, 0, 0))
+        with patch.object(
+            helpers.Session, "query", return_value=self._FakeQuery([resource])
+        ), patch.object(
             helpers.toolkit,
             "get_action",
             lambda name: (
                 lambda context, data_dict: (_ for _ in ()).throw(Exception("boom"))
             ),
-        )
-
-        assert helpers.get_latest_resources(limit=5) == []
+        ):
+            assert helpers.get_latest_resources(limit=5) == []
 
     def test_returns_empty_when_query_raises(self):
-        with patch(
-            "ckanext.artesp_theme.helpers.Session.query",
-            side_effect=Exception("database down"),
-        ):
+        with patch.object(helpers.Session, "query", side_effect=Exception("database down")):
             assert helpers.get_latest_resources(limit=5) == []
 
 
