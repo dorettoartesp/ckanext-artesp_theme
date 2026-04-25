@@ -37,6 +37,7 @@ filterwarnings = [
 ]
 addopts = "--ckan-ini test.ini"
 markers = [
-    "unit: runs without CKAN app or database (local venv, no Docker)",
-    "integration: requires CKAN app, PostgreSQL, and Solr (Docker)",
+    "unit: runs without CKAN app, PostgreSQL, or Solr",
+    "app: requires CKAN app/config/plugin loading but not per-test DB/Solr reset",
+    "integration: requires per-test DB/Solr reset via clean_db or clean_index",
 ]

@@ -2,7 +2,8 @@ import os
 
 import pytest
 
-_INTEGRATION_FIXTURES = {"clean_db", "clean_index", "ckan_config", "app"}
+_INTEGRATION_FIXTURES = {"clean_db", "clean_index"}
+_APP_FIXTURES = {"app", "ckan_config", "with_plugins"}
 
 
 @pytest.hookimpl(tryfirst=True)
@@ -21,7 +22,10 @@ def pytest_configure(config):
 
 def pytest_collection_modifyitems(items):
     for item in items:
-        if _INTEGRATION_FIXTURES & set(item.fixturenames):
+        fixtures = set(item.fixturenames)
+        if _INTEGRATION_FIXTURES & fixtures:
             item.add_marker(pytest.mark.integration)
+        elif _APP_FIXTURES & fixtures:
+            item.add_marker(pytest.mark.app)
         else:
             item.add_marker(pytest.mark.unit)
