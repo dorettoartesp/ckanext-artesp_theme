@@ -15,7 +15,7 @@ import ckanext.artesp_theme.controllers as controllers
 
 pytestmark = [
     pytest.mark.ckan_config("ckan.plugins", "artesp_theme"),
-    pytest.mark.usefixtures("with_plugins", "clean_db"),
+    pytest.mark.usefixtures("with_plugins", "non_clean_db"),
 ]
 
 
