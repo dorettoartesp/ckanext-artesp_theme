@@ -1,10 +1,11 @@
 """Tests for auth.py."""
 
 from types import SimpleNamespace
+import uuid
 
 import ckan.model as model
 import pytest
-from ckan.tests import factories, helpers as test_helpers
+from ckan.tests import factories
 
 from ckanext.artesp_theme.logic import auth as artesp_auth
 from ckanext.artesp_theme.logic import auth_helpers
@@ -28,6 +29,32 @@ def _artesp_org():
 
 def _auth_user(sysadmin=False):
     return SimpleNamespace(id="auth-user-{}".format(sysadmin), sysadmin=sysadmin)
+
+
+def _user(prefix):
+    suffix = uuid.uuid4().hex
+    user = model.User(
+        name="{}-{}".format(prefix, suffix[:10]),
+        email="{}-{}@ckan.example.com".format(prefix, suffix),
+        state="active",
+    )
+    model.Session.add(user)
+    model.Session.flush()
+    return {"id": user.id, "name": user.name, "email": user.email}
+
+
+def _dataset(owner_org, user):
+    suffix = uuid.uuid4().hex[:10]
+    package = model.Package(
+        name="dataset-auth-role-override-{}".format(suffix),
+        title="Dataset auth role override",
+        owner_org=owner_org,
+        creator_user_id=user["id"],
+        state="active",
+    )
+    model.Session.add(package)
+    model.Session.flush()
+    return {"id": package.id, "name": package.name}
 
 
 def test_artesp_theme_get_sum():
@@ -125,15 +152,9 @@ def test_password_reset_is_allowed_when_ldap_is_disabled(action_name):
 
 def test_package_collaborator_create_blocks_non_sysadmin_role_override():
     artesp_org = _artesp_org()
-    creator = factories.User()
-    collaborator = factories.User()
-    package = test_helpers.call_action(
-        "package_create",
-        context={"user": creator["name"]},
-        name="dataset-auth-role-override-{}".format(creator["id"][:8]),
-        title="Dataset auth role override",
-        owner_org=artesp_org["id"],
-    )
+    creator = _user("auth-role-creator")
+    collaborator = _user("auth-role-collaborator")
+    package = _dataset(artesp_org["id"], creator)
 
     denied = artesp_auth.package_collaborator_create(
         {"model": model, "user": creator["name"]},

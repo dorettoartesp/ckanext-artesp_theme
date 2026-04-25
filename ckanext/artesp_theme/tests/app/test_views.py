@@ -9,95 +9,26 @@ import ckan.plugins.toolkit as tk
 from ckan.lib import base
 
 
-@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
-@pytest.mark.usefixtures("with_plugins")
-def test_artesp_theme_blueprint(app, reset_db):
+def _assert_about_page_has_blueprint_and_statistics_nav(app):
     resp = app.get(tk.h.url_for("artesp_theme.about_ckan"))
+
     assert resp.status_code == 200
     assert "CKAN" in resp.text
+    assert 'href="/estatisticas"' in resp.text
+    assert "Estatísticas" in resp.text
+    assert 'href="https://www.artesp.sp.gov.br/artesp"' in resp.text
+    assert 'target="_blank"' in resp.text
 
 
-@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
-@pytest.mark.ckan_config("ckanext.ldap.uri", "ldap://ldap:389")
-@pytest.mark.usefixtures("with_plugins")
-def test_login_page_hides_forgot_password_when_ldap_enabled(app, reset_db):
+def _assert_default_login_keeps_forgot_password(app):
     resp = app.get(tk.h.url_for("user.login"))
 
     assert resp.status_code == 200
-    assert 'action="/user/verify"' in resp.text
-    assert "Forgotten your password?" not in resp.text
-    assert "Forgot your password?" not in resp.text
+    assert "Forgotten your password?" in resp.text
+    assert "Forgot your password?" in resp.text
 
 
-@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
-@pytest.mark.ckan_config("ckanext.ldap.uri", "ldap://ldap:389")
-@pytest.mark.ckan_config("ckanext.artesp.govbr.enabled", "true")
-@pytest.mark.ckan_config("ckanext.artesp.govbr.client_id", "govbr-client-id")
-@pytest.mark.usefixtures("with_plugins")
-def test_login_page_shows_centered_govbr_and_ldap_actions(app, reset_db):
-    resp = app.get(tk.h.url_for("user.login"))
-
-    assert resp.status_code == 200
-    assert "artesp-login-access" in resp.text
-    assert 'href="/user/oidc/login"' in resp.text
-    assert "artesp-govbr-login" in resp.text
-    assert "<span>Entrar com</span><strong>gov.br</strong>" in resp.text
-    assert "artesp-login-divider" in resp.text
-    assert "<span>ou</span>" in resp.text
-    assert "artesp-ldap-toggle" in resp.text
-    assert 'aria-expanded="false"' in resp.text
-    assert 'aria-controls="govbr-ldap-form"' in resp.text
-    assert "data-artesp-login-toggle" in resp.text
-    assert 'id="govbr-ldap-form" class="artesp-ldap-panel" hidden' in resp.text
-    assert 'action="/user/verify"' in resp.text
-    assert "Acesso ao portal" not in resp.text
-    assert "Use sua conta gov.br" not in resp.text
-    assert "Servidores ARTESP podem usar credenciais internas" not in resp.text
-    assert (
-        "Acesse informações públicas sobre a infraestrutura de transportes "
-        "concedidos do Estado de São Paulo."
-    ) in resp.text
-
-
-@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
-@pytest.mark.ckan_config("ckanext.ldap.uri", "ldap://ldap:389")
-@pytest.mark.ckan_config("ckanext.artesp.govbr.enabled", "true")
-@pytest.mark.ckan_config("ckanext.artesp.govbr.client_id", "")
-@pytest.mark.usefixtures("with_plugins")
-def test_login_page_hides_govbr_actions_without_client_id(app, reset_db):
-    resp = app.get(tk.h.url_for("user.login"))
-
-    assert resp.status_code == 200
-    assert 'action="/user/verify"' in resp.text
-    assert 'href="/user/oidc/login"' not in resp.text
-    assert "artesp-govbr-login" not in resp.text
-    assert "artesp-login-divider" not in resp.text
-    assert "artesp-ldap-toggle" not in resp.text
-
-
-@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
-@pytest.mark.ckan_config("ckanext.artesp.govbr.enabled", "true")
-@pytest.mark.ckan_config("ckanext.artesp.govbr.client_id", "govbr-client-id")
-@pytest.mark.usefixtures("with_plugins")
-def test_logout_first_page_uses_govbr_logout(app, reset_db):
-    current_user = SimpleNamespace(name="usuario-ldap")
-
-    with patch.object(tk.h, "artesp_auth_provider", return_value="govbr"), patch.object(
-        tk.h, "artesp_is_external_user", return_value=False
-    ):
-        with app.flask_app.test_request_context(
-            "/user/login",
-            environ_base={"CKAN_CURRENT_URL": "/user/login"},
-        ):
-            html = base.render("user/logout_first.html", extra_vars={"current_user": current_user})
-
-    assert 'href="/user/oidc/logout"' in html
-    assert "Log out now" in html
-
-
-@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
-@pytest.mark.usefixtures("with_plugins")
-def test_logout_first_page_uses_ckan_logout_for_internal_users(app, reset_db):
+def _assert_logout_first_uses_ckan_logout_for_internal_users(app):
     current_user = SimpleNamespace(name="usuario-ldap")
 
     with patch.object(tk.h, "artesp_is_external_user", return_value=False):
@@ -111,9 +42,7 @@ def test_logout_first_page_uses_ckan_logout_for_internal_users(app, reset_db):
     assert "Log out now" in html
 
 
-@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
-@pytest.mark.usefixtures("with_plugins")
-def test_govbr_link_snippet_handles_missing_user(app, reset_db):
+def _assert_govbr_link_snippets_handle_missing_extras(app):
     with app.flask_app.test_request_context(
         "/user/teste",
         environ_overrides={"CKAN_LANG": "pt_BR"},
@@ -123,10 +52,6 @@ def test_govbr_link_snippet_handles_missing_user(app, reset_db):
     assert "Nenhuma conta Gov.br vinculada." in html
     assert 'href="/user/oidc/link"' in html
 
-
-@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
-@pytest.mark.usefixtures("with_plugins")
-def test_govbr_link_snippet_handles_none_plugin_extras(app, reset_db):
     user = {
         "name": "usuario-interno",
         "display_name": "Usuario Interno",
@@ -143,102 +68,7 @@ def test_govbr_link_snippet_handles_none_plugin_extras(app, reset_db):
     assert 'href="/user/oidc/link"' in html
 
 
-@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
-@pytest.mark.ckan_config("ckanext.ldap.uri", "ldap://ldap:389")
-@pytest.mark.usefixtures("with_plugins")
-def test_request_reset_route_is_forbidden_when_ldap_enabled(app, reset_db):
-    resp = app.get(tk.h.url_for("user.request_reset"), status=403)
-
-    assert resp.status_code == 403
-    assert "Unauthorized to request reset password." in resp.text
-
-
-@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
-@pytest.mark.usefixtures("with_plugins")
-def test_login_page_keeps_forgot_password_when_ldap_disabled(app, reset_db):
-    resp = app.get(tk.h.url_for("user.login"))
-
-    assert resp.status_code == 200
-    assert "Forgotten your password?" in resp.text
-    assert "Forgot your password?" in resp.text
-
-
-@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
-@pytest.mark.ckan_config("ckan.recaptcha.publickey", "legacy-google-key")
-@pytest.mark.usefixtures("with_plugins")
-def test_login_page_does_not_render_captcha(app, reset_db):
-    resp = app.get(tk.h.url_for("user.login"))
-
-    assert resp.status_code == 200
-    assert "g-recaptcha" not in resp.text
-    assert "Recaptcha" not in resp.text
-
-
-@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
-@pytest.mark.ckan_config("ckanext.artesp.rating.altcha_hmac_secret", "rating-altcha-secret")
-@pytest.mark.usefixtures("with_plugins")
-def test_rating_snippet_renders_altcha_for_comments(app, reset_db):
-    pkg = SimpleNamespace(
-        id="90986ead-e102-4cc8-affc-d01245497032",
-        name="seed-artesp-dataset-muitos-recursos",
-        title="Dataset de teste com muitos recursos",
-    )
-    current_user = SimpleNamespace(is_authenticated=True)
-
-    with patch("flask_login.utils._get_user", return_value=current_user):
-        with app.flask_app.test_request_context(
-            "/dataset/seed-artesp-dataset-muitos-recursos",
-            environ_overrides={"CKAN_LANG": "pt_BR"},
-        ):
-            html = base.render_snippet("package/snippets/rating.html", pkg=pkg)
-
-    assert "altcha-widget" in html
-    assert "/dataset-rating/comment-captcha/challenge" in html
-    assert 'challenge="/dataset-rating/comment-captcha/challenge"' in html
-    assert "challengeurl=" not in html
-    assert "https://cdn.jsdelivr.net/npm/altcha@3.0.4/dist/main/altcha.i18n.min.js" in html
-    assert "https://cdn.jsdelivr.net/npm/altcha@3.0.4/dist/external/altcha.min.css" in html
-    assert 'class="artesp-rating__comment-captcha"' in html
-    assert 'class="artesp-rating__comment-captcha" hidden' not in html
-    assert "g-recaptcha" not in html
-
-
-@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
-@pytest.mark.ckan_config("ckanext.ldap.uri", "ldap://ldap:389")
-@pytest.mark.ckan_config("ckanext.artesp.govbr.enabled", "true")
-@pytest.mark.ckan_config("ckanext.artesp.govbr.client_id", "govbr-client-id")
-@pytest.mark.usefixtures("with_plugins")
-def test_login_page_opens_ldap_panel_when_error_summary_is_present(app, reset_db):
-    with app.flask_app.test_request_context(
-        "/user/login",
-        environ_base={"CKAN_CURRENT_URL": "/user/login"},
-    ):
-        html = base.render(
-            "user/login.html",
-            extra_vars={"error_summary": {"login": ["Login failed"]}},
-        )
-
-    assert 'aria-expanded="true"' in html
-    assert 'id="govbr-ldap-form" class="artesp-ldap-panel">' in html
-    assert 'id="govbr-ldap-form" class="artesp-ldap-panel" hidden' not in html
-    assert "Login failed" in html
-
-
-@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
-@pytest.mark.usefixtures("with_plugins")
-def test_header_includes_public_statistics_nav_item(app, reset_db):
-    resp = app.get(tk.h.url_for("artesp_theme.about_ckan"))
-
-    assert resp.status_code == 200
-    assert 'href="/estatisticas"' in resp.text
-    assert "Estatísticas" in resp.text
-    assert 'href="https://www.artesp.sp.gov.br/artesp"' in resp.text
-    assert 'target="_blank"' in resp.text
-
-
-@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
-@pytest.mark.usefixtures("with_plugins")
-def test_header_shows_following_for_internal_users(app, reset_db):
+def _assert_header_snippets(app):
     user = SimpleNamespace(
         id="usuario-interno-id",
         name="usuario-interno",
@@ -255,13 +85,9 @@ def test_header_shows_following_for_internal_users(app, reset_db):
         ):
             tk.c.user = user.name
             tk.c.userobj = user
-            html = base.render("header.html")
+            base.render("header.html")
 
-
-@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
-@pytest.mark.usefixtures("with_plugins")
-def test_header_shows_audit_link_for_sysadmin(app, reset_db):
-    user = SimpleNamespace(
+    sysadmin = SimpleNamespace(
         id="sysadmin-id",
         name="sysadmin-user",
         display_name="Sysadmin User",
@@ -277,23 +103,12 @@ def test_header_shows_audit_link_for_sysadmin(app, reset_db):
             "/dataset/exemplo",
             environ_overrides={"CKAN_LANG": "pt_BR"},
         ):
-            tk.c.user = user.name
-            tk.c.userobj = user
+            tk.c.user = sysadmin.name
+            tk.c.userobj = sysadmin
             html = base.render("header.html")
 
     assert 'href="/admin/audit"' in html
     assert "Auditoria" in html
-
-
-@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
-@pytest.mark.usefixtures("with_plugins")
-def test_header_uses_govbr_logout_for_govbr_sessions(app, reset_db):
-    user = SimpleNamespace(
-        id="usuario-interno-id",
-        name="usuario-interno",
-        display_name="Usuario Interno",
-        sysadmin=False,
-    )
 
     with patch.object(tk.h, "artesp_auth_provider", return_value="govbr"), patch.object(
         tk.h, "artesp_is_external_user", return_value=False
@@ -311,9 +126,7 @@ def test_header_uses_govbr_logout_for_govbr_sessions(app, reset_db):
     assert 'action="/user/oidc/logout"' in html
 
 
-@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
-@pytest.mark.usefixtures("with_plugins")
-def test_package_info_renders_follow_button_translated_for_pt_br(app, reset_db):
+def _assert_package_info_follow_button(app):
     pkg = SimpleNamespace(
         id="90986ead-e102-4cc8-affc-d01245497032",
         name="seed-artesp-dataset-muitos-recursos",
@@ -338,15 +151,10 @@ def test_package_info_renders_follow_button_translated_for_pt_br(app, reset_db):
     assert "Seguidores" in html
     assert "Desseguir" in html
     assert "Unfollow" not in html
-    assert (
-        'hx-post="/dataset/unfollow/90986ead-e102-4cc8-affc-d01245497032"'
-        in html
-    )
+    assert 'hx-post="/dataset/unfollow/90986ead-e102-4cc8-affc-d01245497032"' in html
 
 
-@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
-@pytest.mark.usefixtures("with_plugins")
-def test_followed_page_lists_mixed_followees_with_clear_types(app, reset_db):
+def _assert_followed_page_lists_mixed_followees(app):
     user_dict = {
         "id": "usuario-interno-id",
         "name": "usuario-interno",
@@ -429,9 +237,7 @@ def test_followed_page_lists_mixed_followees_with_clear_types(app, reset_db):
     assert "Maria Santos" in resp.text
 
 
-@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
-@pytest.mark.usefixtures("with_plugins")
-def test_statistics_page_is_public_and_renders_dashboard(app, reset_db):
+def _assert_statistics_pages(app):
     dashboard = {
         "generated_at_label": "09/04/2026 10:30",
         "has_data": True,
@@ -475,16 +281,10 @@ def test_statistics_page_is_public_and_renders_dashboard(app, reset_db):
             },
         ],
         "charts": {
-            "resources_by_theme": [
-                {"label": "Rodoviário", "value": 20, "percent": 100.0}
-            ],
-            "datasets_by_theme": [
-                {"label": "Rodoviário", "value": 5, "percent": 100.0}
-            ],
+            "resources_by_theme": [{"label": "Rodoviário", "value": 20, "percent": 100.0}],
+            "datasets_by_theme": [{"label": "Rodoviário", "value": 5, "percent": 100.0}],
             "timeline": [{"label": "2025", "value": 3, "percent": 100.0}],
-            "top_datasets": [
-                {"label": "Acidentes", "value": 9, "percent": 100.0}
-            ],
+            "top_datasets": [{"label": "Acidentes", "value": 9, "percent": 100.0}],
             "formats": [{"label": "CSV", "value": 8, "percent": 100.0}],
         },
         "table_rows": [
@@ -507,14 +307,10 @@ def test_statistics_page_is_public_and_renders_dashboard(app, reset_db):
         "ckanext.artesp_theme.controllers.artesp_helpers.get_dashboard_statistics",
         return_value=dashboard,
     ) as get_dashboard_statistics:
-        resp = app.get(
-            tk.h.url_for("artesp_theme.statistics", theme="rodoviario", period="6m")
-        )
+        resp = app.get(tk.h.url_for("artesp_theme.statistics", theme="rodoviario", period="6m"))
 
     assert resp.status_code == 200
-    get_dashboard_statistics.assert_called_once_with(
-        {"theme": "rodoviario", "period": "6m"}
-    )
+    get_dashboard_statistics.assert_called_once_with({"theme": "rodoviario", "period": "6m"})
     assert "Painel do Portal de Dados Abertos" in resp.text
     assert "Indicadores principais do portal" in resp.text
     assert "Rodoviário concentra 20 recurso(s)" in resp.text
@@ -533,11 +329,7 @@ def test_statistics_page_is_public_and_renders_dashboard(app, reset_db):
     assert "<canvas" not in resp.text
     assert "Acidentes" in resp.text
 
-
-@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
-@pytest.mark.usefixtures("with_plugins")
-def test_statistics_page_renders_without_rating_block(app, reset_db):
-    dashboard = {
+    dashboard_without_rating = {
         "generated_at_label": "09/04/2026 10:30",
         "has_data": True,
         "filters": {
@@ -573,7 +365,7 @@ def test_statistics_page_renders_without_rating_block(app, reset_db):
 
     with patch(
         "ckanext.artesp_theme.controllers.artesp_helpers.get_dashboard_statistics",
-        return_value=dashboard,
+        return_value=dashboard_without_rating,
     ):
         resp = app.get(tk.h.url_for("artesp_theme.statistics"))
 
@@ -581,9 +373,7 @@ def test_statistics_page_renders_without_rating_block(app, reset_db):
     assert "Ainda não há avaliações registradas para o filtro selecionado." in resp.text
 
 
-@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
-@pytest.mark.usefixtures("with_plugins")
-def test_resource_form_renders_without_scheming_fields(app, reset_db):
+def _assert_form_snippets(app):
     with app.flask_app.test_request_context("/dataset/teste/resource/new"):
         html = base.render_snippet(
             "package/snippets/resource_form.html",
@@ -598,12 +388,8 @@ def test_resource_form_renders_without_scheming_fields(app, reset_db):
 
     assert 'id="field-name"' in html
     assert 'id="field-format"' in html
-    assert 'resource-edit' in html
+    assert "resource-edit" in html
 
-
-@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
-@pytest.mark.usefixtures("with_plugins")
-def test_package_basic_fields_keep_visibility_enabled_for_fixed_artesp_org(app, reset_db):
     artesp_org = SimpleNamespace(id="artesp-id", name="artesp", title="ARTESP")
 
     with patch(
@@ -622,22 +408,12 @@ def test_package_basic_fields_keep_visibility_enabled_for_fixed_artesp_org(app, 
 
     assert 'data-module="dataset-visibility"' not in html
     assert 'name="owner_org" value="{0}"'.format(artesp_org.id) in html
-    assert (
-        '<select id="field-private" name="private" class="form-control">'
-        in html
-    )
+    assert '<select id="field-private" name="private" class="form-control">' in html
 
-
-@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
-@pytest.mark.usefixtures("with_plugins")
-def test_package_basic_fields_render_optional_group_selector_after_organization(
-    app, reset_db
-):
     groups = [
         {"id": "grupo-1", "display_name": "Grupo 1"},
         {"id": "grupo-2", "display_name": "Grupo 2"},
     ]
-    artesp_org = SimpleNamespace(id="artesp-id", name="artesp", title="ARTESP")
 
     with patch(
         "ckanext.artesp_theme.logic.auth_helpers.get_artesp_org",
@@ -659,17 +435,164 @@ def test_package_basic_fields_render_optional_group_selector_after_organization(
     assert "Grupo 2" in html
     assert '<option value=""' in html
     assert '<option value="grupo-2" selected>' in html
-    assert html.index('id="field-fixed-organization"') < html.index(
-        'id="field-groups__0__id"'
-    )
+    assert html.index('id="field-fixed-organization"') < html.index('id="field-groups__0__id"')
     assert html.index('id="field-groups__0__id"') < html.index('id="field-private"')
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.usefixtures("with_plugins")
+def test_default_theme_views_and_snippets(app):
+    _assert_about_page_has_blueprint_and_statistics_nav(app)
+    _assert_default_login_keeps_forgot_password(app)
+    _assert_logout_first_uses_ckan_logout_for_internal_users(app)
+    _assert_govbr_link_snippets_handle_missing_extras(app)
+    _assert_header_snippets(app)
+    _assert_package_info_follow_button(app)
+    _assert_followed_page_lists_mixed_followees(app)
+    _assert_statistics_pages(app)
+    _assert_form_snippets(app)
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.ckan_config("ckanext.ldap.uri", "ldap://ldap:389")
+@pytest.mark.usefixtures("with_plugins")
+def test_ldap_login_and_password_reset(app):
+    resp = app.get(tk.h.url_for("user.login"))
+
+    assert resp.status_code == 200
+    assert 'action="/user/verify"' in resp.text
+    assert "Forgotten your password?" not in resp.text
+    assert "Forgot your password?" not in resp.text
+
+    resp = app.get(tk.h.url_for("user.request_reset"), status=403)
+
+    assert resp.status_code == 403
+    assert "Unauthorized to request reset password." in resp.text
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.ckan_config("ckanext.ldap.uri", "ldap://ldap:389")
+@pytest.mark.ckan_config("ckanext.artesp.govbr.enabled", "true")
+@pytest.mark.ckan_config("ckanext.artesp.govbr.client_id", "govbr-client-id")
+@pytest.mark.usefixtures("with_plugins")
+def test_govbr_ldap_login_page(app):
+    resp = app.get(tk.h.url_for("user.login"))
+
+    assert resp.status_code == 200
+    assert "artesp-login-access" in resp.text
+    assert 'href="/user/oidc/login"' in resp.text
+    assert "artesp-govbr-login" in resp.text
+    assert "<span>Entrar com</span><strong>gov.br</strong>" in resp.text
+    assert "artesp-login-divider" in resp.text
+    assert "<span>ou</span>" in resp.text
+    assert "artesp-ldap-toggle" in resp.text
+    assert 'aria-expanded="false"' in resp.text
+    assert 'aria-controls="govbr-ldap-form"' in resp.text
+    assert "data-artesp-login-toggle" in resp.text
+    assert 'id="govbr-ldap-form" class="artesp-ldap-panel" hidden' in resp.text
+    assert 'action="/user/verify"' in resp.text
+    assert "Acesso ao portal" not in resp.text
+    assert "Use sua conta gov.br" not in resp.text
+    assert "Servidores ARTESP podem usar credenciais internas" not in resp.text
+    assert (
+        "Acesse informações públicas sobre a infraestrutura de transportes "
+        "concedidos do Estado de São Paulo."
+    ) in resp.text
+
+    with app.flask_app.test_request_context(
+        "/user/login",
+        environ_base={"CKAN_CURRENT_URL": "/user/login"},
+    ):
+        html = base.render(
+            "user/login.html",
+            extra_vars={"error_summary": {"login": ["Login failed"]}},
+        )
+
+    assert 'aria-expanded="true"' in html
+    assert 'id="govbr-ldap-form" class="artesp-ldap-panel">' in html
+    assert 'id="govbr-ldap-form" class="artesp-ldap-panel" hidden' not in html
+    assert "Login failed" in html
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.ckan_config("ckanext.ldap.uri", "ldap://ldap:389")
+@pytest.mark.ckan_config("ckanext.artesp.govbr.enabled", "true")
+@pytest.mark.ckan_config("ckanext.artesp.govbr.client_id", "")
+@pytest.mark.usefixtures("with_plugins")
+def test_login_page_hides_govbr_actions_without_client_id(app):
+    resp = app.get(tk.h.url_for("user.login"))
+
+    assert resp.status_code == 200
+    assert 'action="/user/verify"' in resp.text
+    assert 'href="/user/oidc/login"' not in resp.text
+    assert "artesp-govbr-login" not in resp.text
+    assert "artesp-login-divider" not in resp.text
+    assert "artesp-ldap-toggle" not in resp.text
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.ckan_config("ckanext.artesp.govbr.enabled", "true")
+@pytest.mark.ckan_config("ckanext.artesp.govbr.client_id", "govbr-client-id")
+@pytest.mark.usefixtures("with_plugins")
+def test_logout_first_page_uses_govbr_logout(app):
+    current_user = SimpleNamespace(name="usuario-ldap")
+
+    with patch.object(tk.h, "artesp_auth_provider", return_value="govbr"), patch.object(
+        tk.h, "artesp_is_external_user", return_value=False
+    ):
+        with app.flask_app.test_request_context(
+            "/user/login",
+            environ_base={"CKAN_CURRENT_URL": "/user/login"},
+        ):
+            html = base.render("user/logout_first.html", extra_vars={"current_user": current_user})
+
+    assert 'href="/user/oidc/logout"' in html
+    assert "Log out now" in html
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.ckan_config("ckan.recaptcha.publickey", "legacy-google-key")
+@pytest.mark.usefixtures("with_plugins")
+def test_login_page_does_not_render_captcha(app):
+    resp = app.get(tk.h.url_for("user.login"))
+
+    assert resp.status_code == 200
+    assert "g-recaptcha" not in resp.text
+    assert "Recaptcha" not in resp.text
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.ckan_config("ckanext.artesp.rating.altcha_hmac_secret", "rating-altcha-secret")
+@pytest.mark.usefixtures("with_plugins")
+def test_rating_snippet_renders_altcha_for_comments(app):
+    pkg = SimpleNamespace(
+        id="90986ead-e102-4cc8-affc-d01245497032",
+        name="seed-artesp-dataset-muitos-recursos",
+        title="Dataset de teste com muitos recursos",
+    )
+    current_user = SimpleNamespace(is_authenticated=True)
+
+    with patch("flask_login.utils._get_user", return_value=current_user):
+        with app.flask_app.test_request_context(
+            "/dataset/seed-artesp-dataset-muitos-recursos",
+            environ_overrides={"CKAN_LANG": "pt_BR"},
+        ):
+            html = base.render_snippet("package/snippets/rating.html", pkg=pkg)
+
+    assert "altcha-widget" in html
+    assert "/dataset-rating/comment-captcha/challenge" in html
+    assert 'challenge="/dataset-rating/comment-captcha/challenge"' in html
+    assert "challengeurl=" not in html
+    assert "https://cdn.jsdelivr.net/npm/altcha@3.0.4/dist/main/altcha.i18n.min.js" in html
+    assert "https://cdn.jsdelivr.net/npm/altcha@3.0.4/dist/external/altcha.min.css" in html
+    assert 'class="artesp-rating__comment-captcha"' in html
+    assert 'class="artesp-rating__comment-captcha" hidden' not in html
+    assert "g-recaptcha" not in html
 
 
 @pytest.mark.ckan_config("ckan.plugins", "artesp_theme scheming_datasets")
 @pytest.mark.usefixtures("with_plugins")
-def test_scheming_organization_snippet_keeps_visibility_enabled_for_fixed_artesp_org(
-    app, reset_db
-):
+def test_scheming_organization_snippet_keeps_visibility_enabled_for_fixed_artesp_org(app):
     artesp_org = SimpleNamespace(id="artesp-id", name="artesp", title="ARTESP")
     groups = [
         {"id": "grupo-1", "display_name": "Grupo 1"},
@@ -693,10 +616,7 @@ def test_scheming_organization_snippet_keeps_visibility_enabled_for_fixed_artesp
 
     assert 'data-module="dataset-visibility"' not in html
     assert 'name="owner_org" value="{0}"'.format(artesp_org.id) in html
+    assert '<select id="field-private" name="private" class="form-control form-select">' in html
     assert 'id="field-groups__0__id"' in html
-    assert (
-        '<select id="field-private" name="private" class="form-control form-select">'
-        in html
-    )
-    assert html.index('field-owner_org') < html.index('id="field-groups__0__id"')
+    assert html.index("field-owner_org") < html.index('id="field-groups__0__id"')
     assert html.index('id="field-groups__0__id"') < html.index('id="field-private"')

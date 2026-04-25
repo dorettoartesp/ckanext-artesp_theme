@@ -1,14 +1,13 @@
 """Tests for audit capture from CKAN action signals."""
 
+import logging
 from types import SimpleNamespace
 
 import ckan.model as model
 import pytest
-from ckan.tests import factories
 
 from ckanext.artesp_theme.audit_model import AuditEvent, audit_event_table
 from ckanext.artesp_theme.logic import audit_capture
-from ckanext.artesp_theme.logic import auth_helpers
 
 
 pytestmark = [
@@ -27,13 +26,6 @@ def _ensure_audit_event_table():
     yield
     model.Session.rollback()
     audit_event_table.create(bind=bind, checkfirst=True)
-
-
-def _artesp_org():
-    org = auth_helpers.get_artesp_org()
-    if org:
-        return {"id": org.id, "name": org.name}
-    return factories.Organization(name="artesp")
 
 
 def test_handle_action_succeeded_ignores_untracked_actions():
@@ -88,7 +80,13 @@ def test_handle_action_succeeded_persists_package_create_as_web(monkeypatch):
 
 
 def test_handle_action_succeeded_persists_resource_delete_as_api(monkeypatch):
-    sysadmin = factories.Sysadmin()
+    sysadmin = SimpleNamespace(
+        id="sysadmin-id",
+        name="sysadmin",
+        display_name="Sysadmin",
+        sysadmin=True,
+        plugin_extras={},
+    )
 
     monkeypatch.setattr(
         audit_capture,
@@ -99,6 +97,11 @@ def test_handle_action_succeeded_persists_resource_delete_as_api(monkeypatch):
             environ={"REMOTE_ADDR": "10.0.0.1"},
             user_agent=SimpleNamespace(string="pytest-api"),
         ),
+    )
+    monkeypatch.setattr(
+        audit_capture.auth_helpers,
+        "get_authenticated_user",
+        lambda context: sysadmin,
     )
     monkeypatch.setattr(
         audit_capture.auth_helpers,
@@ -113,7 +116,7 @@ def test_handle_action_succeeded_persists_resource_delete_as_api(monkeypatch):
 
     audit_capture.handle_action_succeeded(
         "resource_delete",
-        context={"user": sysadmin["name"]},
+        context={"user": sysadmin.name},
         data_dict={"id": "res-1"},
         result=None,
     )
@@ -210,15 +213,39 @@ def test_handle_failed_login_persists_failure(monkeypatch):
     assert event.ip_address == "198.51.100.7"
 
 
-def test_package_create_still_succeeds_when_audit_table_is_missing():
+def test_package_create_audit_capture_is_skipped_when_audit_table_is_missing(
+    monkeypatch,
+    caplog,
+):
     bind = model.Session.get_bind()
     audit_event_table.drop(bind=bind, checkfirst=True)
 
-    user = factories.User()
-    org = _artesp_org()
+    user = SimpleNamespace(
+        id="user-id",
+        name="alice",
+        display_name="Alice",
+        sysadmin=False,
+        plugin_extras={},
+    )
 
-    dataset = factories.Dataset(user=user, owner_org=org["id"])
+    monkeypatch.setattr(
+        audit_capture,
+        "request",
+        SimpleNamespace(
+            path="/dataset/new",
+            headers={},
+            environ={"REMOTE_ADDR": "10.0.0.5"},
+            user_agent=SimpleNamespace(string="pytest-browser"),
+        ),
+    )
+    monkeypatch.setattr(audit_capture.auth_helpers, "get_authenticated_user", lambda context: user)
 
-    loaded = model.Package.get(dataset["name"])
-    assert loaded is not None
-    assert loaded.name == dataset["name"]
+    with caplog.at_level(logging.WARNING, logger=audit_capture.__name__):
+        audit_capture.handle_action_succeeded(
+            "package_create",
+            context={"user": user.name},
+            data_dict={"owner_org": "artesp"},
+            result={"id": "pkg-1", "name": "meu-dataset", "title": "Meu Dataset"},
+        )
+
+    assert "Skipping audit event because audit_event table is unavailable" in caplog.text
