@@ -87,6 +87,16 @@
       color: #102a43;
     }
 
+    .audit-table-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .audit-table-toolbar .audit-summary {
+      flex: 1 1 auto;
+    }
+
     .audit-table {
       table-layout: fixed;
       min-width: 1040px;
@@ -96,6 +106,10 @@
     .audit-table td {
       overflow-wrap: anywhere;
       vertical-align: top;
+    }
+
+    .audit-table th::after {
+      content: '' !important;
     }
 
     .audit-table__truncate {
@@ -120,22 +134,39 @@
     .audit-table td:nth-child(4),
     .audit-table th:nth-child(5),
     .audit-table td:nth-child(5) {
-      width: 11%;
+      width: 10%;
+    }
+
+    .audit-table th:nth-child(6),
+    .audit-table td:nth-child(6) {
+      width: 8%;
+    }
+
+    .audit-table th:nth-child(7),
+    .audit-table td:nth-child(7) {
+      width: 6%;
+    }
+
+    .audit-table th:nth-child(8),
+    .audit-table td:nth-child(8) {
+      width: 8%;
     }
 
     .audit-table th:nth-child(9),
     .audit-table td:nth-child(9),
     .audit-table th:nth-child(10),
     .audit-table td:nth-child(10) {
-      width: 16%;
+      width: 13%;
     }
 
     .audit-sort-link {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
       color: inherit;
       text-decoration: none;
+      white-space: nowrap;
+      overflow: hidden;
     }
 
     .audit-sort-link:hover,
@@ -146,10 +177,53 @@
     .audit-sort-link__icon {
       font-size: 11px;
       color: #829ab1;
+      flex-shrink: 0;
     }
 
     .audit-sort-link.is-active .audit-sort-link__icon {
       color: #102a43;
+    }
+
+    /* Column selector */
+    .audit-col-select {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px 14px;
+      padding: 10px 14px;
+      background: #f8fafc;
+      border: 1px solid #d9e2ec;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+
+    .audit-col-select__label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: #52606d;
+      margin-right: 4px;
+    }
+
+    .audit-col-select__item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin: 0;
+      font-weight: 400;
+      color: #243b53;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .audit-col-select__item::after {
+      content: '' !important;
+    }
+
+    .audit-col-select__item input[type=checkbox] {
+      margin: 0;
+      cursor: pointer;
     }
 
     @media (max-width: 991px) {
@@ -177,7 +251,6 @@
         </header>
       {% endblock %}
       <div class="module-content">
-        {% set sort_icons = {'asc': '▲', 'desc': '▼'} %}
         <div class="audit-page">
           <h1>{{ _('Auditoria') }}</h1>
 
@@ -258,8 +331,12 @@
             <strong>{{ item_count }}</strong>
           </p>
 
+          <div class="audit-col-select" id="js-audit-col-select">
+            <span class="audit-col-select__label">{{ _('Colunas') }}</span>
+          </div>
+
           <div class="table-responsive">
-            <table class="table table-striped table-bordered audit-table">
+            <table class="table table-striped table-bordered audit-table" id="js-audit-table">
             <thead>
               <tr>
                 {% for field, label in [
@@ -276,13 +353,15 @@
                 ] %}
                   {% set next_dir = 'asc' if filters.sort_by != field or filters.sort_dir == 'desc' else 'desc' %}
                   {% set is_active = filters.sort_by == field %}
-                  <th>
+                  <th data-col-label="{{ label }}">
                     <a
                       class="audit-sort-link{% if is_active %} is-active{% endif %}"
                       href="{{ h.url_for('artesp_theme.audit_admin', date_from=filters.date_from, date_to=filters.date_to, scope=filters.scope, action=filters.action, provider=filters.provider, channel=filters.channel, user=filters.user, ip=filters.ip, object=filters.object, sort_by=field, sort_dir=next_dir) }}"
                     >
                       <span>{{ label }}</span>
-                      <span class="audit-sort-link__icon">{% if is_active %}{{ sort_icons[filters.sort_dir] }}{% else %}↕{% endif %}</span>
+                      <span class="audit-sort-link__icon">
+                        <i class="fa {% if is_active %}{% if filters.sort_dir == 'asc' %}fa-sort-asc{% else %}fa-sort-desc{% endif %}{% else %}fa-sort{% endif %}"></i>
+                      </span>
                     </a>
                   </th>
                 {% endfor %}
@@ -335,4 +414,52 @@
       </div>
     </article>
   </div>
+
+  <script>
+  (function () {
+    var KEY = 'audit_hidden_cols';
+    var table = document.getElementById('js-audit-table');
+    var wrap  = document.getElementById('js-audit-col-select');
+    if (!table || !wrap) return;
+
+    var headers = Array.from(table.querySelectorAll('thead th'));
+
+    function loadHidden() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) { return []; }
+    }
+    function saveHidden(arr) {
+      try { localStorage.setItem(KEY, JSON.stringify(arr)); } catch (e) {}
+    }
+
+    function applyHidden(hidden) {
+      headers.forEach(function (th, i) {
+        var disp = hidden.indexOf(i) !== -1 ? 'none' : '';
+        table.querySelectorAll('th:nth-child(' + (i+1) + '), td:nth-child(' + (i+1) + ')').forEach(function (el) {
+          el.style.display = disp;
+        });
+      });
+    }
+
+    var hidden = loadHidden();
+    applyHidden(hidden);
+
+    headers.forEach(function (th, i) {
+      var lbl = document.createElement('label');
+      lbl.className = 'audit-col-select__item';
+      var cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.checked = hidden.indexOf(i) === -1;
+      cb.addEventListener('change', function () {
+        var h = loadHidden();
+        if (this.checked) { h = h.filter(function (x) { return x !== i; }); }
+        else if (h.indexOf(i) === -1) { h.push(i); }
+        saveHidden(h);
+        applyHidden(h);
+      });
+      lbl.appendChild(cb);
+      lbl.appendChild(document.createTextNode(' ' + (th.dataset.colLabel || 'Col ' + (i+1))));
+      wrap.appendChild(lbl);
+    });
+  })();
+  </script>
 {% endblock %}
