@@ -120,6 +120,17 @@ def make_middleware(app: Callable, config: Optional[Dict[str, Any]] = None) -> C
                 response.data = pattern.sub(replace_icon, response.data.decode('utf-8')).encode('utf-8')
             return response
 
+        # HTML cache for anonymous home page requests.
+        from ckanext.artesp_theme import home_cache
+
+        @app.before_request
+        def _home_cache_before():
+            return home_cache.get()
+
+        @app.after_request
+        def _home_cache_after(response):
+            return home_cache.store(response)
+
         if app.debug:
             try:
                 from ckan.model.meta import engine

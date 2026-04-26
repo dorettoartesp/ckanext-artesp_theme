@@ -26,6 +26,11 @@ _TRACKED_ACTIONS = {
 
 def handle_action_succeeded(sender, **kwargs):
     action_name = sender
+
+    from ckanext.artesp_theme import home_cache
+    if home_cache.should_invalidate(action_name):
+        home_cache.clear()
+
     event_family = _TRACKED_ACTIONS.get(action_name)
     if not event_family:
         return

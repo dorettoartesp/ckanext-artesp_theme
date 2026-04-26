@@ -137,31 +137,48 @@ def get_featured_datasets(limit=3):
 
 def get_organization_count():
     """Return the number of organizations in the system."""
+    cache_key = 'organization_count'
+    now = time.monotonic()
+    cached = _HELPERS_CACHE.get(cache_key)
+    if cached and cached['expires_at'] > now:
+        return cached['data']
     try:
-        # Use organization_list to get all organizations
         orgs = toolkit.get_action('organization_list')({}, {'all_fields': False})
-        return len(orgs)
+        count = len(orgs)
     except Exception as e:
         log.error(f"Error counting organizations: {str(e)}")
-        # Return 0 if there's an error
         return 0
+    _HELPERS_CACHE[cache_key] = {'data': count, 'expires_at': now + _HELPERS_CACHE_TTL}
+    return count
 
 def get_group_count():
     """Return the number of groups in the system."""
+    cache_key = 'group_count'
+    now = time.monotonic()
+    cached = _HELPERS_CACHE.get(cache_key)
+    if cached and cached['expires_at'] > now:
+        return cached['data']
     try:
-        # Use group_list to get all groups
         groups = toolkit.get_action('group_list')({}, {'all_fields': False})
-        return len(groups)
+        count = len(groups)
     except Exception as e:
         log.error(f"Error counting groups: {str(e)}")
-        # Return 0 if there's an error
         return 0
+    _HELPERS_CACHE[cache_key] = {'data': count, 'expires_at': now + _HELPERS_CACHE_TTL}
+    return count
 
 def get_year():
     """Return the current year."""
     return datetime.datetime.now().year
 
+_LATEST_RESOURCES_TTL = 60  # segundos — mais volátil que contagens
+
 def get_latest_resources(limit=5, org_id=None, dataset_id=None):
+    cache_key = ('latest_resources', limit, org_id, dataset_id)
+    now = time.monotonic()
+    cached = _HELPERS_CACHE.get(cache_key)
+    if cached and cached['expires_at'] > now:
+        return cached['data']
     results = []
     try:
         query = (
@@ -182,8 +199,10 @@ def get_latest_resources(limit=5, org_id=None, dataset_id=None):
                 'dataset': {'title': pkg_title, 'name': pkg_name},
                 'parent_dataset_title': pkg_title,
             })
-    except Exception as e:
+    except Exception:
         log.error("[ckanext-artesp_theme] Failed to get latest resources", exc_info=True)
+        return results
+    _HELPERS_CACHE[cache_key] = {'data': results, 'expires_at': now + _LATEST_RESOURCES_TTL}
     return results
 
 def get_featured_groups(limit=4):

@@ -96,6 +96,9 @@ class TestFixFontawesomeIcon:
 # ---------------------------------------------------------------------------
 
 class TestGetPackageCount:
+    def setup_method(self):
+        helpers._HELPERS_CACHE.clear()
+
     def test_returns_count_on_success(self, monkeypatch):
         monkeypatch.setattr(
             helpers.toolkit, "get_action",
@@ -160,6 +163,9 @@ class TestGetLatestDatasets:
 # ---------------------------------------------------------------------------
 
 class TestGetFeaturedDatasets:
+    def setup_method(self):
+        helpers._HELPERS_CACHE.clear()
+
     def test_returns_datasets(self, monkeypatch):
         fake = [{"id": "feat-1"}]
         monkeypatch.setattr(
@@ -183,6 +189,9 @@ class TestGetFeaturedDatasets:
 # ---------------------------------------------------------------------------
 
 class TestGetOrganizationCount:
+    def setup_method(self):
+        helpers._HELPERS_CACHE.clear()
+
     def test_returns_count(self, monkeypatch):
         monkeypatch.setattr(
             helpers.toolkit, "get_action",
@@ -205,6 +214,9 @@ class TestGetOrganizationCount:
 # ---------------------------------------------------------------------------
 
 class TestGetGroupCount:
+    def setup_method(self):
+        helpers._HELPERS_CACHE.clear()
+
     def test_returns_count(self, monkeypatch):
         monkeypatch.setattr(
             helpers.toolkit, "get_action",
