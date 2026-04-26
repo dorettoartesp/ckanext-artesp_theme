@@ -3,9 +3,7 @@
 The FontAwesomeFixMiddleware is pure Python with no CKAN imports, so
 these tests do not require CKAN fixtures.
 """
-from unittest.mock import MagicMock, call
-
-import pytest
+from unittest.mock import MagicMock
 
 from ckanext.artesp_theme.middleware import FontAwesomeFixMiddleware, make_middleware
 
@@ -157,16 +155,27 @@ class TestFontAwesomeFixMiddlewareCall:
 # ---------------------------------------------------------------------------
 
 class TestMakeMiddleware:
-    def test_flask_app_returns_app_with_handler(self):
-        """Flask app (has after_request) → registers handler and returns same app."""
+    def test_flask_app_returns_app_with_handlers_in_cache_safe_order(self):
+        """Flask app registers cache and icon hooks in LIFO-safe order."""
         fake_flask_app = MagicMock()
+        fake_flask_app.debug = False
+        fake_flask_app.before_request = MagicMock(side_effect=lambda f: f)
         fake_flask_app.after_request = MagicMock(side_effect=lambda f: f)
         # after_request is truthy → Flask path
         assert hasattr(fake_flask_app, "after_request")
 
         result = make_middleware(fake_flask_app)
         assert result is fake_flask_app
-        fake_flask_app.after_request.assert_called_once()
+        fake_flask_app.before_request.assert_called_once()
+
+        after_request_handlers = [
+            call_args.args[0].__name__
+            for call_args in fake_flask_app.after_request.call_args_list
+        ]
+        assert after_request_handlers == [
+            "_home_cache_after",
+            "fix_fontawesome_icons",
+        ]
 
     def test_non_flask_app_returns_wsgi_middleware(self):
         """Non-Flask app → returns FontAwesomeFixMiddleware wrapping it."""
@@ -187,20 +196,59 @@ class TestMakeMiddleware:
 # ---------------------------------------------------------------------------
 
 class TestAfterRequestHandler:
-    def test_html_response_gets_icons_fixed(self):
-        """The registered after_request handler fixes double-encoded icons in HTML."""
-        registered_handler = None
+    def test_home_cache_stores_html_after_icons_are_fixed(self, monkeypatch):
+        """Flask's LIFO hook execution stores already-fixed homepage HTML."""
+        registered_handlers = []
 
         def capture_handler(f):
-            nonlocal registered_handler
-            registered_handler = f
+            registered_handlers.append(f)
             return f
 
         fake_flask_app = MagicMock()
+        fake_flask_app.debug = False
         fake_flask_app.after_request = capture_handler
 
         make_middleware(fake_flask_app)
-        assert registered_handler is not None
+
+        from ckanext.artesp_theme import home_cache
+
+        stored_bodies = []
+
+        def store_response(response):
+            stored_bodies.append(response.data.decode("utf-8"))
+            return response
+
+        monkeypatch.setattr(home_cache, "store", store_response)
+
+        double_encoded = (
+            '&amp;lt;i class=&amp;quot;fa fa-check&amp;quot;&amp;gt;'
+            '&amp;lt;/i&amp;gt;'
+        )
+        fake_response = MagicMock()
+        fake_response.content_type = "text/html; charset=utf-8"
+        fake_response.data = f"<html><body>{double_encoded}</body></html>".encode("utf-8")
+
+        for handler in reversed(registered_handlers):
+            fake_response = handler(fake_response)
+
+        assert stored_bodies == [
+            '<html><body><i class="fa fa-check"></i></body></html>'
+        ]
+
+    def test_html_response_gets_icons_fixed(self):
+        """The registered after_request handler fixes double-encoded icons in HTML."""
+        registered_handlers = {}
+
+        def capture_handler(f):
+            registered_handlers[f.__name__] = f
+            return f
+
+        fake_flask_app = MagicMock()
+        fake_flask_app.debug = False
+        fake_flask_app.after_request = capture_handler
+
+        make_middleware(fake_flask_app)
+        registered_handler = registered_handlers["fix_fontawesome_icons"]
 
         # Build a fake Flask response
         double_encoded = (
@@ -221,17 +269,18 @@ class TestAfterRequestHandler:
 
     def test_non_html_response_is_not_modified(self):
         """after_request handler skips non-HTML content-types."""
-        registered_handler = None
+        registered_handlers = {}
 
         def capture_handler(f):
-            nonlocal registered_handler
-            registered_handler = f
+            registered_handlers[f.__name__] = f
             return f
 
         fake_flask_app = MagicMock()
+        fake_flask_app.debug = False
         fake_flask_app.after_request = capture_handler
 
         make_middleware(fake_flask_app)
+        registered_handler = registered_handlers["fix_fontawesome_icons"]
 
         json_body = b'{"key": "value"}'
         fake_response = MagicMock()

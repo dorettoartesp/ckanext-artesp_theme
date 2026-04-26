@@ -105,7 +105,19 @@ def make_middleware(app: Callable, config: Optional[Dict[str, Any]] = None) -> C
     """
     # Check if the app is a Flask app
     if hasattr(app, 'after_request'):
-        # If it's a Flask app, we need to modify the response after it's generated
+        # Flask executes after_request hooks in LIFO order, so register
+        # _home_cache_after first so it runs AFTER fix_fontawesome_icons,
+        # ensuring the cached HTML is already icon-fixed.
+        from ckanext.artesp_theme import home_cache
+
+        @app.before_request
+        def _home_cache_before():
+            return home_cache.get()
+
+        @app.after_request
+        def _home_cache_after(response):
+            return home_cache.store(response)
+
         @app.after_request
         def fix_fontawesome_icons(response):
             if response.content_type and 'text/html' in response.content_type.lower():
@@ -119,17 +131,6 @@ def make_middleware(app: Callable, config: Optional[Dict[str, Any]] = None) -> C
 
                 response.data = pattern.sub(replace_icon, response.data.decode('utf-8')).encode('utf-8')
             return response
-
-        # HTML cache for anonymous home page requests.
-        from ckanext.artesp_theme import home_cache
-
-        @app.before_request
-        def _home_cache_before():
-            return home_cache.get()
-
-        @app.after_request
-        def _home_cache_after(response):
-            return home_cache.store(response)
 
         if app.debug:
             try:
