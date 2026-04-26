@@ -47,24 +47,33 @@ def _package(user=None, owner_org="artesp"):
         state="active",
     )
     model.Session.add(package)
-    model.Session.commit()
+    model.Session.flush()
     return {"id": package.id, "name": package.name, "title": package.title}
 
 
 def _user(prefix="rating-user"):
     suffix = uuid.uuid4().hex
-    return factories.User(
+    user = model.User(
         name="{}-{}".format(prefix, suffix[:10]),
         email="{}-{}@ckan.example.com".format(prefix, suffix),
+        state="active",
     )
+    model.Session.add(user)
+    model.Session.flush()
+    return {"id": user.id, "name": user.name, "email": user.email}
 
 
 def _sysadmin(prefix="rating-sysadmin"):
     suffix = uuid.uuid4().hex
-    return factories.Sysadmin(
+    user = model.User(
         name="{}-{}".format(prefix, suffix[:10]),
         email="{}-{}@ckan.example.com".format(prefix, suffix),
+        state="active",
+        sysadmin=True,
     )
+    model.Session.add(user)
+    model.Session.flush()
+    return {"id": user.id, "name": user.name, "email": user.email}
 
 
 def test_worker_sends_notifications_to_active_recipients(monkeypatch, artesp_org):
@@ -80,7 +89,7 @@ def test_worker_sends_notifications_to_active_recipients(monkeypatch, artesp_org
         comment="Helpful comment",
     )
     model.Session.add(rating)
-    model.Session.commit()
+    model.Session.flush()
 
     sent_to = []
 
@@ -138,7 +147,7 @@ def test_worker_returns_early_when_rating_has_no_comment(monkeypatch, artesp_org
         comment="",  # empty comment
     )
     model.Session.add(rating)
-    model.Session.commit()
+    model.Session.flush()
 
     called = []
     monkeypatch.setattr(
@@ -164,7 +173,7 @@ def test_worker_logs_and_returns_when_no_recipients(monkeypatch, artesp_org):
         comment="Good data",
     )
     model.Session.add(rating)
-    model.Session.commit()
+    model.Session.flush()
 
     # Patch so _resolve_recipients returns empty list
     monkeypatch.setattr(rating_notifications, "_resolve_recipients", lambda pkg_dict, user_id: [])
@@ -204,7 +213,7 @@ def test_worker_continues_after_mailer_exception(monkeypatch, artesp_org):
         comment="Feedback here",
     )
     model.Session.add(rating)
-    model.Session.commit()
+    model.Session.flush()
 
     recipient_user = model.User.get(creator["id"])
 
@@ -244,7 +253,7 @@ def test_resolve_recipients_skips_inactive_user(monkeypatch, artesp_org):
     deactivated_obj = model.User.get(deactivated_user["id"])
     deactivated_obj.state = "deleted"
     model.Session.add(deactivated_obj)
-    model.Session.commit()
+    model.Session.flush()
 
     pkg_dict = {
         "id": "pkg-id",
