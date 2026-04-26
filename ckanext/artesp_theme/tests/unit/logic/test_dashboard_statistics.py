@@ -15,10 +15,14 @@ def _dataset(
     group_title,
     created,
     resources,
+    group_id=None,
 ):
     groups = []
     if group_name:
-        groups.append({"name": group_name, "title": group_title})
+        group = {"name": group_name, "title": group_title}
+        if group_id:
+            group["id"] = group_id
+        groups.append(group)
 
     return {
         "name": name,
@@ -30,8 +34,8 @@ def _dataset(
     }
 
 
-def _install_fake_actions(monkeypatch, datasets):
-    groups = [
+def _install_fake_actions(monkeypatch, datasets, groups=None):
+    groups = groups or [
         {"name": "rodoviario", "title": "Rodoviário"},
         {"name": "legislacao", "title": "Legislação"},
         {"name": "aeroportuario", "title": "Aeroportuário"},
@@ -167,6 +171,60 @@ def test_dashboard_statistics_supports_ungrouped_and_all_period(monkeypatch):
     assert payload["charts"]["formats"] == [
         {"label": "ZIP", "value": 1, "percent": 100.0}
     ]
+
+
+def test_dashboard_statistics_canonicalizes_stale_group_labels(monkeypatch):
+    groups = [
+        {"id": "theme-road", "name": "rodovias", "title": "Rodovias"},
+    ]
+    datasets = [
+        _dataset(
+            "ds-transp",
+            "Transporte antigo",
+            "transp-rodoviario",
+            "Transp. Rodoviário",
+            "2026-03-01T00:00:00",
+            [{"format": "CSV", "state": "active"}] * 2,
+            group_id="theme-road",
+        ),
+        _dataset(
+            "ds-rodo",
+            "Rodoviário intermediário",
+            "rodoviario",
+            "Rodoviário",
+            "2026-03-02T00:00:00",
+            [{"format": "CSV", "state": "active"}] * 3,
+            group_id="theme-road",
+        ),
+        _dataset(
+            "ds-rodovias",
+            "Rodovias atual",
+            "rodovias",
+            "Rodovias",
+            "2026-03-03T00:00:00",
+            [{"format": "CSV", "state": "active"}],
+            group_id="theme-road",
+        ),
+    ]
+    _install_fake_actions(monkeypatch, datasets, groups=groups)
+
+    payload = dashboard_statistics.get_dashboard_statistics(
+        {"theme": "rodovias", "period": "all"}
+    )
+
+    assert payload["kpis"]["dataset_count"] == 3
+    assert payload["kpis"]["resource_count"] == 6
+    assert payload["filters"]["available_themes"] == [
+        {"value": "all", "label": "Todos os temas"},
+        {"value": "rodovias", "label": "Rodovias"},
+    ]
+    assert payload["charts"]["resources_by_theme"] == [
+        {"label": "Rodovias", "value": 6, "percent": 100.0}
+    ]
+    assert payload["charts"]["datasets_by_theme"] == [
+        {"label": "Rodovias", "value": 3, "percent": 100.0}
+    ]
+    assert {row["theme"] for row in payload["table_rows"]} == {"Rodovias"}
 
 
 def test_dashboard_statistics_cache_is_scoped_by_filter(monkeypatch):

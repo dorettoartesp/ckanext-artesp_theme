@@ -157,7 +157,7 @@ def _available_theme_options(groups, datasets):
     return options
 
 
-def _get_rating_stats(package_ids, dataset_lookup):
+def _get_rating_stats(package_ids, dataset_lookup, group_lookup=None):
     from ckanext.artesp_theme.model import DatasetRating
     from ckanext.artesp_theme.logic.rating import RATING_CRITERIA
     import ckan.model as ckan_model
@@ -206,12 +206,8 @@ def _get_rating_stats(package_ids, dataset_lookup):
         ds = dataset_lookup.get(pkg_id)
         if not ds:
             continue
-        groups_for_dataset = ds.get("groups", [])
-        sorted_groups = sorted(
-            filter(None, (_group_label(g) for g in groups_for_dataset)),
-            key=lambda v: v.lower(),
-        )
-        theme = sorted_groups[0] if sorted_groups else "Sem grupo"
+        theme_info = _dataset_primary_theme(ds, group_lookup)
+        theme = theme_info["label"]
         avg = round(float(sum(scores)) / float(len(scores)), 2)
         top_rated.append({
             "name": ds.get("name"),
@@ -247,16 +243,20 @@ def _empty_rating_stats():
 
 
 def _build_dashboard_statistics_payload(datasets, groups, organizations, filters, now):
+    group_lookup = _build_group_lookup(groups)
     filtered_datasets = [
-        dataset for dataset in datasets if _dataset_matches_filters(dataset, filters, now)
+        dataset
+        for dataset in datasets
+        if _dataset_matches_filters(dataset, filters, now, group_lookup)
     ]
     theme_metrics = {}
 
     for group in groups:
-        label = _group_label(group)
-        if label:
-            theme_metrics[label] = {
-                "label": label,
+        theme_info = _canonical_group_info(group, group_lookup)
+        if theme_info and theme_info["label"]:
+            theme_metrics[theme_info["key"]] = {
+                "key": theme_info["key"],
+                "label": theme_info["label"],
                 "dataset_count": 0,
                 "resource_count": 0,
             }
@@ -268,19 +268,21 @@ def _build_dashboard_statistics_payload(datasets, groups, organizations, filters
     datasets_without_theme = 0
 
     for dataset in filtered_datasets:
-        groups_for_dataset = dataset.get("groups", [])
-        sorted_groups = sorted(
-            filter(None, (_group_label(group) for group in groups_for_dataset)),
-            key=lambda value: value.lower(),
-        )
-        theme_label = sorted_groups[0] if sorted_groups else "Sem grupo"
+        theme_info = _dataset_primary_theme(dataset, group_lookup)
+        theme_key = theme_info["key"]
+        theme_label = theme_info["label"]
 
         if theme_label == "Sem grupo":
             datasets_without_theme += 1
 
         theme_metrics.setdefault(
-            theme_label,
-            {"label": theme_label, "dataset_count": 0, "resource_count": 0},
+            theme_key,
+            {
+                "key": theme_key,
+                "label": theme_label,
+                "dataset_count": 0,
+                "resource_count": 0,
+            },
         )
 
         active_resources = [
@@ -290,8 +292,8 @@ def _build_dashboard_statistics_payload(datasets, groups, organizations, filters
         ]
         resource_count = len(active_resources)
 
-        theme_metrics[theme_label]["dataset_count"] += 1
-        theme_metrics[theme_label]["resource_count"] += resource_count
+        theme_metrics[theme_key]["dataset_count"] += 1
+        theme_metrics[theme_key]["resource_count"] += resource_count
         total_resources += resource_count
 
         for resource in active_resources:
@@ -331,8 +333,8 @@ def _build_dashboard_statistics_payload(datasets, groups, organizations, filters
     theme_count = len([_group_label(group) for group in groups if _group_label(group)])
     empty_theme_count = sum(
         1
-        for label, metrics in theme_metrics.items()
-        if label != "Sem grupo" and metrics["dataset_count"] == 0
+        for metrics in theme_metrics.values()
+        if metrics["label"] != "Sem grupo" and metrics["dataset_count"] == 0
     )
     average_resources = (
         float(total_resources) / float(dataset_count) if dataset_count else 0.0
@@ -366,7 +368,11 @@ def _build_dashboard_statistics_payload(datasets, groups, organizations, filters
     ]
 
     dataset_lookup = {d["id"]: d for d in filtered_datasets if d.get("id")}
-    rating_stats = _get_rating_stats(list(dataset_lookup.keys()), dataset_lookup)
+    rating_stats = _get_rating_stats(
+        list(dataset_lookup.keys()),
+        dataset_lookup,
+        group_lookup,
+    )
 
     table_rows.sort(key=lambda row: (-row["resource_count"], row["title"].lower()))
     for index, row in enumerate(table_rows, start=1):
@@ -388,9 +394,9 @@ def _build_dashboard_statistics_payload(datasets, groups, organizations, filters
     largest_dataset = table_rows[0] if table_rows else None
     top_format = format_series[0] if format_series else None
     topic_labels = [
-        label
-        for label in sorted(theme_metrics, key=lambda value: value.lower())
-        if label != "Sem grupo"
+        item["label"]
+        for item in sorted(theme_metrics.values(), key=lambda value: value["label"].lower())
+        if item["label"] != "Sem grupo"
     ]
     if datasets_without_theme:
         topic_labels.append("Sem grupo")
@@ -432,8 +438,8 @@ def _build_dashboard_statistics_payload(datasets, groups, organizations, filters
     }
 
 
-def _dataset_matches_filters(dataset, filters, now):
-    if not _dataset_matches_theme(dataset, filters["theme"]):
+def _dataset_matches_filters(dataset, filters, now, group_lookup=None):
+    if not _dataset_matches_theme(dataset, filters["theme"], group_lookup):
         return False
 
     created = _parse_datetime(
@@ -443,12 +449,81 @@ def _dataset_matches_filters(dataset, filters, now):
     return period_start is None or (created is not None and created >= period_start)
 
 
-def _dataset_matches_theme(dataset, theme):
+def _dataset_matches_theme(dataset, theme, group_lookup=None):
     if theme == DEFAULT_THEME:
         return True
     if theme == UNGROUPED_THEME:
         return not dataset.get("groups")
-    return any(group.get("name") == theme for group in dataset.get("groups", []))
+    return any(info["key"] == theme for info in _dataset_theme_infos(dataset, group_lookup))
+
+
+def _build_group_lookup(groups):
+    by_id = {}
+    by_name = {}
+    for group in groups:
+        info = _canonical_group_info(group)
+        if not info:
+            continue
+        group_id = info.get("id")
+        group_name = info.get("name")
+        if group_id:
+            by_id[group_id] = info
+        if group_name:
+            by_name[group_name] = info
+    return {"by_id": by_id, "by_name": by_name}
+
+
+def _canonical_group_info(group_dict, group_lookup=None):
+    if not group_dict:
+        return None
+
+    group_id = group_dict.get("id")
+    group_name = group_dict.get("name")
+    if group_lookup:
+        canonical = (
+            group_lookup["by_id"].get(group_id)
+            or group_lookup["by_name"].get(group_name)
+        )
+        if canonical:
+            return canonical
+
+    label = _group_label(group_dict)
+    key = group_name or group_id or label
+    if not key or not label:
+        return None
+    return {
+        "id": group_id,
+        "name": group_name,
+        "key": key,
+        "label": label,
+    }
+
+
+def _dataset_theme_infos(dataset, group_lookup=None):
+    infos = []
+    seen_keys = set()
+    for group in dataset.get("groups", []):
+        info = _canonical_group_info(group, group_lookup)
+        if not info:
+            continue
+        key = info["key"]
+        if key in seen_keys:
+            continue
+        seen_keys.add(key)
+        infos.append(info)
+    return sorted(infos, key=lambda item: item["label"].lower())
+
+
+def _dataset_primary_theme(dataset, group_lookup=None):
+    theme_infos = _dataset_theme_infos(dataset, group_lookup)
+    if theme_infos:
+        return theme_infos[0]
+    return {
+        "id": None,
+        "name": UNGROUPED_THEME,
+        "key": UNGROUPED_THEME,
+        "label": "Sem grupo",
+    }
 
 
 def _period_start(period, now):
