@@ -489,6 +489,102 @@ class TestUserVerifyBranches:
             request_path="/user/verify",
         )
 
+    def test_returns_login_failed_on_validation_error_from_get_or_create(self):
+        import ckan.plugins.toolkit as real_tk
+
+        class MultipleMatchError(Exception):
+            pass
+
+        class UserConflictError(Exception):
+            pass
+
+        validation_error = real_tk.ValidationError(
+            {"email": ["O endereço de e-mail 'admin@artesp.sp.gov.br' pertence a um usuário registrado."]}
+        )
+        mock_helpers = MagicMock()
+        mock_helpers.check_ldap_password.return_value = True
+        mock_helpers.get_or_create_ldap_user.side_effect = validation_error
+        mock_helpers.login_failed.return_value = "login-failed"
+        fake_search = types.SimpleNamespace(
+            find_ldap_user=MagicMock(return_value={"cn": "cn=Alice"})
+        )
+        fake_exceptions = types.SimpleNamespace(
+            MultipleMatchError=MultipleMatchError,
+            UserConflictError=UserConflictError,
+        )
+        fake_routes = types.SimpleNamespace(_helpers=mock_helpers)
+
+        with patch.dict(
+            sys.modules,
+            {
+                "ckanext.ldap.lib.exceptions": fake_exceptions,
+                "ckanext.ldap.lib.search": fake_search,
+                "ckanext.ldap.routes": fake_routes,
+            },
+        ), patch.object(controllers, "toolkit") as mock_toolkit, patch.object(
+            controllers, "audit_capture"
+        ):
+            mock_toolkit.request.values = {"login": "alice", "password": "secret"}
+            mock_toolkit.config = {"ckanext.ldap.ckan_fallback": False}
+            mock_toolkit.ValidationError = real_tk.ValidationError
+            mock_toolkit._ = lambda msg: msg
+            result = controllers._user_verify()
+
+        assert result == "login-failed"
+        assert "Conflito de conta" in mock_helpers.login_failed.call_args.kwargs["error"]
+
+    def test_records_audit_failure_on_validation_error_from_get_or_create(self):
+        import ckan.plugins.toolkit as real_tk
+
+        class MultipleMatchError(Exception):
+            pass
+
+        class UserConflictError(Exception):
+            pass
+
+        validation_error = real_tk.ValidationError(
+            {"email": ["O endereço de e-mail 'admin@artesp.sp.gov.br' pertence a um usuário registrado."]}
+        )
+        mock_helpers = MagicMock()
+        mock_helpers.check_ldap_password.return_value = True
+        mock_helpers.get_or_create_ldap_user.side_effect = validation_error
+        mock_helpers.login_failed.return_value = "login-failed"
+        fake_search = types.SimpleNamespace(
+            find_ldap_user=MagicMock(return_value={"cn": "cn=Alice"})
+        )
+        fake_exceptions = types.SimpleNamespace(
+            MultipleMatchError=MultipleMatchError,
+            UserConflictError=UserConflictError,
+        )
+        fake_routes = types.SimpleNamespace(_helpers=mock_helpers)
+
+        with patch.dict(
+            sys.modules,
+            {
+                "ckanext.ldap.lib.exceptions": fake_exceptions,
+                "ckanext.ldap.lib.search": fake_search,
+                "ckanext.ldap.routes": fake_routes,
+            },
+        ), patch.object(controllers, "toolkit") as mock_toolkit, patch.object(
+            controllers, "audit_capture"
+        ) as mock_audit_capture:
+            mock_toolkit.request.values = {"login": "alice", "password": "secret"}
+            mock_toolkit.config = {"ckanext.ldap.ckan_fallback": False}
+            mock_toolkit.ValidationError = real_tk.ValidationError
+            mock_toolkit._ = lambda msg: msg
+            result = controllers._user_verify()
+
+        assert result == "login-failed"
+        mock_audit_capture.record_auth_event.assert_called_once_with(
+            event_action="login_failure",
+            success=False,
+            auth_provider="ldap",
+            actor_name="alice",
+            actor_identifier="alice",
+            request_path="/user/verify",
+            details={"reason": "ValidationError", "error": str(validation_error.error_dict)},
+        )
+
     def test_returns_login_failed_when_password_payload_is_missing(self):
         class MultipleMatchError(Exception):
             pass

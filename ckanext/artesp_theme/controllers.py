@@ -128,6 +128,19 @@ def _user_verify():
                         details={"reason": "UserConflictError"},
                     )
                     return _helpers.login_failed(error=str(e))
+                except toolkit.ValidationError as e:
+                    audit_capture.record_auth_event(
+                        event_action="login_failure",
+                        success=False,
+                        auth_provider="ldap",
+                        actor_name=login,
+                        actor_identifier=login,
+                        request_path="/user/verify",
+                        details={"reason": "ValidationError", "error": str(e.error_dict)},
+                    )
+                    return _helpers.login_failed(
+                        error=toolkit._('Conflito de conta. Por favor, entre em contato com o administrador do site.')
+                    )
                 audit_capture.record_auth_event(
                     event_action="login_success",
                     success=True,
