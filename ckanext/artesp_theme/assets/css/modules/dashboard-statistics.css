@@ -33,7 +33,6 @@
   margin: 0;
 }
 
-.dashboard-statistics-page .dashboard-statistics__hero,
 .dashboard-statistics-page .dashboard-statistics__panel,
 .dashboard-statistics-page .dashboard-statistics__stat-card,
 .dashboard-statistics-page .dashboard-statistics__filters,
@@ -44,10 +43,8 @@
 }
 
 .dashboard-statistics-page .dashboard-statistics__hero {
-  border-top: 4px solid var(--artesp-red) !important;
-  box-shadow: var(--artesp-shadow);
   margin: 0 0 24px;
-  padding: 20px;
+  padding: 0;
 }
 
 .dashboard-statistics-page .dashboard-statistics__brandline {
@@ -469,10 +466,6 @@
 }
 
 @media (min-width: 760px) {
-  .dashboard-statistics-page .dashboard-statistics__hero {
-    padding: 24px 28px;
-  }
-
   .dashboard-statistics-page .dashboard-statistics__filters {
     padding: 18px;
   }
