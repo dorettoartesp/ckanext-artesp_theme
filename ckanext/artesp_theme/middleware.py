@@ -1,6 +1,9 @@
+import logging
 import re
 from markupsafe import Markup
 from typing import Callable, Dict, Any, Optional
+
+log = logging.getLogger(__name__)
 
 
 class FontAwesomeFixMiddleware:
@@ -116,6 +119,14 @@ def make_middleware(app: Callable, config: Optional[Dict[str, Any]] = None) -> C
 
                 response.data = pattern.sub(replace_icon, response.data.decode('utf-8')).encode('utf-8')
             return response
+
+        if app.debug:
+            try:
+                from ckan.model.meta import engine
+                from ckanext.artesp_theme.dev_toolbar import install as _install_dev_toolbar
+                _install_dev_toolbar(engine, app)
+            except Exception as exc:
+                log.debug("dev_toolbar init failed: %s", exc)
 
         # Return the Flask app with the after_request handler
         return app

@@ -64,13 +64,18 @@ def fix_fontawesome_icon(icon_name):
 
 def get_package_count():
     """Return the number of packages (datasets) in the system."""
+    cache_key = 'package_count'
+    now = time.monotonic()
+    cached = _HELPERS_CACHE.get(cache_key)
+    if cached and cached['expires_at'] > now:
+        return cached['data']
     try:
-        # Use package_search to get the total count
         result = toolkit.get_action('package_search')({}, {'rows': 0})
-        return result.get('count', 0)
+        count = result.get('count', 0)
     except Exception:
-        # Return 0 if there's an error
         return 0
+    _HELPERS_CACHE[cache_key] = {'data': count, 'expires_at': now + _HELPERS_CACHE_TTL}
+    return count
 
 
 def get_resource_count():
@@ -109,19 +114,24 @@ def get_featured_datasets(limit=3):
     2. All other datasets.
     Within each group, datasets are sorted by most recently modified.
     """
+    cache_key = ('featured_datasets', limit)
+    now = time.monotonic()
+    cached = _HELPERS_CACHE.get(cache_key)
+    if cached and cached['expires_at'] > now:
+        return cached['data']
     try:
-        # Search for all datasets, sorting by featured status and then modification date
         search_params = {
             'sort': 'featuredDataset desc, metadata_modified desc',
             'rows': limit,
             'include_private': False
         }
         datasets = toolkit.get_action('package_search')({}, search_params)
-        return datasets.get('results', [])
+        result = datasets.get('results', [])
     except Exception as e:
         log.error(f"Error getting featured datasets: {str(e)}")
-        # Return empty list if there's an error
         return []
+    _HELPERS_CACHE[cache_key] = {'data': result, 'expires_at': now + _HELPERS_CACHE_TTL}
+    return result
     
 
 

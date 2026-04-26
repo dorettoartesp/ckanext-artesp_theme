@@ -1,3 +1,4 @@
+import time as _time
 from urllib.parse import urlparse
 
 import ckan.model as model
@@ -387,6 +388,41 @@ def dataset_rating_summary(context, data_dict):
     }
 
 
+# ── Home-page package_search cache ──────────────────────────────────────────
+# CKAN core's home view runs package_search(sort='view_recent desc', rows=4)
+# on every request. This sort requires Solr to compute view counts across all
+# datasets and is the dominant TTFB contributor in production. Cache it for 60s.
+
+_PACKAGE_SEARCH_CACHE: dict = {}
+_PACKAGE_SEARCH_CACHE_TTL = 60  # seconds
+
+
+@tk.chained_action
+def package_search(up_func, context, data_dict):
+    is_home_query = (
+        data_dict.get("sort") == "view_recent desc"
+        and data_dict.get("rows") == 4
+        and data_dict.get("fq") == 'capacity:"public"'
+    )
+    if not is_home_query:
+        return up_func(context, data_dict)
+
+    now = _time.monotonic()
+    cached = _PACKAGE_SEARCH_CACHE.get("home_recent")
+    if cached and cached["expires_at"] > now:
+        # CKAN's action wrapper requires check_access to be called even when
+        # we short-circuit and return cached data without invoking up_func.
+        tk.check_access("package_search", context, data_dict)
+        return cached["data"]
+
+    result = up_func(context, data_dict)
+    _PACKAGE_SEARCH_CACHE["home_recent"] = {
+        "data": result,
+        "expires_at": now + _PACKAGE_SEARCH_CACHE_TTL,
+    }
+    return result
+
+
 def get_actions():
     return {
         "artesp_theme_dashboard_statistics": artesp_theme_dashboard_statistics,
@@ -398,4 +434,5 @@ def get_actions():
         "dataset_rating_upsert": dataset_rating_upsert,
         "dataset_rating_show": dataset_rating_show,
         "dataset_rating_summary": dataset_rating_summary,
+        "package_search": package_search,
     }
