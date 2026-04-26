@@ -20,6 +20,7 @@ class TestGetLatestResources:
 
     @pytest.fixture(autouse=True)
     def _cleanup_latest_resources_rows(self):
+        helpers._HELPERS_CACHE.clear()
         (
             model.Session.query(model.Resource)
             .filter(model.Resource.url.like("https://example.com/latestres-%"))
@@ -32,6 +33,7 @@ class TestGetLatestResources:
         )
         model.Session.commit()
         yield
+        helpers._HELPERS_CACHE.clear()
         (
             model.Session.query(model.Resource)
             .filter(model.Resource.url.like("https://example.com/latestres-%"))
@@ -44,12 +46,12 @@ class TestGetLatestResources:
         )
         model.Session.commit()
 
-    def _package(self, title="Dataset", owner_org="artesp"):
+    def _package(self, title="Dataset", owner_org="artesp", state="active"):
         package = model.Package(
             name="latestres-dataset-{}".format(uuid.uuid4().hex[:8]),
             title=title,
             owner_org=owner_org,
-            state="active",
+            state=state,
         )
         model.Session.add(package)
         model.Session.flush()
@@ -104,7 +106,7 @@ class TestGetLatestResources:
         assert all(item["resource"].package_id == dataset.id for item in results)
 
     def test_filters_latest_resources_by_org_id(self, monkeypatch):
-        artesp_org_id = "artesp-org"
+        artesp_org_id = "latestres-org-{}".format(uuid.uuid4().hex[:8])
         dataset = self._package(owner_org=artesp_org_id)
         other_package = self._package(title="Other org dataset", owner_org="other-org")
 
@@ -117,19 +119,11 @@ class TestGetLatestResources:
         assert results
         assert all(item["resource"].package_id == dataset.id for item in results)
 
-    def test_skips_resource_when_package_lookup_fails(self, monkeypatch):
-        dataset = self._package()
-        self._resource(dataset, "broken-package-resource")
+    def test_skips_resource_when_parent_package_is_inactive(self):
+        dataset = self._package(state="deleted")
+        self._resource(dataset, "inactive-package-resource", seconds=86400)
 
-        monkeypatch.setattr(
-            helpers.toolkit,
-            "get_action",
-            lambda name: (
-                lambda context, data_dict: (_ for _ in ()).throw(Exception("boom"))
-            ),
-        )
-
-        assert helpers.get_latest_resources(limit=5) == []
+        assert helpers.get_latest_resources(limit=5, dataset_id=dataset.id) == []
 
     def test_returns_empty_when_query_raises(self):
         with patch(

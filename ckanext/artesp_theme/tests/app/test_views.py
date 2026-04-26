@@ -315,7 +315,7 @@ def _assert_statistics_pages(app):
     assert "Indicadores principais do portal" in resp.text
     assert "Rodoviário concentra 20 recurso(s)" in resp.text
     assert 'data-artesp-style="official-portal"' in resp.text
-    assert "dashboard-statistics__brandline" in resp.text
+    assert "dashboard-statistics__brandline" not in resp.text
     assert "dashboard-statistics__section-title" in resp.text
     assert "dashboard-statistics__filter-icon" in resp.text
     assert "dashboard-statistics__stat-icon fa fa-database" in resp.text

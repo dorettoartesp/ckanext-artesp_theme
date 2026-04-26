@@ -182,7 +182,7 @@ def get_latest_resources(limit=5, org_id=None, dataset_id=None):
     results = []
     try:
         query = (
-            Session.query(Resource, Package.title, Package.name)
+            Session.query(Resource, Package.id, Package.title, Package.name)
             .join(Package, Resource.package_id == Package.id)
             .filter(Resource.state == 'active')
             .filter(Package.state == 'active')
@@ -193,10 +193,10 @@ def get_latest_resources(limit=5, org_id=None, dataset_id=None):
         elif org_id:
             query = query.filter(Package.owner_org == org_id)
         rows = query.order_by(desc(Resource.metadata_modified)).limit(limit).all()
-        for res, pkg_title, pkg_name in rows:
+        for res, pkg_id, pkg_title, pkg_name in rows:
             results.append({
                 'resource': res,
-                'dataset': {'title': pkg_title, 'name': pkg_name},
+                'dataset': {'id': pkg_id, 'title': pkg_title, 'name': pkg_name},
                 'parent_dataset_title': pkg_title,
             })
     except Exception:
