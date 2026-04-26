@@ -1,5 +1,6 @@
 import datetime
 import logging
+import time
 from markupsafe import Markup
 
 from sqlalchemy import desc
@@ -13,6 +14,9 @@ from ckanext.artesp_theme.logic import auth_helpers
 from ckanext.artesp_theme.logic import dashboard_statistics
 
 log = logging.getLogger(__name__)
+
+_HELPERS_CACHE: dict = {}
+_HELPERS_CACHE_TTL = 300  # segundos
 
 RATING_COMMENT_ALTCHA_CONFIG_KEY = "ckanext.artesp.rating.altcha_hmac_secret"
 RATING_COMMENT_ALTCHA_SCRIPT_URL = (
@@ -72,18 +76,9 @@ def get_package_count():
 def get_resource_count():
     """Return the number of resources in the system."""
     try:
-        # Get all packages
-        packages = toolkit.get_action('package_search')({}, {'rows': 1000})
-
-        # Count resources in each package
-        resource_count = 0
-        for package in packages.get('results', []):
-            resource_count += len(package.get('resources', []))
-
-        return resource_count
+        return Session.query(Resource).filter(Resource.state == 'active').count()
     except Exception as e:
         log.error(f"Error counting resources: {str(e)}")
-        # Return 0 if there's an error
         return 0
 
 
@@ -157,68 +152,52 @@ def get_year():
     return datetime.datetime.now().year
 
 def get_latest_resources(limit=5, org_id=None, dataset_id=None):
-    context = {'session': Session}
     results = []
-
     try:
-        # Start base query
-        query = Session.query(Resource).filter(Resource.state == 'active')
-
-        # Filter by dataset or organization if provided
+        query = (
+            Session.query(Resource, Package.title, Package.name)
+            .join(Package, Resource.package_id == Package.id)
+            .filter(Resource.state == 'active')
+            .filter(Package.state == 'active')
+            .filter(Package.private.is_(False))
+        )
         if dataset_id:
             query = query.filter(Resource.package_id == dataset_id)
         elif org_id:
-            query = query.join(Package).filter(Package.owner_org == org_id)
-
-        # Order by metadata_modified descending. This field is more reliable
-        # for finding recently updated resources as it tracks any metadata change.
-        resources = query.order_by(desc(Resource.metadata_modified)).limit(limit).all()
-        for res in resources:
-            try:
-                # Get the full dataset dictionary
-                dataset_dict = toolkit.get_action('package_show')(context, {'id': res.package_id})
-
-                results.append({
-                    'resource': res,
-                    'dataset': dataset_dict,
-                    'parent_dataset_title': dataset_dict.get('title')  # Add title as separate key
-                })
-
-            except Exception as e:
-                log.warning(f"[ckanext-artesp_theme] Failed to fetch dataset for resource {res.id}: {str(e)}")
-
+            query = query.filter(Package.owner_org == org_id)
+        rows = query.order_by(desc(Resource.metadata_modified)).limit(limit).all()
+        for res, pkg_title, pkg_name in rows:
+            results.append({
+                'resource': res,
+                'dataset': {'title': pkg_title, 'name': pkg_name},
+                'parent_dataset_title': pkg_title,
+            })
     except Exception as e:
         log.error("[ckanext-artesp_theme] Failed to get latest resources", exc_info=True)
-
     return results
 
 def get_featured_groups(limit=4):
-    """
-    Return a list of featured groups.
-    Fetches a list of groups with their details, including title, name, image URL, and dataset count.
-    Currently, it takes the first 'limit' groups returned by the 'group_list' action.
-    This could be extended to sort by package_count or a specific 'featured' tag if needed.
-    """
+    cache_key = ('featured_groups', limit)
+    now = time.monotonic()
+    cached = _HELPERS_CACHE.get(cache_key)
+    if cached and cached['expires_at'] > now:
+        return cached['data']
+
+    result = []
     try:
-        group_list_params = {
-            'all_fields': True,        # Fetches most group attributes
-            'include_datasets': True,  # Adds 'package_count' and 'display_name'
-            # We will sort by package_count in Python after fetching.
-        }
-        groups = toolkit.get_action('group_list')({}, group_list_params)
-
-        # Sort groups by package_count in descending order
-        # Groups with no 'package_count' (shouldn't happen with include_datasets=True) default to 0
+        groups = toolkit.get_action('group_list')({}, {
+            'all_fields': True,
+            'include_datasets': True,
+        })
         groups.sort(key=lambda g: g.get('package_count', 0), reverse=True)
-
-        return groups[:limit]
-
+        result = groups[:limit]
     except toolkit.ObjectNotFound:
         log.info("[ckanext-artesp_theme] No groups found to feature.")
-        return []
     except Exception as e:
         log.error(f"[ckanext-artesp_theme] Error getting featured groups: {str(e)}", exc_info=True)
-        return []
+
+    _HELPERS_CACHE[cache_key] = {'data': result, 'expires_at': now + _HELPERS_CACHE_TTL}
+    return result
 
 
 def clear_dashboard_statistics_cache():

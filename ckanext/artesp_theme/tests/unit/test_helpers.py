@@ -119,23 +119,15 @@ class TestGetPackageCount:
 
 class TestGetResourceCount:
     def test_returns_resource_count(self, monkeypatch):
-        fake_packages = [
-            {"resources": [{"id": "r1"}, {"id": "r2"}]},
-            {"resources": [{"id": "r3"}]},
-        ]
-        monkeypatch.setattr(
-            helpers.toolkit, "get_action",
-            lambda name: (lambda ctx, dd: {"results": fake_packages}),
-        )
+        mock_session = MagicMock()
+        mock_session.query.return_value.filter.return_value.count.return_value = 3
+        monkeypatch.setattr(helpers, "Session", mock_session)
         assert helpers.get_resource_count() == 3
 
     def test_returns_zero_on_exception(self, monkeypatch):
-        def fail(name):
-            def raise_err(ctx, dd):
-                raise Exception("Fail")
-            return raise_err
-
-        monkeypatch.setattr(helpers.toolkit, "get_action", fail)
+        mock_session = MagicMock()
+        mock_session.query.side_effect = Exception("DB error")
+        monkeypatch.setattr(helpers, "Session", mock_session)
         assert helpers.get_resource_count() == 0
 
 
@@ -235,6 +227,9 @@ class TestGetGroupCount:
 # ---------------------------------------------------------------------------
 
 class TestGetFeaturedGroups:
+    def setup_method(self):
+        helpers._HELPERS_CACHE.clear()
+
     def test_returns_sorted_by_package_count(self, monkeypatch):
         fake_groups = [
             {"id": "g1", "name": "g1", "package_count": 5},
