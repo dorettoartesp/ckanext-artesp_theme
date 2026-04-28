@@ -92,6 +92,42 @@ class FontAwesomeFixMiddleware:
         return [fixed_response.encode('utf-8')]
 
 
+def _fix_contextual_filter(app: Callable) -> None:
+    """Replace CKAN's ContextualFilter with a request-context-safe version.
+
+    CKAN installs a ContextualFilter on app.logger when email_to is configured.
+    That filter accesses request.path unconditionally, which raises RuntimeError
+    during app startup (outside a request context) and prevents the app from
+    loading. We swap it out for a version that guards the access.
+    """
+    import logging as _logging
+    from flask import request as _request
+
+    class _SafeContextualFilter(_logging.Filter):
+        def filter(self, log_record):  # type: ignore[override]
+            try:
+                log_record.url = _request.path
+                log_record.method = _request.method
+                log_record.ip = _request.environ.get("REMOTE_ADDR")
+                log_record.headers = _request.headers
+            except RuntimeError:
+                log_record.url = ""
+                log_record.method = ""
+                log_record.ip = ""
+                log_record.headers = ""
+            return True
+
+    logger = getattr(app, "logger", None)
+    if logger is None:
+        return
+    for f in list(logger.filters):
+        if type(f).__name__ == "ContextualFilter":
+            logger.removeFilter(f)
+            logger.addFilter(_SafeContextualFilter())
+            log.debug("artesp_theme: replaced ContextualFilter with safe version")
+            break
+
+
 def make_middleware(app: Callable, config: Optional[Dict[str, Any]] = None) -> Callable:
     """
     Factory function to create the middleware.
@@ -131,6 +167,8 @@ def make_middleware(app: Callable, config: Optional[Dict[str, Any]] = None) -> C
 
                 response.data = pattern.sub(replace_icon, response.data.decode('utf-8')).encode('utf-8')
             return response
+
+        _fix_contextual_filter(app)
 
         if app.debug:
             try:
