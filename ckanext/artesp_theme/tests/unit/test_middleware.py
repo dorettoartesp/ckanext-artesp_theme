@@ -5,7 +5,11 @@ these tests do not require CKAN fixtures.
 """
 from unittest.mock import MagicMock
 
-from ckanext.artesp_theme.middleware import FontAwesomeFixMiddleware, make_middleware
+from ckanext.artesp_theme.middleware import (
+    FontAwesomeFixMiddleware,
+    install_safe_error_mail_handler,
+    make_middleware,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -155,6 +159,60 @@ class TestFontAwesomeFixMiddlewareCall:
 # ---------------------------------------------------------------------------
 
 class TestMakeMiddleware:
+    def test_install_safe_error_mail_handler_handles_missing_request_context(
+        self, monkeypatch
+    ):
+        """The patched CKAN mail filter can run during app startup."""
+        import logging
+        import ckan.config.middleware.flask_app as flask_app
+
+        added_filters = []
+        added_handlers = []
+
+        class FakeSMTPHandler(logging.Handler):
+            def __init__(self, *args, **kwargs):
+                super().__init__()
+                self.args = args
+                self.kwargs = kwargs
+
+        app = MagicMock()
+        app.logger.addFilter.side_effect = added_filters.append
+        app.logger.addHandler.side_effect = added_handlers.append
+
+        monkeypatch.setattr(flask_app, "_setup_error_mail_handler", lambda app: None)
+        monkeypatch.setattr(flask_app, "SMTPHandler", FakeSMTPHandler)
+        monkeypatch.setattr(
+            flask_app,
+            "config",
+            {
+                "smtp.server": "localhost",
+                "smtp.starttls": False,
+                "smtp.user": "",
+                "smtp.password": "",
+                "error_email_from": "errors@example.test",
+                "email_to": "admin@example.test",
+            },
+        )
+
+        install_safe_error_mail_handler()
+        flask_app._setup_error_mail_handler(app)
+
+        record = logging.LogRecord(
+            "ckan",
+            logging.ERROR,
+            __file__,
+            1,
+            "startup warning",
+            (),
+            None,
+        )
+        assert added_filters[0].filter(record) is True
+        assert record.url == ""
+        assert record.method == ""
+        assert record.ip == ""
+        assert record.headers == ""
+        assert len(added_handlers) == 1
+
     def test_flask_app_returns_app_with_handlers_in_cache_safe_order(self):
         """Flask app registers cache and icon hooks in LIFO-safe order."""
         fake_flask_app = MagicMock()

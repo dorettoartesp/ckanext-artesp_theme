@@ -12,7 +12,13 @@ from ckanext.artesp_theme.logic import action as artesp_action
 from ckanext.artesp_theme.logic import audit_capture
 from ckanext.artesp_theme.logic import auth as artesp_auth
 from ckanext.artesp_theme.logic import validators
-from ckanext.artesp_theme.middleware import make_middleware
+from ckanext.artesp_theme.middleware import (
+    install_safe_error_mail_handler,
+    make_middleware,
+)
+
+
+install_safe_error_mail_handler()
 
 
 class ArtespThemePlugin(plugins.SingletonPlugin):

@@ -6,6 +6,80 @@ from typing import Callable, Dict, Any, Optional
 log = logging.getLogger(__name__)
 
 
+def install_safe_error_mail_handler() -> None:
+    """Patch CKAN's email error handler before Flask app construction.
+
+    CKAN registers its email error handler before extension middleware runs.
+    With ``email_to`` enabled, the stock ContextualFilter reads
+    ``flask.request`` while the app is still starting, which can abort uWSGI
+    worker startup outside a request context.
+    """
+    try:
+        import ckan.config.middleware.flask_app as flask_app
+        from flask import request as _request
+    except Exception as exc:
+        log.debug("artesp_theme: unable to patch CKAN error mail handler: %s", exc)
+        return
+
+    current_handler = getattr(flask_app, "_setup_error_mail_handler", None)
+    if getattr(current_handler, "_artesp_request_safe", False):
+        return
+
+    def _setup_request_safe_error_mail_handler(app):
+        class ContextualFilter(logging.Filter):
+            def filter(self, log_record):  # type: ignore[override]
+                try:
+                    log_record.url = _request.path
+                    log_record.method = _request.method
+                    log_record.ip = _request.environ.get("REMOTE_ADDR")
+                    log_record.headers = _request.headers
+                except RuntimeError:
+                    log_record.url = ""
+                    log_record.method = ""
+                    log_record.ip = ""
+                    log_record.headers = ""
+                return True
+
+        config = flask_app.config
+        smtp_server = config.get("smtp.server")
+        mailhost = (
+            tuple(smtp_server.split(":"))
+            if smtp_server and ":" in smtp_server
+            else smtp_server
+        )
+        credentials = None
+        if config.get("smtp.user"):
+            credentials = (
+                config.get("smtp.user"),
+                config.get("smtp.password"),
+            )
+        secure = () if config.get("smtp.starttls") else None
+        mail_handler = flask_app.SMTPHandler(
+            mailhost=mailhost,
+            fromaddr=config.get("error_email_from"),
+            toaddrs=[config.get("email_to")],
+            subject="Application Error",
+            credentials=credentials,
+            secure=secure,
+        )
+
+        mail_handler.setLevel(logging.ERROR)
+        mail_handler.setFormatter(logging.Formatter("""
+Time:               %(asctime)s
+URL:                %(url)s
+Method:             %(method)s
+IP:                 %(ip)s
+Headers:            %(headers)s
+
+"""))
+
+        app.logger.addFilter(ContextualFilter())
+        app.logger.addHandler(mail_handler)
+
+    _setup_request_safe_error_mail_handler._artesp_request_safe = True
+    flask_app._setup_error_mail_handler = _setup_request_safe_error_mail_handler
+
+
 class FontAwesomeFixMiddleware:
     """
     WSGI middleware to fix double-encoded Font Awesome icons in CKAN templates.
