@@ -9,6 +9,12 @@ artesp-theme-js:
   extra:
     preload:
       - base/main
+
+artesp-autocomplete-fix-js:
+  filter: rjsmin
+  output: artesp_theme/autocomplete-fix.js
+  contents:
+    - js/autocomplete-fix.js
 # CSS modules
 artesp-theme-css:
   filter: cssrewrite
