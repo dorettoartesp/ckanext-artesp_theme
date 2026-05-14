@@ -36,7 +36,7 @@ def test_admin_management_requires_sysadmin(app):
     assert regular.status_code == 403
 
 
-def test_admin_management_renders_users_datasets_and_resources(app):
+def test_admin_management_has_separate_paginated_pages(app):
     suffix = uuid.uuid4().hex[:8]
     org = _artesp_org()
     sysadmin = factories.Sysadmin()
@@ -61,22 +61,39 @@ def test_admin_management_renders_users_datasets_and_resources(app):
         url="https://example.com/gestao-resource.csv",
     )
 
-    response = app.get(
-        "/admin/gestao",
+    users_page = app.get(
+        "/admin/gestao/usuarios?q={}".format(username),
+        environ_base={"REMOTE_USER": sysadmin["name"]},
+    )
+    datasets_page = app.get(
+        "/admin/gestao/datasets?q={}".format(dataset_name),
+        environ_base={"REMOTE_USER": sysadmin["name"]},
+    )
+    resources_page = app.get(
+        "/admin/gestao/resources?q=gestao-resource.csv",
         environ_base={"REMOTE_USER": sysadmin["name"]},
     )
 
-    assert response.status_code == 200
-    assert "Gestao" in response.text
-    assert "Usuarios" in response.text
-    assert "Datasets" in response.text
-    assert "Resources" in response.text
-    assert username in response.text
-    assert email in response.text
-    assert dataset_name in response.text
-    assert "gestao-resource.csv" in response.text
-    assert 'href="/dataset/edit/{}"'.format(dataset_name) in response.text
-    assert 'href="/dataset/{}/resource/'.format(dataset_name) in response.text
+    assert users_page.status_code == 200
+    assert datasets_page.status_code == 200
+    assert resources_page.status_code == 200
+
+    assert "Usuarios" in users_page.text
+    assert username in users_page.text
+    assert email in users_page.text
+    assert "pagination" in users_page.text
+    assert dataset_name not in users_page.text
+
+    assert "Datasets" in datasets_page.text
+    assert dataset_name in datasets_page.text
+    assert 'href="/dataset/edit/{}"'.format(dataset_name) in datasets_page.text
+    assert "pagination" in datasets_page.text
+    assert "gestao-resource.csv" not in datasets_page.text
+
+    assert "Resources" in resources_page.text
+    assert "gestao-resource.csv" in resources_page.text
+    assert 'href="/dataset/{}/resource/'.format(dataset_name) in resources_page.text
+    assert "pagination" in resources_page.text
 
 
 def test_admin_management_can_revoke_sysadmin(app):

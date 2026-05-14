@@ -296,24 +296,84 @@ def _require_sysadmin_user():
 
 def admin_management():
     _require_sysadmin_user()
-    page = request.args.get("page", "1")
-    filters = {
+    return redirect_to(toolkit.url_for("artesp_theme.admin_management_users"))
+
+
+def _management_filters():
+    return {
         "q": request.args.get("q", ""),
         "state": request.args.get("state", ""),
         "sysadmin": request.args.get("sysadmin", ""),
         "format": request.args.get("format", ""),
     }
 
+
+def _management_page(result, endpoint, filters):
+    def pager_url(**kwargs):
+        params = {
+            key: value
+            for key, value in filters.items()
+            if value
+        }
+        if kwargs.get("page"):
+            params["page"] = kwargs["page"]
+        return toolkit.url_for(endpoint, **params)
+
+    return Page(
+        collection=result.items,
+        page=result.page,
+        items_per_page=result.limit,
+        item_count=result.count,
+        url=pager_url,
+    )
+
+
+def admin_management_users():
+    _require_sysadmin_user()
+    page = request.args.get("page", "1")
+    filters = _management_filters()
     users = admin_management_logic.get_admin_user_management(filters, page)
+
+    return render_template(
+        "admin/management_users.html",
+        active_section="users",
+        filters=filters,
+        users=users,
+        page=_management_page(users, "artesp_theme.admin_management_users", filters),
+    )
+
+
+def admin_management_datasets():
+    _require_sysadmin_user()
+    page = request.args.get("page", "1")
+    filters = _management_filters()
     datasets = admin_management_logic.get_admin_dataset_management(filters, page)
+
+    return render_template(
+        "admin/management_datasets.html",
+        active_section="datasets",
+        filters=filters,
+        datasets=datasets,
+        page=_management_page(
+            datasets, "artesp_theme.admin_management_datasets", filters
+        ),
+    )
+
+
+def admin_management_resources():
+    _require_sysadmin_user()
+    page = request.args.get("page", "1")
+    filters = _management_filters()
     resources = admin_management_logic.get_admin_resource_management(filters, page)
 
     return render_template(
-        "admin/management.html",
+        "admin/management_resources.html",
+        active_section="resources",
         filters=filters,
-        users=users,
-        datasets=datasets,
         resources=resources,
+        page=_management_page(
+            resources, "artesp_theme.admin_management_resources", filters
+        ),
     )
 
 
@@ -340,7 +400,7 @@ def admin_management_sysadmin():
         else:
             flash_success(toolkit._("Revoked sysadmin permission."))
 
-    return redirect_to(toolkit.url_for("artesp_theme.admin_management", tab="users"))
+    return redirect_to(toolkit.url_for("artesp_theme.admin_management_users"))
 
 
 def admin_management_collaborator():
@@ -372,13 +432,31 @@ def admin_management_collaborator():
     except toolkit.ValidationError as exc:
         flash_error(exc.error_summary or exc.error_dict or str(exc))
 
-    return redirect_to(toolkit.url_for("artesp_theme.admin_management", tab="datasets"))
+    return redirect_to(toolkit.url_for("artesp_theme.admin_management_datasets"))
 
 
 artesp_theme.add_url_rule(
     "/admin/gestao",
     endpoint="admin_management",
     view_func=admin_management,
+    methods=["GET"],
+)
+artesp_theme.add_url_rule(
+    "/admin/gestao/usuarios",
+    endpoint="admin_management_users",
+    view_func=admin_management_users,
+    methods=["GET"],
+)
+artesp_theme.add_url_rule(
+    "/admin/gestao/datasets",
+    endpoint="admin_management_datasets",
+    view_func=admin_management_datasets,
+    methods=["GET"],
+)
+artesp_theme.add_url_rule(
+    "/admin/gestao/resources",
+    endpoint="admin_management_resources",
+    view_func=admin_management_resources,
     methods=["GET"],
 )
 artesp_theme.add_url_rule(

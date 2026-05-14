@@ -1,0 +1,78 @@
+{% extends "admin/management_base.html" %}
+
+{% block management_filter %}
+  <form method="get" action="{{ h.url_for('artesp_theme.admin_management_datasets') }}" class="management-filter">
+    <div>
+      <label for="management-q">{{ _('Busca') }}</label>
+      <input id="management-q" class="form-control" type="search" name="q" value="{{ filters.q }}" placeholder="{{ _('Nome ou titulo') }}">
+    </div>
+    <div>
+      <label for="management-state">{{ _('Estado') }}</label>
+      <select id="management-state" class="form-control" name="state">
+        <option value="">{{ _('Todos') }}</option>
+        <option value="active" {% if filters.state == 'active' %}selected{% endif %}>active</option>
+        <option value="draft" {% if filters.state == 'draft' %}selected{% endif %}>draft</option>
+        <option value="deleted" {% if filters.state == 'deleted' %}selected{% endif %}>deleted</option>
+      </select>
+    </div>
+    <div></div>
+    <div>
+      <button class="btn btn-primary" type="submit">
+        <i class="fa fa-search"></i> {{ _('Filtrar') }}
+      </button>
+    </div>
+  </form>
+{% endblock %}
+
+{% block management_table %}
+  <section class="management-section" id="datasets">
+    <div class="management-section__heading">
+      <h2>{{ _('Datasets') }}</h2>
+      {{ count_label(datasets) }}
+    </div>
+    <table class="table table-header table-hover table-bordered management-table">
+      <thead>
+        <tr>
+          <th>{{ _('Dataset') }}</th>
+          <th>{{ _('Organizacao') }}</th>
+          <th>{{ _('Criador') }}</th>
+          <th>{{ _('Resources') }}</th>
+          <th>{{ _('Acoes') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for dataset in datasets.items %}
+          <tr>
+            <td>
+              <a href="{{ h.url_for('dataset.read', id=dataset.name) }}">{{ dataset.title or dataset.name }}</a>
+              <br><small>{{ dataset.name }} - {{ dataset.state }}</small>
+              {% if dataset.private %}<br><span class="management-badge">{{ _('privado') }}</span>{% endif %}
+            </td>
+            <td>{{ dataset.owner_org }}</td>
+            <td>{{ h.linked_user(dataset.creator_name) if dataset.creator_name else '-' }}</td>
+            <td>{{ dataset.resource_count }}</td>
+            <td>
+              <div class="management-actions">
+                <a class="btn btn-default btn-sm" href="{{ h.url_for('dataset.edit', id=dataset.name) }}">
+                  <i class="fa fa-pencil"></i> {{ _('Editar') }}
+                </a>
+                <a class="btn btn-default btn-sm" href="{{ h.url_for('dataset.collaborators_read', id=dataset.name) }}">
+                  <i class="fa fa-users"></i> {{ _('Colaboradores') }}
+                </a>
+                <form method="post" action="{{ h.url_for('artesp_theme.admin_management_collaborator') }}" class="management-inline-form">
+                  {{ h.csrf_input() }}
+                  <input type="hidden" name="package_id" value="{{ dataset.id }}">
+                  <input class="form-control" type="text" name="username" placeholder="{{ _('usuario') }}" required>
+                  <input type="hidden" name="capacity" value="admin">
+                  <button class="btn btn-primary btn-sm" type="submit">{{ _('Admin') }}</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="5">{{ _('Nenhum dataset encontrado.') }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends "admin/management_base.html" %}
+
+{% block management_filter %}
+  <form method="get" action="{{ h.url_for('artesp_theme.admin_management_users') }}" class="management-filter">
+    <div>
+      <label for="management-q">{{ _('Busca') }}</label>
+      <input id="management-q" class="form-control" type="search" name="q" value="{{ filters.q }}" placeholder="{{ _('Nome ou email') }}">
+    </div>
+    <div>
+      <label for="management-sysadmin">{{ _('Sysadmin') }}</label>
+      <select id="management-sysadmin" class="form-control" name="sysadmin">
+        <option value="">{{ _('Todos') }}</option>
+        <option value="true" {% if filters.sysadmin == 'true' %}selected{% endif %}>{{ _('Sim') }}</option>
+        <option value="false" {% if filters.sysadmin == 'false' %}selected{% endif %}>{{ _('Nao') }}</option>
+      </select>
+    </div>
+    <div></div>
+    <div>
+      <button class="btn btn-primary" type="submit">
+        <i class="fa fa-search"></i> {{ _('Filtrar') }}
+      </button>
+    </div>
+  </form>
+{% endblock %}
+
+{% block management_table %}
+  <section class="management-section" id="usuarios">
+    <div class="management-section__heading">
+      <h2>{{ _('Usuarios') }}</h2>
+      {{ count_label(users) }}
+    </div>
+    <table class="table table-header table-hover table-bordered management-table">
+      <thead>
+        <tr>
+          <th>{{ _('Usuario') }}</th>
+          <th>{{ _('E-mail') }}</th>
+          <th>{{ _('Estado') }}</th>
+          <th>{{ _('Datasets') }}</th>
+          <th>{{ _('Acoes') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users.items %}
+          <tr>
+            <td>
+              {{ h.linked_user(user.name) }}
+              {% if user.fullname %}<br><small>{{ user.fullname }}</small>{% endif %}
+              {% if user.sysadmin %}<br><span class="management-badge">sysadmin</span>{% endif %}
+            </td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.state }}</td>
+            <td>{{ user.created_dataset_count }}</td>
+            <td>
+              <div class="management-actions">
+                <a class="btn btn-default btn-sm" href="{{ h.url_for('user.edit', id=user.name) }}">
+                  <i class="fa fa-pencil"></i> {{ _('Editar') }}
+                </a>
+                <form method="post" action="{{ h.url_for('artesp_theme.admin_management_sysadmin') }}" class="management-inline-form">
+                  {{ h.csrf_input() }}
+                  <input type="hidden" name="username" value="{{ user.name }}">
+                  <input type="hidden" name="status" value="{{ '0' if user.sysadmin else '1' }}">
+                  <button class="btn btn-sm {{ 'btn-danger' if user.sysadmin else 'btn-primary' }}" type="submit">
+                    {{ _('Revogar') if user.sysadmin else _('Promover') }}
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="5">{{ _('Nenhum usuario encontrado.') }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}
