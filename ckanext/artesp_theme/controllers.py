@@ -1,4 +1,6 @@
 from datetime import datetime, timedelta, timezone
+import csv
+import io
 
 import ckan.model as model
 from flask import Blueprint, Response, abort, jsonify, render_template, request, g
@@ -330,6 +332,22 @@ def _management_page(result, endpoint, filters):
     )
 
 
+def _csv_response(rows, fieldnames, filename_prefix):
+    output = io.StringIO()
+    writer = csv.DictWriter(output, fieldnames=fieldnames, delimiter=";")
+    writer.writeheader()
+    for row in rows:
+        writer.writerow({field: row.get(field, "") for field in fieldnames})
+
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    filename = "{}-{}.csv".format(filename_prefix, timestamp)
+    response = Response("\ufeff" + output.getvalue(), mimetype="text/csv")
+    response.headers["Content-Disposition"] = 'attachment; filename="{}"'.format(
+        filename
+    )
+    return response
+
+
 def admin_management_users():
     _require_sysadmin_user()
     page = request.args.get("page", "1")
@@ -342,6 +360,26 @@ def admin_management_users():
         filters=filters,
         users=users,
         page=_management_page(users, "artesp_theme.admin_management_users", filters),
+    )
+
+
+def admin_management_users_export():
+    _require_sysadmin_user()
+    rows = admin_management_logic.export_admin_user_management(_management_filters())
+    return _csv_response(
+        rows,
+        [
+            "id",
+            "usuario",
+            "nome_completo",
+            "email",
+            "estado",
+            "sysadmin",
+            "criado_em",
+            "atualizado_em",
+            "datasets_criados",
+        ],
+        "usuarios-gestao",
     )
 
 
@@ -362,6 +400,33 @@ def admin_management_datasets():
     )
 
 
+def admin_management_datasets_export():
+    _require_sysadmin_user()
+    rows = admin_management_logic.export_admin_dataset_management(
+        _management_filters()
+    )
+    return _csv_response(
+        rows,
+        [
+            "id",
+            "nome",
+            "titulo",
+            "descricao",
+            "estado",
+            "privado",
+            "organizacao",
+            "criador",
+            "licenca",
+            "criado_em",
+            "modificado_em",
+            "recursos",
+            "colaboradores",
+            "tags",
+        ],
+        "datasets-gestao",
+    )
+
+
 def admin_management_resources():
     _require_sysadmin_user()
     page = request.args.get("page", "1")
@@ -376,6 +441,35 @@ def admin_management_resources():
         page=_management_page(
             resources, "artesp_theme.admin_management_resources", filters
         ),
+    )
+
+
+def admin_management_resources_export():
+    _require_sysadmin_user()
+    rows = admin_management_logic.export_admin_resource_management(
+        _management_filters()
+    )
+    return _csv_response(
+        rows,
+        [
+            "id",
+            "nome",
+            "descricao",
+            "formato",
+            "mimetype",
+            "estado",
+            "url",
+            "tamanho",
+            "criado_em",
+            "ultima_modificacao",
+            "metadata_modificada_em",
+            "dataset_id",
+            "dataset_nome",
+            "dataset_titulo",
+            "organizacao",
+            "criador_dataset",
+        ],
+        "recursos-gestao",
     )
 
 
@@ -450,15 +544,33 @@ artesp_theme.add_url_rule(
     methods=["GET"],
 )
 artesp_theme.add_url_rule(
+    "/admin/gestao/usuarios/export.csv",
+    endpoint="admin_management_users_export",
+    view_func=admin_management_users_export,
+    methods=["GET"],
+)
+artesp_theme.add_url_rule(
     "/admin/gestao/datasets",
     endpoint="admin_management_datasets",
     view_func=admin_management_datasets,
     methods=["GET"],
 )
 artesp_theme.add_url_rule(
+    "/admin/gestao/datasets/export.csv",
+    endpoint="admin_management_datasets_export",
+    view_func=admin_management_datasets_export,
+    methods=["GET"],
+)
+artesp_theme.add_url_rule(
     "/admin/gestao/resources",
     endpoint="admin_management_resources",
     view_func=admin_management_resources,
+    methods=["GET"],
+)
+artesp_theme.add_url_rule(
+    "/admin/gestao/resources/export.csv",
+    endpoint="admin_management_resources_export",
+    view_func=admin_management_resources_export,
     methods=["GET"],
 )
 artesp_theme.add_url_rule(

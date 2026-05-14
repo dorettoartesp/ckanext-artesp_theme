@@ -17,7 +17,7 @@ class ManagementResult:
     items: list[dict]
     count: int
     page: int
-    limit: int
+    limit: int | None
 
 
 def _coerce_page(value) -> int:
@@ -41,6 +41,22 @@ def _sort_direction(filters) -> str:
 
 def _ordered(column, direction: str):
     return column.desc() if direction == "desc" else column.asc()
+
+
+def _apply_page(query, page: int, limit: int | None):
+    if limit is None:
+        return query
+    return query.offset((page - 1) * limit).limit(limit)
+
+
+def _format_datetime(value):
+    if not value:
+        return ""
+    return value.isoformat()
+
+
+def _tag_names(package) -> str:
+    return ", ".join(sorted(tag.name for tag in package.get_tags()))
 
 
 def get_admin_user_management(filters, page=1, limit=DEFAULT_LIMIT):
@@ -92,7 +108,7 @@ def get_admin_user_management(filters, page=1, limit=DEFAULT_LIMIT):
     else:
         query = query.order_by(model.User.sysadmin.desc(), model.User.name)
 
-    rows = query.offset((page - 1) * limit).limit(limit).all()
+    rows = _apply_page(query, page, limit).all()
 
     return ManagementResult(
         items=[
@@ -101,6 +117,9 @@ def get_admin_user_management(filters, page=1, limit=DEFAULT_LIMIT):
                 "name": user.name,
                 "fullname": user.fullname or "",
                 "email": user.email or "",
+                "created": user.created,
+                "created_iso": _format_datetime(user.created),
+                "updated_iso": "",
                 "state": user.state,
                 "sysadmin": bool(user.sysadmin),
                 "created_dataset_count": created_dataset_count or 0,
@@ -169,7 +188,7 @@ def get_admin_dataset_management(filters, page=1, limit=DEFAULT_LIMIT):
     else:
         query = query.order_by(model.Package.metadata_modified.desc(), model.Package.name)
 
-    rows = query.offset((page - 1) * limit).limit(limit).all()
+    rows = _apply_page(query, page, limit).all()
 
     return ManagementResult(
         items=[
@@ -179,10 +198,17 @@ def get_admin_dataset_management(filters, page=1, limit=DEFAULT_LIMIT):
                 "title": package.title or package.name,
                 "state": package.state,
                 "private": bool(package.private),
+                "notes": package.notes or "",
+                "license_id": getattr(package, "license_id", "") or "",
+                "metadata_created": package.metadata_created,
+                "metadata_created_iso": _format_datetime(package.metadata_created),
+                "metadata_modified": package.metadata_modified,
+                "metadata_modified_iso": _format_datetime(package.metadata_modified),
                 "creator_name": creator_name or "",
                 "owner_org": owner_org_name or "",
                 "resource_count": resource_count or 0,
                 "collaborator_count": collaborator_count or 0,
+                "tags": _tag_names(package),
             }
             for package, creator_name, owner_org_name, resource_count, collaborator_count in rows
         ],
@@ -200,8 +226,15 @@ def get_admin_resource_management(filters, page=1, limit=DEFAULT_LIMIT):
     sort_dir = _sort_direction(filters)
 
     query = (
-        model.Session.query(model.Resource, model.Package)
+        model.Session.query(
+            model.Resource,
+            model.Package,
+            model.User.name.label("creator_name"),
+            model.Group.name.label("owner_org_name"),
+        )
         .join(model.Package, model.Package.id == model.Resource.package_id)
+        .outerjoin(model.User, model.User.id == model.Package.creator_user_id)
+        .outerjoin(model.Group, model.Group.id == model.Package.owner_org)
         .filter(model.Resource.state != model.State.DELETED)
         .filter(model.Package.state != model.State.DELETED)
         .filter(model.Package.type == "dataset")
@@ -232,23 +265,100 @@ def get_admin_resource_management(filters, page=1, limit=DEFAULT_LIMIT):
     else:
         query = query.order_by(model.Resource.metadata_modified.desc(), model.Resource.name)
 
-    rows = query.offset((page - 1) * limit).limit(limit).all()
+    rows = _apply_page(query, page, limit).all()
 
     return ManagementResult(
         items=[
             {
                 "id": resource.id,
                 "name": resource.name or resource.url or resource.id,
+                "description": resource.description or "",
                 "format": resource.format or "",
+                "mimetype": resource.mimetype or "",
                 "state": resource.state,
+                "url": resource.url or "",
+                "size": resource.size or "",
+                "created": resource.created,
+                "created_iso": _format_datetime(resource.created),
+                "last_modified": resource.last_modified,
+                "last_modified_iso": _format_datetime(resource.last_modified),
                 "metadata_modified": resource.metadata_modified,
+                "metadata_modified_iso": _format_datetime(resource.metadata_modified),
                 "package_id": package.id,
                 "package_name": package.name,
                 "package_title": package.title or package.name,
+                "owner_org": owner_org_name or "",
+                "creator_name": creator_name or "",
             }
-            for resource, package in rows
+            for resource, package, creator_name, owner_org_name in rows
         ],
         count=count,
         page=page,
         limit=limit,
     )
+
+
+def export_admin_user_management(filters):
+    users = get_admin_user_management(filters, page=1, limit=None)
+    return [
+        {
+            "id": user["id"],
+            "usuario": user["name"],
+            "nome_completo": user["fullname"],
+            "email": user["email"],
+            "estado": user["state"],
+            "sysadmin": "sim" if user["sysadmin"] else "nao",
+            "criado_em": user["created_iso"],
+            "atualizado_em": user["updated_iso"],
+            "datasets_criados": user["created_dataset_count"],
+        }
+        for user in users.items
+    ]
+
+
+def export_admin_dataset_management(filters):
+    datasets = get_admin_dataset_management(filters, page=1, limit=None)
+    return [
+        {
+            "id": dataset["id"],
+            "nome": dataset["name"],
+            "titulo": dataset["title"],
+            "descricao": dataset["notes"],
+            "estado": dataset["state"],
+            "privado": "sim" if dataset["private"] else "nao",
+            "organizacao": dataset["owner_org"],
+            "criador": dataset["creator_name"],
+            "licenca": dataset["license_id"],
+            "criado_em": dataset["metadata_created_iso"],
+            "modificado_em": dataset["metadata_modified_iso"],
+            "recursos": dataset["resource_count"],
+            "colaboradores": dataset["collaborator_count"],
+            "tags": dataset["tags"],
+        }
+        for dataset in datasets.items
+    ]
+
+
+def export_admin_resource_management(filters):
+    resources = get_admin_resource_management(filters, page=1, limit=None)
+    return [
+        {
+            "id": resource["id"],
+            "nome": resource["name"],
+            "descricao": resource["description"],
+            "formato": resource["format"],
+            "mimetype": resource["mimetype"],
+            "estado": resource["state"],
+            "url": resource["url"],
+            "tamanho": resource["size"],
+            "criado_em": resource["created_iso"],
+            "ultima_modificacao": resource["last_modified_iso"],
+            "metadata_modificada_em": resource["metadata_modified_iso"],
+            "dataset_id": resource["package_id"],
+            "dataset_nome": resource["package_name"],
+            "dataset_titulo": resource["package_title"],
+            "organizacao": resource["owner_org"],
+            "criador_dataset": resource["creator_name"],
+        }
+        for resource in resources.items
+    ]

@@ -21,6 +21,9 @@
         <i class="fa fa-search"></i> {{ _('Filtrar') }}
       </button>
       <a class="btn btn-default" href="{{ h.url_for('artesp_theme.admin_management_datasets') }}">{{ _('Limpar') }}</a>
+      <a class="btn btn-default" href="{{ h.url_for('artesp_theme.admin_management_datasets_export', q=filters.q, state=filters.state, sort_by=filters.sort_by, sort_dir=filters.sort_dir) }}">
+        <i class="fa fa-download"></i> {{ _('Exportar CSV') }}
+      </a>
     </div>
   </form>
 {% endblock %}
