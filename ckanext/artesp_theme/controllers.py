@@ -1,14 +1,21 @@
 from datetime import datetime, timedelta, timezone
+import csv
+import io
 
 import ckan.model as model
 from flask import Blueprint, Response, abort, jsonify, render_template, request, g
 from ckan.plugins import toolkit
-from ckan.lib.helpers import flash_error, redirect_to
+from ckan.lib.helpers import flash_error, flash_success, redirect_to
 from ckan.lib.pagination import Page
 import logging
 
 import ckanext.artesp_theme.helpers as artesp_helpers
-from ckanext.artesp_theme.logic import audit_capture, audit_query, auth_helpers
+from ckanext.artesp_theme.logic import (
+    admin_management as admin_management_logic,
+    audit_capture,
+    audit_query,
+    auth_helpers,
+)
 
 log = logging.getLogger(__name__)
 
@@ -264,9 +271,28 @@ def audit_admin():
         "page": request.args.get("page", "1"),
     }
     result = audit_query.search_audit_events(filters)
+    result_filters = result.get("filters", filters)
+
+    def audit_pager_url(**kwargs):
+        params = {
+            key: value
+            for key, value in result_filters.items()
+            if key != "page" and value
+        }
+        if kwargs.get("page"):
+            params["page"] = kwargs["page"]
+        return toolkit.url_for("artesp_theme.audit_admin", **params)
+
     return render_template(
         "admin/audit.html",
         **result,
+        pagination=Page(
+            collection=result["events"],
+            page=result["page"],
+            items_per_page=result.get("page_size", audit_query.PAGE_SIZE),
+            item_count=result["item_count"],
+            url=audit_pager_url,
+        ),
         scope_choices=audit_query.SCOPE_CHOICES,
         action_choices=audit_query.ACTION_CHOICES,
         provider_choices=audit_query.PROVIDER_CHOICES,
@@ -279,6 +305,304 @@ artesp_theme.add_url_rule(
     endpoint="audit_admin",
     view_func=audit_admin,
     methods=["GET"],
+)
+
+
+def _require_sysadmin_user():
+    user = model.User.get(g.user) if g.user else None
+    if not user or not getattr(user, "sysadmin", False):
+        abort(403)
+    return user
+
+
+def admin_management():
+    _require_sysadmin_user()
+    return redirect_to(toolkit.url_for("artesp_theme.admin_management_users"))
+
+
+def _management_filters():
+    return {
+        "q": request.args.get("q", ""),
+        "state": request.args.get("state", ""),
+        "sysadmin": request.args.get("sysadmin", ""),
+        "format": request.args.get("format", ""),
+        "sort_by": request.args.get("sort_by", ""),
+        "sort_dir": request.args.get("sort_dir", ""),
+    }
+
+
+def _management_page(result, endpoint, filters):
+    def pager_url(**kwargs):
+        params = {
+            key: value
+            for key, value in filters.items()
+            if value
+        }
+        if kwargs.get("page"):
+            params["page"] = kwargs["page"]
+        return toolkit.url_for(endpoint, **params)
+
+    return Page(
+        collection=result.items,
+        page=result.page,
+        items_per_page=result.limit,
+        item_count=result.count,
+        url=pager_url,
+    )
+
+
+def _csv_response(rows, fieldnames, filename_prefix):
+    output = io.StringIO()
+    writer = csv.DictWriter(output, fieldnames=fieldnames, delimiter=";")
+    writer.writeheader()
+    for row in rows:
+        writer.writerow({field: row.get(field, "") for field in fieldnames})
+
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    filename = "{}-{}.csv".format(filename_prefix, timestamp)
+    response = Response("\ufeff" + output.getvalue(), mimetype="text/csv")
+    response.headers["Content-Disposition"] = 'attachment; filename="{}"'.format(
+        filename
+    )
+    return response
+
+
+def admin_management_users():
+    _require_sysadmin_user()
+    page = request.args.get("page", "1")
+    filters = _management_filters()
+    users = admin_management_logic.get_admin_user_management(filters, page)
+
+    return render_template(
+        "admin/management_users.html",
+        active_section="users",
+        filters=filters,
+        users=users,
+        page=_management_page(users, "artesp_theme.admin_management_users", filters),
+    )
+
+
+def admin_management_users_export():
+    _require_sysadmin_user()
+    rows = admin_management_logic.export_admin_user_management(_management_filters())
+    return _csv_response(
+        rows,
+        [
+            "id",
+            "usuario",
+            "nome_completo",
+            "email",
+            "estado",
+            "sysadmin",
+            "criado_em",
+            "atualizado_em",
+            "datasets_criados",
+        ],
+        "usuarios-gestao",
+    )
+
+
+def admin_management_datasets():
+    _require_sysadmin_user()
+    page = request.args.get("page", "1")
+    filters = _management_filters()
+    datasets = admin_management_logic.get_admin_dataset_management(filters, page)
+
+    return render_template(
+        "admin/management_datasets.html",
+        active_section="datasets",
+        filters=filters,
+        datasets=datasets,
+        page=_management_page(
+            datasets, "artesp_theme.admin_management_datasets", filters
+        ),
+    )
+
+
+def admin_management_datasets_export():
+    _require_sysadmin_user()
+    rows = admin_management_logic.export_admin_dataset_management(
+        _management_filters()
+    )
+    return _csv_response(
+        rows,
+        [
+            "id",
+            "nome",
+            "titulo",
+            "descricao",
+            "estado",
+            "privado",
+            "organizacao",
+            "criador",
+            "licenca",
+            "criado_em",
+            "modificado_em",
+            "recursos",
+            "colaboradores",
+            "tags",
+        ],
+        "datasets-gestao",
+    )
+
+
+def admin_management_resources():
+    _require_sysadmin_user()
+    page = request.args.get("page", "1")
+    filters = _management_filters()
+    resources = admin_management_logic.get_admin_resource_management(filters, page)
+
+    return render_template(
+        "admin/management_resources.html",
+        active_section="resources",
+        filters=filters,
+        resources=resources,
+        page=_management_page(
+            resources, "artesp_theme.admin_management_resources", filters
+        ),
+    )
+
+
+def admin_management_resources_export():
+    _require_sysadmin_user()
+    rows = admin_management_logic.export_admin_resource_management(
+        _management_filters()
+    )
+    return _csv_response(
+        rows,
+        [
+            "id",
+            "nome",
+            "descricao",
+            "formato",
+            "mimetype",
+            "estado",
+            "url",
+            "tamanho",
+            "criado_em",
+            "ultima_modificacao",
+            "metadata_modificada_em",
+            "dataset_id",
+            "dataset_nome",
+            "dataset_titulo",
+            "organizacao",
+            "criador_dataset",
+        ],
+        "recursos-gestao",
+    )
+
+
+def admin_management_sysadmin():
+    user = _require_sysadmin_user()
+    username = (request.form.get("username") or "").strip()
+    status = toolkit.asbool(request.form.get("status"))
+    context = {"user": user.name, "auth_user_obj": user}
+
+    try:
+        toolkit.get_action("user_patch")(
+            context,
+            {"id": username, "sysadmin": status},
+        )
+    except toolkit.ObjectNotFound:
+        flash_error(toolkit._("User not found"))
+    except toolkit.NotAuthorized:
+        flash_error(toolkit._("Not authorized to promote user to sysadmin"))
+    except toolkit.ValidationError as exc:
+        flash_error(exc.error_summary or exc.error_dict or str(exc))
+    else:
+        if status:
+            flash_success(toolkit._("Promoted user to sysadmin."))
+        else:
+            flash_success(toolkit._("Revoked sysadmin permission."))
+
+    return redirect_to(toolkit.url_for("artesp_theme.admin_management_users"))
+
+
+def admin_management_collaborator():
+    user = _require_sysadmin_user()
+    package_id = (request.form.get("package_id") or "").strip()
+    username = (request.form.get("username") or "").strip()
+    user_id = (request.form.get("user_id") or "").strip()
+    capacity = (request.form.get("capacity") or "admin").strip()
+    operation = (request.form.get("operation") or "add").strip()
+    context = {"user": user.name, "auth_user_obj": user}
+
+    try:
+        if operation == "delete":
+            toolkit.get_action("package_collaborator_delete")(
+                context,
+                {"id": package_id, "user_id": user_id or username},
+            )
+            flash_success(toolkit._("Removed dataset collaborator."))
+        else:
+            toolkit.get_action("package_collaborator_create")(
+                context,
+                {"id": package_id, "username": username, "capacity": capacity},
+            )
+            flash_success(toolkit._("Saved dataset collaborator."))
+    except toolkit.ObjectNotFound:
+        flash_error(toolkit._("User or dataset not found"))
+    except toolkit.NotAuthorized as exc:
+        flash_error(str(exc))
+    except toolkit.ValidationError as exc:
+        flash_error(exc.error_summary or exc.error_dict or str(exc))
+
+    return redirect_to(toolkit.url_for("artesp_theme.admin_management_datasets"))
+
+
+artesp_theme.add_url_rule(
+    "/admin/gestao",
+    endpoint="admin_management",
+    view_func=admin_management,
+    methods=["GET"],
+)
+artesp_theme.add_url_rule(
+    "/admin/gestao/usuarios",
+    endpoint="admin_management_users",
+    view_func=admin_management_users,
+    methods=["GET"],
+)
+artesp_theme.add_url_rule(
+    "/admin/gestao/usuarios/export.csv",
+    endpoint="admin_management_users_export",
+    view_func=admin_management_users_export,
+    methods=["GET"],
+)
+artesp_theme.add_url_rule(
+    "/admin/gestao/datasets",
+    endpoint="admin_management_datasets",
+    view_func=admin_management_datasets,
+    methods=["GET"],
+)
+artesp_theme.add_url_rule(
+    "/admin/gestao/datasets/export.csv",
+    endpoint="admin_management_datasets_export",
+    view_func=admin_management_datasets_export,
+    methods=["GET"],
+)
+artesp_theme.add_url_rule(
+    "/admin/gestao/resources",
+    endpoint="admin_management_resources",
+    view_func=admin_management_resources,
+    methods=["GET"],
+)
+artesp_theme.add_url_rule(
+    "/admin/gestao/resources/export.csv",
+    endpoint="admin_management_resources_export",
+    view_func=admin_management_resources_export,
+    methods=["GET"],
+)
+artesp_theme.add_url_rule(
+    "/admin/gestao/sysadmin",
+    endpoint="admin_management_sysadmin",
+    view_func=admin_management_sysadmin,
+    methods=["POST"],
+)
+artesp_theme.add_url_rule(
+    "/admin/gestao/collaborator",
+    endpoint="admin_management_collaborator",
+    view_func=admin_management_collaborator,
+    methods=["POST"],
 )
 
 

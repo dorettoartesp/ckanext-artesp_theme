@@ -1,0 +1,77 @@
+{% extends "admin/management_base.html" %}
+
+{% block management_filter %}
+  <form method="get" action="{{ h.url_for('artesp_theme.admin_management_datasets') }}" class="management-filter">
+    <div>
+      <label for="management-q">{{ _('Busca') }}</label>
+      <input id="management-q" class="form-control" type="search" name="q" value="{{ filters.q }}" placeholder="{{ _('Nome ou título') }}">
+    </div>
+    <div>
+      <label for="management-state">{{ _('Estado') }}</label>
+      <select id="management-state" class="form-control" name="state">
+        <option value="">{{ _('Todos') }}</option>
+        <option value="active" {% if filters.state == 'active' %}selected{% endif %}>active</option>
+        <option value="draft" {% if filters.state == 'draft' %}selected{% endif %}>draft</option>
+        <option value="deleted" {% if filters.state == 'deleted' %}selected{% endif %}>deleted</option>
+      </select>
+    </div>
+    <div></div>
+    <div class="management-filter__actions">
+      <button class="btn btn-primary" type="submit">
+        <i class="fa fa-search"></i> {{ _('Filtrar') }}
+      </button>
+      <a class="btn btn-default" href="{{ h.url_for('artesp_theme.admin_management_datasets') }}">{{ _('Limpar') }}</a>
+      <a class="btn btn-default" href="{{ h.url_for('artesp_theme.admin_management_datasets_export', q=filters.q, state=filters.state, sort_by=filters.sort_by, sort_dir=filters.sort_dir) }}">
+        <i class="fa fa-download"></i> {{ _('Exportar CSV') }}
+      </a>
+    </div>
+  </form>
+{% endblock %}
+
+{% block management_table %}
+  <section class="management-section" id="datasets">
+    <div class="management-section__heading">
+      <h2>{{ _('Conjuntos de Dados') }}</h2>
+      {{ count_label(datasets) }}
+    </div>
+    <div class="table-responsive">
+    <table class="table table-header table-hover table-bordered management-table">
+      <thead>
+        <tr>
+          <th>{{ sort_link('artesp_theme.admin_management_datasets', 'title', _('Dataset')) }}</th>
+          <th>{{ sort_link('artesp_theme.admin_management_datasets', 'owner_org', _('Organização')) }}</th>
+          <th>{{ sort_link('artesp_theme.admin_management_datasets', 'creator', _('Criador')) }}</th>
+          <th>{{ sort_link('artesp_theme.admin_management_datasets', 'resources', _('Recursos')) }}</th>
+          <th>{{ _('Ações') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for dataset in datasets.items %}
+          <tr>
+            <td>
+              <a href="{{ h.url_for('dataset.read', id=dataset.name) }}">{{ dataset.title or dataset.name }}</a>
+              <br><small>{{ dataset.name }} - {{ dataset.state }}</small>
+              {% if dataset.private %}<br><span class="management-badge">{{ _('privado') }}</span>{% endif %}
+            </td>
+            <td>{{ dataset.owner_org }}</td>
+            <td>{{ h.linked_user(dataset.creator_name) if dataset.creator_name else '-' }}</td>
+            <td>{{ dataset.resource_count }}</td>
+            <td>
+              <div class="management-actions">
+                <a class="btn btn-default btn-sm" href="{{ h.url_for('dataset.edit', id=dataset.name) }}">
+                  <i class="fa fa-pencil"></i> {{ _('Editar') }}
+                </a>
+                <a class="btn btn-default btn-sm" href="{{ h.url_for('dataset.collaborators_read', id=dataset.name) }}">
+                  <i class="fa fa-users"></i> {{ _('Colaboradores') }}
+                </a>
+              </div>
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="5">{{ _('Nenhum dataset encontrado.') }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+  </section>
+{% endblock %}

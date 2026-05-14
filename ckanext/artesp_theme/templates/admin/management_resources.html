@@ -1,0 +1,73 @@
+{% extends "admin/management_base.html" %}
+
+{% block management_filter %}
+  <form method="get" action="{{ h.url_for('artesp_theme.admin_management_resources') }}" class="management-filter">
+    <div>
+      <label for="management-q">{{ _('Busca') }}</label>
+      <input id="management-q" class="form-control" type="search" name="q" value="{{ filters.q }}" placeholder="{{ _('Recurso ou conjunto de dados') }}">
+    </div>
+    <div>
+      <label for="management-format">{{ _('Formato') }}</label>
+      <input id="management-format" class="form-control" type="search" name="format" value="{{ filters.format }}" placeholder="CSV">
+    </div>
+    <div></div>
+    <div class="management-filter__actions">
+      <button class="btn btn-primary" type="submit">
+        <i class="fa fa-search"></i> {{ _('Filtrar') }}
+      </button>
+      <a class="btn btn-default" href="{{ h.url_for('artesp_theme.admin_management_resources') }}">{{ _('Limpar') }}</a>
+      <a class="btn btn-default" href="{{ h.url_for('artesp_theme.admin_management_resources_export', q=filters.q, format=filters.format, sort_by=filters.sort_by, sort_dir=filters.sort_dir) }}">
+        <i class="fa fa-download"></i> {{ _('Exportar CSV') }}
+      </a>
+    </div>
+  </form>
+{% endblock %}
+
+{% block management_table %}
+  <section class="management-section" id="resources">
+    <div class="management-section__heading">
+      <h2>{{ _('Recursos') }}</h2>
+      {{ count_label(resources) }}
+    </div>
+    <div class="table-responsive">
+    <table class="table table-header table-hover table-bordered management-table">
+      <thead>
+        <tr>
+          <th>{{ sort_link('artesp_theme.admin_management_resources', 'name', _('Recurso')) }}</th>
+          <th>{{ sort_link('artesp_theme.admin_management_resources', 'dataset', _('Conjunto de Dados')) }}</th>
+          <th>{{ sort_link('artesp_theme.admin_management_resources', 'format', _('Formato')) }}</th>
+          <th>{{ sort_link('artesp_theme.admin_management_resources', 'updated', _('Atualizado')) }}</th>
+          <th>{{ _('Ações') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for resource in resources.items %}
+          <tr>
+            <td>
+              <a href="{{ h.url_for('dataset_resource.read', id=resource.package_name, resource_id=resource.id) }}">{{ resource.name or resource.id }}</a>
+              <br><small>{{ resource.id }}</small>
+            </td>
+            <td>
+              <a href="{{ h.url_for('dataset.read', id=resource.package_name) }}">{{ resource.package_title or resource.package_name }}</a>
+            </td>
+            <td>{{ resource.format }}</td>
+            <td>{{ h.render_datetime(resource.metadata_modified, with_hours=True) if resource.metadata_modified else '-' }}</td>
+            <td>
+              <div class="management-actions">
+                <a class="btn btn-default btn-sm" href="{{ h.url_for('dataset_resource.edit', id=resource.package_name, resource_id=resource.id) }}">
+                  <i class="fa fa-pencil"></i> {{ _('Editar') }}
+                </a>
+                <a class="btn btn-default btn-sm" href="{{ h.url_for('dataset.read', id=resource.package_name) }}">
+                  <i class="fa fa-database"></i> {{ _('Conjunto') }}
+                </a>
+              </div>
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="5">{{ _('Nenhum recurso encontrado.') }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+  </section>
+{% endblock %}

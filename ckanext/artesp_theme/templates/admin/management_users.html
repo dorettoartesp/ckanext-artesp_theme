@@ -1,0 +1,81 @@
+{% extends "admin/management_base.html" %}
+
+{% block management_filter %}
+  <form method="get" action="{{ h.url_for('artesp_theme.admin_management_users') }}" class="management-filter">
+    <div>
+      <label for="management-q">{{ _('Busca') }}</label>
+      <input id="management-q" class="form-control" type="search" name="q" value="{{ filters.q }}" placeholder="{{ _('Nome ou e-mail') }}">
+    </div>
+    <div>
+      <label for="management-sysadmin">{{ _('Sysadmin') }}</label>
+      <select id="management-sysadmin" class="form-control" name="sysadmin">
+        <option value="">{{ _('Todos') }}</option>
+        <option value="true" {% if filters.sysadmin == 'true' %}selected{% endif %}>{{ _('Sim') }}</option>
+        <option value="false" {% if filters.sysadmin == 'false' %}selected{% endif %}>{{ _('Não') }}</option>
+      </select>
+    </div>
+    <div></div>
+    <div class="management-filter__actions">
+      <button class="btn btn-primary" type="submit">
+        <i class="fa fa-search"></i> {{ _('Filtrar') }}
+      </button>
+      <a class="btn btn-default" href="{{ h.url_for('artesp_theme.admin_management_users') }}">{{ _('Limpar') }}</a>
+      <a class="btn btn-default" href="{{ h.url_for('artesp_theme.admin_management_users_export', q=filters.q, sysadmin=filters.sysadmin, sort_by=filters.sort_by, sort_dir=filters.sort_dir) }}">
+        <i class="fa fa-download"></i> {{ _('Exportar CSV') }}
+      </a>
+    </div>
+  </form>
+{% endblock %}
+
+{% block management_table %}
+  <section class="management-section" id="usuarios">
+    <div class="management-section__heading">
+      <h2>{{ _('Usuários') }}</h2>
+      {{ count_label(users) }}
+    </div>
+    <div class="table-responsive">
+    <table class="table table-header table-hover table-bordered management-table">
+      <thead>
+        <tr>
+          <th>{{ sort_link('artesp_theme.admin_management_users', 'name', _('Usuário')) }}</th>
+          <th>{{ sort_link('artesp_theme.admin_management_users', 'email', _('E-mail')) }}</th>
+          <th>{{ sort_link('artesp_theme.admin_management_users', 'state', _('Estado')) }}</th>
+          <th>{{ sort_link('artesp_theme.admin_management_users', 'datasets', _('Conjuntos de Dados')) }}</th>
+          <th>{{ _('Ações') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users.items %}
+          <tr>
+            <td>
+              {{ h.linked_user(user.name) }}
+              {% if user.fullname %}<br><small>{{ user.fullname }}</small>{% endif %}
+              {% if user.sysadmin %}<br><span class="management-badge">sysadmin</span>{% endif %}
+            </td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.state }}</td>
+            <td>{{ user.created_dataset_count }}</td>
+            <td>
+              <div class="management-actions">
+                <a class="btn btn-default btn-sm" href="{{ h.url_for('user.edit', id=user.name) }}">
+                  <i class="fa fa-pencil"></i> {{ _('Editar') }}
+                </a>
+                <form method="post" action="{{ h.url_for('artesp_theme.admin_management_sysadmin') }}" class="management-inline-form">
+                  {{ h.csrf_input() }}
+                  <input type="hidden" name="username" value="{{ user.name }}">
+                  <input type="hidden" name="status" value="{{ '0' if user.sysadmin else '1' }}">
+                  <button class="btn btn-sm {{ 'btn-danger' if user.sysadmin else 'btn-primary' }}" type="submit">
+                    {{ _('Revogar') if user.sysadmin else _('Promover') }}
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="5">{{ _('Nenhum usuário encontrado.') }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+  </section>
+{% endblock %}

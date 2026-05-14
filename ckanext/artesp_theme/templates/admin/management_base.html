@@ -1,0 +1,249 @@
+{% extends "admin/base.html" %}
+
+{% block subtitle %}{{ _('Gestão') }}{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  <style>
+    .management-page {
+      display: grid;
+      gap: 24px;
+    }
+
+    .management-page h1 {
+      margin-top: 0;
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .management-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .management-tabs a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 36px;
+      padding: 7px 12px;
+      border: 1px solid #d9e2ec;
+      border-radius: 6px;
+      background: #fff;
+      color: #243b53;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .management-tabs .active a {
+      border-color: #ff161f;
+      color: #ff161f;
+    }
+
+    .management-filter {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) 160px 140px minmax(290px, auto);
+      gap: 12px;
+      align-items: end;
+      padding: 16px;
+      border: 1px solid #d9e2ec;
+      border-radius: 8px;
+      background: #f8fafc;
+    }
+
+    .management-filter label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #243b53;
+    }
+
+    .management-filter .form-control {
+      width: 100%;
+      min-height: 38px;
+    }
+
+    .management-section {
+      display: grid;
+      gap: 12px;
+    }
+
+    .management-section__heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 0;
+      padding-left: 14px;
+      border-left: 4px solid #ff161f;
+    }
+
+    .management-section__heading h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .management-count {
+      color: #52606d;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .management-table {
+      table-layout: auto;
+      min-width: 980px;
+    }
+
+    .management-table th,
+    .management-table td {
+      vertical-align: middle;
+      overflow-wrap: anywhere;
+    }
+
+    .management-table th:last-child,
+    .management-table td:last-child {
+      width: 190px;
+      min-width: 190px;
+    }
+
+    .management-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      gap: 6px;
+    }
+
+    .management-inline-form {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0;
+      white-space: nowrap;
+    }
+
+    .management-inline-form .form-control {
+      width: 150px;
+      min-height: 32px;
+      padding: 4px 8px;
+    }
+
+    .management-actions .btn,
+    .management-inline-form .btn {
+      white-space: nowrap;
+    }
+
+    .management-filter__actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-start;
+      min-width: 290px;
+    }
+
+    .management-filter__actions .btn {
+      white-space: nowrap;
+    }
+
+    .management-badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: #eef2f7;
+      color: #243b53;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .management-sort-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .management-sort-link:hover,
+    .management-sort-link:focus {
+      color: #034ea2;
+      text-decoration: none;
+    }
+
+    .management-sort-link.is-active {
+      color: #034ea2;
+    }
+
+    @media (max-width: 991px) {
+      .management-filter {
+        grid-template-columns: 1fr;
+      }
+
+      .management-actions {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+{% endblock %}
+
+{% macro count_label(result) -%}
+  <span class="management-count">{{ result.count }} {{ _('registros') }}</span>
+{%- endmacro %}
+
+{% macro sort_link(endpoint, field, label) -%}
+  {% set is_active = filters.sort_by == field %}
+  {% set next_dir = 'asc' if not is_active or filters.sort_dir == 'desc' else 'desc' %}
+  <a
+    class="management-sort-link{% if is_active %} is-active{% endif %}"
+    href="{{ h.url_for(endpoint, q=filters.q, state=filters.state, sysadmin=filters.sysadmin, format=filters.format, sort_by=field, sort_dir=next_dir) }}"
+  >
+    <span>{{ label }}</span>
+    <i class="fa {% if is_active %}{% if filters.sort_dir == 'asc' %}fa-sort-asc{% else %}fa-sort-desc{% endif %}{% else %}fa-sort{% endif %}"></i>
+  </a>
+{%- endmacro %}
+
+{% block secondary %}{% endblock %}
+
+{% block primary %}
+  <div class="primary col-md-12 col-xs-12" role="main">
+    <article class="module">
+      {% block page_header %}
+        <header class="module-content page-header">
+          <ul class="nav nav-tabs">
+            {{ h.build_nav_icon('admin.index', _('Sysadmins'), icon='gavel') }}
+            {{ h.build_nav_icon('admin.config', _('Config'), icon='gear') }}
+            {{ h.build_nav_icon('admin.trash', _('Trash'), icon='trash') }}
+            {{ h.build_nav_icon('artesp_theme.audit_admin', _('Auditoria'), icon='history') }}
+            <li class="active"><a href="{{ h.url_for('artesp_theme.admin_management_users') }}"><i class="fa fa-users"></i>Gestão</a></li>
+          </ul>
+        </header>
+      {% endblock %}
+      <div class="module-content">
+        <div class="management-page">
+          <h1>{{ _('Gestão') }}</h1>
+
+          <ul class="management-tabs">
+            <li class="{{ 'active' if active_section == 'users' else '' }}">
+              <a href="{{ h.url_for('artesp_theme.admin_management_users') }}"><i class="fa fa-users"></i>{{ _('Usuários') }}</a>
+            </li>
+            <li class="{{ 'active' if active_section == 'datasets' else '' }}">
+              <a href="{{ h.url_for('artesp_theme.admin_management_datasets') }}"><i class="fa fa-database"></i>{{ _('Conjuntos de Dados') }}</a>
+            </li>
+            <li class="{{ 'active' if active_section == 'resources' else '' }}">
+              <a href="{{ h.url_for('artesp_theme.admin_management_resources') }}"><i class="fa fa-file"></i>{{ _('Recursos') }}</a>
+            </li>
+          </ul>
+
+          {% block management_filter %}{% endblock %}
+          {% block management_table %}{% endblock %}
+          <div class="management-pagination">
+            {{ page.pager() }}
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+{% endblock %}

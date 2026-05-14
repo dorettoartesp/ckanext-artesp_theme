@@ -394,22 +394,7 @@
             </table>
           </div>
 
-          {% if has_prev or has_next %}
-            <nav aria-label="{{ _('Paginação da auditoria') }}">
-              <ul class="pager">
-                {% if has_prev %}
-                  <li class="previous">
-                    <a href="{{ h.url_for('artesp_theme.audit_admin', date_from=filters.date_from, date_to=filters.date_to, scope=filters.scope, action=filters.action, provider=filters.provider, channel=filters.channel, user=filters.user, ip=filters.ip, object=filters.object, sort_by=filters.sort_by, sort_dir=filters.sort_dir, page=page - 1) }}">&larr; {{ _('Anterior') }}</a>
-                  </li>
-                {% endif %}
-                {% if has_next %}
-                  <li class="next">
-                    <a href="{{ h.url_for('artesp_theme.audit_admin', date_from=filters.date_from, date_to=filters.date_to, scope=filters.scope, action=filters.action, provider=filters.provider, channel=filters.channel, user=filters.user, ip=filters.ip, object=filters.object, sort_by=filters.sort_by, sort_dir=filters.sort_dir, page=page + 1) }}">{{ _('Próxima') }} &rarr;</a>
-                  </li>
-                {% endif %}
-              </ul>
-            </nav>
-          {% endif %}
+          {{ pagination.pager() }}
         </div>
       </div>
     </article>
