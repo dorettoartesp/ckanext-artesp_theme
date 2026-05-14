@@ -239,8 +239,8 @@
 
           {% block management_filter %}{% endblock %}
           {% block management_table %}{% endblock %}
-          <div class="management-pagination pagination">
-            {{ page.pager(q=filters.q, state=filters.state, sysadmin=filters.sysadmin, format=filters.format) }}
+          <div class="management-pagination">
+            {{ page.pager() }}
           </div>
         </div>
       </div>

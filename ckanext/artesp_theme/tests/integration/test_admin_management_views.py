@@ -167,6 +167,30 @@ def test_admin_management_sorts_datasets_and_resources(app):
     assert resources_page.text.index("zzz-gestao-sort") < resources_page.text.index("aaa-gestao-sort")
 
 
+def test_admin_management_uses_standard_numbered_pagination(app):
+    suffix = uuid.uuid4().hex[:8]
+    sysadmin = factories.Sysadmin()
+    for index in range(55):
+        factories.User(
+            name="gp{}{:02d}".format(suffix, index),
+            email="gestao-page-{}-{:02d}@example.com".format(suffix, index),
+        )
+
+    response = app.get(
+        "/admin/gestao/usuarios?q=gestao-page-{}&sort_by=name&sort_dir=asc&page=2".format(suffix),
+        environ_base={"REMOTE_USER": sysadmin["name"]},
+    )
+
+    assert response.status_code == 200
+    assert "55 registros" in response.text
+    assert 'class="pagination-wrapper"' in response.text
+    assert 'class="pagination justify-content-center"' in response.text
+    assert "page=1" in response.text
+    assert "q=gestao-page-{}".format(suffix) in response.text
+    assert "sort_by=name" in response.text
+    assert "sort_dir=asc" in response.text
+
+
 def test_admin_management_exports_filtered_csv(app):
     suffix = uuid.uuid4().hex[:8]
     org = _artesp_org()

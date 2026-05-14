@@ -271,9 +271,28 @@ def audit_admin():
         "page": request.args.get("page", "1"),
     }
     result = audit_query.search_audit_events(filters)
+    result_filters = result.get("filters", filters)
+
+    def audit_pager_url(**kwargs):
+        params = {
+            key: value
+            for key, value in result_filters.items()
+            if key != "page" and value
+        }
+        if kwargs.get("page"):
+            params["page"] = kwargs["page"]
+        return toolkit.url_for("artesp_theme.audit_admin", **params)
+
     return render_template(
         "admin/audit.html",
         **result,
+        pagination=Page(
+            collection=result["events"],
+            page=result["page"],
+            items_per_page=result.get("page_size", audit_query.PAGE_SIZE),
+            item_count=result["item_count"],
+            url=audit_pager_url,
+        ),
         scope_choices=audit_query.SCOPE_CHOICES,
         action_choices=audit_query.ACTION_CHOICES,
         provider_choices=audit_query.PROVIDER_CHOICES,

@@ -117,10 +117,12 @@ def test_audit_admin_route_renders_numbered_pagination(app):
     )
 
     assert response.status_code == 200
-    assert 'class="pagination audit-pagination"' in response.text
-    assert 'aria-label="Paginação da auditoria"' in response.text
+    assert 'class="pagination audit-pagination"' not in response.text
+    assert 'class="pagination-wrapper"' in response.text
+    assert 'class="pagination justify-content-center"' in response.text
     assert ">1</a>" in response.text
-    assert ">2 <span" in response.text
+    assert ">2</a>" in response.text
+    assert 'class="page-item active"' in response.text
     assert ">3</a>" in response.text
     assert "page=1" in response.text
     assert "page=3" in response.text

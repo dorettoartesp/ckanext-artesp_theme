@@ -67,35 +67,16 @@ def search_audit_events(raw_filters: dict[str, str] | None = None) -> dict[str, 
     offset = (filters["page"] - 1) * PAGE_SIZE
     events = query.offset(offset).limit(PAGE_SIZE).all()
 
-    page_count = max(1, (item_count + PAGE_SIZE - 1) // PAGE_SIZE)
     return {
         "events": events,
         "item_count": item_count,
         "page": filters["page"],
         "page_size": PAGE_SIZE,
-        "page_count": page_count,
-        "pagination_pages": _pagination_pages(filters["page"], page_count),
+        "page_count": max(1, (item_count + PAGE_SIZE - 1) // PAGE_SIZE),
         "has_prev": filters["page"] > 1,
         "has_next": offset + len(events) < item_count,
         "filters": _serialize_filters(filters),
     }
-
-
-def _pagination_pages(current_page: int, page_count: int) -> list[int | None]:
-    if page_count <= 9:
-        return list(range(1, page_count + 1))
-
-    pages = {1, page_count}
-    pages.update(range(max(1, current_page - 2), min(page_count, current_page + 2) + 1))
-
-    result: list[int | None] = []
-    previous = 0
-    for page in sorted(pages):
-        if previous and page - previous > 1:
-            result.append(None)
-        result.append(page)
-        previous = page
-    return result
 
 
 def _normalize_filters(raw_filters: dict[str, str]) -> dict[str, object]:
