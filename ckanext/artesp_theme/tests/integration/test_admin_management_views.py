@@ -85,15 +85,65 @@ def test_admin_management_has_separate_paginated_pages(app):
     assert dataset_name not in users_page.text
 
     assert "Conjuntos de Dados" in datasets_page.text
+    assert '<li class="active"><a href="/admin/gestao/usuarios"><i class="fa fa-users"></i>Gestão</a></li>' in datasets_page.text
+    assert "sort_by=title" in datasets_page.text
+    assert "sort_by=owner_org" in datasets_page.text
+    assert "sort_by=creator" in datasets_page.text
+    assert "sort_by=resources" in datasets_page.text
     assert dataset_name in datasets_page.text
     assert 'href="/dataset/edit/{}"'.format(dataset_name) in datasets_page.text
     assert "pagination" in datasets_page.text
     assert "gestao-resource.csv" not in datasets_page.text
 
     assert "Recursos" in resources_page.text
+    assert '<li class="active"><a href="/admin/gestao/usuarios"><i class="fa fa-users"></i>Gestão</a></li>' in resources_page.text
+    assert "sort_by=name" in resources_page.text
+    assert "sort_by=dataset" in resources_page.text
+    assert "sort_by=format" in resources_page.text
+    assert "sort_by=updated" in resources_page.text
     assert "gestao-resource.csv" in resources_page.text
     assert 'href="/dataset/{}/resource/'.format(dataset_name) in resources_page.text
     assert "pagination" in resources_page.text
+
+
+def test_admin_management_sorts_datasets_and_resources(app):
+    suffix = uuid.uuid4().hex[:8]
+    org = _artesp_org()
+    sysadmin = factories.Sysadmin()
+    dataset_a = factories.Dataset(
+        name="gestao-sort-a-{}".format(suffix),
+        title="AAA Gestao Sort {}".format(suffix),
+        owner_org=org["id"],
+    )
+    dataset_z = factories.Dataset(
+        name="gestao-sort-z-{}".format(suffix),
+        title="ZZZ Gestao Sort {}".format(suffix),
+        owner_org=org["id"],
+    )
+    factories.Resource(
+        package_id=dataset_a["id"],
+        name="aaa-gestao-sort-{}.csv".format(suffix),
+        format="CSV",
+        url="https://example.com/aaa-gestao-sort.csv",
+    )
+    factories.Resource(
+        package_id=dataset_z["id"],
+        name="zzz-gestao-sort-{}.json".format(suffix),
+        format="JSON",
+        url="https://example.com/zzz-gestao-sort.json",
+    )
+
+    datasets_page = app.get(
+        "/admin/gestao/datasets?q=Gestao+Sort+{}&sort_by=title&sort_dir=asc".format(suffix),
+        environ_base={"REMOTE_USER": sysadmin["name"]},
+    )
+    resources_page = app.get(
+        "/admin/gestao/resources?q={}&sort_by=format&sort_dir=desc".format(suffix),
+        environ_base={"REMOTE_USER": sysadmin["name"]},
+    )
+
+    assert datasets_page.text.index("AAA Gestao Sort") < datasets_page.text.index("ZZZ Gestao Sort")
+    assert resources_page.text.index("zzz-gestao-sort") < resources_page.text.index("aaa-gestao-sort")
 
 
 def test_admin_management_can_revoke_sysadmin(app):

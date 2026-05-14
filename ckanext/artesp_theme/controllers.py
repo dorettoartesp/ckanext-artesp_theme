@@ -305,6 +305,8 @@ def _management_filters():
         "state": request.args.get("state", ""),
         "sysadmin": request.args.get("sysadmin", ""),
         "format": request.args.get("format", ""),
+        "sort_by": request.args.get("sort_by", ""),
+        "sort_dir": request.args.get("sort_dir", ""),
     }
 
 

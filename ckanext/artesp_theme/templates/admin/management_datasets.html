@@ -35,10 +35,10 @@
     <table class="table table-header table-hover table-bordered management-table">
       <thead>
         <tr>
-          <th>{{ _('Dataset') }}</th>
-          <th>{{ _('Organização') }}</th>
-          <th>{{ _('Criador') }}</th>
-          <th>{{ _('Recursos') }}</th>
+          <th>{{ sort_link('artesp_theme.admin_management_datasets', 'title', _('Dataset')) }}</th>
+          <th>{{ sort_link('artesp_theme.admin_management_datasets', 'owner_org', _('Organização')) }}</th>
+          <th>{{ sort_link('artesp_theme.admin_management_datasets', 'creator', _('Criador')) }}</th>
+          <th>{{ sort_link('artesp_theme.admin_management_datasets', 'resources', _('Recursos')) }}</th>
           <th>{{ _('Ações') }}</th>
         </tr>
       </thead>

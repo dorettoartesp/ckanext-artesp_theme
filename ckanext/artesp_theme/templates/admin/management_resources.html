@@ -30,10 +30,10 @@
     <table class="table table-header table-hover table-bordered management-table">
       <thead>
         <tr>
-          <th>{{ _('Recurso') }}</th>
-          <th>{{ _('Conjunto de Dados') }}</th>
-          <th>{{ _('Formato') }}</th>
-          <th>{{ _('Atualizado') }}</th>
+          <th>{{ sort_link('artesp_theme.admin_management_resources', 'name', _('Recurso')) }}</th>
+          <th>{{ sort_link('artesp_theme.admin_management_resources', 'dataset', _('Conjunto de Dados')) }}</th>
+          <th>{{ sort_link('artesp_theme.admin_management_resources', 'format', _('Formato')) }}</th>
+          <th>{{ sort_link('artesp_theme.admin_management_resources', 'updated', _('Atualizado')) }}</th>
           <th>{{ _('Ações') }}</th>
         </tr>
       </thead>
