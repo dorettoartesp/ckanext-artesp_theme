@@ -4,7 +4,7 @@
   <form method="get" action="{{ h.url_for('artesp_theme.admin_management_resources') }}" class="management-filter">
     <div>
       <label for="management-q">{{ _('Busca') }}</label>
-      <input id="management-q" class="form-control" type="search" name="q" value="{{ filters.q }}" placeholder="{{ _('Resource ou dataset') }}">
+      <input id="management-q" class="form-control" type="search" name="q" value="{{ filters.q }}" placeholder="{{ _('Recurso ou conjunto de dados') }}">
     </div>
     <div>
       <label for="management-format">{{ _('Formato') }}</label>
@@ -22,18 +22,18 @@
 {% block management_table %}
   <section class="management-section" id="resources">
     <div class="management-section__heading">
-      <h2>{{ _('Resources') }}</h2>
+      <h2>{{ _('Recursos') }}</h2>
       {{ count_label(resources) }}
     </div>
     <div class="table-responsive">
     <table class="table table-header table-hover table-bordered management-table">
       <thead>
         <tr>
-          <th>{{ _('Resource') }}</th>
-          <th>{{ _('Dataset') }}</th>
+          <th>{{ _('Recurso') }}</th>
+          <th>{{ _('Conjunto de Dados') }}</th>
           <th>{{ _('Formato') }}</th>
           <th>{{ _('Atualizado') }}</th>
-          <th>{{ _('Acoes') }}</th>
+          <th>{{ _('Ações') }}</th>
         </tr>
       </thead>
       <tbody>
@@ -54,13 +54,13 @@
                   <i class="fa fa-pencil"></i> {{ _('Editar') }}
                 </a>
                 <a class="btn btn-default btn-sm" href="{{ h.url_for('dataset.read', id=resource.package_name) }}">
-                  <i class="fa fa-database"></i> {{ _('Dataset') }}
+                  <i class="fa fa-database"></i> {{ _('Conjunto') }}
                 </a>
               </div>
             </td>
           </tr>
         {% else %}
-          <tr><td colspan="5">{{ _('Nenhum resource encontrado.') }}</td></tr>
+          <tr><td colspan="5">{{ _('Nenhum recurso encontrado.') }}</td></tr>
         {% endfor %}
       </tbody>
     </table>

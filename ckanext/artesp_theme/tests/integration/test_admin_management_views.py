@@ -78,19 +78,19 @@ def test_admin_management_has_separate_paginated_pages(app):
     assert datasets_page.status_code == 200
     assert resources_page.status_code == 200
 
-    assert "Usuarios" in users_page.text
+    assert "Usuários" in users_page.text
     assert username in users_page.text
     assert email in users_page.text
     assert "pagination" in users_page.text
     assert dataset_name not in users_page.text
 
-    assert "Datasets" in datasets_page.text
+    assert "Conjuntos de Dados" in datasets_page.text
     assert dataset_name in datasets_page.text
     assert 'href="/dataset/edit/{}"'.format(dataset_name) in datasets_page.text
     assert "pagination" in datasets_page.text
     assert "gestao-resource.csv" not in datasets_page.text
 
-    assert "Resources" in resources_page.text
+    assert "Recursos" in resources_page.text
     assert "gestao-resource.csv" in resources_page.text
     assert 'href="/dataset/{}/resource/'.format(dataset_name) in resources_page.text
     assert "pagination" in resources_page.text

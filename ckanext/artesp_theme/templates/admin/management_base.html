@@ -1,6 +1,6 @@
 {% extends "admin/base.html" %}
 
-{% block subtitle %}{{ _('Gestao') }}{% endblock %}
+{% block subtitle %}{{ _('Gestão') }}{% endblock %}
 
 {% block styles %}
   {{ super() }}
@@ -107,8 +107,8 @@
 
     .management-table th:last-child,
     .management-table td:last-child {
-      width: 280px;
-      min-width: 280px;
+      width: 190px;
+      min-width: 190px;
     }
 
     .management-actions {
@@ -177,17 +177,17 @@
       {% endblock %}
       <div class="module-content">
         <div class="management-page">
-          <h1>{{ _('Gestao') }}</h1>
+          <h1>{{ _('Gestão') }}</h1>
 
           <ul class="management-tabs">
             <li class="{{ 'active' if active_section == 'users' else '' }}">
-              <a href="{{ h.url_for('artesp_theme.admin_management_users') }}"><i class="fa fa-users"></i>{{ _('Usuarios') }}</a>
+              <a href="{{ h.url_for('artesp_theme.admin_management_users') }}"><i class="fa fa-users"></i>{{ _('Usuários') }}</a>
             </li>
             <li class="{{ 'active' if active_section == 'datasets' else '' }}">
-              <a href="{{ h.url_for('artesp_theme.admin_management_datasets') }}"><i class="fa fa-database"></i>{{ _('Datasets') }}</a>
+              <a href="{{ h.url_for('artesp_theme.admin_management_datasets') }}"><i class="fa fa-database"></i>{{ _('Conjuntos de Dados') }}</a>
             </li>
             <li class="{{ 'active' if active_section == 'resources' else '' }}">
-              <a href="{{ h.url_for('artesp_theme.admin_management_resources') }}"><i class="fa fa-file"></i>{{ _('Resources') }}</a>
+              <a href="{{ h.url_for('artesp_theme.admin_management_resources') }}"><i class="fa fa-file"></i>{{ _('Recursos') }}</a>
             </li>
           </ul>
 

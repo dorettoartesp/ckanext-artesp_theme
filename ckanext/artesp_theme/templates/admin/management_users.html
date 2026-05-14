@@ -4,14 +4,14 @@
   <form method="get" action="{{ h.url_for('artesp_theme.admin_management_users') }}" class="management-filter">
     <div>
       <label for="management-q">{{ _('Busca') }}</label>
-      <input id="management-q" class="form-control" type="search" name="q" value="{{ filters.q }}" placeholder="{{ _('Nome ou email') }}">
+      <input id="management-q" class="form-control" type="search" name="q" value="{{ filters.q }}" placeholder="{{ _('Nome ou e-mail') }}">
     </div>
     <div>
       <label for="management-sysadmin">{{ _('Sysadmin') }}</label>
       <select id="management-sysadmin" class="form-control" name="sysadmin">
         <option value="">{{ _('Todos') }}</option>
         <option value="true" {% if filters.sysadmin == 'true' %}selected{% endif %}>{{ _('Sim') }}</option>
-        <option value="false" {% if filters.sysadmin == 'false' %}selected{% endif %}>{{ _('Nao') }}</option>
+        <option value="false" {% if filters.sysadmin == 'false' %}selected{% endif %}>{{ _('Não') }}</option>
       </select>
     </div>
     <div></div>
@@ -26,18 +26,18 @@
 {% block management_table %}
   <section class="management-section" id="usuarios">
     <div class="management-section__heading">
-      <h2>{{ _('Usuarios') }}</h2>
+      <h2>{{ _('Usuários') }}</h2>
       {{ count_label(users) }}
     </div>
     <div class="table-responsive">
     <table class="table table-header table-hover table-bordered management-table">
       <thead>
         <tr>
-          <th>{{ _('Usuario') }}</th>
+          <th>{{ _('Usuário') }}</th>
           <th>{{ _('E-mail') }}</th>
           <th>{{ _('Estado') }}</th>
-          <th>{{ _('Datasets') }}</th>
-          <th>{{ _('Acoes') }}</th>
+          <th>{{ _('Conjuntos de Dados') }}</th>
+          <th>{{ _('Ações') }}</th>
         </tr>
       </thead>
       <tbody>
@@ -68,7 +68,7 @@
             </td>
           </tr>
         {% else %}
-          <tr><td colspan="5">{{ _('Nenhum usuario encontrado.') }}</td></tr>
+          <tr><td colspan="5">{{ _('Nenhum usuário encontrado.') }}</td></tr>
         {% endfor %}
       </tbody>
     </table>

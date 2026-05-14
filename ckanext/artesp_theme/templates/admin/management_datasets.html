@@ -4,7 +4,7 @@
   <form method="get" action="{{ h.url_for('artesp_theme.admin_management_datasets') }}" class="management-filter">
     <div>
       <label for="management-q">{{ _('Busca') }}</label>
-      <input id="management-q" class="form-control" type="search" name="q" value="{{ filters.q }}" placeholder="{{ _('Nome ou titulo') }}">
+      <input id="management-q" class="form-control" type="search" name="q" value="{{ filters.q }}" placeholder="{{ _('Nome ou título') }}">
     </div>
     <div>
       <label for="management-state">{{ _('Estado') }}</label>
@@ -27,7 +27,7 @@
 {% block management_table %}
   <section class="management-section" id="datasets">
     <div class="management-section__heading">
-      <h2>{{ _('Datasets') }}</h2>
+      <h2>{{ _('Conjuntos de Dados') }}</h2>
       {{ count_label(datasets) }}
     </div>
     <div class="table-responsive">
@@ -35,10 +35,10 @@
       <thead>
         <tr>
           <th>{{ _('Dataset') }}</th>
-          <th>{{ _('Organizacao') }}</th>
+          <th>{{ _('Organização') }}</th>
           <th>{{ _('Criador') }}</th>
-          <th>{{ _('Resources') }}</th>
-          <th>{{ _('Acoes') }}</th>
+          <th>{{ _('Recursos') }}</th>
+          <th>{{ _('Ações') }}</th>
         </tr>
       </thead>
       <tbody>
@@ -60,13 +60,6 @@
                 <a class="btn btn-default btn-sm" href="{{ h.url_for('dataset.collaborators_read', id=dataset.name) }}">
                   <i class="fa fa-users"></i> {{ _('Colaboradores') }}
                 </a>
-                <form method="post" action="{{ h.url_for('artesp_theme.admin_management_collaborator') }}" class="management-inline-form">
-                  {{ h.csrf_input() }}
-                  <input type="hidden" name="package_id" value="{{ dataset.id }}">
-                  <input class="form-control" type="text" name="username" placeholder="{{ _('usuario') }}" required>
-                  <input type="hidden" name="capacity" value="admin">
-                  <button class="btn btn-primary btn-sm" type="submit">{{ _('Admin') }}</button>
-                </form>
               </div>
             </td>
           </tr>
