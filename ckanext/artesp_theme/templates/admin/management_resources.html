@@ -11,10 +11,11 @@
       <input id="management-format" class="form-control" type="search" name="format" value="{{ filters.format }}" placeholder="CSV">
     </div>
     <div></div>
-    <div>
+    <div class="management-filter__actions">
       <button class="btn btn-primary" type="submit">
         <i class="fa fa-search"></i> {{ _('Filtrar') }}
       </button>
+      <a class="btn btn-default" href="{{ h.url_for('artesp_theme.admin_management_resources') }}">{{ _('Limpar') }}</a>
     </div>
   </form>
 {% endblock %}
