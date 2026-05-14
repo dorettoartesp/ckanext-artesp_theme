@@ -92,3 +92,38 @@ def test_audit_admin_route_renders_filters_table_and_nav(app):
     assert 'title="conjunto-de-dados-com-nome-bem-longo-para-truncar"' in response.text
     assert 'title="recurso-com-nome-bem-longo-para-truncar.csv"' in response.text
     assert 'href="/admin/audit"' in response.text
+
+
+def test_audit_admin_route_renders_numbered_pagination(app):
+    sysadmin = factories.Sysadmin()
+    for index in range(125):
+        event = AuditEvent(
+            event_family="dataset",
+            event_action="package_update",
+            success=True,
+            actor_id=sysadmin["id"],
+            actor_name="audit-page-user",
+            actor_type="sysadmin",
+            channel="web",
+            package_name="audit-page-dataset-{}".format(index),
+        )
+        event.occurred_at = datetime.utcnow()
+        model.Session.add(event)
+    model.Session.commit()
+
+    response = app.get(
+        "/admin/audit?user=audit-page-user&sort_by=actor_name&sort_dir=asc&page=2",
+        environ_base={"REMOTE_USER": sysadmin["name"]},
+    )
+
+    assert response.status_code == 200
+    assert 'class="pagination audit-pagination"' in response.text
+    assert 'aria-label="Paginação da auditoria"' in response.text
+    assert ">1</a>" in response.text
+    assert ">2 <span" in response.text
+    assert ">3</a>" in response.text
+    assert "page=1" in response.text
+    assert "page=3" in response.text
+    assert "user=audit-page-user" in response.text
+    assert "sort_by=actor_name" in response.text
+    assert "sort_dir=asc" in response.text

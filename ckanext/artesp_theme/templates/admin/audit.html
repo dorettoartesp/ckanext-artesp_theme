@@ -226,6 +226,25 @@
       cursor: pointer;
     }
 
+    .audit-pagination {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin: 0;
+    }
+
+    .audit-pagination > li > a,
+    .audit-pagination > li > span {
+      min-width: 36px;
+      text-align: center;
+    }
+
+    .audit-pagination__ellipsis > span {
+      border-color: transparent;
+      background: transparent;
+      color: #52606d;
+    }
+
     @media (max-width: 991px) {
       .audit-toolbar {
         padding: 16px;
@@ -394,19 +413,36 @@
             </table>
           </div>
 
-          {% if has_prev or has_next %}
+          {% if page_count > 1 %}
             <nav aria-label="{{ _('Paginação da auditoria') }}">
-              <ul class="pager">
-                {% if has_prev %}
-                  <li class="previous">
-                    <a href="{{ h.url_for('artesp_theme.audit_admin', date_from=filters.date_from, date_to=filters.date_to, scope=filters.scope, action=filters.action, provider=filters.provider, channel=filters.channel, user=filters.user, ip=filters.ip, object=filters.object, sort_by=filters.sort_by, sort_dir=filters.sort_dir, page=page - 1) }}">&larr; {{ _('Anterior') }}</a>
-                  </li>
-                {% endif %}
-                {% if has_next %}
-                  <li class="next">
-                    <a href="{{ h.url_for('artesp_theme.audit_admin', date_from=filters.date_from, date_to=filters.date_to, scope=filters.scope, action=filters.action, provider=filters.provider, channel=filters.channel, user=filters.user, ip=filters.ip, object=filters.object, sort_by=filters.sort_by, sort_dir=filters.sort_dir, page=page + 1) }}">{{ _('Próxima') }} &rarr;</a>
-                  </li>
-                {% endif %}
+              <ul class="pagination audit-pagination">
+                <li class="{{ 'disabled' if not has_prev else '' }}">
+                  {% if has_prev %}
+                    <a href="{{ h.url_for('artesp_theme.audit_admin', date_from=filters.date_from, date_to=filters.date_to, scope=filters.scope, action=filters.action, provider=filters.provider, channel=filters.channel, user=filters.user, ip=filters.ip, object=filters.object, sort_by=filters.sort_by, sort_dir=filters.sort_dir, page=page - 1) }}" aria-label="{{ _('Página anterior') }}">&laquo;</a>
+                  {% else %}
+                    <span aria-hidden="true">&laquo;</span>
+                  {% endif %}
+                </li>
+                {% for page_number in pagination_pages %}
+                  {% if page_number %}
+                    <li class="{{ 'active' if page_number == page else '' }}">
+                      {% if page_number == page %}
+                        <span>{{ page_number }} <span class="sr-only">{{ _('página atual') }}</span></span>
+                      {% else %}
+                        <a href="{{ h.url_for('artesp_theme.audit_admin', date_from=filters.date_from, date_to=filters.date_to, scope=filters.scope, action=filters.action, provider=filters.provider, channel=filters.channel, user=filters.user, ip=filters.ip, object=filters.object, sort_by=filters.sort_by, sort_dir=filters.sort_dir, page=page_number) }}">{{ page_number }}</a>
+                      {% endif %}
+                    </li>
+                  {% else %}
+                    <li class="disabled audit-pagination__ellipsis"><span>&hellip;</span></li>
+                  {% endif %}
+                {% endfor %}
+                <li class="{{ 'disabled' if not has_next else '' }}">
+                  {% if has_next %}
+                    <a href="{{ h.url_for('artesp_theme.audit_admin', date_from=filters.date_from, date_to=filters.date_to, scope=filters.scope, action=filters.action, provider=filters.provider, channel=filters.channel, user=filters.user, ip=filters.ip, object=filters.object, sort_by=filters.sort_by, sort_dir=filters.sort_dir, page=page + 1) }}" aria-label="{{ _('Próxima página') }}">&raquo;</a>
+                  {% else %}
+                    <span aria-hidden="true">&raquo;</span>
+                  {% endif %}
+                </li>
               </ul>
             </nav>
           {% endif %}
