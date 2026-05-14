@@ -29,6 +29,7 @@
       <h2>{{ _('Usuarios') }}</h2>
       {{ count_label(users) }}
     </div>
+    <div class="table-responsive">
     <table class="table table-header table-hover table-bordered management-table">
       <thead>
         <tr>
@@ -71,5 +72,6 @@
         {% endfor %}
       </tbody>
     </table>
+    </div>
   </section>
 {% endblock %}

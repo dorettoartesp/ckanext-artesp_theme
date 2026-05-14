@@ -10,6 +10,12 @@
       gap: 24px;
     }
 
+    .management-page h1 {
+      margin-top: 0;
+      font-size: 28px;
+      font-weight: 700;
+    }
+
     .management-tabs {
       display: flex;
       flex-wrap: wrap;
@@ -89,7 +95,8 @@
     }
 
     .management-table {
-      table-layout: fixed;
+      table-layout: auto;
+      min-width: 980px;
     }
 
     .management-table th,
@@ -98,10 +105,16 @@
       overflow-wrap: anywhere;
     }
 
+    .management-table th:last-child,
+    .management-table td:last-child {
+      width: 280px;
+      min-width: 280px;
+    }
+
     .management-actions {
       display: flex;
       flex-wrap: wrap;
-      justify-content: flex-end;
+      justify-content: flex-start;
       gap: 6px;
     }
 
@@ -110,12 +123,18 @@
       align-items: center;
       gap: 6px;
       margin: 0;
+      white-space: nowrap;
     }
 
     .management-inline-form .form-control {
-      width: 140px;
+      width: 150px;
       min-height: 32px;
       padding: 4px 8px;
+    }
+
+    .management-actions .btn,
+    .management-inline-form .btn {
+      white-space: nowrap;
     }
 
     .management-badge {
@@ -144,36 +163,41 @@
   <span class="management-count">{{ result.count }} {{ _('registros') }}</span>
 {%- endmacro %}
 
-{% block primary_content_inner %}
-  <div class="management-page">
-    <ul class="management-tabs">
-      <li class="{{ 'active' if active_section == 'users' else '' }}">
-        <a href="{{ h.url_for('artesp_theme.admin_management_users') }}"><i class="fa fa-users"></i>{{ _('Usuarios') }}</a>
-      </li>
-      <li class="{{ 'active' if active_section == 'datasets' else '' }}">
-        <a href="{{ h.url_for('artesp_theme.admin_management_datasets') }}"><i class="fa fa-database"></i>{{ _('Datasets') }}</a>
-      </li>
-      <li class="{{ 'active' if active_section == 'resources' else '' }}">
-        <a href="{{ h.url_for('artesp_theme.admin_management_resources') }}"><i class="fa fa-file"></i>{{ _('Resources') }}</a>
-      </li>
-    </ul>
+{% block secondary %}{% endblock %}
 
-    {% block management_filter %}{% endblock %}
-    {% block management_table %}{% endblock %}
-    <div class="management-pagination pagination">
-      {{ page.pager(q=filters.q, state=filters.state, sysadmin=filters.sysadmin, format=filters.format) }}
-    </div>
-  </div>
-{% endblock %}
+{% block primary %}
+  <div class="primary col-md-12 col-xs-12" role="main">
+    <article class="module">
+      {% block page_header %}
+        <header class="module-content page-header">
+          <ul class="nav nav-tabs">
+            {% block content_primary_nav %}{{ super() }}{% endblock %}
+          </ul>
+        </header>
+      {% endblock %}
+      <div class="module-content">
+        <div class="management-page">
+          <h1>{{ _('Gestao') }}</h1>
 
-{% block secondary_content %}
-  <div class="module module-narrow module-shallow">
-    <h2 class="module-heading">
-      <i class="fa fa-info-circle"></i>
-      {{ _('Gestao operacional') }}
-    </h2>
-    <div class="module-content">
-      <p>{{ _('Use esta central para revisar usuarios, datasets e resources e ajustar permissoes administrativas sem executar exclusoes.') }}</p>
-    </div>
+          <ul class="management-tabs">
+            <li class="{{ 'active' if active_section == 'users' else '' }}">
+              <a href="{{ h.url_for('artesp_theme.admin_management_users') }}"><i class="fa fa-users"></i>{{ _('Usuarios') }}</a>
+            </li>
+            <li class="{{ 'active' if active_section == 'datasets' else '' }}">
+              <a href="{{ h.url_for('artesp_theme.admin_management_datasets') }}"><i class="fa fa-database"></i>{{ _('Datasets') }}</a>
+            </li>
+            <li class="{{ 'active' if active_section == 'resources' else '' }}">
+              <a href="{{ h.url_for('artesp_theme.admin_management_resources') }}"><i class="fa fa-file"></i>{{ _('Resources') }}</a>
+            </li>
+          </ul>
+
+          {% block management_filter %}{% endblock %}
+          {% block management_table %}{% endblock %}
+          <div class="management-pagination pagination">
+            {{ page.pager(q=filters.q, state=filters.state, sysadmin=filters.sysadmin, format=filters.format) }}
+          </div>
+        </div>
+      </div>
+    </article>
   </div>
 {% endblock %}
