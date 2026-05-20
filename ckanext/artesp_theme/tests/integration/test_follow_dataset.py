@@ -114,13 +114,13 @@ def test_usuario_anonimo_nao_gera_erro_500_ao_seguir_dataset(app, public_dataset
     assert resp.status_code == 403
 
 
-def test_botao_seguir_inclui_csrf_no_proprio_elemento():
-    """O botão HTMX de follow deve enviar CSRF mesmo sem depender de herança do body."""
+def test_botao_seguir_nao_duplica_csrf_no_proprio_elemento():
+    """O botão HTMX de follow deve deixar o CSRF para o htmx-csrf.js do CKAN core."""
     root = Path(__file__).resolve().parents[2]
     snippet = root / "templates" / "snippets" / "follow_button.html"
     html = snippet.read_text()
-    assert 'hx-headers=' in html
-    assert "X-CSRFToken" in html
+    assert "hx-headers" not in html
+    assert "X-CSRFToken" not in html
 
 
 @pytest.mark.ckan_config("WTF_CSRF_ENABLED", "false")
@@ -141,9 +141,9 @@ def test_usuario_interno_pode_desseguir_dataset(app, internal_user, public_datas
     assert resp.status_code == 200
 
 
-def test_pagina_inclui_hx_headers_csrf_no_body(app):
-    """Todas as páginas devem enviar o token CSRF via hx-headers no body para requisições HTMX."""
+def test_pagina_nao_duplica_hx_headers_csrf_no_body(app):
+    """O CSRF de HTMX deve ser injetado uma unica vez pelo htmx-csrf.js do CKAN core."""
     resp = app.get("/dataset")
     html = resp.get_data(as_text=True)
-    assert 'hx-headers=' in html, "body deve ter hx-headers para incluir CSRF em requisições HTMX"
-    assert "X-CSRFToken" in html, "hx-headers deve conter X-CSRFToken"
+    assert '<meta name="csrf_field_name"' in html
+    assert 'hx-headers=' not in html
