@@ -221,6 +221,21 @@ def make_middleware(app: Callable, config: Optional[Dict[str, Any]] = None) -> C
         from ckanext.artesp_theme import home_cache
 
         @app.before_request
+        def _guard_anonymous_follow_requests():
+            from flask import abort, g, request
+
+            if request.method != "POST":
+                return None
+            if not (
+                request.path.startswith("/dataset/follow/")
+                or request.path.startswith("/dataset/unfollow/")
+            ):
+                return None
+            if getattr(g, "user", ""):
+                return None
+            abort(403)
+
+        @app.before_request
         def _home_cache_before():
             return home_cache.get()
 

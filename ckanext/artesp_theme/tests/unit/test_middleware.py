@@ -224,7 +224,14 @@ class TestMakeMiddleware:
 
         result = make_middleware(fake_flask_app)
         assert result is fake_flask_app
-        fake_flask_app.before_request.assert_called_once()
+        before_request_handlers = [
+            call_args.args[0].__name__
+            for call_args in fake_flask_app.before_request.call_args_list
+        ]
+        assert before_request_handlers == [
+            "_guard_anonymous_follow_requests",
+            "_home_cache_before",
+        ]
 
         after_request_handlers = [
             call_args.args[0].__name__

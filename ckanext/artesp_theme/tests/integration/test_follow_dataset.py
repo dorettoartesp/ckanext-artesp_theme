@@ -1,6 +1,7 @@
 """Testes de integração para a funcionalidade de seguir datasets."""
 
 import uuid
+from pathlib import Path
 
 import pytest
 
@@ -101,6 +102,25 @@ def test_usuario_interno_pode_seguir_dataset_publico(app, internal_user, public_
         environ_base={"REMOTE_USER": internal_user["name"]},
     )
     assert resp.status_code == 200
+
+
+@pytest.mark.ckan_config("WTF_CSRF_ENABLED", "false")
+def test_usuario_anonimo_nao_gera_erro_500_ao_seguir_dataset(app, public_dataset):
+    """A rota de follow deve negar anônimos com 403 em vez de vazar NotAuthorized como 500."""
+    resp = app.post(
+        f"/dataset/follow/{public_dataset['id']}",
+        expect_errors=True,
+    )
+    assert resp.status_code == 403
+
+
+def test_botao_seguir_inclui_csrf_no_proprio_elemento():
+    """O botão HTMX de follow deve enviar CSRF mesmo sem depender de herança do body."""
+    root = Path(__file__).resolve().parents[2]
+    snippet = root / "templates" / "snippets" / "follow_button.html"
+    html = snippet.read_text()
+    assert 'hx-headers=' in html
+    assert "X-CSRFToken" in html
 
 
 @pytest.mark.ckan_config("WTF_CSRF_ENABLED", "false")
