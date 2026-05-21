@@ -131,6 +131,12 @@
   }
 }
 
+@media (max-width: 767.98px) {
+  .wrapper.dataset-read-wrapper > aside.secondary {
+    display: none;
+  }
+}
+
 @media (max-width: 576px) {
   .featured-groups-container {
     grid-template-columns: 1fr;
