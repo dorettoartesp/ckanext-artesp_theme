@@ -289,3 +289,9 @@ a:hover, a:focus {
   border-color: #dee2e6 !important;
   opacity: 0.6 !important;
 }
+
+/* Keep media rendered from dataset Markdown inside the primary column. */
+.notes.embedded-content img {
+  height: auto;
+  max-width: 100%;
+}
