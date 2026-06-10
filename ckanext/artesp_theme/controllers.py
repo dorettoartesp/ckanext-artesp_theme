@@ -651,6 +651,44 @@ artesp_theme.add_url_rule(
 )
 
 
+def _resource_packages_by_id(resources, batch_size=500):
+    package_ids = sorted({
+        resource.get('package_id')
+        for resource in resources
+        if resource.get('package_id')
+    })
+    packages_by_id = {}
+
+    for start in range(0, len(package_ids), batch_size):
+        batch = package_ids[start:start + batch_size]
+        quoted_ids = [
+            '"{}"'.format(
+                package_id.replace('\\', '\\\\').replace('"', '\\"')
+            )
+            for package_id in batch
+        ]
+        try:
+            results = toolkit.get_action('package_search')(None, {
+                'fq': 'id:({})'.format(' OR '.join(quoted_ids)),
+                'rows': len(batch),
+                'include_private': False,
+            })
+        except Exception as package_error:
+            log.warning(
+                "Could not fetch package info for %d resources in batch: %s",
+                len(batch),
+                package_error,
+            )
+            continue
+
+        for package in results.get('results', []):
+            package_id = package.get('id')
+            if package_id:
+                packages_by_id[package_id] = package
+
+    return packages_by_id
+
+
 def resource_search():
     """
     Controller for searching resources directly.
@@ -717,26 +755,15 @@ def resource_search():
         # Convert to list
         resources_list = list(all_resources.values())
 
-        # Enrich ALL resources with package (dataset) information BEFORE filtering/pagination
-        # This allows us to calculate group facets and improves performance with caching
-        package_cache = {}
+        # Fetch dataset metadata in batches instead of issuing one package_show
+        # call per dataset before pagination.
+        packages_by_id = _resource_packages_by_id(resources_list)
         for resource in resources_list:
-            try:
-                pkg_id = resource['package_id']
-
-                # Check cache first to avoid duplicate package_show calls
-                if pkg_id not in package_cache:
-                    package = toolkit.get_action('package_show')(None, {'id': pkg_id})
-                    package_cache[pkg_id] = package
-                else:
-                    package = package_cache[pkg_id]
-
-                # Store package metadata with resource
+            package = packages_by_id.get(resource.get('package_id'))
+            if package:
                 resource['package_name'] = package.get('title') or package.get('name')
                 resource['groups'] = package.get('groups', [])
-
-            except Exception as pkg_error:
-                log.warning(f"Could not fetch package info for {resource['package_id']}: {pkg_error}")
+            else:
                 resource['package_name'] = None
                 resource['groups'] = []
 

@@ -688,17 +688,19 @@ class TestResourceSearchBranches:
                         raise Exception("description failed")
                     return {"results": list(resources_by_query.get(query, []))}
                 return action
-            if name == "package_show":
-                def action(context, data_dict):
-                    if data_dict["id"] == "pkg-2":
-                        raise Exception("package missing")
-                    return {
-                        "id": "pkg-1",
-                        "name": "dataset-1",
-                        "title": "Dataset 1",
-                        "groups": [{"name": "group-a", "title": "Group A"}],
-                    }
-                return action
+            if name == "package_search":
+                return lambda context, data_dict: {
+                    "results": [
+                        {
+                            "id": "pkg-1",
+                            "name": "dataset-1",
+                            "title": "Dataset 1",
+                            "groups": [
+                                {"name": "group-a", "title": "Group A"}
+                            ],
+                        }
+                    ]
+                }
             raise AssertionError(name)
 
         class FakePage:

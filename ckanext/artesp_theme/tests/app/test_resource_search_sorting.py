@@ -10,12 +10,21 @@ def _patch_resource_actions(monkeypatch, resources):
             return lambda context, data_dict: {
                 "results": [dict(resource) for resource in resources]
             }
-        if name == "package_show":
+        if name == "package_search":
             return lambda context, data_dict: {
-                "id": data_dict["id"],
-                "title": "Dataset {}".format(data_dict["id"]),
-                "name": data_dict["id"],
-                "groups": [],
+                "results": [
+                    {
+                        "id": package_id,
+                        "title": "Dataset {}".format(package_id),
+                        "name": package_id,
+                        "groups": [],
+                    }
+                    for package_id in sorted({
+                        resource["package_id"]
+                        for resource in resources
+                        if resource.get("package_id")
+                    })
+                ]
             }
         raise AssertionError(name)
 
@@ -24,6 +33,62 @@ def _patch_resource_actions(monkeypatch, resources):
 @pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
 @pytest.mark.usefixtures("with_plugins")
 class TestResourceSearchSorting:
+    def test_resource_search_enriches_packages_in_one_batch(self, app, monkeypatch):
+        action_calls = []
+
+        def fake_get_action(name):
+            if name == "resource_search":
+                return lambda context, data_dict: {
+                    "results": [
+                        {
+                            "id": "res-1",
+                            "package_id": "pkg-1",
+                            "name": "Resource 1",
+                        },
+                        {
+                            "id": "res-2",
+                            "package_id": "pkg-2",
+                            "name": "Resource 2",
+                        },
+                    ]
+                }
+            if name == "package_search":
+                def action(context, data_dict):
+                    action_calls.append(data_dict)
+                    return {
+                        "results": [
+                            {
+                                "id": "pkg-1",
+                                "name": "dataset-1",
+                                "title": "Dataset 1",
+                                "groups": [],
+                            },
+                            {
+                                "id": "pkg-2",
+                                "name": "dataset-2",
+                                "title": "Dataset 2",
+                                "groups": [],
+                            },
+                        ]
+                    }
+
+                return action
+            if name == "package_show":
+                raise AssertionError("package_show must not be called")
+            raise AssertionError(name)
+
+        monkeypatch.setattr(controllers.toolkit, "get_action", fake_get_action)
+
+        response = app.get(toolkit.url_for("artesp_theme.resource_search"))
+
+        assert response.status_code == 200
+        assert len(action_calls) == 1
+        assert action_calls[0]["rows"] == 2
+        assert '"pkg-1"' in action_calls[0]["fq"]
+        assert '"pkg-2"' in action_calls[0]["fq"]
+        assert "Dataset 1" in response.body
+        assert "Dataset 2" in response.body
+
     def test_resource_search_no_results_renders_empty_state(self, app, monkeypatch):
         """
         Test that the /resources route renders the empty state without Solr data.
