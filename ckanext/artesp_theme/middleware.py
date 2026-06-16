@@ -220,6 +220,48 @@ def make_middleware(app: Callable, config: Optional[Dict[str, Any]] = None) -> C
         # ensuring the cached HTML is already icon-fixed.
         from ckanext.artesp_theme import home_cache
 
+        def _is_user_path(path):
+            normalized_path = path.rstrip("/") or "/"
+            if normalized_path == "/user":
+                return True
+            return normalized_path.startswith("/user/")
+
+        def _is_restricted_user_path(path):
+            normalized_path = path.rstrip("/") or "/"
+            if normalized_path == "/user":
+                return True
+            if not normalized_path.startswith("/user/"):
+                return False
+
+            segments = normalized_path.split("/")
+            reserved_user_routes = {
+                "_logout",
+                "api-tokens",
+                "delete",
+                "edit",
+                "login",
+                "logout",
+                "me",
+                "oidc",
+                "register",
+                "reset",
+                "verify",
+            }
+
+            if len(segments) == 3:
+                return segments[2] not in reserved_user_routes
+
+            if len(segments) == 4 and segments[2] == "activity":
+                return True
+
+            restricted_user_subpages = {
+                "followed",
+                "groups",
+                "organizations",
+                "rating-admin",
+            }
+            return len(segments) == 4 and segments[3] in restricted_user_subpages
+
         @app.before_request
         def _guard_anonymous_follow_requests():
             from flask import abort, g, request
@@ -234,6 +276,19 @@ def make_middleware(app: Callable, config: Optional[Dict[str, Any]] = None) -> C
             if getattr(g, "user", ""):
                 return None
             abort(403)
+
+        @app.before_request
+        def _restrict_user_index_to_sysadmins():
+            from ckan import model
+            from flask import abort, g, request
+
+            if not _is_restricted_user_path(request.path):
+                return None
+
+            user = model.User.get(getattr(g, "user", "")) if getattr(g, "user", "") else None
+            if not user or not getattr(user, "sysadmin", False):
+                abort(403)
+            return None
 
         @app.before_request
         def _home_cache_before():
@@ -255,6 +310,14 @@ def make_middleware(app: Callable, config: Optional[Dict[str, Any]] = None) -> C
                     return f'<i class="fa fa-{icon_name}"></i>'
 
                 response.data = pattern.sub(replace_icon, response.data.decode('utf-8')).encode('utf-8')
+            return response
+
+        @app.after_request
+        def _noindex_restricted_user_index(response):
+            from flask import has_request_context, request
+
+            if has_request_context() and _is_user_path(request.path):
+                response.headers["X-Robots-Tag"] = "noindex, nofollow"
             return response
 
         _fix_contextual_filter(app)

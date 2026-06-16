@@ -1018,10 +1018,12 @@ def rating_admin_index(id: str):
 
     if not getattr(current_user, "is_authenticated", False):
         return redirect_to(toolkit.url_for("user.login"))
-    if current_user.name != id:
+
+    current_user_obj = model.User.get(current_user.name)
+    if current_user.name != id and not getattr(current_user_obj, "sysadmin", False):
         abort(403)
 
-    user = model.User.get(current_user.name)
+    user = model.User.get(id)
     if not user or auth_helpers.is_external_user(user):
         abort(403)
 
