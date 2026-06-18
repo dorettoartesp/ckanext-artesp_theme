@@ -651,6 +651,59 @@ artesp_theme.add_url_rule(
 )
 
 
+def _resource_packages_by_id(package_ids):
+    package_ids = {package_id for package_id in package_ids if package_id}
+    if not package_ids:
+        return {}
+
+    rows = (
+        model.Session.query(
+            model.Package.id,
+            model.Package.name,
+            model.Package.title,
+            model.Group.name.label("group_name"),
+            model.Group.title.label("group_title"),
+        )
+        .outerjoin(
+            model.Member,
+            (model.Member.table_id == model.Package.id)
+            & (model.Member.table_name == "package")
+            & (model.Member.state == "active"),
+        )
+        .outerjoin(
+            model.Group,
+            (model.Group.id == model.Member.group_id)
+            & (model.Group.state == "active")
+            & (model.Group.type == "group"),
+        )
+        .filter(model.Package.id.in_(package_ids))
+        .filter(model.Package.state == "active")
+        .filter(model.Package.private.is_(False))
+        .all()
+    )
+
+    packages = {}
+    seen_groups = {}
+    for row in rows:
+        package = packages.setdefault(
+            row.id,
+            {
+                "package_name": row.title or row.name,
+                "groups": [],
+            },
+        )
+        if row.group_name and row.group_name not in seen_groups.setdefault(row.id, set()):
+            package["groups"].append(
+                {
+                    "name": row.group_name,
+                    "title": row.group_title or row.group_name,
+                }
+            )
+            seen_groups[row.id].add(row.group_name)
+
+    return packages
+
+
 def resource_search():
     """
     Controller for searching resources directly.
@@ -717,32 +770,20 @@ def resource_search():
         # Convert to list
         resources_list = list(all_resources.values())
 
-        # Enrich ALL resources with package (dataset) information BEFORE filtering/pagination
-        # This allows us to calculate group facets and improves performance with caching
-        package_cache = {}
-        for resource in resources_list:
-            try:
-                pkg_id = resource['package_id']
-
-                # Check cache first to avoid duplicate package_show calls
-                if pkg_id not in package_cache:
-                    package = toolkit.get_action('package_show')(None, {'id': pkg_id})
-                    package_cache[pkg_id] = package
-                else:
-                    package = package_cache[pkg_id]
-
-                # Store package metadata with resource
-                resource['package_name'] = package.get('title') or package.get('name')
-                resource['groups'] = package.get('groups', [])
-
-            except Exception as pkg_error:
-                log.warning(f"Could not fetch package info for {resource['package_id']}: {pkg_error}")
-                resource['package_name'] = None
-                resource['groups'] = []
-
-        # Apply format filter
+        # Apply format filter before package enrichment to reduce work when possible.
         if format_filter:
             resources_list = [r for r in resources_list if r.get('format') == format_filter]
+
+        # Enrich resources with the package fields required by this page in one
+        # lightweight query. Avoid package_show here: it builds complete dataset
+        # dicts and dominates /resources response time when many resources exist.
+        package_metadata = _resource_packages_by_id(
+            resource.get("package_id") for resource in resources_list
+        )
+        for resource in resources_list:
+            metadata = package_metadata.get(resource.get("package_id"), {})
+            resource["package_name"] = metadata.get("package_name")
+            resource["groups"] = metadata.get("groups", [])
 
         # Apply group filter
         if group_filter:
