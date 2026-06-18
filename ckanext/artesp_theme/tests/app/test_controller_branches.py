@@ -817,6 +817,20 @@ class TestResourceSearchBranches:
                 )
 
         monkeypatch.setattr(controllers.toolkit, "get_action", fake_get_action)
+        monkeypatch.setattr(
+            controllers,
+            "_resource_packages_by_id",
+            lambda package_ids: {
+                "pkg-1": {
+                    "package_name": "Dataset 1",
+                    "groups": [{"name": "group-a", "title": "Group A"}],
+                },
+                "pkg-2": {
+                    "package_name": None,
+                    "groups": [],
+                },
+            },
+        )
         monkeypatch.setattr(controllers, "Page", FakePage)
         monkeypatch.setattr(
             controllers.toolkit,

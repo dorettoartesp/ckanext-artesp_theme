@@ -5,6 +5,7 @@ from ckan.plugins import toolkit
 from ckan.tests import factories
 import ckan.lib.search as search
 
+from ckanext.artesp_theme import controllers
 from ckanext.artesp_theme.logic import auth_helpers
 
 
@@ -51,3 +52,26 @@ class TestResourceSearch:
         assert resource_name in resp.body
         # Check if the description appears
         assert resource_description[:-1] in resp.body
+
+    def test_resource_packages_by_id_returns_dataset_title_and_groups(self):
+        org = _artesp_org()
+        unique_suffix = uuid.uuid4().hex[:8]
+        group = factories.Group(
+            name="resources-perf-group-{}".format(unique_suffix),
+            title="Resources Performance Group",
+        )
+        dataset = factories.Dataset(
+            owner_org=org["id"],
+            title="Resources Performance Dataset",
+            groups=[{"name": group["name"]}],
+        )
+
+        result = controllers._resource_packages_by_id([dataset["id"]])
+
+        assert result[dataset["id"]]["package_name"] == "Resources Performance Dataset"
+        assert result[dataset["id"]]["groups"] == [
+            {
+                "name": group["name"],
+                "title": "Resources Performance Group",
+            }
+        ]

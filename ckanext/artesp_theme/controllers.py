@@ -651,42 +651,57 @@ artesp_theme.add_url_rule(
 )
 
 
-def _resource_packages_by_id(resources, batch_size=500):
-    package_ids = sorted({
-        resource.get('package_id')
-        for resource in resources
-        if resource.get('package_id')
-    })
-    packages_by_id = {}
+def _resource_packages_by_id(package_ids):
+    package_ids = {package_id for package_id in package_ids if package_id}
+    if not package_ids:
+        return {}
 
-    for start in range(0, len(package_ids), batch_size):
-        batch = package_ids[start:start + batch_size]
-        quoted_ids = [
-            '"{}"'.format(
-                package_id.replace('\\', '\\\\').replace('"', '\\"')
+    rows = (
+        model.Session.query(
+            model.Package.id,
+            model.Package.name,
+            model.Package.title,
+            model.Group.name.label("group_name"),
+            model.Group.title.label("group_title"),
+        )
+        .outerjoin(
+            model.Member,
+            (model.Member.table_id == model.Package.id)
+            & (model.Member.table_name == "package")
+            & (model.Member.state == "active"),
+        )
+        .outerjoin(
+            model.Group,
+            (model.Group.id == model.Member.group_id)
+            & (model.Group.state == "active")
+            & (model.Group.type == "group"),
+        )
+        .filter(model.Package.id.in_(package_ids))
+        .filter(model.Package.state == "active")
+        .filter(model.Package.private.is_(False))
+        .all()
+    )
+
+    packages = {}
+    seen_groups = {}
+    for row in rows:
+        package = packages.setdefault(
+            row.id,
+            {
+                "package_name": row.title or row.name,
+                "groups": [],
+            },
+        )
+        if row.group_name and row.group_name not in seen_groups.setdefault(row.id, set()):
+            package["groups"].append(
+                {
+                    "name": row.group_name,
+                    "title": row.group_title or row.group_name,
+                }
             )
-            for package_id in batch
-        ]
-        try:
-            results = toolkit.get_action('package_search')(None, {
-                'fq': 'id:({})'.format(' OR '.join(quoted_ids)),
-                'rows': len(batch),
-                'include_private': False,
-            })
-        except Exception as package_error:
-            log.warning(
-                "Could not fetch package info for %d resources in batch: %s",
-                len(batch),
-                package_error,
-            )
-            continue
+            seen_groups[row.id].add(row.group_name)
 
-        for package in results.get('results', []):
-            package_id = package.get('id')
-            if package_id:
-                packages_by_id[package_id] = package
-
-    return packages_by_id
+    return packages
 
 
 def resource_search():
@@ -755,21 +770,20 @@ def resource_search():
         # Convert to list
         resources_list = list(all_resources.values())
 
-        # Fetch dataset metadata in batches instead of issuing one package_show
-        # call per dataset before pagination.
-        packages_by_id = _resource_packages_by_id(resources_list)
-        for resource in resources_list:
-            package = packages_by_id.get(resource.get('package_id'))
-            if package:
-                resource['package_name'] = package.get('title') or package.get('name')
-                resource['groups'] = package.get('groups', [])
-            else:
-                resource['package_name'] = None
-                resource['groups'] = []
-
-        # Apply format filter
+        # Apply format filter before package enrichment to reduce work when possible.
         if format_filter:
             resources_list = [r for r in resources_list if r.get('format') == format_filter]
+
+        # Enrich resources with the package fields required by this page in one
+        # lightweight query. Avoid package_show here: it builds complete dataset
+        # dicts and dominates /resources response time when many resources exist.
+        package_metadata = _resource_packages_by_id(
+            resource.get("package_id") for resource in resources_list
+        )
+        for resource in resources_list:
+            metadata = package_metadata.get(resource.get("package_id"), {})
+            resource["package_name"] = metadata.get("package_name")
+            resource["groups"] = metadata.get("groups", [])
 
         # Apply group filter
         if group_filter:

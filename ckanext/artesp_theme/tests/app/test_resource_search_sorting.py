@@ -184,3 +184,61 @@ class TestResourceSearchSorting:
         assert pos_res1 != -1
         assert pos_res2 != -1
         assert pos_res2 < pos_res1, f"Expected B ({pos_res2}) to be before A ({pos_res1}) in created desc sort"
+
+    def test_resource_search_uses_batched_package_metadata(self, app, monkeypatch):
+        resources = [
+            {
+                "id": "res-a",
+                "package_id": "pkg-1",
+                "name": "Resource A",
+                "format": "CSV",
+                "metadata_modified": "2026-01-01T00:00:00",
+            },
+            {
+                "id": "res-b",
+                "package_id": "pkg-2",
+                "name": "Resource B",
+                "format": "JSON",
+                "metadata_modified": "2026-01-02T00:00:00",
+            },
+        ]
+        package_ids_seen = []
+
+        def fake_get_action(name):
+            if name == "resource_search":
+                return lambda context, data_dict: {
+                    "results": [dict(resource) for resource in resources]
+                }
+            if name == "package_show":
+                raise AssertionError("resource_search must not call package_show")
+            raise AssertionError(name)
+
+        def fake_resource_packages_by_id(package_ids):
+            package_ids_seen.append(set(package_ids))
+            return {
+                "pkg-1": {
+                    "package_name": "Dataset 1",
+                    "groups": [{"name": "group-a", "title": "Group A"}],
+                },
+                "pkg-2": {
+                    "package_name": "Dataset 2",
+                    "groups": [{"name": "group-b", "title": "Group B"}],
+                },
+            }
+
+        monkeypatch.setattr(controllers.toolkit, "get_action", fake_get_action)
+        monkeypatch.setattr(
+            controllers,
+            "_resource_packages_by_id",
+            fake_resource_packages_by_id,
+            raising=False,
+        )
+
+        url = toolkit.url_for("artesp_theme.resource_search", group="group-b")
+        resp = app.get(url)
+
+        assert resp.status_code == 200
+        assert package_ids_seen == [{"pkg-1", "pkg-2"}]
+        assert "Resource B" in resp.body
+        assert "Dataset 2" in resp.body
+        assert "Resource A" not in resp.body
