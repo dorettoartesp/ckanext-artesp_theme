@@ -111,6 +111,11 @@
   background: none;
 }
 
+/* Remover quando a barra GovSP for restaurada apos o periodo eleitoral. */
+.minimal-header.election-period-header {
+  padding-top: 1rem;
+}
+
 .header-top {
   display: flex;
   justify-content: flex-end;

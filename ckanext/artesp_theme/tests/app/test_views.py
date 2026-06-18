@@ -441,6 +441,16 @@ def _assert_form_snippets(app):
 
 @pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
 @pytest.mark.usefixtures("with_plugins")
+def test_election_period_hides_government_branding(app):
+    resp = app.get("/")
+
+    assert resp.status_code == 200
+    assert 'class="govsp-topo"' not in resp.text
+    assert 'class="govsp-logo"' not in resp.text
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.usefixtures("with_plugins")
 def test_default_theme_views_and_snippets(app):
     _assert_about_page_has_blueprint_and_statistics_nav(app)
     _assert_default_login_keeps_forgot_password(app)

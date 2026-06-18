@@ -230,6 +230,7 @@ class TestMakeMiddleware:
         ]
         assert before_request_handlers == [
             "_guard_anonymous_follow_requests",
+            "_restrict_user_index_to_sysadmins",
             "_home_cache_before",
         ]
 
@@ -240,6 +241,7 @@ class TestMakeMiddleware:
         assert after_request_handlers == [
             "_home_cache_after",
             "fix_fontawesome_icons",
+            "_noindex_restricted_user_index",
         ]
 
     def test_non_flask_app_returns_wsgi_middleware(self):
@@ -261,6 +263,31 @@ class TestMakeMiddleware:
 # ---------------------------------------------------------------------------
 
 class TestAfterRequestHandler:
+    def test_user_index_response_gets_noindex_header(self):
+        from flask import Flask
+
+        registered_handlers = {}
+
+        def capture_handler(f):
+            registered_handlers[f.__name__] = f
+            return f
+
+        fake_flask_app = Flask("test")
+        fake_flask_app.debug = False
+        fake_flask_app.after_request = capture_handler
+
+        make_middleware(fake_flask_app)
+        registered_handler = registered_handlers["_noindex_restricted_user_index"]
+
+        fake_response = MagicMock()
+        fake_response.headers = {}
+
+        with fake_flask_app.test_request_context("/user"):
+            result = registered_handler(fake_response)
+
+        assert result is fake_response
+        assert fake_response.headers["X-Robots-Tag"] == "noindex, nofollow"
+
     def test_home_cache_stores_html_after_icons_are_fixed(self, monkeypatch):
         """Flask's LIFO hook execution stores already-fixed homepage HTML."""
         registered_handlers = []

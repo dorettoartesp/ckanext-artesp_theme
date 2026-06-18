@@ -27,6 +27,107 @@ def test_static_routes_render_successfully(app, reset_db, path):
     assert resp.status_code == 200
 
 
+class TestUserIndexAccess:
+    def test_user_index_requires_sysadmin(self, app, reset_db):
+        regular = factories.User()
+
+        anonymous = app.get("/user", expect_errors=True)
+        logged_user = app.get(
+            "/user",
+            environ_base={"REMOTE_USER": regular["name"]},
+            expect_errors=True,
+        )
+
+        assert anonymous.status_code == 403
+        assert anonymous.headers["X-Robots-Tag"] == "noindex, nofollow"
+        assert logged_user.status_code == 403
+
+    def test_sysadmin_can_access_user_index_with_noindex_header(self, app, reset_db):
+        sysadmin = factories.Sysadmin()
+
+        response = app.get(
+            "/user",
+            environ_base={"REMOTE_USER": sysadmin["name"]},
+        )
+
+        assert response.status_code == 200
+        assert response.headers["X-Robots-Tag"] == "noindex, nofollow"
+
+    def test_user_profile_requires_sysadmin_but_login_remains_public(self, app, reset_db):
+        target = factories.User()
+        regular = factories.User()
+        sysadmin = factories.Sysadmin()
+
+        anonymous = app.get(f"/user/{target['name']}", expect_errors=True)
+        logged_user = app.get(
+            f"/user/{target['name']}",
+            environ_base={"REMOTE_USER": regular["name"]},
+            expect_errors=True,
+        )
+        admin = app.get(
+            f"/user/{target['name']}",
+            environ_base={"REMOTE_USER": sysadmin["name"]},
+        )
+        login = app.get("/user/login")
+
+        assert anonymous.status_code == 403
+        assert anonymous.headers["X-Robots-Tag"] == "noindex, nofollow"
+        assert logged_user.status_code == 403
+        assert admin.status_code == 200
+        assert admin.headers["X-Robots-Tag"] == "noindex, nofollow"
+        assert login.status_code == 200
+        assert login.headers["X-Robots-Tag"] == "noindex, nofollow"
+
+    @pytest.mark.parametrize(
+        "path_template",
+        [
+            "/user/{name}/followed",
+            "/user/{name}/rating-admin",
+            "/user/activity/{name}",
+        ],
+    )
+    def test_user_subpages_require_sysadmin(self, app, reset_db, path_template):
+        target = factories.User()
+        regular = factories.User()
+        sysadmin = factories.Sysadmin()
+        path = path_template.format(name=target["name"])
+
+        anonymous = app.get(path, expect_errors=True)
+        logged_user = app.get(
+            path,
+            environ_base={"REMOTE_USER": regular["name"]},
+            expect_errors=True,
+        )
+        admin = app.get(
+            path,
+            environ_base={"REMOTE_USER": sysadmin["name"]},
+            expect_errors=True,
+        )
+
+        assert anonymous.status_code == 403
+        assert anonymous.headers["X-Robots-Tag"] == "noindex, nofollow"
+        assert logged_user.status_code == 403
+        assert admin.status_code != 403
+        assert admin.headers["X-Robots-Tag"] == "noindex, nofollow"
+
+    @pytest.mark.parametrize(
+        "path",
+        [
+            "/user/login",
+            "/user/reset",
+            "/user/register",
+        ],
+    )
+    def test_functional_user_routes_are_not_sysadmin_only_but_are_noindex(
+        self, app, reset_db, path
+    ):
+        response = app.get(path, expect_errors=True)
+
+        assert response.headers["X-Robots-Tag"] == "noindex, nofollow"
+        if path != "/user/register":
+            assert response.status_code != 403
+
+
 def test_statistics_route_forwards_query_params(app, monkeypatch, reset_db):
     captured = {}
 
@@ -688,17 +789,19 @@ class TestResourceSearchBranches:
                         raise Exception("description failed")
                     return {"results": list(resources_by_query.get(query, []))}
                 return action
-            if name == "package_show":
-                def action(context, data_dict):
-                    if data_dict["id"] == "pkg-2":
-                        raise Exception("package missing")
-                    return {
-                        "id": "pkg-1",
-                        "name": "dataset-1",
-                        "title": "Dataset 1",
-                        "groups": [{"name": "group-a", "title": "Group A"}],
-                    }
-                return action
+            if name == "package_search":
+                return lambda context, data_dict: {
+                    "results": [
+                        {
+                            "id": "pkg-1",
+                            "name": "dataset-1",
+                            "title": "Dataset 1",
+                            "groups": [
+                                {"name": "group-a", "title": "Group A"}
+                            ],
+                        }
+                    ]
+                }
             raise AssertionError(name)
 
         class FakePage:
