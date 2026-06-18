@@ -6,6 +6,7 @@ artesp-theme-js:
     - js/stats-counter.js
     - js/dashboard-statistics.js
     - js/rating.js
+    - js/resource-upload-progress.js
   extra:
     preload:
       - base/main
@@ -39,3 +40,4 @@ artesp-theme-css:
     - css/modules/responsive.css
     - css/modules/user.css
     - css/modules/rating.css
+    - css/modules/resource-upload-progress.css

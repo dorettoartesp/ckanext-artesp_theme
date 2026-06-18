@@ -1,0 +1,85 @@
+.artesp-resource-upload-feedback {
+  margin-top: 8px;
+  padding: 10px 12px;
+  border: 1px solid #d9e2ec;
+  border-radius: 4px;
+  background: #f8fafc;
+  color: #333333;
+}
+
+.artesp-resource-upload-feedback__summary,
+.artesp-resource-upload-feedback__meta {
+  margin: 0;
+}
+
+.artesp-resource-upload-feedback__summary {
+  font-weight: 600;
+}
+
+.artesp-resource-upload-feedback__meta {
+  margin-top: 4px;
+  color: #666666;
+  font-size: 0.875rem;
+}
+
+.artesp-resource-upload-feedback--error .artesp-resource-upload-feedback {
+  border-color: #b00020;
+  background: #fff5f5;
+  color: #8a0018;
+}
+
+.artesp-resource-upload-overlay {
+  position: fixed;
+  z-index: 10000;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.58);
+}
+
+.artesp-resource-upload-overlay[hidden] {
+  display: none;
+}
+
+.artesp-resource-upload-overlay__panel {
+  width: min(420px, 100%);
+  padding: 28px 32px;
+  border-radius: 4px;
+  background: #ffffff;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.24);
+  color: #222222;
+  text-align: center;
+}
+
+.artesp-resource-upload-overlay__spinner {
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 18px;
+  border: 4px solid #d9e2ec;
+  border-top-color: #034ea2;
+  border-radius: 50%;
+  animation: artesp-resource-upload-spin 0.9s linear infinite;
+}
+
+.artesp-resource-upload-overlay__title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.artesp-resource-upload-overlay__detail {
+  margin: 8px 0 0;
+  color: #666666;
+}
+
+.artesp-resource-upload-is-blocked {
+  overflow: hidden;
+}
+
+@keyframes artesp-resource-upload-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

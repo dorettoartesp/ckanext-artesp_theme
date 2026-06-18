@@ -3,27 +3,31 @@
    Contains styling for the dataset creation workflow stages
    ========================================================================== */
 
-/* Target the highlight elements inside the stages list items */
-.stages li.active .highlight,
-.stages li.complete .highlight {
-  /* Change the background color from the default greenish color (rgb(140, 198, 138)) 
-     to use the --secondary CSS variable (blue) */
+.stages li.active .highlight {
   background-color: var(--secondary) !important;
   color: white !important;
   border-color: var(--secondary) !important;
 }
 
-/* Ensure this styling applies to the dataset creation workflow pages */
-body.dataset.new .stages li.active .highlight,
-body.dataset.new .stages li.complete .highlight {
-  background-color: var(--secondary) !important;
-  color: white !important;
-  border-color: var(--secondary) !important;
-}
-
-/* Style for the buttons in the stages */
+.stages li.complete .highlight,
 .stages li.complete .highlight[type="submit"] {
-  background-color: var(--secondary) !important;
+  background-color: var(--tw-blue-100) !important;
+  color: var(--secondary) !important;
+  border-color: var(--tw-blue-100) !important;
+}
+
+.stages li.active:after,
+.stages li.complete:after {
+  content: none !important;
+  border: 0 !important;
+}
+
+.stages li.active:before {
+  color: var(--secondary) !important;
+  background-color: white !important;
+}
+
+.stages li.complete:before {
   color: white !important;
-  border-color: var(--secondary) !important;
+  background-color: var(--secondary) !important;
 }

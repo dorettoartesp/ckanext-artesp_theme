@@ -34,7 +34,15 @@ placeholder - placeholder text for url field
     ">{{ _('Remove') }}</button>
 {% endmacro %}
 
-<div data-module="resource-upload-field" class="resource-upload-field form-group">
+<div
+  data-module="resource-upload-field"
+  data-artesp-resource-upload
+  data-resource-upload-max-size-mb="1024"
+  data-resource-upload-ready-text="{{ _('Pronto para enviar') }}"
+  data-resource-upload-too-large-text="{{ _('O arquivo selecionado é maior que o limite de 1024 MB.') }}"
+  data-resource-upload-sending-text="{{ _('Enviando arquivo. Aguarde.') }}"
+  data-resource-upload-empty-text="{{ _('Nenhum arquivo selecionado') }}"
+  class="resource-upload-field form-group">
   <input type="radio" id="resource-url-none" name="url_type" value="" {{
     'checked' if not data.url and not data.url_type else '' }}>
   <div class="select-type">
@@ -91,6 +99,17 @@ placeholder - placeholder text for url field
               id='field-resource-upload',
               type='file',
               classes=['control-full']) }}
+            <div class="artesp-resource-upload-feedback" data-resource-upload-status aria-live="polite">
+              <p class="artesp-resource-upload-feedback__summary" data-resource-upload-file-name>{{ _('Nenhum arquivo selecionado') }}</p>
+              <p class="artesp-resource-upload-feedback__meta" data-resource-upload-file-size></p>
+            </div>
+            <div class="artesp-resource-upload-overlay" data-resource-upload-overlay role="alertdialog" aria-modal="true" aria-live="assertive" hidden>
+              <div class="artesp-resource-upload-overlay__panel">
+                <div class="artesp-resource-upload-overlay__spinner" aria-hidden="true"></div>
+                <p class="artesp-resource-upload-overlay__title" data-resource-upload-overlay-message>{{ _('Enviando arquivo. Aguarde.') }}</p>
+                <p class="artesp-resource-upload-overlay__detail">{{ _('Não feche esta janela até o envio terminar.') }}</p>
+              </div>
+            </div>
           </div>
         {% endblock %}
       </div>
