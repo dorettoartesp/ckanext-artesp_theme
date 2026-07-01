@@ -22,9 +22,10 @@
   </a>
   {% endblock %}
   {% block resource_item_description %}
-    <p class="description">
-      {% if res.description %}
-        {{ h.markdown_extract(h.get_translated(res, 'description'), extract_length=80) }}
+    {% set description = h.get_translated(res, 'description') %}
+    <p class="description"{% if description %} title="{{ h.markdown_extract(description, extract_length=0) | striptags | forceescape }}"{% endif %}>
+      {% if description %}
+        {{ h.markdown_extract(description, extract_length=80) }}
       {% endif %}
     </p>
   {% endblock %}
