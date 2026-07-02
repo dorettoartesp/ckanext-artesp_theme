@@ -1,0 +1,113 @@
+/* Accessible progressive enhancement for CKAN's server-rendered pagers. */
+.artesp-pagination-nav {
+  display: flex;
+  justify-content: center;
+  max-width: 100%;
+}
+
+.artesp-pagination-nav .pagination {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.artesp-pagination-nav .pagination > .page-item > .page-link {
+  align-items: center;
+  border: 1px solid #d0d5dd !important;
+  border-radius: 4px !important;
+  box-sizing: border-box;
+  display: inline-flex;
+  font-size: 14px;
+  font-weight: 600;
+  height: 36px;
+  justify-content: center;
+  line-height: 1;
+  margin: 0 !important;
+  min-width: 36px;
+  padding: 0 8px;
+  text-align: center;
+}
+
+.artesp-pagination-nav .pagination > .page-item > button.page-link {
+  appearance: none;
+  cursor: pointer;
+}
+
+.artesp-pagination-nav .pagination > .page-item > .page-link:hover {
+  border-color: var(--secondary) !important;
+}
+
+.artesp-pagination-nav .pagination > .page-item > .page-link:focus-visible {
+  outline: 3px solid rgba(19, 81, 180, 0.35);
+  outline-offset: 2px;
+  position: relative;
+  z-index: 4;
+}
+
+.artesp-pagination-nav .pagination > .page-item.active > .page-link {
+  background-color: var(--secondary) !important;
+  border-color: var(--secondary) !important;
+  color: #ffffff !important;
+}
+
+.artesp-pagination-nav .pagination > .page-item.disabled > .page-link {
+  cursor: not-allowed;
+}
+
+.artesp-pagination-nav .pagination-ellipsis {
+  letter-spacing: 1px;
+}
+
+.pagination-jump-popover {
+  background: #ffffff;
+  border: 1px solid #c9d1db;
+  border-radius: 4px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.16);
+  box-sizing: border-box;
+  max-width: calc(100vw - 16px);
+  padding: 12px;
+  position: fixed;
+  text-align: left;
+  width: 210px;
+  z-index: 1080;
+}
+
+.pagination-jump-popover[hidden] {
+  display: none;
+}
+
+.pagination-jump-form > label {
+  color: var(--gray-darker);
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.pagination-jump-controls {
+  display: flex;
+  gap: 6px;
+}
+
+.pagination-jump-controls .form-control {
+  height: 34px;
+  min-width: 0;
+  padding: 4px 8px;
+}
+
+.pagination-jump-controls .btn {
+  flex: 0 0 auto;
+  height: 34px;
+  min-width: 42px;
+  padding: 4px 10px;
+}
+
+.pagination-jump-error {
+  color: #b42318;
+  font-size: 12px;
+  line-height: 1.35;
+  margin: 8px 0 0;
+}

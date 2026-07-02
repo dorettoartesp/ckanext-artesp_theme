@@ -8,6 +8,7 @@ artesp-theme-js:
     - js/rating.js
     - js/resource-upload-progress.js
     - js/responsive-placeholder.js
+    - js/pagination.js
   extra:
     preload:
       - base/main
@@ -26,6 +27,7 @@ artesp-theme-css:
     - css/modules/base.css
     - css/modules/layout.css
     - css/modules/components.css
+    - css/modules/pagination.css
     - css/modules/components-additional.css
     - css/modules/badges.css
     - css/modules/footer.css
