@@ -1,6 +1,28 @@
 import pytest
+from types import SimpleNamespace
 
 from ckanext.artesp_theme import resource_pagination
+
+
+@pytest.mark.parametrize("endpoint", ["dataset.read", "dcat.read_dataset"])
+def test_dataset_read_detection_supports_core_and_dcat_routes(monkeypatch, endpoint):
+    monkeypatch.setattr(resource_pagination, "has_request_context", lambda: True)
+    monkeypatch.setattr(
+        resource_pagination, "request", SimpleNamespace(endpoint=endpoint)
+    )
+
+    assert resource_pagination._is_dataset_read_request() is True
+
+
+def test_dataset_read_detection_rejects_api_routes(monkeypatch):
+    monkeypatch.setattr(resource_pagination, "has_request_context", lambda: True)
+    monkeypatch.setattr(
+        resource_pagination,
+        "request",
+        SimpleNamespace(endpoint="api.action"),
+    )
+
+    assert resource_pagination._is_dataset_read_request() is False
 
 
 def _resources(count):

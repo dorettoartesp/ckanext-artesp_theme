@@ -9,6 +9,7 @@ import ckan.plugins.toolkit as toolkit
 
 
 RESOURCE_PAGE_SIZE = 20
+DATASET_READ_ENDPOINTS = {"dataset.read", "dcat.read_dataset"}
 
 
 class ResourcePageNotFound(ValueError):
@@ -84,7 +85,7 @@ def build_resource_page(resources, raw_page, query, page_size=RESOURCE_PAGE_SIZE
 
 
 def _is_dataset_read_request():
-    return has_request_context() and request.endpoint == "dataset.read"
+    return has_request_context() and request.endpoint in DATASET_READ_ENDPOINTS
 
 
 def paginate_dataset_view(package_dict):
