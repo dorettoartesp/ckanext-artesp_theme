@@ -352,10 +352,56 @@ def get_rating_comment_captcha_stylesheet_url() -> str:
 
 from flask import request as flask_request
 
+from ckanext.artesp_theme import resource_pagination
+
 
 def seo_canonical_url():
-    """Returns the canonical URL of the current page without query parameters."""
+    """Return the canonical URL, preserving unfiltered resource pages."""
+    if flask_request.endpoint == "dataset.read":
+        query = str(flask_request.args.get("resource_q", "")).strip()
+        raw_page = flask_request.args.get("resource_page", "1")
+        if not query:
+            try:
+                page = int(raw_page)
+            except (TypeError, ValueError):
+                page = 1
+            if page > 1:
+                return "{}?resource_page={}".format(
+                    flask_request.base_url, page
+                )
     return flask_request.base_url
+
+
+def seo_robots_content():
+    if (
+        flask_request.endpoint == "dataset.read"
+        and str(flask_request.args.get("resource_q", "")).strip()
+    ):
+        return "noindex,follow"
+    return ""
+
+
+def get_dataset_resource_pagination():
+    return resource_pagination.get_resource_pagination()
+
+
+def get_dataset_resource_query():
+    page = resource_pagination.get_resource_page()
+    return page.query if page else ""
+
+
+def get_dataset_resource_filtered_total():
+    page = resource_pagination.get_resource_page()
+    return page.filtered_total if page else 0
+
+
+def get_dataset_resource_page_number():
+    page = resource_pagination.get_resource_page()
+    return page.page if page else 1
+
+
+def get_full_dataset_resources(package_dict):
+    return resource_pagination.get_full_resources(package_dict)
 
 
 def seo_meta_description(pkg_dict=None, org_dict=None, group_dict=None, length=155):
@@ -383,7 +429,7 @@ def seo_jsonld_dataset(pkg_dict):
     keywords = [tag['name'] for tag in pkg_dict.get('tags', [])]
 
     distribution = []
-    for res in pkg_dict.get('resources', []):
+    for res in get_full_dataset_resources(pkg_dict):
         distribution.append({
             '@type': 'DataDownload',
             'name': res.get('name') or res.get('id', ''),
@@ -486,8 +532,14 @@ def get_helpers():
         "get_rating_comment_captcha_script_url": get_rating_comment_captcha_script_url,
         "get_rating_comment_captcha_stylesheet_url": get_rating_comment_captcha_stylesheet_url,
         "seo_canonical_url": seo_canonical_url,
+        "seo_robots_content": seo_robots_content,
         "seo_meta_description": seo_meta_description,
         "seo_jsonld_dataset": seo_jsonld_dataset,
         "seo_jsonld_organization": seo_jsonld_organization,
         "seo_jsonld_site": seo_jsonld_site,
+        "get_dataset_resource_pagination": get_dataset_resource_pagination,
+        "get_dataset_resource_query": get_dataset_resource_query,
+        "get_dataset_resource_filtered_total": get_dataset_resource_filtered_total,
+        "get_dataset_resource_page_number": get_dataset_resource_page_number,
+        "get_full_dataset_resources": get_full_dataset_resources,
     }

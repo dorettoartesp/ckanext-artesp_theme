@@ -68,6 +68,53 @@ body .resource-item .btn.btn-primary.resource-url-analytics,
   margin-bottom: 5px;
 }
 
+.dataset-resource-action {
+  width: 133px;
+  justify-content: center;
+}
+
+@media (max-width: 575.98px) {
+  .dataset-resource-search .dataset-resource-action {
+    width: 96px;
+  }
+
+  .resources .resource-item {
+    position: relative;
+    margin-bottom: 12px;
+    border: 1px solid var(--tw-gray-300);
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+  }
+
+  .resources .resource-item:active {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.16);
+    transform: translateY(1px);
+  }
+
+  .resources .resource-card-link {
+    position: static;
+  }
+
+  .resources .resource-card-link::after {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    border-radius: 6px;
+    content: "";
+  }
+
+  .resources .resource-card-link:focus-visible {
+    outline: 0;
+  }
+
+  .resources .resource-card-link:focus-visible::after {
+    outline: 3px solid var(--secondary);
+    outline-offset: 2px;
+  }
+}
+
 /* Specific override for resource-url-analytics button */
 .resource-url-analytics,
 .btn.resource-url-analytics,

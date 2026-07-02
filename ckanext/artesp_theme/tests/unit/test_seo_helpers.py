@@ -26,6 +26,29 @@ def test_seo_canonical_url_returns_root_url_as_is(monkeypatch):
     assert result == 'http://dados.artesp.sp.gov.br/'
 
 
+def test_seo_canonical_url_preserves_unfiltered_resource_page(monkeypatch):
+    mock_request = MagicMock()
+    mock_request.base_url = 'http://dados.artesp.sp.gov.br/dataset/test'
+    mock_request.endpoint = 'dataset.read'
+    mock_request.args = {'resource_page': '2'}
+    monkeypatch.setattr('ckanext.artesp_theme.helpers.flask_request', mock_request)
+
+    assert helpers.seo_canonical_url() == (
+        'http://dados.artesp.sp.gov.br/dataset/test?resource_page=2'
+    )
+
+
+def test_seo_search_results_use_dataset_canonical_and_noindex(monkeypatch):
+    mock_request = MagicMock()
+    mock_request.base_url = 'http://dados.artesp.sp.gov.br/dataset/test'
+    mock_request.endpoint = 'dataset.read'
+    mock_request.args = {'resource_q': 'portarias', 'resource_page': '2'}
+    monkeypatch.setattr('ckanext.artesp_theme.helpers.flask_request', mock_request)
+
+    assert helpers.seo_canonical_url() == mock_request.base_url
+    assert helpers.seo_robots_content() == 'noindex,follow'
+
+
 def test_seo_meta_description_extracts_from_pkg_notes(monkeypatch):
     pkg = {
         'notes': 'Dados de **pedágio** no estado de São Paulo.',

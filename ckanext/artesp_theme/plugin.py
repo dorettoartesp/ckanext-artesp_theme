@@ -6,6 +6,7 @@ import ckan.plugins.toolkit as toolkit
 import ckanext.artesp_theme.audit_model  # noqa: F401 — registers AuditEvent mapping
 import ckanext.artesp_theme.helpers as helpers
 import ckanext.artesp_theme.model  # noqa: F401 — registers DatasetRating imperative mapping
+import ckanext.artesp_theme.resource_pagination as resource_pagination
 from ckanext.artesp_theme.controllers import artesp_theme
 from ckanext.artesp_theme.govbr.blueprint import govbr as govbr_blueprint
 from ckanext.artesp_theme.logic import action as artesp_action
@@ -32,6 +33,7 @@ class ArtespThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IAuthFunctions)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IResourceController, inherit=True)
+    plugins.implements(plugins.IPackageController, inherit=True)
     plugins.implements(plugins.ISignal)
 
     def update_config(self, config_):
@@ -80,6 +82,9 @@ class ArtespThemePlugin(plugins.SingletonPlugin):
         artesp_action.normalize_resource_for_unfold(resource)
         artesp_action.sync_unfold_resource_view({}, resource)
         return resource
+
+    def before_dataset_view(self, package_dict):
+        return resource_pagination.paginate_dataset_view(package_dict)
 
     def get_blueprint(self):
         return [artesp_theme, govbr_blueprint]

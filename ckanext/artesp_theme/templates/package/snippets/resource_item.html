@@ -17,7 +17,7 @@
 
 <li class="resource-item" data-id="{{ res.id }}">
   {% block resource_item_title %}
-  <a class="heading" href="{{ url }}" title="{{ res.name or res.description }}">
+  <a class="heading resource-card-link" href="{{ url }}" title="{{ res.name or res.description }}">
     {{ h.resource_display_name(res) | truncate(50) }}<span class="format-label" property="dc:format" data-format="{{ res.format.lower() or 'data' }}">{{ h.get_translated(res, 'format') }}</span>
   </a>
   {% endblock %}
@@ -32,7 +32,7 @@
   {% block resource_item_explore %}
   {% if not url_is_edit %}
   <div class="dropdown btn-group">
-    <a href="#" class="btn btn-primary dropdown-toggle" type="button" id="dropdownExplorer" data-bs-toggle="dropdown" aria-expanded="false">
+    <a href="#" class="btn btn-primary dropdown-toggle dataset-resource-action" type="button" id="dropdownExplorer" data-bs-toggle="dropdown" aria-expanded="false">
       <i class="fa fa-share"></i>
       {{ _('Explore') }}
       <span class="caret"></span>

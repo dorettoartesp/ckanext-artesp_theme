@@ -11,7 +11,35 @@
   #}
 
 <section id="dataset-resources" class="resources">
-  <h2>{{ _('Data and Resources') }}</h2>
+  {% if pkg.num_resources or resource_query %}
+    <form class="dataset-resource-search mb-3" method="get"
+      action="{{ h.url_for('dataset.read', id=pkg.name) }}">
+      <label class="visually-hidden" for="dataset-resource-query">{{ _('Search resources...') }}</label>
+      <div class="input-group">
+        <input id="dataset-resource-query" class="form-control" type="search"
+          name="resource_q" value="{{ resource_query }}"
+          placeholder="{{ _('Use this field to search resources in this dataset...') }}"
+          data-responsive-placeholder
+          data-placeholder-desktop="{{ _('Use this field to search resources in this dataset...') }}"
+          data-placeholder-mobile="{{ _('Search resource...') }}">
+        <button class="btn btn-primary dataset-resource-action" type="submit">
+          <i class="fa fa-search" aria-hidden="true"></i>
+          {{ _('Search') }}
+        </button>
+        {% if resource_query %}
+          <a class="btn btn-light" href="{{ h.url_for('dataset.read', id=pkg.name) }}">
+            <i class="fa fa-times" aria-hidden="true"></i>
+            {{ _('Clear') }}
+          </a>
+        {% endif %}
+      </div>
+    </form>
+    {% if resource_filtered_total %}
+      <p class="dataset-resource-search-summary">
+        {% snippet 'snippets/search_result_text.html', query=resource_query, count=resource_filtered_total, type='resource' %}
+      </p>
+    {% endif %}
+  {% endif %}
   {% block resource_list %}
     {% if resources %}
       <ul class="{% block resource_list_class %}resource-list{% endblock %}">
@@ -24,7 +52,9 @@
       </ul>
     {% else %}
       {% block resource_list_empty %}
-        {% if h.check_access('resource_create', {'package_id': pkg['id']}) %}
+        {% if resource_query %}
+          <p class="empty">{{ _('No resources found for "{query}"').format(query=resource_query) }}</p>
+        {% elif h.check_access('resource_create', {'package_id': pkg['id']}) %}
           {% trans url=h.url_for(pkg.type ~ '_resource.new', id=pkg.name) %}
           <p class="empty">This dataset has no data, <a href="{{ url }}">why not add some?</a></p>
           {% endtrans %}
@@ -34,4 +64,7 @@
       {% endblock %}
     {% endif %}
   {% endblock %}
+  {% if resource_pagination %}
+    {{ resource_pagination.pager() }}
+  {% endif %}
 </section>

@@ -2219,6 +2219,14 @@ msgstr ""
 msgid "Search resources..."
 msgstr ""
 
+#: ckanext/artesp_theme/templates/package/snippets/resources_list.html:26
+msgid "Use this field to search resources in this dataset..."
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resources_list.html:29
+msgid "Search resource..."
+msgstr ""
+
 #: ckanext/artesp_theme/templates/resource/search.html:50
 #: ckanext/artesp_theme/templates/resource/search.html:81
 msgid "Remove filter"
@@ -4104,4 +4112,8 @@ msgstr ""
 
 #: ckanext/artesp_theme/templates/user/snippets/user_search.html:5
 msgid "Search Users"
+msgstr ""
+
+#: ckanext/artesp_theme/templates/package/snippets/resources_list.html:54
+msgid "Clear"
 msgstr ""

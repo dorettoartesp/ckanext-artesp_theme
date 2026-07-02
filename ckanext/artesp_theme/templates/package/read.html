@@ -33,7 +33,10 @@
 
   {% block package_resources %}
     {% snippet "package/snippets/resources_list.html", pkg=pkg, resources=pkg.resources,
-      can_edit=h.check_access('package_update', {'id':pkg.id }) %}
+      can_edit=h.check_access('package_update', {'id':pkg.id }),
+      resource_query=h.get_dataset_resource_query(),
+      resource_filtered_total=h.get_dataset_resource_filtered_total(),
+      resource_pagination=h.get_dataset_resource_pagination() %}
   {% endblock %}
 
   {% block package_tags %}
