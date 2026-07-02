@@ -11,7 +11,7 @@
   #}
 
 <section id="dataset-resources" class="resources">
-  {% if pkg.num_resources or resource_query %}
+  {% if (resource_pagination and resource_pagination.page_count > 1) or resource_query %}
     <form class="dataset-resource-search mb-3" method="get"
       action="{{ h.url_for('dataset.read', id=pkg.name) }}">
       <label class="visually-hidden" for="dataset-resource-query">{{ _('Search resources...') }}</label>

@@ -65,6 +65,9 @@ def test_before_dataset_view_does_not_paginate_other_routes(app):
 
 
 class _Pagination:
+    def __init__(self, page_count=2):
+        self.page_count = page_count
+
     def pager(self):
         return Markup('<nav class="pagination-test">Paginas</nav>')
 
@@ -116,6 +119,44 @@ def test_resource_list_renders_filtered_empty_state(app):
 
     assert 'No resources found for "inexistente"' in html
     assert "why not add some?" not in html
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.usefixtures("with_plugins")
+def test_resource_search_is_hidden_when_dataset_has_a_single_page(app):
+    package = _package(resource_count=20)
+
+    with app.flask_app.test_request_context("/dataset/dataset-teste"):
+        html = base.render_snippet(
+            "package/snippets/resources_list.html",
+            pkg=package,
+            resources=package["resources"],
+            can_edit=True,
+            resource_query="",
+            resource_filtered_total=20,
+            resource_pagination=_Pagination(page_count=1),
+        )
+
+    assert "dataset-resource-search" not in html
+
+
+@pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
+@pytest.mark.usefixtures("with_plugins")
+def test_resource_search_remains_visible_for_an_active_query(app):
+    package = _package(resource_count=1)
+
+    with app.flask_app.test_request_context("/dataset/dataset-teste"):
+        html = base.render_snippet(
+            "package/snippets/resources_list.html",
+            pkg=package,
+            resources=package["resources"],
+            can_edit=True,
+            resource_query="mapa",
+            resource_filtered_total=1,
+            resource_pagination=_Pagination(page_count=1),
+        )
+
+    assert "dataset-resource-search" in html
 
 
 @pytest.mark.ckan_config("ckan.plugins", "artesp_theme")
